@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 // connect db
 mongoose.connect(
   keys.mongoURI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   () => console.log("MongoDB connected...")
 );
 
@@ -20,5 +20,6 @@ app.use(cors());
 
 // routes
 app.use("/", require("./routes/index"));
+app.use("/user", require("./routes/user"));
 
 app.listen(5000, () => console.log("Server started on port 5000..."));

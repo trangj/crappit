@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
   title: String,
+  author: String,
   content: String,
   date: {
     type: Date,
