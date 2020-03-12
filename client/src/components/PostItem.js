@@ -5,11 +5,13 @@ import {
   ListItemIcon,
   Button,
   Collapse,
-  IconButton
+  IconButton,
+  Icon
 } from "@material-ui/core";
 import UpdatePost from "./UpdatePost";
+import moment from "moment";
 
-const PostItem = ({ post, deletePost, updatePost }) => {
+const PostItem = ({ post, deletePost, updatePost, user }) => {
   const [open, setOpen] = useState(false);
   const { title, content, date } = post;
 
@@ -26,15 +28,22 @@ const PostItem = ({ post, deletePost, updatePost }) => {
             aria-controls={post.id}
             aria-expanded={open}
           >
-            {open ? <i class="fas fa-minus"></i> : <i class="fas fa-plus"></i>}
+            {open ? <Icon>fullscreen_exit</Icon> : <Icon>fullscreen</Icon>}
           </IconButton>
         </ListItemIcon>
-        <ListItemText primary={title} secondary={date} />
-        <Button onClick={handleDelete}>Delete</Button>
-        <UpdatePost updatePost={updatePost} post={post} />
+        <ListItemText
+          primary={title}
+          secondary={`Posted by ${post.author} | ${moment(date).fromNow()} `}
+        />
+        {user !== undefined && user.username === post.author ? (
+          <>
+            <Button onClick={handleDelete}>Delete</Button>
+            <UpdatePost updatePost={updatePost} post={post} />
+          </>
+        ) : null}
       </ListItem>
       <Collapse in={open}>
-        <div id={post.id}>
+        <div id={post._id}>
           <p>{content}</p>
         </div>
       </Collapse>

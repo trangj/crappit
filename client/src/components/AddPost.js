@@ -8,7 +8,7 @@ import {
   TextField
 } from "@material-ui/core";
 
-const AddPost = ({ addPost }) => {
+const AddPost = ({ addPost, user }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -17,6 +17,7 @@ const AddPost = ({ addPost }) => {
     e.preventDefault();
     const newPost = {
       title,
+      author: user.username,
       content
     };
     addPost(newPost);
