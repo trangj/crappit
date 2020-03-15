@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const Post = require("../models/Post");
 
 router.get("/", (req, res) => {
+  console.log("getting posts");
   Post.find()
     .then(posts => {
       res.json(posts);
@@ -23,6 +24,14 @@ router.post("/newpost", auth, (req, res) => {
       res.json({ status: "Post successfully created", post: result })
     )
     .catch(err => res.json({ status: "Could not create post" }));
+});
+
+router.get("/:id", (req, res) => {
+  Post.findOne({ _id: req.params.id })
+    .then(post => {
+      res.json(post);
+    })
+    .catch(err => res.json({ status: "Could not fetch post" }));
 });
 
 router.delete("/:id/deletepost", auth, (req, res) => {

@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Login from "../components/User/Login";
 import Register from "../components/User/Register";
 import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
-const NavigationBar = ({ loginUser, registerUser, logoutUser, user }) => {
+import { GlobalContext } from "../context/GlobalState";
+
+const NavigationBar = () => {
+  const { fetchUser, loginUser, registerUser, logoutUser, user } = useContext(
+    GlobalContext
+  );
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
-          Crappit
-        </Typography>
+        <Link
+          to="/"
+          style={{ flex: 1, textDecoration: "none", color: "white" }}
+        >
+          <Typography variant="h6" color="inherit">
+            Crappit
+          </Typography>
+        </Link>
         {user === undefined ? (
           <>
             <Login loginUser={loginUser} />

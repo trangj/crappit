@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,10 +8,14 @@ import {
   TextField
 } from "@material-ui/core";
 
-const AddPost = ({ addPost, user }) => {
+import { GlobalContext } from "../context/GlobalState";
+
+const AddPost = () => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+
+  const { addPost, user } = useContext(GlobalContext);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -26,8 +30,8 @@ const AddPost = ({ addPost, user }) => {
     setOpen(false);
   };
 
-  return (
-    <div>
+  return user ? (
+    <>
       <Button className="mt-4" onClick={() => setOpen(true)}>
         Add Post
       </Button>
@@ -59,8 +63,8 @@ const AddPost = ({ addPost, user }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
-  );
+    </>
+  ) : null;
 };
 
 export default AddPost;
