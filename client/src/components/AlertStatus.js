@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { GlobalContext } from "../context/GlobalState";
 import Alert from "@material-ui/lab/Alert";
 
-const AlertStatus = ({ status }) => {
-  const [closed, setClosed] = useState(false);
+const AlertStatus = () => {
+  const [closed, setClosed] = useState(true);
+  const { status } = useContext(GlobalContext);
+
   useEffect(() => {
     setClosed(false);
   }, [status]);
 
-  return closed ? null : (
-    <Alert severity="warning" onClose={() => setClosed(true)}>
-      {status}
-    </Alert>
-  );
+  return status ? (
+    closed ? null : (
+      <Alert severity="warning" onClose={() => setClosed(false)}>
+        {status}
+      </Alert>
+    )
+  ) : null;
 };
 
 export default AlertStatus;

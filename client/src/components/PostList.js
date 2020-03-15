@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import PostItem from "./PostItem";
 import List from "@material-ui/core/List";
 
-const PostList = ({ posts, deletePost, updatePost, user }) => {
+import { GlobalContext } from "../context/GlobalState";
+
+const PostList = () => {
+  const { posts, fetchPosts, deletePost, updatePost, user } = useContext(
+    GlobalContext
+  );
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   return (
     <List>
       {posts.map(post => (

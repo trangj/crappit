@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import UpdatePost from "./UpdatePost";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const PostItem = ({ post, deletePost, updatePost, user }) => {
   const [open, setOpen] = useState(false);
@@ -25,14 +26,18 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
         <ListItemIcon>
           <IconButton
             onClick={() => setOpen(!open)}
-            aria-controls={post.id}
+            aria-controls={post._id}
             aria-expanded={open}
           >
             {open ? <Icon>fullscreen_exit</Icon> : <Icon>fullscreen</Icon>}
           </IconButton>
         </ListItemIcon>
         <ListItemText
-          primary={title}
+          primary={
+            <Link to={`/${post._id}`} style={{ textDecoration: "none" }}>
+              {title}
+            </Link>
+          }
           secondary={`Posted by ${post.author} | ${moment(date).fromNow()} `}
         />
         {user !== undefined && user.username === post.author ? (
