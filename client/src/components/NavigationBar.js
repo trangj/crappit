@@ -7,13 +7,9 @@ import { Link } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalState";
 
 const NavigationBar = () => {
-  const { fetchUser, loginUser, registerUser, logoutUser, user } = useContext(
+  const { loginUser, registerUser, logoutUser, user } = useContext(
     GlobalContext
   );
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   return (
     <AppBar position="static">

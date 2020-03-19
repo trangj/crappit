@@ -8,7 +8,8 @@ export default (state, action) => {
     case "GET_POST":
       return {
         ...state,
-        post: action.payload
+        post: action.payload.post,
+        status: action.payload.status
       };
     case "GET_USER":
       return {
@@ -36,10 +37,30 @@ export default (state, action) => {
         posts: [...state.posts, action.payload.post],
         status: action.payload.status
       };
+    case "ADD_COMMENT":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: [...state.post.comments, action.payload.comment]
+        },
+        status: action.payload.status
+      };
     case "DELETE_POST":
       return {
         ...state,
-        posts: state.posts.filter(post => post._id !== action.payload)
+        posts: state.posts.filter(post => post._id !== action.payload.id),
+        status: action.payload.status
+      };
+    case "DELETE_COMMENT":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: state.post.comments.filter(
+            comment => comment._id !== action.payload.id
+          )
+        }
       };
     case "UPDATE_POST":
       return {
@@ -53,12 +74,48 @@ export default (state, action) => {
         }),
         status: action.payload.status
       };
+    case "UPDATE_COMMENT":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: state.post.comments.map(comment => {
+            if (action.payload.comment._id === comment._id) {
+              comment.content = action.payload.comment.content;
+            }
+            return comment;
+          })
+        },
+        status: action.payload.status
+      };
+    case "CHANGE_VOTE":
+      return {
+        ...state,
+        posts: state.posts.map(post => {
+          if (action.payload.post._id === post._id) {
+            post.likes = action.payload.post.likes;
+            post.dislikes = action.payload.post.dislikes;
+          }
+          return post;
+        }),
+        post: {
+          ...state.post,
+          likes: action.payload.post.likes,
+          dislikes: action.payload.post.dislikes
+        },
+        status: action.payload.status
+      };
     case "USER_ERROR":
       return {
         ...state,
         status: action.payload
       };
     case "POST_ERROR":
+      return {
+        ...state,
+        status: action.payload
+      };
+    case "COMMENT_ERROR":
       return {
         ...state,
         status: action.payload

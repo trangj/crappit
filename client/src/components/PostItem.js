@@ -6,9 +6,11 @@ import {
   Button,
   Collapse,
   IconButton,
-  Icon
+  Icon,
+  Card
 } from "@material-ui/core";
 import UpdatePost from "./UpdatePost";
+import Voting from "./Voting";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
@@ -21,8 +23,9 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
   };
 
   return (
-    <React.Fragment>
+    <Card style={{ marginTop: "1rem" }}>
       <ListItem>
+        <Voting post={post} />
         <ListItemIcon>
           <IconButton
             onClick={() => setOpen(!open)}
@@ -34,7 +37,10 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
         </ListItemIcon>
         <ListItemText
           primary={
-            <Link to={`/${post._id}`} style={{ textDecoration: "none" }}>
+            <Link
+              to={`/${post._id}`}
+              style={{ textDecoration: "none", color: "black" }}
+            >
               {title}
             </Link>
           }
@@ -48,11 +54,11 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
         ) : null}
       </ListItem>
       <Collapse in={open}>
-        <div id={post._id}>
+        <div id={post._id} style={{ marginLeft: "2rem" }}>
           <p>{content}</p>
         </div>
       </Collapse>
-    </React.Fragment>
+    </Card>
   );
 };
 

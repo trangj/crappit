@@ -75,8 +75,7 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get("/", auth, (req, res) => {
-  console.log("getting user");
+router.get("/getuser", auth, (req, res) => {
   User.findById(req.user.id)
     .select("-password")
     .then(user => res.json({ user }));

@@ -49,11 +49,10 @@ export const GlobalProvider = ({ children }) => {
 
   async function fetchUser() {
     try {
-      const res = await fetch("http://localhost:5000/user", {
+      const res = await fetch("http://localhost:5000/user/getuser", {
         headers: { "x-auth-token": localStorage.token }
       });
       const data = await res.json();
-
       dispatch({
         type: "GET_USER",
         payload: data.user
@@ -139,22 +138,68 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function addComment(newComment) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/${newComment.id}/newcomment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          },
+          body: JSON.stringify(newComment)
+        }
+      );
+      const data = await res.json();
+      dispatch({
+        type: "ADD_COMMENT",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "COMMENT_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
   async function deletePost(id) {
     try {
-      await fetch(`http://localhost:5000/${id}/deletepost`, {
+      const res = await fetch(`http://localhost:5000/${id}/deletepost`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           "x-auth-token": localStorage.token
         }
       });
+      const data = await res.json();
       dispatch({
         type: "DELETE_POST",
-        payload: id
+        payload: data
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
+  async function deleteComment(id, commentid) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/${id}/c/${commentid}/deletecomment`,
+        { method: "DELETE", headers: { "x-auth-token": localStorage.token } }
+      );
+      const data = await res.json();
+      dispatch({
+        type: "DELETE_COMMENT",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "COMMENT_ERROR",
         payload: err.data
       });
     }
@@ -186,6 +231,51 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function updateComment(newComment, id) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/${id}/c/${newComment._id}/updatecomment`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          },
+          body: JSON.stringify(newComment)
+        }
+      );
+      const data = await res.json();
+      dispatch({
+        type: "UPDATE_COMMENT",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "COMMENT_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
+  async function changeVote(vote, id) {
+    const res = await fetch(
+      `http://localhost:5000/${id.post}/changevote?vote=${vote}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.token
+        },
+        body: JSON.stringify(id)
+      }
+    );
+    const data = await res.json();
+    dispatch({
+      type: "CHANGE_VOTE",
+      payload: data
+    });
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -200,8 +290,12 @@ export const GlobalProvider = ({ children }) => {
         logoutUser,
         registerUser,
         addPost,
+        addComment,
         updatePost,
-        deletePost
+        updateComment,
+        deletePost,
+        deleteComment,
+        changeVote
       }}
     >
       {children}

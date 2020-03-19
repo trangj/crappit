@@ -12,7 +12,7 @@ const AlertStatus = () => {
 
   return status ? (
     closed ? null : (
-      <Alert severity="warning" onClose={() => setClosed(false)}>
+      <Alert severity="warning" onClose={() => setClosed(true)}>
         {status}
       </Alert>
     )

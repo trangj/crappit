@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,21 +7,22 @@ import {
   Button,
   TextField
 } from "@material-ui/core";
+import { GlobalContext } from "../context/GlobalState";
 
-const UpdatePost = ({ updatePost, post }) => {
+const UpdateComment = ({ comment }) => {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState(post.title);
-  const [content, setContent] = useState(post.content);
+  const [content, setContent] = useState("");
+  const { updateComment, post } = useContext(GlobalContext);
 
   const handleSubmit = e => {
     e.preventDefault();
-    const newPost = {
-      id: post._id,
-      title,
+    const newComment = {
+      _id: comment._id,
       content
     };
-    updatePost(newPost);
+    updateComment(newComment, post._id);
     setOpen(false);
+    setContent("");
   };
 
   return (
@@ -35,13 +36,6 @@ const UpdatePost = ({ updatePost, post }) => {
           <form onSubmit={handleSubmit}>
             <TextField
               id="standard-basic"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              fullWidth
-              label="Title"
-            />
-            <TextField
-              id="standard-basic"
               value={content}
               multiline
               onChange={e => setContent(e.target.value)}
@@ -53,7 +47,7 @@ const UpdatePost = ({ updatePost, post }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleSubmit} color="primary">
-            Post
+            Edit
           </Button>
         </DialogActions>
       </Dialog>
@@ -61,4 +55,4 @@ const UpdatePost = ({ updatePost, post }) => {
   );
 };
 
-export default UpdatePost;
+export default UpdateComment;
