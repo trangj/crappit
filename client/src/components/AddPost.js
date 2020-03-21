@@ -15,7 +15,7 @@ const AddPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const { addPost, user } = useContext(GlobalContext);
+  const { topic, addPost, user } = useContext(GlobalContext);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -24,7 +24,7 @@ const AddPost = () => {
       author: user.username,
       content
     };
-    addPost(newPost);
+    addPost(topic.title, newPost);
     setTitle("");
     setContent("");
     setOpen(false);

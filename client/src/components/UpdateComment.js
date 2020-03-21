@@ -11,18 +11,16 @@ import { GlobalContext } from "../context/GlobalState";
 
 const UpdateComment = ({ comment }) => {
   const [open, setOpen] = useState(false);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(comment.content);
   const { updateComment, post } = useContext(GlobalContext);
 
   const handleSubmit = e => {
     e.preventDefault();
     const newComment = {
-      _id: comment._id,
       content
     };
-    updateComment(newComment, post._id);
+    updateComment(post.topic, post._id, comment._id, newComment);
     setOpen(false);
-    setContent("");
   };
 
   return (

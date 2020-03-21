@@ -1,5 +1,16 @@
 export default (state, action) => {
   switch (action.type) {
+    case "GET_TOPIC":
+      return {
+        ...state,
+        posts: action.payload.topic.posts,
+        topic: {
+          _id: action.payload.topic._id,
+          title: action.payload.topic.title,
+          description: action.payload.topic.description,
+          date: action.payload.topic.date
+        }
+      };
     case "GET_POSTS":
       return {
         ...state,

@@ -8,7 +8,7 @@ const CommentItem = ({ comment }) => {
   const { deleteComment, post, user } = useContext(GlobalContext);
 
   const handleDelete = () => {
-    deleteComment(post._id, comment._id);
+    deleteComment(post.topic, post._id, comment._id);
   };
 
   return (

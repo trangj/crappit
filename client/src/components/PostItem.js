@@ -19,7 +19,7 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
   const { title, content, date } = post;
 
   const handleDelete = () => {
-    deletePost(post._id);
+    deletePost(post.topic, post._id);
   };
 
   return (
@@ -38,7 +38,7 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
         <ListItemText
           primary={
             <Link
-              to={`/${post._id}`}
+              to={`/t/${post.topic}/p/${post._id}`}
               style={{ textDecoration: "none", color: "black" }}
             >
               {title}

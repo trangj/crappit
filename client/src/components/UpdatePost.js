@@ -16,11 +16,10 @@ const UpdatePost = ({ updatePost, post }) => {
   const handleSubmit = e => {
     e.preventDefault();
     const newPost = {
-      id: post._id,
       title,
       content
     };
-    updatePost(newPost);
+    updatePost(post.topic, post._id, newPost);
     setOpen(false);
   };
 

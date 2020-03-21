@@ -1,26 +1,30 @@
 import React, { useEffect, useContext } from "react";
 import { GlobalContext } from "../../context/GlobalState";
-import { List } from "@material-ui/core";
+import { List, Typography } from "@material-ui/core";
 import PostItem from "../PostItem";
 import AddPost from "../AddPost";
 
-const Home = () => {
+const Topic = ({ match }) => {
   const {
     fetchUser,
     posts,
-    fetchPosts,
+    fetchTopic,
     deletePost,
     updatePost,
-    user
+    user,
+    topic
   } = useContext(GlobalContext);
 
   useEffect(() => {
     fetchUser();
-    fetchPosts();
+    fetchTopic(match.params.topic);
   }, []);
 
   return (
     <>
+      <Typography>Welcome to t/{topic.title}!</Typography>
+      <Typography>{topic.description}</Typography>
+      <AddPost />
       <List>
         {posts.map(post => (
           <PostItem
@@ -36,4 +40,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Topic;

@@ -7,18 +7,16 @@ const Voting = ({ post }) => {
 
   const handleUpvote = () => {
     const id = {
-      post: post._id,
       user: user._id
     };
-    changeVote("like", id);
+    changeVote(post.topic, post._id, "like", id);
   };
 
   const handleDownvote = () => {
     const id = {
-      post: post._id,
       user: user._id
     };
-    changeVote("dislike", id);
+    changeVote(post.topic, post._id, "dislike", id);
   };
 
   return user ? (

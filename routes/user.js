@@ -6,79 +6,85 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/User");
 
-router.post("/register", (req, res) => {
+// @route   GET /api/user/register
+// @desc    Register user
+// @acess   Public
+
+router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password)
     res.status(400).json({ status: "Missing fields" });
 
-  User.findOne({ email }).then(user => {
+  try {
+    const user = await User.findOne({ email });
     if (user) return res.status(400).json({ status: "User already exists" });
+
+    const salt = await bcyrpt.genSalt(10);
+    if (!salt) throw Error("Error with generating salt");
+
+    const hash = await bcyrpt.hash(password, salt);
+    if (!hash) throw Error("Error with generating hash");
+
     const newUser = new User({
       username,
       email,
-      password
+      password: hash
     });
-    bcyrpt.genSalt(10, (err, salt) => {
-      bcyrpt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
-        newUser.password = hash;
-        newUser.save().then(user =>
-          jwt.sign(
-            { id: user.id },
-            keys.jwtSecret,
-            { expiresIn: 3600 },
-            (err, token) => {
-              if (err) throw err;
-              res.json({
-                token,
-                user: {
-                  id: user.id,
-                  username: user.username,
-                  email: user.email
-                }
-              });
-            }
-          )
-        );
-      });
+    const savedUser = await newUser.save();
+    if (!savedUser) throw Error("Error with saving user");
+
+    const token = await jwt.sign({ id: savedUser.id }, keys.jwtSecret, {
+      expiresIn: 3600
     });
-  });
+    res.status(200).json({
+      token,
+      user: savedUser
+    });
+  } catch (err) {
+    res.status(400).json({ status: "Error in creating user" });
+  }
 });
 
-router.post("/login", (req, res) => {
+// @route   GET /api/user/login
+// @desc    Login user
+// @acess   Public
+
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) res.status(400).json({ status: "Missing fields" });
 
-  User.findOne({ email }).then(user => {
+  try {
+    const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ status: "User does not exist" });
 
-    bcyrpt.compare(password, user.password).then(isMatch => {
-      if (!isMatch)
-        return res.status(400).json({ status: "Invalid credentials" });
-      jwt.sign(
-        { id: user.id },
-        keys.jwtSecret,
-        { expiresIn: 3600 },
-        (err, token) => {
-          if (err) throw err;
-          res.json({
-            token,
-            user: {
-              id: user.id,
-              username: user.username,
-              email: user.email
-            }
-          });
-        }
-      );
+    const isMatch = await bcyrpt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ status: "Invalid credentials" });
+
+    const token = await jwt.sign({ id: user.id }, keys.jwtSecret, {
+      expiresIn: 3600
     });
-  });
+    res.status(200).json({
+      token,
+      user
+    });
+  } catch (err) {
+    res.status(400).json({ status: "Could not login" });
+  }
 });
 
-router.get("/getuser", auth, (req, res) => {
-  User.findById(req.user.id)
-    .select("-password")
-    .then(user => res.json({ user }));
+// @route   GET /api/user
+// @desc    Get user
+// @acess   Private
+
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) throw Error("No user");
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(400).json({ status: "Could not get user" });
+  }
 });
 
 module.exports = router;

@@ -18,12 +18,11 @@ const CommentCard = ({ post }) => {
   const handleSubmit = e => {
     e.preventDefault();
     const newComment = {
-      id: post._id,
       content,
       author: user.username
     };
     setContent("");
-    addComment(newComment);
+    addComment(post.topic, post._id, newComment);
   };
 
   return (
@@ -53,7 +52,9 @@ const CommentCard = ({ post }) => {
         )}
         <List>
           {comments &&
-            comments.map(comment => <CommentItem comment={comment} />)}
+            comments.map(comment => (
+              <CommentItem comment={comment} key={comment._id} />
+            ))}
         </List>
       </CardContent>
     </Card>

@@ -19,7 +19,7 @@ mongoose.connect(
 app.use(cors());
 
 // routes
-app.use("/", require("./routes/index"));
-app.use("/user", require("./routes/user"));
+app.use("/api/index", require("./routes/index"));
+app.use("/api/user", require("./routes/user"));
 
 app.listen(5000, () => console.log("Server started on port 5000..."));

@@ -8,7 +8,7 @@ const Post = ({ match }) => {
 
   useEffect(() => {
     fetchUser();
-    fetchPost(match.params.id);
+    fetchPost(match.params.topic, match.params.id);
   }, []);
 
   return (

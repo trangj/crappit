@@ -5,7 +5,8 @@ const initialState = {
   user: undefined,
   status: "",
   posts: [],
-  post: {}
+  post: {},
+  topic: {}
 };
 
 export const GlobalContext = createContext(initialState);
@@ -13,9 +14,25 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
+  async function fetchTopic(topic) {
+    try {
+      const res = await fetch(`http://localhost:5000/api/index/t/${topic}`);
+      const data = await res.json();
+      dispatch({
+        type: "GET_TOPIC",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "POST_ERR",
+        payload: err.data
+      });
+    }
+  }
+
   async function fetchPosts() {
     try {
-      const res = await fetch("http://localhost:5000/");
+      const res = await fetch("http://localhost:5000/api/index");
       const data = await res.json();
 
       dispatch({
@@ -30,9 +47,11 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function fetchPost(id) {
+  async function fetchPost(topic, id) {
     try {
-      const res = await fetch(`http://localhost:5000/${id}`);
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}/p/${id}`
+      );
       const data = await res.json();
 
       dispatch({
@@ -49,7 +68,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function fetchUser() {
     try {
-      const res = await fetch("http://localhost:5000/user/getuser", {
+      const res = await fetch("http://localhost:5000/api/user", {
         headers: { "x-auth-token": localStorage.token }
       });
       const data = await res.json();
@@ -75,7 +94,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function loginUser(user) {
     try {
-      const res = await fetch("http://localhost:5000/user/login", {
+      const res = await fetch("http://localhost:5000/api/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user)
@@ -96,12 +115,13 @@ export const GlobalProvider = ({ children }) => {
 
   async function registerUser(user) {
     try {
-      const res = await fetch("http://localhost:5000/user/register", {
+      const res = await fetch("http://localhost:5000/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user)
       });
       const data = await res.json();
+      console.log(data);
       localStorage.setItem("token", data.token);
       dispatch({
         type: "REGISTER_USER",
@@ -115,9 +135,9 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function addPost(newPost) {
+  async function addPost(topic, newPost) {
     try {
-      const res = await fetch("http://localhost:5000/newpost", {
+      const res = await fetch(`http://localhost:5000/api/index/t/${topic}/p`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,10 +158,10 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function addComment(newComment) {
+  async function addComment(topic, id, newComment) {
     try {
       const res = await fetch(
-        `http://localhost:5000/${newComment.id}/newcomment`,
+        `http://localhost:5000/api/index/t/${topic}/p/${id}`,
         {
           method: "POST",
           headers: {
@@ -164,15 +184,18 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function deletePost(id) {
+  async function deletePost(topic, id) {
     try {
-      const res = await fetch(`http://localhost:5000/${id}/deletepost`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.token
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}/p/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          }
         }
-      });
+      );
       const data = await res.json();
       dispatch({
         type: "DELETE_POST",
@@ -186,10 +209,10 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function deleteComment(id, commentid) {
+  async function deleteComment(topic, id, commentid) {
     try {
       const res = await fetch(
-        `http://localhost:5000/${id}/c/${commentid}/deletecomment`,
+        `http://localhost:5000/api/index/t/${topic}/p/${id}/c/${commentid}`,
         { method: "DELETE", headers: { "x-auth-token": localStorage.token } }
       );
       const data = await res.json();
@@ -205,10 +228,10 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function updatePost(newPost) {
+  async function updatePost(topic, id, newPost) {
     try {
       const res = await fetch(
-        `http://localhost:5000/${newPost.id}/updatepost`,
+        `http://localhost:5000/api/index/t/${topic}/p/${id}`,
         {
           method: "PUT",
           headers: {
@@ -231,10 +254,10 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function updateComment(newComment, id) {
+  async function updateComment(topic, postid, commentid, newComment) {
     try {
       const res = await fetch(
-        `http://localhost:5000/${id}/c/${newComment._id}/updatecomment`,
+        `http://localhost:5000/api/index/t/${topic}/p/${postid}/c/${commentid}`,
         {
           method: "PUT",
           headers: {
@@ -257,23 +280,30 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function changeVote(vote, id) {
-    const res = await fetch(
-      `http://localhost:5000/${id.post}/changevote?vote=${vote}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.token
-        },
-        body: JSON.stringify(id)
-      }
-    );
-    const data = await res.json();
-    dispatch({
-      type: "CHANGE_VOTE",
-      payload: data
-    });
+  async function changeVote(topic, id, vote, userid) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}/p/${id}/changevote?vote=${vote}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          },
+          body: JSON.stringify(userid)
+        }
+      );
+      const data = await res.json();
+      dispatch({
+        type: "CHANGE_VOTE",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "VOTE_ERROR",
+        payload: err.data
+      });
+    }
   }
 
   return (
@@ -283,7 +313,9 @@ export const GlobalProvider = ({ children }) => {
         post: state.post,
         user: state.user,
         status: state.status,
+        topic: state.topic,
         fetchUser,
+        fetchTopic,
         fetchPosts,
         fetchPost,
         loginUser,
