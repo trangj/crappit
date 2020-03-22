@@ -6,6 +6,7 @@ const initialState = {
   status: "",
   posts: [],
   post: {},
+  topics: [],
   topic: {}
 };
 
@@ -103,7 +104,7 @@ export const GlobalProvider = ({ children }) => {
       localStorage.setItem("token", data.token);
       dispatch({
         type: "LOGIN_USER",
-        payload: data.user
+        payload: data
       });
     } catch (err) {
       dispatch({
@@ -121,11 +122,10 @@ export const GlobalProvider = ({ children }) => {
         body: JSON.stringify(user)
       });
       const data = await res.json();
-      console.log(data);
       localStorage.setItem("token", data.token);
       dispatch({
         type: "REGISTER_USER",
-        payload: data.user
+        payload: data
       });
     } catch (err) {
       dispatch({
@@ -306,6 +306,71 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function addTopic(topic) {
+    try {
+      const res = await fetch("http://localhost:5000/api/index/t", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.token
+        },
+        body: JSON.stringify(topic)
+      });
+      const data = await res.json();
+      dispatch({
+        type: "ADD_TOPIC",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "TOPIC_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
+  async function followTopic(topic, userid) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}/followtopic`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          },
+          body: JSON.stringify(userid)
+        }
+      );
+      const data = await res.json();
+      dispatch({
+        type: "FOLLOW_TOPIC",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "FOLLOW_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
+  async function fetchTopics() {
+    try {
+      const res = await fetch("http://localhost:5000/api/index/t");
+      const data = await res.json();
+      dispatch({
+        type: "GET_TOPICS",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "TOPIC_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
   return (
     <GlobalContext.Provider
       value={{
@@ -313,8 +378,10 @@ export const GlobalProvider = ({ children }) => {
         post: state.post,
         user: state.user,
         status: state.status,
+        topics: state.topics,
         topic: state.topic,
         fetchUser,
+        fetchTopics,
         fetchTopic,
         fetchPosts,
         fetchPost,
@@ -327,7 +394,9 @@ export const GlobalProvider = ({ children }) => {
         updateComment,
         deletePost,
         deleteComment,
-        changeVote
+        changeVote,
+        followTopic,
+        addTopic
       }}
     >
       {children}

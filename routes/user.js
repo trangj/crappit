@@ -11,9 +11,12 @@ const User = require("../models/User");
 // @acess   Public
 
 router.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
-  if (!username || !email || !password)
-    res.status(400).json({ status: "Missing fields" });
+  const { username, email, password, password2 } = req.body;
+  if (!username || !email || !password || !password2)
+    return res.status(400).json({ status: "Missing fields" });
+
+  if (password !== password2)
+    return res.status(400).json({ status: "Passwords are not the same" });
 
   try {
     const user = await User.findOne({ email });

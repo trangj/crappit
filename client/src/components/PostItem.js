@@ -44,7 +44,13 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
               {title}
             </Link>
           }
-          secondary={`Posted by ${post.author} | ${moment(date).fromNow()} `}
+          secondary={
+            <>
+              Posted by {post.author} |{" "}
+              <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
+              {moment(date).fromNow()}
+            </>
+          }
         />
         {user !== undefined && user.username === post.author ? (
           <>

@@ -235,4 +235,43 @@ router.get("/t/:topic", async (req, res) => {
   }
 });
 
+// @route   POST /api/index/t/:topic/followtopic
+// @desc    Follow a topic
+// @acess   Private
+
+router.post("/t/:topic/followtopic", async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.body.user }).select("-password");
+    if (!user) throw Error("No user");
+
+    if (user.followedTopics.includes(req.params.topic)) {
+      user.followedTopics = user.followedTopics.filter(
+        topic => topic !== req.params.topic
+      );
+      await user.save();
+      res.status(200).json({ user, status: "Successfully unfollowed" });
+    } else {
+      user.followedTopics.push(req.params.topic);
+      await user.save();
+      res.status(200).json({ user, status: "Successfully followed" });
+    }
+  } catch (err) {
+    res.status(400).json({ status: "Could not follow topic" });
+  }
+});
+
+// @route   GET /api/index/t
+// @desc    Get all topics
+// @acess   Public
+
+router.get("/t", async (req, res) => {
+  try {
+    const topics = await Topic.find();
+    if (!topics) throw Error("No topics");
+    res.json({ topics });
+  } catch (err) {
+    res.json({ status: "Could not get topics" });
+  }
+});
+
 module.exports = router;

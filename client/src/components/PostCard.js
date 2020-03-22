@@ -8,6 +8,7 @@ import {
   Typography,
   Grid
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   return (
@@ -28,7 +29,9 @@ const PostCard = ({ post }) => {
               <Typography gutterBottom variant="h5" component="h2">
                 {post.title}
               </Typography>
-              Posted by {post.author} | {moment(post.date).fromNow()}
+              Posted by {post.author} |{" "}
+              <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
+              {moment(post.date).fromNow()}
             </div>
           </Grid>
         </Grid>

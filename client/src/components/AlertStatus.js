@@ -1,21 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
 import { GlobalContext } from "../context/GlobalState";
 import Alert from "@material-ui/lab/Alert";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const AlertStatus = () => {
-  const [closed, setClosed] = useState(true);
+  const [open, setOpen] = useState(false);
   const { status } = useContext(GlobalContext);
 
   useEffect(() => {
-    setClosed(false);
+    setOpen(true);
   }, [status]);
 
   return status ? (
-    closed ? null : (
-      <Alert severity="warning" onClose={() => setClosed(true)}>
+    <Snackbar
+      open={open}
+      autoHideDuration={6000}
+      onClose={() => setOpen(false)}
+    >
+      <Alert severity="warning" onClose={() => setOpen(false)}>
         {status}
       </Alert>
-    )
+    </Snackbar>
   ) : null;
 };
 

@@ -9,7 +9,7 @@ const Post = ({ match }) => {
   useEffect(() => {
     fetchUser();
     fetchPost(match.params.topic, match.params.id);
-  }, []);
+  }, [match.params.topic, match.params.id]);
 
   return (
     <>

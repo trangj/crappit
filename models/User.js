@@ -15,8 +15,7 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
-  likes: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-  disikes: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  followedTopics: [String],
   register_date: {
     type: Date,
     default: Date.now

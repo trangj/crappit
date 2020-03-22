@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from "react";
 import { GlobalContext } from "../../context/GlobalState";
 import { List } from "@material-ui/core";
 import PostItem from "../PostItem";
-import AddPost from "../AddPost";
 
 const Home = () => {
   const {

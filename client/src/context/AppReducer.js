@@ -35,12 +35,14 @@ export default (state, action) => {
     case "LOGIN_USER":
       return {
         ...state,
-        user: action.payload
+        user: action.payload.user,
+        status: action.payload.status
       };
     case "REGISTER_USER":
       return {
         ...state,
-        user: action.payload
+        user: action.payload.user,
+        status: action.payload.status
       };
     case "ADD_POST":
       return {
@@ -115,6 +117,20 @@ export default (state, action) => {
           dislikes: action.payload.post.dislikes
         },
         status: action.payload.status
+      };
+    case "FOLLOW_TOPIC":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          followedTopics: action.payload.user.followedTopics
+        },
+        status: action.payload.status
+      };
+    case "GET_TOPICS":
+      return {
+        ...state,
+        topics: action.payload.topics
       };
     case "USER_ERROR":
       return {

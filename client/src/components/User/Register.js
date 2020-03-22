@@ -13,17 +13,20 @@ const Register = ({ registerUser }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
 
   const handleSubmit = e => {
     const user = {
       username,
       email,
-      password
+      password,
+      password2
     };
     registerUser(user);
     setUsername("");
     setEmail("");
     setPassword("");
+    setPassword2("");
     setOpen(false);
   };
 
@@ -57,6 +60,14 @@ const Register = ({ registerUser }) => {
               onChange={e => setPassword(e.target.value)}
               fullWidth
               label="Password"
+            />
+            <TextField
+              id="password2"
+              value={password2}
+              type="password"
+              onChange={e => setPassword2(e.target.value)}
+              fullWidth
+              label="Retype Password"
             />
           </form>
         </DialogContent>
