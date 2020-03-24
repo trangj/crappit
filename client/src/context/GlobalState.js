@@ -3,6 +3,7 @@ import AppReducer from "./AppReducer";
 
 const initialState = {
   user: undefined,
+  loading: true,
   status: "",
   posts: [],
   post: {},
@@ -15,8 +16,26 @@ export const GlobalContext = createContext(initialState);
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
+  async function fetchTopics() {
+    try {
+      dispatch({ type: "SET_LOADING" });
+      const res = await fetch("http://localhost:5000/api/index/t");
+      const data = await res.json();
+      dispatch({
+        type: "GET_TOPICS",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "TOPIC_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
   async function fetchTopic(topic) {
     try {
+      dispatch({ type: "SET_LOADING" });
       const res = await fetch(`http://localhost:5000/api/index/t/${topic}`);
       const data = await res.json();
       dispatch({
@@ -33,9 +52,9 @@ export const GlobalProvider = ({ children }) => {
 
   async function fetchPosts() {
     try {
+      dispatch({ type: "SET_LOADING" });
       const res = await fetch("http://localhost:5000/api/index");
       const data = await res.json();
-
       dispatch({
         type: "GET_POSTS",
         payload: data
@@ -50,11 +69,11 @@ export const GlobalProvider = ({ children }) => {
 
   async function fetchPost(topic, id) {
     try {
+      dispatch({ type: "SET_LOADING" });
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}`
       );
       const data = await res.json();
-
       dispatch({
         type: "GET_POST",
         payload: data
@@ -135,15 +154,38 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function addPost(topic, newPost) {
+  async function addTopic(formData) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
+      const res = await fetch("http://localhost:5000/api/index/t", {
+        method: "POST",
+        headers: {
+          "x-auth-token": localStorage.token
+        },
+        body: formData
+      });
+      const data = await res.json();
+      dispatch({
+        type: "ADD_TOPIC",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "TOPIC_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
+  async function addPost(topic, formData) {
+    try {
+      dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(`http://localhost:5000/api/index/t/${topic}/p`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           "x-auth-token": localStorage.token
         },
-        body: JSON.stringify(newPost)
+        body: formData
       });
       const data = await res.json();
       dispatch({
@@ -160,6 +202,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function addComment(topic, id, newComment) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}`,
         {
@@ -186,6 +229,8 @@ export const GlobalProvider = ({ children }) => {
 
   async function deletePost(topic, id) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
+
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}`,
         {
@@ -211,6 +256,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function deleteComment(topic, id, commentid) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}/c/${commentid}`,
         { method: "DELETE", headers: { "x-auth-token": localStorage.token } }
@@ -230,6 +276,8 @@ export const GlobalProvider = ({ children }) => {
 
   async function updatePost(topic, id, newPost) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
+
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}`,
         {
@@ -256,6 +304,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function updateComment(topic, postid, commentid, newComment) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${postid}/c/${commentid}`,
         {
@@ -282,6 +331,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function changeVote(topic, id, vote, userid) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}/changevote?vote=${vote}`,
         {
@@ -306,24 +356,28 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function addTopic(topic) {
+  async function changeCommentVote(topic, postid, commentid, vote, userid) {
     try {
-      const res = await fetch("http://localhost:5000/api/index/t", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.token
-        },
-        body: JSON.stringify(topic)
-      });
+      dispatch({ type: "CLEAR_STATUS" });
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}/p/${postid}/c/${commentid}/changevote?vote=${vote}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          },
+          body: JSON.stringify(userid)
+        }
+      );
       const data = await res.json();
       dispatch({
-        type: "ADD_TOPIC",
+        type: "CHANGE_COMMENT_VOTE",
         payload: data
       });
     } catch (err) {
       dispatch({
-        type: "TOPIC_ERROR",
+        type: "VOTE_ERROR",
         payload: err.data
       });
     }
@@ -331,6 +385,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function followTopic(topic, userid) {
     try {
+      dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/followtopic`,
         {
@@ -355,22 +410,6 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function fetchTopics() {
-    try {
-      const res = await fetch("http://localhost:5000/api/index/t");
-      const data = await res.json();
-      dispatch({
-        type: "GET_TOPICS",
-        payload: data
-      });
-    } catch (err) {
-      dispatch({
-        type: "TOPIC_ERROR",
-        payload: err.data
-      });
-    }
-  }
-
   return (
     <GlobalContext.Provider
       value={{
@@ -380,6 +419,7 @@ export const GlobalProvider = ({ children }) => {
         status: state.status,
         topics: state.topics,
         topic: state.topic,
+        loading: state.loading,
         fetchUser,
         fetchTopics,
         fetchTopic,
@@ -390,13 +430,14 @@ export const GlobalProvider = ({ children }) => {
         registerUser,
         addPost,
         addComment,
+        addTopic,
         updatePost,
         updateComment,
         deletePost,
         deleteComment,
         changeVote,
-        followTopic,
-        addTopic
+        changeCommentVote,
+        followTopic
       }}
     >
       {children}

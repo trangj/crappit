@@ -1,6 +1,10 @@
+// express setup
 const express = require("express");
 const router = express.Router();
+// middleware
+const upload = require("../middleware/upload");
 const auth = require("../middleware/auth");
+// schemas
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Topic = require("../models/Topic");
@@ -39,19 +43,20 @@ router.get("/t/:topic/p/:id", async (req, res) => {
 // @desc    Create post
 // @acess   Private
 
-router.post("/t/:topic/p", auth, async (req, res) => {
+router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
   const newPost = new Post({
     title: req.body.title,
     author: req.body.author,
     content: req.body.content,
-    topic: req.params.topic
+    topic: req.params.topic,
+    imageURL: req.file ? req.file.location : "",
+    imageName: req.file ? req.file.key : ""
   });
   try {
     const topic = await Topic.findOne({ title: req.params.topic });
     if (!topic) throw Error("No topic");
     topic.posts.push(newPost);
     await topic.save();
-
     const post = await newPost.save();
     if (!post) throw Error("No post");
     res.status(200).json({ status: "Post successfully created", post });
@@ -136,6 +141,44 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
   }
 });
 
+// @route   PUT /api/index/t/:topic/p/:id/c/:commentid/changevote
+// @desc    Change vote on comment
+// @acess   Private
+
+router.put("/t/:topic/p/:id/c/:commentid/changevote", async (req, res) => {
+  try {
+    const comment = await Comment.findOne({ _id: req.params.commentid });
+    if (!comment) throw Error("No comment");
+    const user = await User.findOne({ _id: req.body.user });
+    if (!user) throw Error("No user");
+
+    if (req.query.vote == "like") {
+      if (comment.likes.includes(user._id)) {
+        return res.json({ status: "Already liked." });
+      }
+      if (comment.dislikes.includes(user._id)) {
+        comment.dislikes.pull(user._id);
+      }
+      comment.likes.push(user._id);
+      await comment.save();
+      res.status(200).json({ comment, status: "Successfully liked" });
+    } else if (req.query.vote == "dislike") {
+      if (comment.dislikes.includes(user._id)) {
+        return res.json({ status: "Already disliked." });
+      }
+      if (comment.likes.includes(user._id)) {
+        comment.likes.pull(user._id);
+      }
+      comment.dislikes.push(user._id);
+      await comment.save();
+      res.status(200).json({ comment, status: "Successfully disliked" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json({ status: "Could not like/dislike post" });
+  }
+});
+
 // @route   POST /api/index/t/:topic/p/:id
 // @desc    Create a comment
 // @acess   Private
@@ -204,10 +247,12 @@ router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 // @desc    Create a topic
 // @acess   Private
 
-router.post("/t", auth, async (req, res) => {
+router.post("/t", auth, upload.single("file"), async (req, res) => {
   const newTopic = new Topic({
     title: req.body.title,
-    description: req.body.description
+    description: req.body.description,
+    imageURL: req.file ? req.file.location : "",
+    imageName: req.file ? req.file.key : ""
   });
   try {
     let topic = await Topic.findOne({ title: req.body.title });

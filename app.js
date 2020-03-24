@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");

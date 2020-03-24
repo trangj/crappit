@@ -6,38 +6,35 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Grid
+  Grid,
+  Divider
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   return (
-    <Card>
-      <CardMedia
-        component="img"
-        height="140"
-        alt="img"
-        src="https://glowvarietyshow.com/wp-content/uploads/2017/03/placeholder-image.jpg"
-      />
+    <Card style={{ marginBottom: "1rem" }}>
+      <CardMedia component="img" alt={post.imageName} src={post.imageURL} />
       <CardContent>
         <Grid container>
-          <Grid item>
-            {Object.keys(post).length !== 0 && <Voting post={post} />}
-          </Grid>
-          <Grid item>
-            <div style={{ marginTop: "1rem", marginLeft: "1rem" }}>
-              <Typography gutterBottom variant="h5" component="h2">
-                {post.title}
-              </Typography>
+          {post && (
+            <Grid item>
+              <Voting post={post} />
+            </Grid>
+          )}
+          <Grid item style={{ marginTop: "1rem" }}>
+            <Typography gutterBottom variant="h5" component="h2">
+              {post.title}
+            </Typography>
+            <Typography gutterBottom>
               Posted by {post.author} |{" "}
               <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
               {moment(post.date).fromNow()}
-            </div>
+            </Typography>
           </Grid>
         </Grid>
-        <Typography variant="body2" component="p" style={{ marginTop: "1rem" }}>
-          {post.content}
-        </Typography>
+        <Divider style={{ margin: "1rem 0rem 1rem" }} />
+        <Typography variant="body1">{post.content}</Typography>
       </CardContent>
     </Card>
   );

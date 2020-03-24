@@ -23,7 +23,7 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
   };
 
   return (
-    <Card style={{ marginTop: "1rem" }}>
+    <Card style={{ marginBottom: "1rem" }}>
       <ListItem>
         <Voting post={post} />
         <ListItemIcon>
@@ -36,19 +36,12 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
           </IconButton>
         </ListItemIcon>
         <ListItemText
-          primary={
-            <Link
-              to={`/t/${post.topic}/p/${post._id}`}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              {title}
-            </Link>
-          }
+          primary={<Link to={`/t/${post.topic}/p/${post._id}`}>{title}</Link>}
           secondary={
             <>
               Posted by {post.author} |{" "}
               <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
-              {moment(date).fromNow()}
+              {post.comments.length} Comments | {moment(date).fromNow()}
             </>
           }
         />
@@ -60,8 +53,17 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
         ) : null}
       </ListItem>
       <Collapse in={open}>
-        <div id={post._id} style={{ marginLeft: "2rem" }}>
-          <p>{content}</p>
+        <div id={post._id} style={{ margin: "0rem 1rem 1rem 1rem" }}>
+          <img
+            src={post.imageURL}
+            style={{
+              display: "block",
+              marginLeft: "auto",
+              marginRight: "auto"
+            }}
+          />
+          <br />
+          {content}
         </div>
       </Collapse>
     </Card>

@@ -13,23 +13,23 @@ const TopicCard = () => {
   const { topic, followTopic, user } = useContext(GlobalContext);
 
   return (
-    <Card>
-      <CardMedia
-        component="img"
-        height="140"
-        alt="img"
-        src="https://glowvarietyshow.com/wp-content/uploads/2017/03/placeholder-image.jpg"
-      />
+    <Card style={{ marginBottom: "1rem" }}>
+      <CardMedia component="img" alt={topic.imageName} src={topic.imageURL} />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="h2">
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="h2"
+          style={{ marginTop: "1rem" }}
+        >
           Welcome to t/{topic.title}!
         </Typography>
         <Typography gutterBottom>{topic.description}</Typography>
-        <Button onClick={() => followTopic(topic.title, { user: user._id })}>
-          {user && user.followedTopics.includes(topic.title)
-            ? "Unfollow"
-            : "Follow"}
-        </Button>
+        {user && (
+          <Button onClick={() => followTopic(topic.title, { user: user._id })}>
+            {user.followedTopics.includes(topic.title) ? "Unfollow" : "Follow"}
+          </Button>
+        )}
         <AddPost />
       </CardContent>
     </Card>

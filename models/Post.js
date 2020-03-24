@@ -6,6 +6,8 @@ const postSchema = new Schema({
   author: String,
   content: String,
   topic: String,
+  imageURL: String,
+  imageName: String,
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   dislikes: [{ type: Schema.Types.ObjectId, ref: "User" }],

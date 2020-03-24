@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ListItem, ListItemText, Button } from "@material-ui/core";
 import UpdateComment from "./UpdateComment";
+import CommentVoting from "./CommentVoting";
 import moment from "moment";
 import { GlobalContext } from "../context/GlobalState";
 
@@ -13,6 +14,7 @@ const CommentItem = ({ comment }) => {
 
   return (
     <ListItem>
+      <CommentVoting comment={comment} />
       <ListItemText
         primary={comment.content}
         secondary={`Commented by ${comment.author} | ${moment(

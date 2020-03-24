@@ -2,31 +2,31 @@ import React, { useContext } from "react";
 import { Button, ButtonGroup, Icon } from "@material-ui/core";
 import { GlobalContext } from "../context/GlobalState";
 
-const Voting = ({ post }) => {
-  const { user, changeVote } = useContext(GlobalContext);
+const CommentVoting = ({ comment }) => {
+  const { topic, user, changeCommentVote } = useContext(GlobalContext);
 
   const handleUpvote = () => {
     const id = {
       user: user._id
     };
-    changeVote(post.topic, post._id, "like", id);
+    changeCommentVote(topic.title, comment.post, comment._id, "like", id);
   };
 
   const handleDownvote = () => {
     const id = {
       user: user._id
     };
-    changeVote(post.topic, post._id, "dislike", id);
+    changeCommentVote(topic.title, comment.post, comment._id, "dislike", id);
   };
 
-  return user && post.likes && post.dislikes ? (
+  return user ? (
     <ButtonGroup
       orientation="vertical"
       variant="text"
       size="small"
       style={{ marginRight: "1rem" }}
     >
-      {post.likes.includes(user._id) ? (
+      {comment.likes.includes(user._id) ? (
         <Button disabled>
           <Icon>keyboard_arrow_up</Icon>
         </Button>
@@ -35,8 +35,8 @@ const Voting = ({ post }) => {
           <Icon>keyboard_arrow_up</Icon>
         </Button>
       )}
-      <Button disabled>{post.likes.length - post.dislikes.length}</Button>
-      {post.dislikes.includes(user._id) ? (
+      <Button disabled>{comment.likes.length - comment.dislikes.length}</Button>
+      {comment.dislikes.includes(user._id) ? (
         <Button disabled>
           <Icon>keyboard_arrow_down</Icon>
         </Button>
@@ -49,4 +49,4 @@ const Voting = ({ post }) => {
   ) : null;
 };
 
-export default Voting;
+export default CommentVoting;

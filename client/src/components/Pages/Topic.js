@@ -1,38 +1,37 @@
 import React, { useEffect, useContext } from "react";
 import { GlobalContext } from "../../context/GlobalState";
-import { List } from "@material-ui/core";
 import PostItem from "../PostItem";
 import TopicCard from "../TopicCard";
+import SkeletonCard from "../SkeletonCard";
 
 const Topic = ({ match }) => {
   const {
-    fetchUser,
     posts,
     fetchTopic,
     deletePost,
     updatePost,
-    user
+    user,
+    loading
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    fetchUser();
     fetchTopic(match.params.topic);
   }, [match.params.topic]);
 
-  return (
+  return loading ? (
+    <SkeletonCard />
+  ) : (
     <>
       <TopicCard />
-      <List>
-        {posts.map(post => (
-          <PostItem
-            post={post}
-            key={post._id}
-            deletePost={deletePost}
-            updatePost={updatePost}
-            user={user}
-          />
-        ))}
-      </List>
+      {posts.map(post => (
+        <PostItem
+          post={post}
+          key={post._id}
+          deletePost={deletePost}
+          updatePost={updatePost}
+          user={user}
+        />
+      ))}
     </>
   );
 };

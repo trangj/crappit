@@ -4,6 +4,8 @@ const Schema = mongoose.Schema;
 const topicSchema = new Schema({
   title: String,
   description: String,
+  imageURL: String,
+  imageName: String,
   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   date: { type: Date, default: Date.now }
 });

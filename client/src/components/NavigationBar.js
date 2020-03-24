@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Login from "../components/User/Login";
 import Register from "../components/User/Register";
 import AddTopic from "../components/AddTopic";
@@ -22,9 +22,15 @@ import { GlobalContext } from "../context/GlobalState";
 
 const NavigationBar = () => {
   const [drawer, setDrawer] = useState(false);
-  const { loginUser, registerUser, logoutUser, user } = useContext(
+  const { fetchUser, loginUser, registerUser, logoutUser, user } = useContext(
     GlobalContext
   );
+
+  useEffect(() => {
+    if (localStorage.token) {
+      fetchUser();
+    }
+  }, []);
 
   return (
     <>
@@ -96,6 +102,7 @@ const NavigationBar = () => {
                   component={Link}
                   to={`/t/${topic}`}
                   onClick={() => setDrawer(false)}
+                  key={topic}
                 >
                   <ListItemIcon>
                     <Icon>forum</Icon>

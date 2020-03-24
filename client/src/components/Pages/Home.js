@@ -2,23 +2,25 @@ import React, { useEffect, useContext } from "react";
 import { GlobalContext } from "../../context/GlobalState";
 import { List } from "@material-ui/core";
 import PostItem from "../PostItem";
+import SkeletonList from "../SkeletonList";
 
 const Home = () => {
   const {
-    fetchUser,
     posts,
     fetchPosts,
     deletePost,
     updatePost,
-    user
+    user,
+    loading
   } = useContext(GlobalContext);
 
   useEffect(() => {
-    fetchUser();
     fetchPosts();
   }, []);
 
-  return (
+  return loading ? (
+    <SkeletonList />
+  ) : (
     <>
       <List>
         {posts.map(post => (

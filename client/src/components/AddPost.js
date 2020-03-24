@@ -14,20 +14,25 @@ const AddPost = () => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [file, setFile] = useState("");
 
   const { topic, addPost, user } = useContext(GlobalContext);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const newPost = {
-      title,
-      author: user.username,
-      content
-    };
-    addPost(topic.title, newPost);
+  const handleSubmit = () => {
+    if (!title || !content) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", title);
+    formData.append("author", user.username);
+    formData.append("content", content);
+    addPost(topic.title, formData);
     setTitle("");
     setContent("");
     setOpen(false);
+  };
+
+  const changeUpload = e => {
+    setFile(e.target.files[0]);
   };
 
   return user ? (
@@ -55,6 +60,15 @@ const AddPost = () => {
               label="Content"
               rows="4"
             />
+            <Button component="label">
+              Upload File
+              <input
+                type="file"
+                style={{ display: "none" }}
+                onChange={changeUpload}
+              />
+            </Button>
+            {file.name}
           </form>
         </DialogContent>
         <DialogActions>

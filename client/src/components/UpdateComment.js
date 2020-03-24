@@ -14,8 +14,8 @@ const UpdateComment = ({ comment }) => {
   const [content, setContent] = useState(comment.content);
   const { updateComment, post } = useContext(GlobalContext);
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (!content) return;
     const newComment = {
       content
     };

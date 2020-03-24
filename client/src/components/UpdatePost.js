@@ -13,8 +13,8 @@ const UpdatePost = ({ updatePost, post }) => {
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (!title || !content) return;
     const newPost = {
       title,
       content

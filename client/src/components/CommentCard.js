@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Typography,
-  List,
   TextField,
   Button
 } from "@material-ui/core";
@@ -12,11 +11,11 @@ import { GlobalContext } from "../context/GlobalState";
 
 const CommentCard = ({ post }) => {
   const { comments } = post;
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState("");
   const { user, addComment } = useContext(GlobalContext);
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    if (!content) return;
     const newComment = {
       content,
       author: user.username
@@ -26,7 +25,7 @@ const CommentCard = ({ post }) => {
   };
 
   return (
-    <Card style={{ marginTop: "2rem" }}>
+    <Card style={{ marginBottom: "1rem" }}>
       <CardContent>
         <Typography gutterBottom variant="h6" component="h2">
           Comments
@@ -50,12 +49,10 @@ const CommentCard = ({ post }) => {
             </Button>
           </>
         )}
-        <List>
-          {comments &&
-            comments.map(comment => (
-              <CommentItem comment={comment} key={comment._id} />
-            ))}
-        </List>
+        {comments &&
+          comments.map(comment => (
+            <CommentItem comment={comment} key={comment._id} />
+          ))}
       </CardContent>
     </Card>
   );
