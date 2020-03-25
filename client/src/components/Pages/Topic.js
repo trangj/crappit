@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { GlobalContext } from "../../context/GlobalState";
 import PostItem from "../PostItem";
 import TopicCard from "../TopicCard";
@@ -13,12 +13,14 @@ const Topic = ({ match }) => {
     user,
     loading
   } = useContext(GlobalContext);
+  const [componentLoading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchTopic(match.params.topic);
+    setLoading(false);
   }, [match.params.topic]);
 
-  return loading ? (
+  return loading || componentLoading ? (
     <SkeletonCard />
   ) : (
     <>

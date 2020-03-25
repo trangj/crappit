@@ -7,9 +7,7 @@ import {
   Button,
   TextField
 } from "@material-ui/core";
-
 import { GlobalContext } from "../context/GlobalState";
-import { set } from "mongoose";
 
 const AddTopic = () => {
   const [open, setOpen] = useState(false);

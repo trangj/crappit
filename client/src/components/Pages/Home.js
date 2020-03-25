@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { GlobalContext } from "../../context/GlobalState";
 import { List } from "@material-ui/core";
 import PostItem from "../PostItem";
@@ -13,12 +13,14 @@ const Home = () => {
     user,
     loading
   } = useContext(GlobalContext);
+  const [componentLoading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPosts();
+    setLoading(false);
   }, []);
 
-  return loading ? (
+  return loading || componentLoading ? (
     <SkeletonList />
   ) : (
     <>
