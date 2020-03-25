@@ -4,7 +4,7 @@ import AppReducer from "./AppReducer";
 const initialState = {
   user: undefined,
   loading: true,
-  status: "",
+  status: undefined,
   posts: [],
   post: {},
   topics: [],
@@ -329,7 +329,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function changeVote(topic, id, vote, userid) {
+  async function changeVote(topic, id, vote) {
     try {
       dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
@@ -337,10 +337,8 @@ export const GlobalProvider = ({ children }) => {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             "x-auth-token": localStorage.token
-          },
-          body: JSON.stringify(userid)
+          }
         }
       );
       const data = await res.json();
@@ -356,7 +354,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function changeCommentVote(topic, postid, commentid, vote, userid) {
+  async function changeCommentVote(topic, postid, commentid, vote) {
     try {
       dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
@@ -364,10 +362,8 @@ export const GlobalProvider = ({ children }) => {
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             "x-auth-token": localStorage.token
-          },
-          body: JSON.stringify(userid)
+          }
         }
       );
       const data = await res.json();
@@ -383,7 +379,7 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function followTopic(topic, userid) {
+  async function followTopic(topic) {
     try {
       dispatch({ type: "CLEAR_STATUS" });
       const res = await fetch(
@@ -391,10 +387,8 @@ export const GlobalProvider = ({ children }) => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             "x-auth-token": localStorage.token
-          },
-          body: JSON.stringify(userid)
+          }
         }
       );
       const data = await res.json();

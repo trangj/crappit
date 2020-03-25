@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import SkeletonList from "../SkeletonList";
-import { List, ListItem } from "@material-ui/core";
+import { List, ListItem, ListItemText, Card } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalState";
 
@@ -18,9 +18,14 @@ const AllTopics = () => {
   ) : (
     <List>
       {topics.map(topic => (
-        <ListItem button component={Link} to={`/t/${topic.title}`}>
-          t/{topic.title}
-        </ListItem>
+        <Card style={{ marginBottom: "1rem" }}>
+          <ListItem button component={Link} to={`/t/${topic.title}`}>
+            <ListItemText
+              primary={`t/${topic.title}`}
+              secondary={`${topic.description}`}
+            />
+          </ListItem>
+        </Card>
       ))}
     </List>
   );

@@ -6,17 +6,11 @@ const CommentVoting = ({ comment }) => {
   const { topic, user, changeCommentVote } = useContext(GlobalContext);
 
   const handleUpvote = () => {
-    const id = {
-      user: user._id
-    };
-    changeCommentVote(topic.title, comment.post, comment._id, "like", id);
+    changeCommentVote(topic.title, comment.post, comment._id, "like");
   };
 
   const handleDownvote = () => {
-    const id = {
-      user: user._id
-    };
-    changeCommentVote(topic.title, comment.post, comment._id, "dislike", id);
+    changeCommentVote(topic.title, comment.post, comment._id, "dislike");
   };
 
   return user ? (

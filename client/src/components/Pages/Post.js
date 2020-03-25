@@ -13,9 +13,6 @@ const Post = ({ match }) => {
     setLoading(false);
   }, [match.params.topic, match.params.id]);
 
-  console.log(loading);
-  console.log(post);
-
   return loading || componentLoading ? (
     <SkeletonCard />
   ) : (

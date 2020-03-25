@@ -13,14 +13,21 @@ const User = require("../models/User");
 router.post("/register", async (req, res) => {
   const { username, email, password, password2 } = req.body;
   if (!username || !email || !password || !password2)
-    return res.status(400).json({ status: "Missing fields" });
+    return res
+      .status(400)
+      .json({ status: { text: "Missing fields", severity: "error" } });
 
   if (password !== password2)
-    return res.status(400).json({ status: "Passwords are not the same" });
+    return res.status(400).json({
+      status: { text: "Passwords are not the same", severity: "error" }
+    });
 
   try {
     const user = await User.findOne({ email });
-    if (user) return res.status(400).json({ status: "User already exists" });
+    if (user)
+      return res
+        .status(400)
+        .json({ status: { text: "User already exists", severity: "error" } });
 
     const salt = await bcyrpt.genSalt(10);
     if (!salt) throw Error("Error with generating salt");
@@ -41,10 +48,16 @@ router.post("/register", async (req, res) => {
     });
     res.status(200).json({
       token,
-      user: savedUser
+      user: savedUser,
+      status: {
+        text: "Successfully registered, you can now login!",
+        severity: "success"
+      }
     });
   } catch (err) {
-    res.status(400).json({ status: "Error in creating user" });
+    res
+      .status(400)
+      .json({ status: { text: "Error in creating user", severity: "error" } });
   }
 });
 
@@ -54,25 +67,37 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) res.status(400).json({ status: "Missing fields" });
+  if (!email || !password)
+    res
+      .status(400)
+      .json({ status: { text: "Missing fields", severity: "error" } });
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ status: "User does not exist" });
+    if (!user)
+      return res
+        .status(400)
+        .json({ status: { text: "User does not exist", severity: "error" } });
 
     const isMatch = await bcyrpt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ status: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ status: { text: "Invalid credentials", severity: "error" } });
 
     const token = await jwt.sign({ id: user.id }, keys.jwtSecret, {
       expiresIn: 3600
     });
+
     res.status(200).json({
       token,
-      user
+      user,
+      status: { text: "Successfully logged in!", severity: "success" }
     });
   } catch (err) {
-    res.status(400).json({ status: "Could not login" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not login", severity: "error" } });
   }
 });
 
@@ -86,7 +111,9 @@ router.get("/", auth, async (req, res) => {
     if (!user) throw Error("No user");
     res.status(200).json({ user });
   } catch (err) {
-    res.status(400).json({ status: "Could not get user" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not get user", severity: "error" } });
   }
 });
 

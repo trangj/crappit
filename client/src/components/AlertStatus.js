@@ -11,14 +11,14 @@ const AlertStatus = () => {
     setOpen(true);
   }, [status]);
 
-  return status ? (
+  return status !== undefined ? (
     <Snackbar
       open={open}
       autoHideDuration={6000}
       onClose={() => setOpen(false)}
     >
-      <Alert severity="warning" onClose={() => setOpen(false)}>
-        {status}
+      <Alert severity={status.severity} onClose={() => setOpen(false)}>
+        {status.text}
       </Alert>
     </Snackbar>
   ) : null;

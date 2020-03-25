@@ -41,7 +41,8 @@ export default (state, action) => {
     case "LOGOUT_USER":
       return {
         ...state,
-        user: undefined
+        user: undefined,
+        status: { text: "Successfully logged out", severity: "success" }
       };
     case "LOGIN_USER":
       return {
@@ -177,7 +178,7 @@ export default (state, action) => {
     case "CLEAR_STATUS":
       return {
         ...state,
-        status: ""
+        status: undefined
       };
     default:
       return state;

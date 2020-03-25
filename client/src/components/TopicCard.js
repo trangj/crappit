@@ -26,7 +26,7 @@ const TopicCard = () => {
         </Typography>
         <Typography gutterBottom>{topic.description}</Typography>
         {user && (
-          <Button onClick={() => followTopic(topic.title, { user: user._id })}>
+          <Button onClick={() => followTopic(topic.title)}>
             {user.followedTopics.includes(topic.title) ? "Unfollow" : "Follow"}
           </Button>
         )}

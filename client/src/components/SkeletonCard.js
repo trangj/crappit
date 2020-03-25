@@ -6,12 +6,14 @@ const SkeletonCard = () => {
   return (
     <>
       <Card>
-        <Skeleton variant="rect" height={175} />
+        <Skeleton variant="rect" height={200} />
         <CardContent>
           <Skeleton height={40} />
           <Skeleton height={30} width={300} />
           <Divider style={{ margin: "1rem 0rem 1rem" }} />
-          <Skeleton variant="rect" height={100} />
+          <Skeleton height={30} />
+          <Skeleton height={30} width={1100} />
+          <Skeleton height={30} />
         </CardContent>
       </Card>
       <Card style={{ marginTop: "1rem", opacity: "75%" }}>

@@ -59,9 +59,14 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
     await topic.save();
     const post = await newPost.save();
     if (!post) throw Error("No post");
-    res.status(200).json({ status: "Post successfully created", post });
+    res.status(200).json({
+      status: { text: "Post successfully created", severity: "success" },
+      post
+    });
   } catch (err) {
-    res.status(400).json({ status: "Could not create post" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not create post", severity: "error" } });
   }
 });
 
@@ -79,10 +84,12 @@ router.delete("/t/:topic/p/:id", auth, async (req, res) => {
     await Post.deleteOne({ _id: req.params.id });
     res.status(200).json({
       id: req.params.id,
-      status: "Post successfully deleted"
+      status: { text: "Post successfully deleted", severity: "success" }
     });
   } catch (err) {
-    res.status(400).json({ status: "Error in deleting post" });
+    res
+      .status(400)
+      .json({ status: { text: "Error in deleting post", severity: "error" } });
   }
 });
 
@@ -98,9 +105,14 @@ router.put("/t/:topic/p/:id", auth, async (req, res) => {
       { useFindAndModify: false, new: true }
     );
     if (!post) throw Error("No post");
-    res.status(200).json({ status: "Post successfully updated", post });
+    res.status(200).json({
+      status: { text: "Post successfully updated", severity: "success" },
+      post
+    });
   } catch (err) {
-    res.status(400).json({ status: "Could not update post" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not update post", severity: "error" } });
   }
 });
 
@@ -112,32 +124,38 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id });
     if (!post) throw Error("No post");
-    const user = await User.findOne({ _id: req.body.user });
+    const user = await User.findOne({ _id: req.user.id });
     if (!user) throw Error("No user");
 
     if (req.query.vote == "like") {
-      if (post.likes.includes(user._id)) {
-        return res.json({ status: "Already liked." });
+      if (post.likes.includes(req.user.id)) {
+        return res.json({
+          status: { text: "Already liked", severity: "error" }
+        });
       }
-      if (post.dislikes.includes(user._id)) {
-        post.dislikes.pull(user._id);
+      if (post.dislikes.includes(req.user.id)) {
+        post.dislikes.pull(req.user.id);
       }
-      post.likes.push(user._id);
+      post.likes.push(req.user.id);
       await post.save();
-      res.status(200).json({ post, status: "Successfully liked" });
+      res.status(200).json({ post });
     } else if (req.query.vote == "dislike") {
-      if (post.dislikes.includes(user._id)) {
-        return res.json({ status: "Already disliked." });
+      if (post.dislikes.includes(req.user.id)) {
+        return res.json({
+          status: { text: "Already disliked", severity: "error" }
+        });
       }
-      if (post.likes.includes(user._id)) {
-        post.likes.pull(user._id);
+      if (post.likes.includes(req.user.id)) {
+        post.likes.pull(req.user.id);
       }
-      post.dislikes.push(user._id);
+      post.dislikes.push(req.user.id);
       await post.save();
-      res.status(200).json({ post, status: "Successfully disliked" });
+      res.status(200).json({ post });
     }
   } catch (err) {
-    res.status(400).json({ status: "Could not like/dislike post" });
+    res.status(400).json({
+      status: { text: "Could not like/dislike post", severity: "error" }
+    });
   }
 });
 
@@ -145,39 +163,49 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
 // @desc    Change vote on comment
 // @acess   Private
 
-router.put("/t/:topic/p/:id/c/:commentid/changevote", async (req, res) => {
-  try {
-    const comment = await Comment.findOne({ _id: req.params.commentid });
-    if (!comment) throw Error("No comment");
-    const user = await User.findOne({ _id: req.body.user });
-    if (!user) throw Error("No user");
+router.put(
+  "/t/:topic/p/:id/c/:commentid/changevote",
+  auth,
+  async (req, res) => {
+    try {
+      const comment = await Comment.findOne({ _id: req.params.commentid });
+      if (!comment) throw Error("No comment");
+      const user = await User.findOne({ _id: req.user.id });
+      if (!user) throw Error("No user");
 
-    if (req.query.vote == "like") {
-      if (comment.likes.includes(user._id)) {
-        return res.json({ status: "Already liked." });
+      if (req.query.vote == "like") {
+        if (comment.likes.includes(req.user.id)) {
+          return res.json({
+            status: { text: "Already liked", severity: "error" }
+          });
+        }
+        if (comment.dislikes.includes(req.user.id)) {
+          comment.dislikes.pull(req.user.id);
+        }
+        comment.likes.push(req.user.id);
+        await comment.save();
+        res.status(200).json({ comment });
+      } else if (req.query.vote == "dislike") {
+        if (comment.dislikes.includes(req.user.id)) {
+          return res.json({
+            status: { text: "Already disliked", severity: "error" }
+          });
+        }
+        if (comment.likes.includes(req.user.id)) {
+          comment.likes.pull(req.user.id);
+        }
+        comment.dislikes.push(req.user.id);
+        await comment.save();
+        res.status(200).json({ comment });
       }
-      if (comment.dislikes.includes(user._id)) {
-        comment.dislikes.pull(user._id);
-      }
-      comment.likes.push(user._id);
-      await comment.save();
-      res.status(200).json({ comment, status: "Successfully liked" });
-    } else if (req.query.vote == "dislike") {
-      if (comment.dislikes.includes(user._id)) {
-        return res.json({ status: "Already disliked." });
-      }
-      if (comment.likes.includes(user._id)) {
-        comment.likes.pull(user._id);
-      }
-      comment.dislikes.push(user._id);
-      await comment.save();
-      res.status(200).json({ comment, status: "Successfully disliked" });
+    } catch (err) {
+      console.log(err.message);
+      res.status(400).json({
+        status: { text: "Could not like/dislike post", severity: "error" }
+      });
     }
-  } catch (err) {
-    console.log(err.message);
-    res.status(400).json({ status: "Could not like/dislike post" });
   }
-});
+);
 
 // @route   POST /api/index/t/:topic/p/:id
 // @desc    Create a comment
@@ -198,9 +226,14 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
 
     post.comments.push(newComment);
     await post.save();
-    res.status(200).json({ comment, status: "Comment succesfully added" });
+    res.status(200).json({
+      comment,
+      status: { text: "Comment succesfully added", severity: "success" }
+    });
   } catch (err) {
-    res.status(400).json({ status: "Could not make comment" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not make comment", severity: "error" } });
   }
 });
 
@@ -218,10 +251,12 @@ router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
     await Comment.deleteOne({ _id: req.params.commentid });
     res.status(200).json({
       id: req.params.commentid,
-      status: "Comment succesfully deleted"
+      status: { text: "Comment succesfully deleted", severity: "success" }
     });
   } catch (err) {
-    res.status(400).json({ status: "Could not delete comment" });
+    res.status(400).json({
+      status: { text: "Could not delete comment", severity: "error" }
+    });
   }
 });
 
@@ -237,9 +272,14 @@ router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
       { useFindAndModify: false, new: true }
     );
     if (!comment) throw Error("No comment");
-    res.status(200).json({ status: "Comment successfully updated", comment });
+    res.status(200).json({
+      status: { text: "Comment successfully updated", severity: "success" },
+      comment
+    });
   } catch (err) {
-    res.status(400).json({ status: "Could not update post" });
+    res.status(400).json({
+      status: { text: "Could not update comment", severity: "error" }
+    });
   }
 });
 
@@ -256,11 +296,19 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
   });
   try {
     let topic = await Topic.findOne({ title: req.body.title });
-    if (topic) return res.json({ status: "Topic already exists" });
+    if (topic)
+      return res.json({
+        status: { text: "Topic already exists", severity: "error" }
+      });
     topic = await newTopic.save();
-    res.status(200).json({ topic, status: "Topic successfully created" });
+    res.status(200).json({
+      topic,
+      status: { text: "Topic successfully created", severity: "success" }
+    });
   } catch (err) {
-    res.status(400).json({ status: "Could not make topic" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not make topic", severity: "error" } });
   }
 });
 
@@ -276,7 +324,9 @@ router.get("/t/:topic", async (req, res) => {
     if (!topic) throw Error("No topic");
     res.status(200).json({ topic });
   } catch (err) {
-    res.status(400).json({ status: "Could not find topic" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not find topic", severity: "error" } });
   }
 });
 
@@ -284,9 +334,9 @@ router.get("/t/:topic", async (req, res) => {
 // @desc    Follow a topic
 // @acess   Private
 
-router.post("/t/:topic/followtopic", async (req, res) => {
+router.post("/t/:topic/followtopic", auth, async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.body.user }).select("-password");
+    const user = await User.findOne({ _id: req.user.id }).select("-password");
     if (!user) throw Error("No user");
 
     if (user.followedTopics.includes(req.params.topic)) {
@@ -294,14 +344,22 @@ router.post("/t/:topic/followtopic", async (req, res) => {
         topic => topic !== req.params.topic
       );
       await user.save();
-      res.status(200).json({ user, status: "Successfully unfollowed" });
+      res.status(200).json({
+        user,
+        status: { text: "Successfully unfollowed", severity: "success" }
+      });
     } else {
       user.followedTopics.push(req.params.topic);
       await user.save();
-      res.status(200).json({ user, status: "Successfully followed" });
+      res.status(200).json({
+        user,
+        status: { text: "Successfully followed", severity: "success" }
+      });
     }
   } catch (err) {
-    res.status(400).json({ status: "Could not follow topic" });
+    res
+      .status(400)
+      .json({ status: { text: "Could not follow topic", severity: "error" } });
   }
 });
 
