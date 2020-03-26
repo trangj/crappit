@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField
-} from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import { Formik, Form, Field } from "formik";
+import * as yup from "yup";
+import TextFieldForm from "./Forms/TextFieldForm";
+
+const schema = yup.object({
+  title: yup.string().required(),
+  content: yup.string().required()
+});
 
 const UpdatePost = ({ updatePost, post }) => {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState(post.title);
-  const [content, setContent] = useState(post.content);
 
-  const handleSubmit = () => {
-    if (!title || !content) return;
+  const handleSubmit = values => {
+    const { title, content } = values;
     const newPost = {
       title,
       content
@@ -31,30 +30,27 @@ const UpdatePost = ({ updatePost, post }) => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle id="form-dialog-title">Edit</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="standard-basic"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              fullWidth
-              label="Title"
-            />
-            <TextField
-              id="standard-basic"
-              value={content}
-              multiline
-              onChange={e => setContent(e.target.value)}
-              fullWidth
-              label="Content"
-              rows="4"
-            />
-          </form>
+          <Formik
+            initialValues={{ title: post.title, content: post.content }}
+            onSubmit={handleSubmit}
+            validationSchema={schema}
+          >
+            {() => (
+              <Form>
+                <Field label="Title" name="title" component={TextFieldForm} />
+                <Field
+                  label="Content"
+                  name="content"
+                  multiline
+                  component={TextFieldForm}
+                />
+                <Button type="submit" style={{ float: "right" }}>
+                  Post
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Post
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

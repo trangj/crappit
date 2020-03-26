@@ -16,10 +16,10 @@ const Topic = require("../models/Topic");
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
-    if (!posts) throw Error("No posts");
+    if (!posts) throw Error("Could not fetch posts");
     res.status(200).json(posts);
   } catch (err) {
-    res.status(400).json({ status: "Could not fetch posts" });
+    res.status(400).json({ status: err.message });
   }
 });
 
@@ -32,10 +32,10 @@ router.get("/t/:topic/p/:id", async (req, res) => {
     const post = await Post.findOne({ _id: req.params.id }).populate({
       path: "comments"
     });
-    if (!post) throw Error("No post");
+    if (!post) throw Error("Could not fetch post");
     res.status(200).json({ post });
   } catch (err) {
-    res.status(400).json({ status: "Could not fetch post" });
+    res.status(400).json({ status: err.message });
   }
 });
 
@@ -46,7 +46,8 @@ router.get("/t/:topic/p/:id", async (req, res) => {
 router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
   const newPost = new Post({
     title: req.body.title,
-    author: req.body.author,
+    author: req.user.username,
+    authorId: req.user.id,
     content: req.body.content,
     topic: req.params.topic,
     imageURL: req.file ? req.file.location : "",
@@ -54,19 +55,17 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
   });
   try {
     const topic = await Topic.findOne({ title: req.params.topic });
-    if (!topic) throw Error("No topic");
+    if (!topic) throw Error("No topic exists");
+    const post = await newPost.save();
+    if (!post) throw Error("Post could not be made");
     topic.posts.push(newPost);
     await topic.save();
-    const post = await newPost.save();
-    if (!post) throw Error("No post");
     res.status(200).json({
       status: { text: "Post successfully created", severity: "success" },
       post
     });
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Could not create post", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -76,20 +75,23 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
 
 router.delete("/t/:topic/p/:id", auth, async (req, res) => {
   try {
+    const query = await Post.deleteOne({
+      _id: req.params.id,
+      authorId: req.user.id
+    });
+    if (!query.deletedCount)
+      throw Error("Post does not exist or you are not the author");
+    await Comment.deleteMany({ post: req.params.id });
     await Topic.updateOne(
       { title: req.params.topic },
       { $pull: { posts: req.params.id } }
     );
-    await Comment.deleteMany({ post: req.params.id });
-    await Post.deleteOne({ _id: req.params.id });
     res.status(200).json({
       id: req.params.id,
       status: { text: "Post successfully deleted", severity: "success" }
     });
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Error in deleting post", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -99,20 +101,21 @@ router.delete("/t/:topic/p/:id", auth, async (req, res) => {
 
 router.put("/t/:topic/p/:id", auth, async (req, res) => {
   try {
+    if (!req.body.content || !req.body.title)
+      throw Error("Missing required fields");
     const post = await Post.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: req.params.id, authorId: req.user.id },
       { $set: { content: req.body.content, title: req.body.title } },
       { useFindAndModify: false, new: true }
     );
-    if (!post) throw Error("No post");
+    if (!post)
+      throw Error("Post does not exist or you are not the author of the post");
     res.status(200).json({
-      status: { text: "Post successfully updated", severity: "success" },
-      post
+      post,
+      status: { text: "Post successfully updated", severity: "success" }
     });
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Could not update post", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -123,9 +126,9 @@ router.put("/t/:topic/p/:id", auth, async (req, res) => {
 router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.id });
-    if (!post) throw Error("No post");
+    if (!post) throw Error("No post exists");
     const user = await User.findOne({ _id: req.user.id });
-    if (!user) throw Error("No user");
+    if (!user) throw Error("No user exists");
 
     if (req.query.vote == "like") {
       if (post.likes.includes(req.user.id)) {
@@ -154,7 +157,7 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
     }
   } catch (err) {
     res.status(400).json({
-      status: { text: "Could not like/dislike post", severity: "error" }
+      status: { text: err.message, severity: "error" }
     });
   }
 });
@@ -169,9 +172,9 @@ router.put(
   async (req, res) => {
     try {
       const comment = await Comment.findOne({ _id: req.params.commentid });
-      if (!comment) throw Error("No comment");
+      if (!comment) throw Error("No comment exists");
       const user = await User.findOne({ _id: req.user.id });
-      if (!user) throw Error("No user");
+      if (!user) throw Error("No user exists");
 
       if (req.query.vote == "like") {
         if (comment.likes.includes(req.user.id)) {
@@ -199,9 +202,8 @@ router.put(
         res.status(200).json({ comment });
       }
     } catch (err) {
-      console.log(err.message);
       res.status(400).json({
-        status: { text: "Could not like/dislike post", severity: "error" }
+        status: { text: err.message, severity: "error" }
       });
     }
   }
@@ -213,7 +215,8 @@ router.put(
 
 router.post("/t/:topic/p/:id", auth, async (req, res) => {
   const newComment = new Comment({
-    author: req.body.author,
+    author: req.user.username,
+    authorId: req.user.id,
     content: req.body.content,
     topic: req.params.topic,
     post: req.params.id
@@ -231,9 +234,7 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
       status: { text: "Comment succesfully added", severity: "success" }
     });
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Could not make comment", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -243,19 +244,21 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
 
 router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
+    const query = await Comment.deleteOne({ _id: req.params.commentid });
+    if (!query.deletedCount)
+      throw Error("Comment does not exist or you are not the author");
     await Post.updateOne(
       { _id: req.params.id },
       { $pull: { comments: req.params.commentid } },
       { useFindAndModify: true }
     );
-    await Comment.deleteOne({ _id: req.params.commentid });
     res.status(200).json({
       id: req.params.commentid,
       status: { text: "Comment succesfully deleted", severity: "success" }
     });
   } catch (err) {
     res.status(400).json({
-      status: { text: "Could not delete comment", severity: "error" }
+      status: { text: err.message, severity: "error" }
     });
   }
 });
@@ -267,18 +270,18 @@ router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
     const comment = await Comment.findOneAndUpdate(
-      { _id: req.params.commentid },
+      { _id: req.params.commentid, authorId: req.user.id },
       { $set: { content: req.body.content } },
       { useFindAndModify: false, new: true }
     );
-    if (!comment) throw Error("No comment");
+    if (!comment) throw Error("No comment exists or you are not the author");
     res.status(200).json({
       status: { text: "Comment successfully updated", severity: "success" },
       comment
     });
   } catch (err) {
     res.status(400).json({
-      status: { text: "Could not update comment", severity: "error" }
+      status: { text: err.message, severity: "error" }
     });
   }
 });
@@ -306,9 +309,7 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
       status: { text: "Topic successfully created", severity: "success" }
     });
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Could not make topic", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -321,12 +322,10 @@ router.get("/t/:topic", async (req, res) => {
     const topic = await Topic.findOne({ title: req.params.topic }).populate({
       path: "posts"
     });
-    if (!topic) throw Error("No topic");
+    if (!topic) throw Error("Topic does not exist");
     res.status(200).json({ topic });
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Could not find topic", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -337,7 +336,7 @@ router.get("/t/:topic", async (req, res) => {
 router.post("/t/:topic/followtopic", auth, async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.user.id }).select("-password");
-    if (!user) throw Error("No user");
+    if (!user) throw Error("No user exists");
 
     if (user.followedTopics.includes(req.params.topic)) {
       user.followedTopics = user.followedTopics.filter(
@@ -357,9 +356,7 @@ router.post("/t/:topic/followtopic", auth, async (req, res) => {
       });
     }
   } catch (err) {
-    res
-      .status(400)
-      .json({ status: { text: "Could not follow topic", severity: "error" } });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
@@ -370,10 +367,10 @@ router.post("/t/:topic/followtopic", auth, async (req, res) => {
 router.get("/t", async (req, res) => {
   try {
     const topics = await Topic.find();
-    if (!topics) throw Error("No topics");
+    if (!topics) throw Error("No topics exist");
     res.json({ topics });
   } catch (err) {
-    res.json({ status: "Could not get topics" });
+    res.json({ status: err.message });
   }
 });
 

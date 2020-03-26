@@ -43,12 +43,7 @@ router.post("/register", async (req, res) => {
     const savedUser = await newUser.save();
     if (!savedUser) throw Error("Error with saving user");
 
-    const token = await jwt.sign({ id: savedUser.id }, keys.jwtSecret, {
-      expiresIn: 3600
-    });
     res.status(200).json({
-      token,
-      user: savedUser,
       status: {
         text: "Successfully registered, you can now login!",
         severity: "success"
@@ -85,9 +80,13 @@ router.post("/login", async (req, res) => {
         .status(400)
         .json({ status: { text: "Invalid credentials", severity: "error" } });
 
-    const token = await jwt.sign({ id: user.id }, keys.jwtSecret, {
-      expiresIn: 3600
-    });
+    const token = await jwt.sign(
+      { id: user.id, username: user.username },
+      keys.jwtSecret,
+      {
+        expiresIn: 3600
+      }
+    );
 
     res.status(200).json({
       token,

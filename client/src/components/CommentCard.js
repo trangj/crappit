@@ -1,27 +1,27 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import CommentItem from "./CommentItem";
-import {
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button
-} from "@material-ui/core";
+import { Card, CardContent, Typography, Button } from "@material-ui/core";
+import * as yup from "yup";
+import TextFieldForm from "./Forms/TextFieldForm";
+import { Formik, Form, Field } from "formik";
 import { GlobalContext } from "../context/GlobalState";
+
+const schema = yup.object({
+  content: yup.string().required()
+});
 
 const CommentCard = ({ post }) => {
   const { comments } = post;
-  const [content, setContent] = useState("");
   const { user, addComment } = useContext(GlobalContext);
 
-  const handleSubmit = () => {
-    if (!content) return;
+  const handleSubmit = (values, { resetForm }) => {
+    const { content } = values;
     const newComment = {
       content,
       author: user.username
     };
-    setContent("");
     addComment(post.topic, post._id, newComment);
+    resetForm("");
   };
 
   return (
@@ -31,23 +31,25 @@ const CommentCard = ({ post }) => {
           Comments
         </Typography>
         {user && (
-          <>
-            <TextField
-              title="Comment"
-              placeholder="Make a comment..."
-              multiline
-              rows="4"
-              fullWidth
-              value={content}
-              onChange={e => setContent(e.target.value)}
-            />
-            <Button
-              onClick={handleSubmit}
-              style={{ display: "flex", marginLeft: "auto" }}
-            >
-              Post
-            </Button>
-          </>
+          <Formik
+            initialValues={{ content: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={schema}
+          >
+            {() => (
+              <Form>
+                <Field
+                  label="Content"
+                  name="content"
+                  multiline
+                  component={TextFieldForm}
+                />
+                <Button type="submit" style={{ float: "right" }}>
+                  Post
+                </Button>
+              </Form>
+            )}
+          </Formik>
         )}
         {comments &&
           comments.map(comment => (

@@ -11,6 +11,7 @@ const Post = ({ match }) => {
   useEffect(() => {
     fetchPost(match.params.topic, match.params.id);
     setLoading(false);
+    // eslint-disable-next-line
   }, [match.params.topic, match.params.id]);
 
   return loading || componentLoading ? (

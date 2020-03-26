@@ -1,21 +1,20 @@
 import React, { useContext, useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField
-} from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import * as yup from "yup";
+import TextFieldForm from "./Forms/TextFieldForm";
+import { Formik, Form, Field } from "formik";
 import { GlobalContext } from "../context/GlobalState";
+
+const schema = yup.object({
+  content: yup.string().required()
+});
 
 const UpdateComment = ({ comment }) => {
   const [open, setOpen] = useState(false);
-  const [content, setContent] = useState(comment.content);
   const { updateComment, post } = useContext(GlobalContext);
 
-  const handleSubmit = () => {
-    if (!content) return;
+  const handleSubmit = values => {
+    const { content } = values;
     const newComment = {
       content
     };
@@ -31,23 +30,26 @@ const UpdateComment = ({ comment }) => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle id="form-dialog-title">Edit</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="standard-basic"
-              value={content}
-              multiline
-              onChange={e => setContent(e.target.value)}
-              fullWidth
-              label="Content"
-              rows="4"
-            />
-          </form>
+          <Formik
+            initialValues={{ content: comment.content }}
+            onSubmit={handleSubmit}
+            validationSchema={schema}
+          >
+            {() => (
+              <Form>
+                <Field
+                  label="Content"
+                  name="content"
+                  multiline
+                  component={TextFieldForm}
+                />
+                <Button type="submit" style={{ float: "right" }}>
+                  Post
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Edit
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

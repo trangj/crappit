@@ -1,26 +1,27 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField
-} from "@material-ui/core";
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import * as yup from "yup";
+import TextFieldForm from "../Forms/TextFieldForm";
+import { Formik, Form, Field } from "formik";
+
+const schema = yup.object({
+  email: yup
+    .string()
+    .email()
+    .required(),
+  password: yup.string().required()
+});
 
 const Login = ({ loginUser }) => {
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleSubmit = e => {
+  const handleSubmit = values => {
+    const { email, password } = values;
     const user = {
       email,
       password
     };
     loginUser(user);
-    setEmail("");
-    setPassword("");
     setOpen(false);
   };
 
@@ -32,29 +33,27 @@ const Login = ({ loginUser }) => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle id="title">Login</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              fullWidth
-              label="Email"
-            />
-            <TextField
-              id="password"
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              fullWidth
-              label="Password"
-            />
-          </form>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={schema}
+          >
+            {() => (
+              <Form>
+                <Field label="Email" name="email" component={TextFieldForm} />
+                <Field
+                  label="Password"
+                  name="password"
+                  type="password"
+                  component={TextFieldForm}
+                />
+                <Button type="submit" style={{ float: "right" }}>
+                  Post
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Login
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

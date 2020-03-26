@@ -30,6 +30,7 @@ const NavigationBar = () => {
     if (localStorage.token) {
       fetchUser();
     }
+    // eslint-disable-next-line
   }, []);
 
   return (

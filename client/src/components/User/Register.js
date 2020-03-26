@@ -7,15 +7,28 @@ import {
   DialogTitle,
   TextField
 } from "@material-ui/core";
+import * as yup from "yup";
+import TextFieldForm from "../Forms/TextFieldForm";
+import { Formik, Form, Field } from "formik";
+
+const schema = yup.object({
+  username: yup.string().required(),
+  email: yup
+    .string()
+    .email()
+    .required(),
+  password: yup.string().required(),
+  password2: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required()
+});
 
 const Register = ({ registerUser }) => {
   const [open, setOpen] = useState(false);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
 
-  const handleSubmit = e => {
+  const handleSubmit = values => {
+    const { username, email, password, password2 } = values;
     const user = {
       username,
       email,
@@ -23,10 +36,6 @@ const Register = ({ registerUser }) => {
       password2
     };
     registerUser(user);
-    setUsername("");
-    setEmail("");
-    setPassword("");
-    setPassword2("");
     setOpen(false);
   };
 
@@ -38,44 +47,43 @@ const Register = ({ registerUser }) => {
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle id="form-dialog-title">Register</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="username"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-              fullWidth
-              label="Username"
-            />
-            <TextField
-              id="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              fullWidth
-              label="Email"
-            />
-            <TextField
-              id="password"
-              value={password}
-              type="password"
-              onChange={e => setPassword(e.target.value)}
-              fullWidth
-              label="Password"
-            />
-            <TextField
-              id="password2"
-              value={password2}
-              type="password"
-              onChange={e => setPassword2(e.target.value)}
-              fullWidth
-              label="Retype Password"
-            />
-          </form>
+          <Formik
+            initialValues={{
+              username: "",
+              email: "",
+              password: "",
+              password2: ""
+            }}
+            onSubmit={handleSubmit}
+            validationSchema={schema}
+          >
+            {() => (
+              <Form>
+                <Field
+                  label="Username"
+                  name="username"
+                  component={TextFieldForm}
+                />
+                <Field label="Email" name="email" component={TextFieldForm} />
+                <Field
+                  label="Password"
+                  name="password"
+                  type="password"
+                  component={TextFieldForm}
+                />
+                <Field
+                  label="Confirm Password"
+                  name="password2"
+                  type="password"
+                  component={TextFieldForm}
+                />
+                <Button type="submit" style={{ float: "right" }}>
+                  Post
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Register
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

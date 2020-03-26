@@ -1,36 +1,38 @@
 import React, { useState, useContext } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField
-} from "@material-ui/core";
+import { Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import { Formik, Form, Field } from "formik";
+import * as yup from "yup";
+import TextFieldForm from "./Forms/TextFieldForm";
+import FileFieldForm from "./Forms/FileFieldForm";
 import { GlobalContext } from "../context/GlobalState";
+
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+const FILE_SIZE = 160 * 1024;
+const schema = yup.object({
+  title: yup.string().required(),
+  description: yup.string().required(),
+  file: yup
+    .mixed()
+    .test("fileSize", "File Size is too large", value =>
+      value === undefined ? true : value.size <= FILE_SIZE
+    )
+    .test("fileType", "Unsupported File Format", value =>
+      value === undefined ? true : SUPPORTED_FORMATS.includes(value.type)
+    )
+});
 
 const AddTopic = () => {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [file, setFile] = useState("");
-
   const { addTopic, user } = useContext(GlobalContext);
 
-  const handleSubmit = () => {
-    if (!title || !description) return;
+  const handleSubmit = values => {
+    const { title, description, file } = values;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("file", file);
     addTopic(formData);
-    setTitle("");
-    setDescription("");
     setOpen(false);
-  };
-
-  const changeUpload = e => {
-    setFile(e.target.files[0]);
   };
 
   return user ? (
@@ -39,41 +41,35 @@ const AddTopic = () => {
         Create Topic
       </div>
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle id="form-dialog-title">Add a post!</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add a topic!</DialogTitle>
         <DialogContent>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              id="standard-basic"
-              value={title}
-              onChange={e => setTitle(e.target.value)}
-              fullWidth
-              label="Title"
-            />
-            <TextField
-              id="standard-basic"
-              value={description}
-              multiline
-              onChange={e => setDescription(e.target.value)}
-              fullWidth
-              label="Description"
-              rows="4"
-            />
-            <Button component="label">
-              Upload File
-              <input
-                type="file"
-                style={{ display: "none" }}
-                onChange={changeUpload}
-              />
-            </Button>
-            {file.name}
-          </form>
+          <Formik
+            initialValues={{ title: "", description: "", file: "" }}
+            onSubmit={handleSubmit}
+            validationSchema={schema}
+          >
+            {({ setFieldValue }) => (
+              <Form>
+                <Field label="Title" name="title" component={TextFieldForm} />
+                <Field
+                  label="Description"
+                  name="description"
+                  multiline
+                  component={TextFieldForm}
+                />
+                <Field
+                  label="File"
+                  name="file"
+                  component={FileFieldForm}
+                  setFieldValue={setFieldValue}
+                />
+                <Button type="submit" style={{ float: "right" }}>
+                  Post
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
-            Create Topic
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   ) : null;

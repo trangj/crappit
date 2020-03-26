@@ -55,6 +55,7 @@ const PostItem = ({ post, deletePost, updatePost, user }) => {
       <Collapse in={open}>
         <div id={post._id} style={{ margin: "0rem 1rem 1rem 1rem" }}>
           <img
+            alt={post.imageName}
             src={post.imageURL}
             style={{
               display: "block",

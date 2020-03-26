@@ -18,6 +18,7 @@ const Topic = ({ match }) => {
   useEffect(() => {
     fetchTopic(match.params.topic);
     setLoading(false);
+    // eslint-disable-next-line
   }, [match.params.topic]);
 
   return loading || componentLoading ? (

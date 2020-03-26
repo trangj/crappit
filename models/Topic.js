@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const topicSchema = new Schema({
-  title: String,
-  description: String,
+  title: { type: String, required: true },
+  description: { type: String, required: true },
   imageURL: String,
   imageName: String,
   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],

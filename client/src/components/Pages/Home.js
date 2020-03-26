@@ -18,6 +18,7 @@ const Home = () => {
   useEffect(() => {
     fetchPosts();
     setLoading(false);
+    // eslint-disable-next-line
   }, []);
 
   return loading || componentLoading ? (

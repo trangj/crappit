@@ -11,6 +11,7 @@ const AllTopics = () => {
   useEffect(() => {
     fetchTopics();
     setLoading(false);
+    // eslint-disable-next-line
   }, []);
 
   return loading || componentLoading ? (
