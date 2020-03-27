@@ -11,14 +11,14 @@ const schema = yup.object({
 
 const UpdateComment = ({ comment }) => {
   const [open, setOpen] = useState(false);
-  const { updateComment, post } = useContext(GlobalContext);
+  const { updateComment } = useContext(GlobalContext);
 
   const handleSubmit = values => {
     const { content } = values;
     const newComment = {
       content
     };
-    updateComment(post.topic, post._id, comment._id, newComment);
+    updateComment(comment.topic, comment.post, comment._id, newComment);
     setOpen(false);
   };
 

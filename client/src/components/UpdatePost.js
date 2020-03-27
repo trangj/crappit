@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
+import { GlobalContext } from "../context/GlobalState";
 
 const schema = yup.object({
   title: yup.string().required(),
   content: yup.string().required()
 });
 
-const UpdatePost = ({ updatePost, post }) => {
+const UpdatePost = ({ post }) => {
+  const { updatePost } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = values => {

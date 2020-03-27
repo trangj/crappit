@@ -22,9 +22,7 @@ import { GlobalContext } from "../context/GlobalState";
 
 const NavigationBar = () => {
   const [drawer, setDrawer] = useState(false);
-  const { fetchUser, loginUser, registerUser, logoutUser, user } = useContext(
-    GlobalContext
-  );
+  const { fetchUser, logoutUser, user } = useContext(GlobalContext);
 
   useEffect(() => {
     if (localStorage.token) {
@@ -50,8 +48,8 @@ const NavigationBar = () => {
           </Typography>
           {user === undefined ? (
             <>
-              <Login loginUser={loginUser} />
-              <Register registerUser={registerUser} />
+              <Login />
+              <Register />
             </>
           ) : (
             <Button onClick={() => logoutUser()} color="inherit">

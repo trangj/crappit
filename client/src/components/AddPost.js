@@ -31,7 +31,6 @@ const AddPost = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("title", title);
-    formData.append("author", user.username);
     formData.append("content", content);
     addPost(topic.title, formData);
     setOpen(false);

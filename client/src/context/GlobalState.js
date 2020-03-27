@@ -290,6 +290,7 @@ export const GlobalProvider = ({ children }) => {
         }
       );
       const data = await res.json();
+      console.log(data);
       dispatch({
         type: "UPDATE_POST",
         payload: data

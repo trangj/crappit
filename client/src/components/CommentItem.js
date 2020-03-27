@@ -1,16 +1,13 @@
 import React, { useContext } from "react";
-import { ListItem, ListItemText, Button } from "@material-ui/core";
+import { ListItem, ListItemText } from "@material-ui/core";
+import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import CommentVoting from "./CommentVoting";
 import moment from "moment";
 import { GlobalContext } from "../context/GlobalState";
 
 const CommentItem = ({ comment }) => {
-  const { deleteComment, post, user } = useContext(GlobalContext);
-
-  const handleDelete = () => {
-    deleteComment(post.topic, post._id, comment._id);
-  };
+  const { user } = useContext(GlobalContext);
 
   return (
     <ListItem>
@@ -21,9 +18,9 @@ const CommentItem = ({ comment }) => {
           comment.date
         ).fromNow()}`}
       />
-      {user !== undefined && user.username === comment.author ? (
+      {user !== undefined && user._id === comment.authorId ? (
         <>
-          <Button onClick={handleDelete}>Delete</Button>
+          <DeleteComment comment={comment} />
           <UpdateComment comment={comment} />
         </>
       ) : null}

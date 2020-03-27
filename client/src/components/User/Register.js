@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField
-} from "@material-ui/core";
+import React, { useState, useContext } from "react";
+import { Button, Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
+import { GlobalContext } from "../../context/GlobalState";
 
 const schema = yup.object({
   username: yup.string().required(),
@@ -24,7 +18,8 @@ const schema = yup.object({
     .required()
 });
 
-const Register = ({ registerUser }) => {
+const Register = () => {
+  const { registerUser } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
 
   const handleSubmit = values => {

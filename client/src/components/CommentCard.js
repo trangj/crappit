@@ -10,15 +10,14 @@ const schema = yup.object({
   content: yup.string().required()
 });
 
-const CommentCard = ({ post }) => {
+const CommentCard = () => {
+  const { user, post, addComment } = useContext(GlobalContext);
   const { comments } = post;
-  const { user, addComment } = useContext(GlobalContext);
 
   const handleSubmit = (values, { resetForm }) => {
     const { content } = values;
     const newComment = {
-      content,
-      author: user.username
+      content
     };
     addComment(post.topic, post._id, newComment);
     resetForm("");

@@ -87,7 +87,6 @@ router.delete("/t/:topic/p/:id", auth, async (req, res) => {
       { $pull: { posts: req.params.id } }
     );
     res.status(200).json({
-      id: req.params.id,
       status: { text: "Post successfully deleted", severity: "success" }
     });
   } catch (err) {
@@ -107,7 +106,7 @@ router.put("/t/:topic/p/:id", auth, async (req, res) => {
       { _id: req.params.id, authorId: req.user.id },
       { $set: { content: req.body.content, title: req.body.title } },
       { useFindAndModify: false, new: true }
-    );
+    ).populate("comments");
     if (!post)
       throw Error("Post does not exist or you are not the author of the post");
     res.status(200).json({
@@ -244,11 +243,14 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
 
 router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
-    const query = await Comment.deleteOne({ _id: req.params.commentid });
+    const query = await Comment.deleteOne({
+      _id: req.params.commentid,
+      authorId: req.user.id
+    });
     if (!query.deletedCount)
       throw Error("Comment does not exist or you are not the author");
     await Post.updateOne(
-      { _id: req.params.id },
+      { _id: req.params.id, authorId: req.user.id },
       { $pull: { comments: req.params.commentid } },
       { useFindAndModify: true }
     );
@@ -269,6 +271,7 @@ router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 
 router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
+    if (!req.body.content) throw Error("Missing required fields");
     const comment = await Comment.findOneAndUpdate(
       { _id: req.params.commentid, authorId: req.user.id },
       { $set: { content: req.body.content } },

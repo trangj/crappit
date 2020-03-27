@@ -6,7 +6,7 @@ import { GlobalContext } from "../../context/GlobalState";
 
 const Post = ({ match }) => {
   const [componentLoading, setLoading] = useState(true);
-  const { fetchPost, post, loading } = useContext(GlobalContext);
+  const { fetchPost, loading } = useContext(GlobalContext);
 
   useEffect(() => {
     fetchPost(match.params.topic, match.params.id);
@@ -18,8 +18,8 @@ const Post = ({ match }) => {
     <SkeletonCard />
   ) : (
     <>
-      <PostCard post={post} />
-      <CommentCard post={post} />
+      <PostCard />
+      <CommentCard />
     </>
   );
 };

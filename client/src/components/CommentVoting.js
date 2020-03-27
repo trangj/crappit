@@ -3,14 +3,14 @@ import { Button, ButtonGroup, Icon } from "@material-ui/core";
 import { GlobalContext } from "../context/GlobalState";
 
 const CommentVoting = ({ comment }) => {
-  const { topic, user, changeCommentVote } = useContext(GlobalContext);
+  const { user, changeCommentVote } = useContext(GlobalContext);
 
   const handleUpvote = () => {
-    changeCommentVote(topic.title, comment.post, comment._id, "like");
+    changeCommentVote(comment.topic, comment.post, comment._id, "like");
   };
 
   const handleDownvote = () => {
-    changeCommentVote(topic.title, comment.post, comment._id, "dislike");
+    changeCommentVote(comment.topic, comment.post, comment._id, "dislike");
   };
 
   return user ? (

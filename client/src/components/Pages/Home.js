@@ -5,14 +5,7 @@ import PostItem from "../PostItem";
 import SkeletonList from "../SkeletonList";
 
 const Home = () => {
-  const {
-    posts,
-    fetchPosts,
-    deletePost,
-    updatePost,
-    user,
-    loading
-  } = useContext(GlobalContext);
+  const { posts, fetchPosts, loading } = useContext(GlobalContext);
   const [componentLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,13 +20,7 @@ const Home = () => {
     <>
       <List>
         {posts.map(post => (
-          <PostItem
-            post={post}
-            key={post._id}
-            deletePost={deletePost}
-            updatePost={updatePost}
-            user={user}
-          />
+          <PostItem post={post} key={post._id} />
         ))}
       </List>
     </>

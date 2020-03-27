@@ -74,7 +74,7 @@ export default (state, action) => {
     case "DELETE_POST":
       return {
         ...state,
-        posts: state.posts.filter(post => post._id !== action.payload.id),
+        post: {},
         status: action.payload.status
       };
     case "DELETE_COMMENT":
@@ -91,13 +91,7 @@ export default (state, action) => {
     case "UPDATE_POST":
       return {
         ...state,
-        posts: state.posts.map(post => {
-          if (action.payload.post._id === post._id) {
-            post.title = action.payload.post.title;
-            post.content = action.payload.post.content;
-          }
-          return post;
-        }),
+        post: action.payload.post,
         status: action.payload.status
       };
     case "UPDATE_COMMENT":
