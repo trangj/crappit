@@ -36,16 +36,38 @@ export const GlobalProvider = ({ children }) => {
   async function fetchTopic(topic) {
     try {
       dispatch({ type: "SET_LOADING" });
-      const res = await fetch(`http://localhost:5000/api/index/t/${topic}`);
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}?skip=0`
+      );
       const data = await res.json();
+      if (!data.topic) throw Error("No topic exists");
       dispatch({
         type: "GET_TOPIC",
         payload: data
       });
     } catch (err) {
       dispatch({
-        type: "POST_ERR",
-        payload: err.data
+        type: "POST_ERROR",
+        payload: { text: err.message, severity: "error" }
+      });
+    }
+  }
+
+  async function moreTopic(topic, length) {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}?skip=${length}`
+      );
+      const data = await res.json();
+      if (!data.topic) throw Error("No topic exists");
+      dispatch({
+        type: "MORE_TOPIC",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "POST_ERROR",
+        payload: { text: err.message, severity: "error" }
       });
     }
   }
@@ -53,10 +75,26 @@ export const GlobalProvider = ({ children }) => {
   async function fetchPosts() {
     try {
       dispatch({ type: "SET_LOADING" });
-      const res = await fetch("http://localhost:5000/api/index");
+      const res = await fetch(`http://localhost:5000/api/index?skip=0`);
       const data = await res.json();
       dispatch({
         type: "GET_POSTS",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "POST_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
+  async function morePosts(length) {
+    try {
+      const res = await fetch(`http://localhost:5000/api/index?skip=${length}`);
+      const data = await res.json();
+      dispatch({
+        type: "MORE_POSTS",
         payload: data
       });
     } catch (err) {
@@ -74,6 +112,7 @@ export const GlobalProvider = ({ children }) => {
         `http://localhost:5000/api/index/t/${topic}/p/${id}`
       );
       const data = await res.json();
+      if (!data.post) throw Error("No post exists");
       dispatch({
         type: "GET_POST",
         payload: data
@@ -81,7 +120,7 @@ export const GlobalProvider = ({ children }) => {
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: err.data
+        payload: { text: err.message, severity: "error" }
       });
     }
   }
@@ -421,7 +460,9 @@ export const GlobalProvider = ({ children }) => {
         registerUser,
         fetchTopics,
         fetchTopic,
+        moreTopic,
         fetchPosts,
+        morePosts,
         fetchPost,
         addPost,
         addComment,

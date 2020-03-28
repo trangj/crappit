@@ -15,7 +15,9 @@ const Topic = require("../models/Topic");
 
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find()
+      .skip(parseInt(req.query.skip))
+      .limit(9);
     if (!posts) throw Error("Could not fetch posts");
     res.status(200).json(posts);
   } catch (err) {
@@ -322,11 +324,13 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
 
 router.get("/t/:topic", async (req, res) => {
   try {
-    const topic = await Topic.findOne({ title: req.params.topic }).populate({
-      path: "posts"
-    });
+    const topic = await Topic.findOne({ title: req.params.topic });
     if (!topic) throw Error("Topic does not exist");
-    res.status(200).json({ topic });
+    const posts = await Post.find({ topic: req.params.topic })
+      .skip(parseInt(req.query.skip))
+      .limit(9);
+    if (!posts) throw Error("No posts found");
+    res.status(200).json({ topic, posts });
   } catch (err) {
     res.status(400).json({ status: { text: err.message, severity: "error" } });
   }

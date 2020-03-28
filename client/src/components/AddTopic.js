@@ -1,5 +1,14 @@
 import React, { useState, useContext } from "react";
-import { Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Icon
+} from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
@@ -37,9 +46,12 @@ const AddTopic = () => {
 
   return user ? (
     <>
-      <div className="mt-4" onClick={() => setOpen(true)} style={{ flex: 1 }}>
-        Create Topic
-      </div>
+      <ListItem button onClick={() => setOpen(true)}>
+        <ListItemIcon>
+          <Icon>add</Icon>
+        </ListItemIcon>
+        <ListItemText>Add Topic</ListItemText>
+      </ListItem>
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle id="form-dialog-title">Add a topic!</DialogTitle>
         <DialogContent>

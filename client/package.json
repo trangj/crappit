@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.5",
     "@material-ui/lab": "^4.0.0-alpha.45",
+    "@material-ui/styles": "^4.9.6",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
@@ -12,6 +13,7 @@
     "moment": "^2.24.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-infinite-scroll-component": "^5.0.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "yup": "^0.28.3"

@@ -17,7 +17,7 @@ const AllTopics = () => {
   return loading || componentLoading ? (
     <SkeletonList />
   ) : (
-    <List>
+    <>
       {topics.map(topic => (
         <Card style={{ marginBottom: "1rem" }}>
           <ListItem button component={Link} to={`/t/${topic.title}`}>
@@ -28,7 +28,7 @@ const AllTopics = () => {
           </ListItem>
         </Card>
       ))}
-    </List>
+    </>
   );
 };
 

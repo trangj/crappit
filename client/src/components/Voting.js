@@ -22,7 +22,7 @@ const Voting = ({ post }) => {
     >
       {post.likes.includes(user._id) ? (
         <Button disabled>
-          <Icon>keyboard_arrow_up</Icon>
+          <Icon color="primary">keyboard_arrow_up</Icon>
         </Button>
       ) : (
         <Button onClick={handleUpvote}>
@@ -32,7 +32,7 @@ const Voting = ({ post }) => {
       <Button disabled>{post.likes.length - post.dislikes.length}</Button>
       {post.dislikes.includes(user._id) ? (
         <Button disabled>
-          <Icon>keyboard_arrow_down</Icon>
+          <Icon color="secondary">keyboard_arrow_down</Icon>
         </Button>
       ) : (
         <Button onClick={handleDownvote}>

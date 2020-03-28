@@ -1,12 +1,14 @@
 import React, { useEffect, useContext, useState } from "react";
 import { GlobalContext } from "../../context/GlobalState";
-import { List } from "@material-ui/core";
 import PostItem from "../PostItem";
 import SkeletonList from "../SkeletonList";
+import InfiniteScroll from "react-infinite-scroll-component";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Home = () => {
-  const { posts, fetchPosts, loading } = useContext(GlobalContext);
+  const { posts, fetchPosts, morePosts, loading } = useContext(GlobalContext);
   const [componentLoading, setLoading] = useState(true);
+  const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -18,11 +20,29 @@ const Home = () => {
     <SkeletonList />
   ) : (
     <>
-      <List>
+      <InfiniteScroll
+        dataLength={posts.length}
+        next={() => {
+          setFetching(true);
+          morePosts(posts.length);
+          setFetching(false);
+        }}
+        hasMore={true}
+      >
         {posts.map(post => (
           <PostItem post={post} key={post._id} />
         ))}
-      </List>
+      </InfiniteScroll>
+      {fetching && (
+        <CircularProgress
+          style={{
+            display: "block",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginBottom: "1rem"
+          }}
+        />
+      )}
     </>
   );
 };

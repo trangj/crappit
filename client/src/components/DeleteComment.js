@@ -20,11 +20,11 @@ const DeleteComment = ({ comment }) => {
               deleteComment(comment.topic, comment.post, comment._id);
               setOpen(false);
             }}
-            color="secondary"
+            color="primary"
           >
             Yes, I regret posting it!
           </Button>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button onClick={() => setOpen(false)} color="secondary">
             No, I like my comment!
           </Button>
         </DialogContent>

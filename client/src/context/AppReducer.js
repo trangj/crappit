@@ -9,22 +9,25 @@ export default (state, action) => {
     case "GET_TOPIC":
       return {
         ...state,
-        posts: action.payload.topic.posts,
-        topic: {
-          _id: action.payload.topic._id,
-          title: action.payload.topic.title,
-          description: action.payload.topic.description,
-          imageURL: action.payload.topic.imageURL,
-          imageName: action.payload.topic.imageName,
-          date: action.payload.topic.date
-        },
+        posts: action.payload.posts,
+        topic: action.payload.topic,
         loading: false
+      };
+    case "MORE_TOPIC":
+      return {
+        ...state,
+        posts: [...state.posts, ...action.payload.posts]
       };
     case "GET_POSTS":
       return {
         ...state,
         posts: action.payload,
         loading: false
+      };
+    case "MORE_POSTS":
+      return {
+        ...state,
+        posts: [...state.posts, ...action.payload]
       };
     case "GET_POST":
       return {
@@ -55,6 +58,11 @@ export default (state, action) => {
         ...state,
         user: action.payload.user,
         status: action.payload.status
+      };
+    case "ADD_TOPIC":
+      return {
+        ...state,
+        topics: [...state.topics, action.payload.topic]
       };
     case "ADD_POST":
       return {

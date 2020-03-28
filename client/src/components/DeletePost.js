@@ -25,11 +25,11 @@ const DeletePost = ({ post }) => {
               deletePost(post.topic, post._id);
               setRedirect(true);
             }}
-            color="secondary"
+            color="primary"
           >
             Yes, I regret posting it!
           </Button>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button onClick={() => setOpen(false)} color="secondary">
             No, I like my post!
           </Button>
         </DialogContent>

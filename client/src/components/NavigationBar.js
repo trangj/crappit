@@ -33,7 +33,7 @@ const NavigationBar = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" color="inherit">
         <Toolbar>
           <IconButton
             edge="start"
@@ -86,14 +86,7 @@ const NavigationBar = () => {
             <ListItem>Sign up to follow topics!</ListItem>
           ) : (
             <>
-              <ListItem button>
-                <ListItemIcon>
-                  <Icon>add</Icon>
-                </ListItemIcon>
-                <ListItemText>
-                  <AddTopic />
-                </ListItemText>
-              </ListItem>
+              <AddTopic />
               <Divider />
               {user.followedTopics.map(topic => (
                 <ListItem
