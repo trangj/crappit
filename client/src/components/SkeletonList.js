@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Card, CardContent } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 const SkeletonList = () => {

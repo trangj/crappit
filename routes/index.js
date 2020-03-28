@@ -11,7 +11,7 @@ const Topic = require("../models/Topic");
 
 // @route   GET /api/index
 // @desc    Get all posts
-// @acess   Public
+// @access   Public
 
 router.get("/", async (req, res) => {
   try {
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 
 // @route   GET /api/index/t/:topic/p/:id
 // @desc    Get a post
-// @acess   Public
+// @access   Public
 
 router.get("/t/:topic/p/:id", async (req, res) => {
   try {
@@ -43,7 +43,7 @@ router.get("/t/:topic/p/:id", async (req, res) => {
 
 // @route   POST /api/index/t/:topic/p
 // @desc    Create post
-// @acess   Private
+// @access   Private
 
 router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
   const newPost = new Post({
@@ -73,7 +73,7 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
 
 // @route   DELETE /api/index/t/:topic/p/:id
 // @desc    Delete a post
-// @acess   Private
+// @access   Private
 
 router.delete("/t/:topic/p/:id", auth, async (req, res) => {
   try {
@@ -98,7 +98,7 @@ router.delete("/t/:topic/p/:id", auth, async (req, res) => {
 
 // @route   PUT /api/index/t/:topic/p/:id
 // @desc    Update a post
-// @acess   Private
+// @access   Private
 
 router.put("/t/:topic/p/:id", auth, async (req, res) => {
   try {
@@ -122,7 +122,7 @@ router.put("/t/:topic/p/:id", auth, async (req, res) => {
 
 // @route   PUT /api/index/t/:topic/p/:id/changevote
 // @desc    Change vote on post
-// @acess   Private
+// @access   Private
 
 router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
   try {
@@ -165,7 +165,7 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
 
 // @route   PUT /api/index/t/:topic/p/:id/c/:commentid/changevote
 // @desc    Change vote on comment
-// @acess   Private
+// @access   Private
 
 router.put(
   "/t/:topic/p/:id/c/:commentid/changevote",
@@ -212,7 +212,7 @@ router.put(
 
 // @route   POST /api/index/t/:topic/p/:id
 // @desc    Create a comment
-// @acess   Private
+// @access   Private
 
 router.post("/t/:topic/p/:id", auth, async (req, res) => {
   const newComment = new Comment({
@@ -241,7 +241,7 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
 
 // @route   GET /api/index/t/:topic/p/:id/c/:commentid
 // @desc    Delete a comment
-// @acess   Private
+// @access   Private
 
 router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
@@ -269,7 +269,7 @@ router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 
 // @route   PUT /api/index/t/:topic/p/:id/c/:commentid
 // @desc    Update a comment
-// @acess   Private
+// @access   Private
 
 router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
@@ -293,7 +293,7 @@ router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 
 // @route   POST /api/index/t
 // @desc    Create a topic
-// @acess   Private
+// @access   Private
 
 router.post("/t", auth, upload.single("file"), async (req, res) => {
   const newTopic = new Topic({
@@ -320,7 +320,7 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
 
 // @route   GET /api/index/t/:topic
 // @desc    Get a topic
-// @acess   Public
+// @access   Public
 
 router.get("/t/:topic", async (req, res) => {
   try {
@@ -338,7 +338,7 @@ router.get("/t/:topic", async (req, res) => {
 
 // @route   POST /api/index/t/:topic/followtopic
 // @desc    Follow a topic
-// @acess   Private
+// @access   Private
 
 router.post("/t/:topic/followtopic", auth, async (req, res) => {
   try {
@@ -369,13 +369,33 @@ router.post("/t/:topic/followtopic", auth, async (req, res) => {
 
 // @route   GET /api/index/t
 // @desc    Get all topics
-// @acess   Public
+// @access   Public
 
 router.get("/t", async (req, res) => {
   try {
     const topics = await Topic.find();
-    if (!topics) throw Error("No topics exist");
-    res.json({ topics });
+    if (!topics) throw Error("Could not get topics");
+    res.status(200).json({ topics });
+  } catch (err) {
+    res.status(400).json({ status: { text: err.message }, severity: "error" });
+  }
+});
+
+// @route   GET /api/index/search
+// @desc    Search for a topic or post
+// @access  Public
+
+router.get("/search", async (req, res) => {
+  try {
+    const topics = await Topic.find(
+      { title: { $regex: req.query.value, $options: "i" } },
+      "title"
+    );
+    const posts = await Post.find(
+      { title: { $regex: req.query.value, $options: "i" } },
+      "title topic author date"
+    );
+    res.json([...topics, ...posts]);
   } catch (err) {
     res.json({ status: err.message });
   }

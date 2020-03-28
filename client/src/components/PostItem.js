@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-  Icon,
-  Card,
-  Divider
-} from "@material-ui/core";
+import { ListItem, ListItemText, Icon, Card, Divider } from "@material-ui/core";
 import Voting from "./Voting";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -31,15 +23,6 @@ const PostItem = ({ post }) => {
             </>
           }
         />
-        {/* <ListItemSecondaryAction>
-          <IconButton
-            onClick={() => setOpen(!open)}
-            aria-controls={post._id}
-            aria-expanded={open}
-          >
-            {open ? <Icon>arrow_drop_up</Icon> : <Icon>arrow_drop_down</Icon>}
-          </IconButton>
-        </ListItemSecondaryAction> */}
       </ListItem>
       <div
         style={{ flex: 1, textAlign: "center" }}

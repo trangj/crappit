@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import SkeletonList from "../SkeletonList";
-import { List, ListItem, ListItemText, Card } from "@material-ui/core";
+import { ListItem, ListItemText, Card } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalState";
 

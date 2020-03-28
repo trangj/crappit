@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import Login from "../components/User/Login";
 import Register from "../components/User/Register";
 import AddTopic from "../components/AddTopic";
+import Search from "./Search";
 import {
   AppBar,
   Toolbar,
@@ -33,7 +34,7 @@ const NavigationBar = () => {
 
   return (
     <>
-      <AppBar position="static" color="inherit">
+      <AppBar position="sticky" color="inherit">
         <Toolbar>
           <IconButton
             edge="start"
@@ -43,9 +44,10 @@ const NavigationBar = () => {
           >
             <Icon>menu</Icon>
           </IconButton>
-          <Typography variant="h6" color="inherit" style={{ flex: 1 }}>
+          <Typography variant="h6" color="inherit">
             Crappit
           </Typography>
+          <Search />
           {user === undefined ? (
             <>
               <Login />
