@@ -115,6 +115,17 @@ export default (state, action) => {
         ...state,
         post: {
           ...state.post,
+          comments: state.post.comments.filter(
+            comment => comment._id !== action.payload.comment._id
+          )
+        },
+        status: action.payload.status
+      };
+    case "DELETE_REPLY":
+      return {
+        ...state,
+        post: {
+          ...state.post,
           comments: state.post.comments.map(comment => {
             const id = action.payload.comment.comment;
             function searchTree(comment, id) {
@@ -153,6 +164,37 @@ export default (state, action) => {
             if (action.payload.comment._id === comment._id) {
               comment.content = action.payload.comment.content;
             }
+            return comment;
+          })
+        },
+        status: action.payload.status
+      };
+    case "UPDATE_REPLY":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: state.post.comments.map(comment => {
+            const id = action.payload.comment.comment;
+            function searchTree(comment, id) {
+              if (comment._id === id) {
+                comment.comments = comment.comments.map(comment => {
+                  if (comment._id === action.payload.comment._id) {
+                    comment.content = action.payload.comment.content;
+                    return comment;
+                  }
+                });
+                return comment;
+              }
+              if (comment.comments.length === 0) return comment;
+
+              comment.comments = comment.comments.map(comment => {
+                comment = searchTree(comment, id);
+                return comment;
+              });
+              return comment;
+            }
+            comment = searchTree(comment, id);
             return comment;
           })
         },

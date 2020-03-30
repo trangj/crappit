@@ -328,7 +328,7 @@ export const GlobalProvider = ({ children }) => {
       );
       const data = await res.json();
       dispatch({
-        type: "DELETE_COMMENT",
+        type: data.comment.comment ? "DELETE_REPLY" : "DELETE_COMMENT",
         payload: data
       });
     } catch (err) {
@@ -384,7 +384,7 @@ export const GlobalProvider = ({ children }) => {
       );
       const data = await res.json();
       dispatch({
-        type: "UPDATE_COMMENT",
+        type: data.comment.comment ? "UPDATE_REPLY" : "UPDATE_COMMENT",
         payload: data
       });
     } catch (err) {
