@@ -266,10 +266,36 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function addReply(topic, id, commentid, newReply) {
+    try {
+      dispatch({ type: "CLEAR_STATUS" });
+      const res = await fetch(
+        `http://localhost:5000/api/index/t/${topic}/p/${id}/c/${commentid}/reply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.token
+          },
+          body: JSON.stringify(newReply)
+        }
+      );
+      const data = await res.json();
+      dispatch({
+        type: "ADD_REPLY",
+        payload: data
+      });
+    } catch (err) {
+      dispatch({
+        type: "COMMENT_ERROR",
+        payload: err.data
+      });
+    }
+  }
+
   async function deletePost(topic, id) {
     try {
       dispatch({ type: "CLEAR_STATUS" });
-
       const res = await fetch(
         `http://localhost:5000/api/index/t/${topic}/p/${id}`,
         {
@@ -466,6 +492,7 @@ export const GlobalProvider = ({ children }) => {
         fetchPost,
         addPost,
         addComment,
+        addReply,
         addTopic,
         updatePost,
         updateComment,

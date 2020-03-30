@@ -79,6 +79,31 @@ export default (state, action) => {
         },
         status: action.payload.status
       };
+    case "ADD_REPLY":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: state.post.comments.map(comment => {
+            const id = action.payload.reply.comment;
+            function searchTree(comment, id) {
+              if (comment._id === id) {
+                comment.comments.push(action.payload.reply);
+                return comment;
+              }
+              if (comment.comments.length === 0) return comment;
+
+              comment.comments = comment.comments.map(comment => {
+                comment = searchTree(comment, id);
+                return comment;
+              });
+              return comment;
+            }
+            comment = searchTree(comment, id);
+            return comment;
+          })
+        }
+      };
     case "DELETE_POST":
       return {
         ...state,
@@ -90,9 +115,26 @@ export default (state, action) => {
         ...state,
         post: {
           ...state.post,
-          comments: state.post.comments.filter(
-            comment => comment._id !== action.payload.id
-          )
+          comments: state.post.comments.map(comment => {
+            const id = action.payload.comment.comment;
+            function searchTree(comment, id) {
+              if (comment._id === id) {
+                comment.comments = comment.comments.filter(
+                  comment => comment._id !== action.payload.comment._id
+                );
+                return comment;
+              }
+              if (comment.comments.length === 0) return comment;
+
+              comment.comments = comment.comments.map(comment => {
+                comment = searchTree(comment, id);
+                return comment;
+              });
+              return comment;
+            }
+            comment = searchTree(comment, id);
+            return comment;
+          })
         },
         status: action.payload.status
       };

@@ -20,35 +20,30 @@ const Search = () => {
     value.length > 3 && fetchSearch();
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-  };
-
   return (
-    <form onSubmit={handleSubmit} style={{ flex: 1, margin: "0 2rem 0 2rem" }}>
-      <Autocomplete
-        options={options}
-        getOptionLabel={option => option.title}
-        onChange={(event, value) => setSearch(value)}
-        renderInput={params => (
-          <TextField
-            {...params}
-            onChange={e => handleChange(e.target.value)}
-            placeholder="Search..."
-          />
-        )}
-        renderOption={option =>
-          option.topic ? (
-            <Link to={`/t/${option.topic}/p/${option._id}`}>
-              {option.title} | Posted by {option.author} | t/{option.topic} |{" "}
-              {moment(option.date).fromNow()}
-            </Link>
-          ) : (
-            <Link to={`/t/${option.title}`}>t/{option.title}</Link>
-          )
-        }
-      />
-    </form>
+    <Autocomplete
+      style={{ flex: 1, margin: "0 2rem 0 2rem" }}
+      options={options}
+      getOptionLabel={option => option.title}
+      renderInput={params => (
+        <TextField
+          {...params}
+          value={search}
+          onChange={e => handleChange(e.target.value)}
+          placeholder="Search..."
+        />
+      )}
+      renderOption={option =>
+        option.topic ? (
+          <Link to={`/t/${option.topic}/p/${option._id}`} style={{ flex: 1 }}>
+            {option.title} | Posted by {option.author} | t/{option.topic} |{" "}
+            {moment(option.date).fromNow()}
+          </Link>
+        ) : (
+          <Link to={`/t/${option.title}`}>t/{option.title}</Link>
+        )
+      }
+    />
   );
 };
 

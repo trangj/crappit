@@ -7,43 +7,50 @@ const SkeletonList = () => {
     <>
       <Card style={{ marginBottom: "1rem" }}>
         <CardContent>
-          <Skeleton height={40} />
-          <Skeleton height={30} width={300} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
       <Card style={{ marginBottom: "1rem" }}>
         <CardContent>
-          <Skeleton height={40} />
-          <Skeleton height={30} width={300} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
       <Card style={{ marginBottom: "1rem" }}>
         <CardContent>
-          <Skeleton height={40} />
-          <Skeleton height={30} width={300} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
       <Card style={{ marginBottom: "1rem" }}>
         <CardContent>
-          <Skeleton height={40} />
-          <Skeleton height={30} width={300} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
       <Card style={{ marginBottom: "1rem", opacity: "75%" }}>
         <CardContent>
-          <Skeleton height={40} />
-          <Skeleton height={30} width={300} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
       <Card style={{ marginBottom: "1rem", opacity: "50%" }}>
         <CardContent>
-          <Skeleton height={40} />
-          <Skeleton height={30} width={300} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
       <Card style={{ marginBottom: "1rem", opacity: "25%" }}>
         <CardContent>
-          <Skeleton height={20} />
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
+        </CardContent>
+      </Card>
+      <Card style={{ marginBottom: "1rem", opacity: "25%" }}>
+        <CardContent>
+          <Skeleton height={25} />
+          <Skeleton height={20} width={300} />
         </CardContent>
       </Card>
     </>

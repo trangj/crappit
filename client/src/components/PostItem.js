@@ -43,11 +43,12 @@ const PostItem = ({ post }) => {
               src={post.imageURL}
               style={{
                 display: "block",
+                maxWidth: "100%",
                 marginLeft: "auto",
                 marginRight: "auto"
               }}
             />
-            {post.content}
+            <p>{post.content}</p>
           </div>
         </>
       )}

@@ -19,7 +19,7 @@ const AllTopics = () => {
   ) : (
     <>
       {topics.map(topic => (
-        <Card style={{ marginBottom: "1rem" }}>
+        <Card style={{ marginBottom: "1rem" }} key={topic.title}>
           <ListItem button component={Link} to={`/t/${topic.title}`}>
             <ListItemText
               primary={`t/${topic.title}`}

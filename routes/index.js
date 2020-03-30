@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
   try {
     const posts = await Post.find()
       .skip(parseInt(req.query.skip))
-      .limit(9);
+      .limit(10);
     if (!posts) throw Error("Could not fetch posts");
     res.status(200).json(posts);
   } catch (err) {
@@ -245,19 +245,14 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
 
 router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
   try {
-    const query = await Comment.deleteOne({
+    const comment = await Comment.findOneAndDelete({
       _id: req.params.commentid,
       authorId: req.user.id
     });
-    if (!query.deletedCount)
+    if (!comment)
       throw Error("Comment does not exist or you are not the author");
-    await Post.updateOne(
-      { _id: req.params.id, authorId: req.user.id },
-      { $pull: { comments: req.params.commentid } },
-      { useFindAndModify: true }
-    );
     res.status(200).json({
-      id: req.params.commentid,
+      comment,
       status: { text: "Comment succesfully deleted", severity: "success" }
     });
   } catch (err) {
@@ -328,7 +323,7 @@ router.get("/t/:topic", async (req, res) => {
     if (!topic) throw Error("Topic does not exist");
     const posts = await Post.find({ topic: req.params.topic })
       .skip(parseInt(req.query.skip))
-      .limit(9);
+      .limit(10);
     if (!posts) throw Error("No posts found");
     res.status(200).json({ topic, posts });
   } catch (err) {
@@ -398,6 +393,39 @@ router.get("/search", async (req, res) => {
     res.json([...topics, ...posts]);
   } catch (err) {
     res.json({ status: err.message });
+  }
+});
+
+// @route   POST /api/index/t/:topic/p/:id/c/:commentid/reply
+// @desc    Add a reply to a comment
+// @access  Public
+
+router.post("/t/:topic/p/:id/c/:commentid/reply", auth, async (req, res) => {
+  const newComment = new Comment({
+    author: req.user.username,
+    authorId: req.user.id,
+    content: req.body.content,
+    topic: req.params.topic,
+    post: req.params.id,
+    comment: req.params.commentid
+  });
+  try {
+    const reply = await newComment.save();
+    if (!reply) throw Error("No reply");
+    const comment = await Comment.findOne({ _id: req.params.commentid });
+    if (!comment) throw Error("No comment");
+
+    comment.comments.push(reply);
+    await comment.save();
+
+    res.status(200).json({
+      reply,
+      status: { text: "reply made successfully", severity: "success" }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: { text: "Could not reply to comment", severity: "error" }
+    });
   }
 });
 

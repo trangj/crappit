@@ -16,7 +16,7 @@ import FileFieldForm from "./Forms/FileFieldForm";
 import { GlobalContext } from "../context/GlobalState";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 160 * 1024;
+const FILE_SIZE = 320 * 1024;
 const schema = yup.object({
   title: yup.string().required(),
   description: yup.string().required(),

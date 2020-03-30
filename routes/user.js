@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
       { id: user.id, username: user.username },
       keys.jwtSecret,
       {
-        expiresIn: 3600
+        expiresIn: 3600 * 6
       }
     );
 

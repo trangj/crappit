@@ -18,6 +18,8 @@ import { GlobalContext } from "../context/GlobalState";
 const PostCard = () => {
   const { post, user } = useContext(GlobalContext);
 
+  console.log(post.comments);
+
   return (
     <Card style={{ marginBottom: "1rem" }}>
       <CardMedia component="img" alt={post.imageName} src={post.imageURL} />
