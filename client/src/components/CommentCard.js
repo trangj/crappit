@@ -24,7 +24,7 @@ const CommentCard = () => {
   };
 
   return (
-    <Card style={{ marginBottom: "1rem" }}>
+    <Card style={{ marginBottom: "1rem" }} id="comments">
       <CardContent>
         <Typography gutterBottom variant="h6" component="h2">
           Comments

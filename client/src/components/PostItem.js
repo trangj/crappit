@@ -17,15 +17,19 @@ const PostItem = ({ post }) => {
           }
           secondary={
             <>
-              Posted by {post.author} |{" "}
+              Posted by
+              <Link to={`/u/${post.authorId}`}> {post.author}</Link> |{" "}
               <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
-              {post.comments.length} Comments | {moment(post.date).fromNow()}
+              <Link to={`/t/${post.topic}/p/${post._id}#comments`}>
+                {post.comments.length} Comments
+              </Link>{" "}
+              | {moment(post.date).fromNow()}
             </>
           }
         />
       </ListItem>
       <div
-        style={{ flex: 1, textAlign: "center" }}
+        style={{ flex: 1, textAlign: "center", cursor: "pointer" }}
         onClick={() => setOpen(!open)}
       >
         {open ? (

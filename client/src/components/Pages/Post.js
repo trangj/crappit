@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import PostCard from "../PostCard";
 import CommentCard from "../CommentCard";
-import SkeletonCard from "../SkeletonCard";
+import SkeletonCard from "../Utils/SkeletonCard";
 import { GlobalContext } from "../../context/GlobalState";
 
 const Post = ({ match }) => {

@@ -18,8 +18,6 @@ import { GlobalContext } from "../context/GlobalState";
 const PostCard = () => {
   const { post, user } = useContext(GlobalContext);
 
-  console.log(post.comments);
-
   return (
     <Card style={{ marginBottom: "1rem" }}>
       <CardMedia component="img" alt={post.imageName} src={post.imageURL} />
@@ -35,8 +33,8 @@ const PostCard = () => {
               {post.title}
             </Typography>
             <Typography gutterBottom>
-              Posted by {post.author} |{" "}
-              <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
+              Posted by <Link to={`/u/${post.authorId}`}> {post.author} </Link>{" "}
+              | <Link to={`/t/${post.topic}`}>t/{post.topic}</Link> |{" "}
               {moment(post.date).fromNow()}
             </Typography>
           </Grid>

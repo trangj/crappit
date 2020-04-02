@@ -181,8 +181,8 @@ export default (state, action) => {
                 comment.comments = comment.comments.map(comment => {
                   if (comment._id === action.payload.comment._id) {
                     comment.content = action.payload.comment.content;
-                    return comment;
                   }
+                  return comment;
                 });
                 return comment;
               }

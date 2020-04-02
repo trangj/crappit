@@ -116,4 +116,20 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/user/u/:userid
+// @desc    Get user profile
+// @access  Public
+
+router.get("/u/:userid", async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.userid });
+    if (!user) throw Error("No user found");
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(400).json({
+      status: { text: err.message, severity: "error" }
+    });
+  }
+});
+
 module.exports = router;

@@ -4,6 +4,7 @@ import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import { GlobalContext } from "../context/GlobalState";
 
@@ -16,15 +17,25 @@ const CommentItem = ({ comment }) => {
         <CommentVoting comment={comment} />
         <ListItemText
           primary={comment.content}
-          secondary={`Commented by ${comment.author} | ${moment(
-            comment.date
-          ).fromNow()}`}
+          secondary={
+            <>
+              Commented by
+              <Link to={`/u/${comment.authorId}`}>
+                {" "}
+                {comment.author}{" "}
+              </Link> | {moment(comment.date).fromNow()}
+            </>
+          }
         />
-        {user !== undefined && user._id === comment.authorId ? (
+        {user !== undefined ? (
           <>
             <AddReply comment={comment} />
-            <DeleteComment comment={comment} />
-            <UpdateComment comment={comment} />
+            {user._id === comment.authorId && (
+              <>
+                <DeleteComment comment={comment} />
+                <UpdateComment comment={comment} />
+              </>
+            )}
           </>
         ) : null}
       </ListItem>

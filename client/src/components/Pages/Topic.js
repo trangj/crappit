@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import { GlobalContext } from "../../context/GlobalState";
 import PostItem from "../PostItem";
 import TopicCard from "../TopicCard";
-import SkeletonList from "../SkeletonList";
+import SkeletonList from "../Utils/SkeletonList";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InfiniteScroll from "react-infinite-scroll-component";
 

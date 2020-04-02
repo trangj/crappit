@@ -9,9 +9,11 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Topic = require("../models/Topic");
 
+//POST//
+
 // @route   GET /api/index
 // @desc    Get all posts
-// @access   Public
+// @access  Public
 
 router.get("/", async (req, res) => {
   try {
@@ -27,7 +29,7 @@ router.get("/", async (req, res) => {
 
 // @route   GET /api/index/t/:topic/p/:id
 // @desc    Get a post
-// @access   Public
+// @access  Public
 
 router.get("/t/:topic/p/:id", async (req, res) => {
   try {
@@ -43,7 +45,7 @@ router.get("/t/:topic/p/:id", async (req, res) => {
 
 // @route   POST /api/index/t/:topic/p
 // @desc    Create post
-// @access   Private
+// @access  Private
 
 router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
   const newPost = new Post({
@@ -73,7 +75,7 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
 
 // @route   DELETE /api/index/t/:topic/p/:id
 // @desc    Delete a post
-// @access   Private
+// @access  Private
 
 router.delete("/t/:topic/p/:id", auth, async (req, res) => {
   try {
@@ -98,7 +100,7 @@ router.delete("/t/:topic/p/:id", auth, async (req, res) => {
 
 // @route   PUT /api/index/t/:topic/p/:id
 // @desc    Update a post
-// @access   Private
+// @access  Private
 
 router.put("/t/:topic/p/:id", auth, async (req, res) => {
   try {
@@ -122,7 +124,7 @@ router.put("/t/:topic/p/:id", auth, async (req, res) => {
 
 // @route   PUT /api/index/t/:topic/p/:id/changevote
 // @desc    Change vote on post
-// @access   Private
+// @access  Private
 
 router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
   try {
@@ -163,9 +165,96 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
   }
 });
 
+//COMMENT//
+
+// @route   POST /api/index/t/:topic/p/:id
+// @desc    Create a comment
+// @access  Private
+
+router.post("/t/:topic/p/:id", auth, async (req, res) => {
+  const newComment = new Comment({
+    author: req.user.username,
+    authorId: req.user.id,
+    content: req.body.content,
+    topic: req.params.topic,
+    post: req.params.id
+  });
+  try {
+    const comment = await newComment.save();
+    if (!comment) throw Error("No comment");
+    const post = await Post.findOne({ _id: req.params.id });
+    if (!post) throw Error("No post");
+
+    post.comments.push(newComment);
+    await post.save();
+    res.status(200).json({
+      comment,
+      status: { text: "Comment succesfully added", severity: "success" }
+    });
+  } catch (err) {
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
+  }
+});
+
+// @route   PUT /api/index/t/:topic/p/:id/c/:commentid
+// @desc    Update a comment
+// @access  Private
+
+router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
+  try {
+    if (!req.body.content) throw Error("Missing required fields");
+    const comment = await Comment.findOneAndUpdate(
+      { _id: req.params.commentid, authorId: req.user.id },
+      { $set: { content: req.body.content } },
+      { useFindAndModify: false, new: true }
+    );
+    if (!comment) throw Error("No comment exists or you are not the author");
+    res.status(200).json({
+      status: { text: "Comment successfully updated", severity: "success" },
+      comment
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: { text: err.message, severity: "error" }
+    });
+  }
+});
+
+// @route   GET /api/index/t/:topic/p/:id/c/:commentid
+// @desc    Delete a comment
+// @access  Private
+
+router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
+  try {
+    const comment = await Comment.findOneAndDelete({
+      _id: req.params.commentid,
+      authorId: req.user.id
+    });
+    if (!comment)
+      throw Error("Comment does not exist or you are not the author");
+    await Comment.deleteMany(
+      { comment: comment._id },
+      { $pull: { comments: comment._id } }
+    );
+    await Post.updateOne(
+      { _id: req.params.id, authorId: req.user.id },
+      { $pull: { comments: req.params.commentid } },
+      { useFindAndModify: true }
+    );
+    res.status(200).json({
+      comment,
+      status: { text: "Comment succesfully deleted", severity: "success" }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: { text: err.message, severity: "error" }
+    });
+  }
+});
+
 // @route   PUT /api/index/t/:topic/p/:id/c/:commentid/changevote
 // @desc    Change vote on comment
-// @access   Private
+// @access  Private
 
 router.put(
   "/t/:topic/p/:id/c/:commentid/changevote",
@@ -210,101 +299,84 @@ router.put(
   }
 );
 
-// @route   POST /api/index/t/:topic/p/:id
-// @desc    Create a comment
-// @access   Private
+// @route   POST /api/index/t/:topic/p/:id/c/:commentid/reply
+// @desc    Add a reply to a comment
+// @access  Private
 
-router.post("/t/:topic/p/:id", auth, async (req, res) => {
+router.post("/t/:topic/p/:id/c/:commentid/reply", auth, async (req, res) => {
   const newComment = new Comment({
     author: req.user.username,
     authorId: req.user.id,
     content: req.body.content,
     topic: req.params.topic,
-    post: req.params.id
+    post: req.params.id,
+    comment: req.params.commentid
   });
   try {
-    const comment = await newComment.save();
+    const reply = await newComment.save();
+    if (!reply) throw Error("No reply");
+    const comment = await Comment.findOne({ _id: req.params.commentid });
     if (!comment) throw Error("No comment");
-    const post = await Post.findOne({ _id: req.params.id });
-    if (!post) throw Error("No post");
 
-    post.comments.push(newComment);
-    await post.save();
+    comment.comments.push(reply);
+    await comment.save();
+
     res.status(200).json({
-      comment,
-      status: { text: "Comment succesfully added", severity: "success" }
+      reply,
+      status: { text: "reply made successfully", severity: "success" }
     });
+  } catch (err) {
+    res.status(400).json({
+      status: { text: "Could not reply to comment", severity: "error" }
+    });
+  }
+});
+
+//TOPIC//
+
+// @route   GET /api/index/t
+// @desc    Get all topics
+// @access  Public
+
+router.get("/t", async (req, res) => {
+  try {
+    const topics = await Topic.find();
+    if (!topics) throw Error("Could not get topics");
+    res.status(200).json({ topics });
+  } catch (err) {
+    res.status(400).json({ status: { text: err.message }, severity: "error" });
+  }
+});
+
+// @route   GET /api/index/t/:topic
+// @desc    Get a topic
+// @access  Public
+
+router.get("/t/:topic", async (req, res) => {
+  try {
+    const topic = await Topic.findOne({ title: req.params.topic });
+    if (!topic) throw Error("Topic does not exist");
+    const posts = await Post.find({ topic: req.params.topic })
+      .skip(parseInt(req.query.skip))
+      .limit(10);
+    if (!posts) throw Error("No posts found");
+    res.status(200).json({ topic, posts });
   } catch (err) {
     res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
 
-// @route   GET /api/index/t/:topic/p/:id/c/:commentid
-// @desc    Delete a comment
-// @access   Private
-
-router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
-  try {
-    const comment = await Comment.findOneAndDelete({
-      _id: req.params.commentid,
-      authorId: req.user.id
-    });
-    if (!comment)
-      throw Error("Comment does not exist or you are not the author");
-    await Comment.deleteMany(
-      { comment: comment._id },
-      { $pull: { comments: comment._id } }
-    );
-    await Post.updateOne(
-      { _id: req.params.id, authorId: req.user.id },
-      { $pull: { comments: req.params.commentid } },
-      { useFindAndModify: true }
-    );
-    res.status(200).json({
-      comment,
-      status: { text: "Comment succesfully deleted", severity: "success" }
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: { text: err.message, severity: "error" }
-    });
-  }
-});
-
-// @route   PUT /api/index/t/:topic/p/:id/c/:commentid
-// @desc    Update a comment
-// @access   Private
-
-router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
-  try {
-    if (!req.body.content) throw Error("Missing required fields");
-    const comment = await Comment.findOneAndUpdate(
-      { _id: req.params.commentid, authorId: req.user.id },
-      { $set: { content: req.body.content } },
-      { useFindAndModify: false, new: true }
-    );
-    if (!comment) throw Error("No comment exists or you are not the author");
-    res.status(200).json({
-      status: { text: "Comment successfully updated", severity: "success" },
-      comment
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: { text: err.message, severity: "error" }
-    });
-  }
-});
-
 // @route   POST /api/index/t
 // @desc    Create a topic
-// @access   Private
+// @access  Private
 
 router.post("/t", auth, upload.single("file"), async (req, res) => {
   const newTopic = new Topic({
     title: req.body.title,
     description: req.body.description,
     imageURL: req.file ? req.file.location : "",
-    imageName: req.file ? req.file.key : ""
+    imageName: req.file ? req.file.key : "",
+    moderators: [req.user.id]
   });
   try {
     let topic = await Topic.findOne({ title: req.body.title });
@@ -322,27 +394,9 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
   }
 });
 
-// @route   GET /api/index/t/:topic
-// @desc    Get a topic
-// @access   Public
-
-router.get("/t/:topic", async (req, res) => {
-  try {
-    const topic = await Topic.findOne({ title: req.params.topic });
-    if (!topic) throw Error("Topic does not exist");
-    const posts = await Post.find({ topic: req.params.topic })
-      .skip(parseInt(req.query.skip))
-      .limit(10);
-    if (!posts) throw Error("No posts found");
-    res.status(200).json({ topic, posts });
-  } catch (err) {
-    res.status(400).json({ status: { text: err.message, severity: "error" } });
-  }
-});
-
 // @route   POST /api/index/t/:topic/followtopic
 // @desc    Follow a topic
-// @access   Private
+// @access  Private
 
 router.post("/t/:topic/followtopic", auth, async (req, res) => {
   try {
@@ -371,19 +425,34 @@ router.post("/t/:topic/followtopic", auth, async (req, res) => {
   }
 });
 
-// @route   GET /api/index/t
-// @desc    Get all topics
-// @access   Public
+// @route   PUT /api/index/t/:topic
+// @desc    Update a topic
+// @access  Private
 
-router.get("/t", async (req, res) => {
+router.put("/t/:topic", auth, upload.single("file"), async (req, res) => {
   try {
-    const topics = await Topic.find();
-    if (!topics) throw Error("Could not get topics");
-    res.status(200).json({ topics });
+    const topic = await Topic.findOneAndUpdate(
+      { title: req.params.topic, moderators: [req.user.id] },
+      {
+        $set: {
+          description: req.body.description,
+          ...(req.file.location && { imageURL: req.file.location }),
+          ...(req.file.key && { imageName: req.file.key })
+        }
+      },
+      { useFindAndModify: false, new: true }
+    );
+    if (!topic) throw Error("Could not update topic");
+    res.status(200).json({
+      topic,
+      status: { text: "Successfully updated topic", severity: "success" }
+    });
   } catch (err) {
-    res.status(400).json({ status: { text: err.message }, severity: "error" });
+    res.status(400).json({ status: { text: err.message, severity: "error" } });
   }
 });
+
+//SEARCH//
 
 // @route   GET /api/index/search
 // @desc    Search for a topic or post
@@ -402,39 +471,6 @@ router.get("/search", async (req, res) => {
     res.json([...topics, ...posts]);
   } catch (err) {
     res.json({ status: err.message });
-  }
-});
-
-// @route   POST /api/index/t/:topic/p/:id/c/:commentid/reply
-// @desc    Add a reply to a comment
-// @access  Public
-
-router.post("/t/:topic/p/:id/c/:commentid/reply", auth, async (req, res) => {
-  const newComment = new Comment({
-    author: req.user.username,
-    authorId: req.user.id,
-    content: req.body.content,
-    topic: req.params.topic,
-    post: req.params.id,
-    comment: req.params.commentid
-  });
-  try {
-    const reply = await newComment.save();
-    if (!reply) throw Error("No reply");
-    const comment = await Comment.findOne({ _id: req.params.commentid });
-    if (!comment) throw Error("No comment");
-
-    comment.comments.push(reply);
-    await comment.save();
-
-    res.status(200).json({
-      reply,
-      status: { text: "reply made successfully", severity: "success" }
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: { text: "Could not reply to comment", severity: "error" }
-    });
   }
 });
 
