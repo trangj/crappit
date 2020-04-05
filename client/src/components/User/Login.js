@@ -53,7 +53,7 @@ const Login = () => {
             )}
           </Formik>
           <a href="http://localhost:5000/api/user/forgot">
-            Forgot your password?
+            <small>Forgot your password?</small>
           </a>
         </DialogContent>
       </Dialog>

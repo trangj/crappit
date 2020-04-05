@@ -125,7 +125,7 @@ router.get("/", auth, async (req, res) => {
 // @desc    request to change user password
 // @acess   Public
 router.get("/forgot", (req, res) => {
-  res.render("forgot");
+  res.render("forgot", { msg: undefined });
 });
 
 // @route   POST /api/user/forgot
@@ -156,13 +156,11 @@ router.post("/forgot", async (req, res) => {
         "If you did not request this, please ignore this email and your password will remain unchanged.\n",
     };
     await sgMail.send(msg);
-    res
-      .status(200)
-      .send(
-        `An e-mail has been sent to ${user.email} with further instuctions`
-      );
+    res.status(200).render("forgot", {
+      msg: "An email has been sent to your email for further instuctions",
+    });
   } catch (err) {
-    res.status(400).send(err.message + "Go back and try again.");
+    res.status(400).render("forgot", { msg: err.message });
   }
 });
 
@@ -177,9 +175,9 @@ router.get("/reset/:token", async (req, res) => {
       resetPasswordExpires: { $gt: Date.now() },
     });
     if (!user) throw Error("Token is invalid or has expired");
-    res.render("reset", { token: req.params.token });
+    res.render("reset", { token: req.params.token, msg: undefined });
   } catch (err) {
-    res.send(err.message);
+    res.render("reset", { token: req.params.token, msg: err.message });
   }
 });
 
@@ -190,16 +188,8 @@ router.get("/reset/:token", async (req, res) => {
 router.post("/reset/:token", async (req, res) => {
   const { password, password2 } = req.body;
   try {
-    if (!password || !password2) {
-      return res.status(400).json({
-        status: { text: "Missing required fields", severity: "error" },
-      });
-    }
-    if (password !== password2) {
-      return res.status(400).json({
-        status: { text: "Passwords are not the same", severity: "error" },
-      });
-    }
+    if (!password || !password2) throw Error("Please enter a new password");
+    if (password !== password2) throw Error("Passwords are not the same");
 
     const user = await User.findOne({
       resetPasswordToken: req.params.token,
@@ -229,9 +219,16 @@ router.post("/reset/:token", async (req, res) => {
         " has just been changed.\n",
     };
     await sgMail.send(msg);
-    res.status(200).send("Your password has been changed");
+    res
+      .status(200)
+      .render("reset", {
+        token: req.params.token,
+        msg: "Your password has been changed",
+      });
   } catch (err) {
-    res.status(400).send(err.message);
+    res
+      .status(400)
+      .render("reset", { token: req.params.token, msg: err.message });
   }
 });
 

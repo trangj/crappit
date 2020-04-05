@@ -7,28 +7,25 @@ import { GlobalContext } from "../../context/GlobalState";
 
 const schema = yup.object({
   username: yup.string().required(),
-  email: yup
-    .string()
-    .email()
-    .required(),
+  email: yup.string().email().required(),
   password: yup.string().required(),
   password2: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required()
+    .required(),
 });
 
 const Register = () => {
   const { registerUser } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { username, email, password, password2 } = values;
     const user = {
       username,
       email,
       password,
-      password2
+      password2,
     };
     registerUser(user);
     setOpen(false);
@@ -47,7 +44,7 @@ const Register = () => {
               username: "",
               email: "",
               password: "",
-              password2: ""
+              password2: "",
             }}
             onSubmit={handleSubmit}
             validationSchema={schema}

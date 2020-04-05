@@ -1,28 +1,54 @@
-<form class="card mt-4" action="/api/user/reset/<%= token %>" method="POST">
-  <div class="card-header">
-    <h5 class="mb-0">Reset Password</h5>
-  </div>
-  <div class="card-body">
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        name="password"
-        placeholder="Enter password..."
-      />
-    </div>
-    <div class="form-group">
-      <label for="password2">Confirm Password</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password2"
-        name="password2"
-        placeholder="Reenter password..."
-      />
-    </div>
-    <button type="submit" class="btn btn-primary">Change Password</button>
-  </div>
-</form>
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Import Google Icon Font-->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <!--Import materialize.css-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <form class="container" action="/api/user/reset/<%= token %>" method="POST">
+      <div class="card-header">
+        <h5 class="mb-0">Reset Password</h5>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Enter password..."
+          />
+        </div>
+        <div class="form-group">
+          <label for="password2">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password2"
+            name="password2"
+            placeholder="Reenter password..."
+          />
+        </div>
+        <% if(msg !== undefined) {%>
+        <p><%= msg %></p>
+        <% } %>
+        <button type="submit" class="btn btn-primary">Change Password</button>
+      </div>
+    </form>
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>
