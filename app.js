@@ -4,6 +4,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 
+// init ejs
+app.set("view engine", "ejs");
+
 // bodyparser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

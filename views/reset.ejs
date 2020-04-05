@@ -1,0 +1,28 @@
+<form class="card mt-4" action="/api/user/reset/<%= token %>" method="POST">
+  <div class="card-header">
+    <h5 class="mb-0">Reset Password</h5>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="Enter password..."
+      />
+    </div>
+    <div class="form-group">
+      <label for="password2">Confirm Password</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password2"
+        name="password2"
+        placeholder="Reenter password..."
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Change Password</button>
+  </div>
+</form>

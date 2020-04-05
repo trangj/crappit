@@ -6,22 +6,19 @@ import { Formik, Form, Field } from "formik";
 import { GlobalContext } from "../../context/GlobalState";
 
 const schema = yup.object({
-  email: yup
-    .string()
-    .email()
-    .required(),
-  password: yup.string().required()
+  email: yup.string().email().required(),
+  password: yup.string().required(),
 });
 
 const Login = () => {
   const { loginUser } = useContext(GlobalContext);
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const { email, password } = values;
     const user = {
       email,
-      password
+      password,
     };
     loginUser(user);
     setOpen(false);
@@ -55,6 +52,9 @@ const Login = () => {
               </Form>
             )}
           </Formik>
+          <a href="http://localhost:5000/api/user/forgot">
+            Forgot your password?
+          </a>
         </DialogContent>
       </Dialog>
     </div>

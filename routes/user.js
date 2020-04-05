@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const bcyrpt = require("bcryptjs");
+const crypto = require("crypto");
+const sgMail = require("@sendgrid/mail");
 const keys = require("../config/keys");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/User");
+
+// init sgMail
+sgMail.setApiKey(keys.sendgrid);
 
 // @route   GET /api/user/register
 // @desc    Register user
@@ -19,7 +24,7 @@ router.post("/register", async (req, res) => {
 
   if (password !== password2)
     return res.status(400).json({
-      status: { text: "Passwords are not the same", severity: "error" }
+      status: { text: "Passwords are not the same", severity: "error" },
     });
 
   try {
@@ -38,7 +43,7 @@ router.post("/register", async (req, res) => {
     const newUser = new User({
       username,
       email,
-      password: hash
+      password: hash,
     });
     const savedUser = await newUser.save();
     if (!savedUser) throw Error("Error with saving user");
@@ -46,8 +51,8 @@ router.post("/register", async (req, res) => {
     res.status(200).json({
       status: {
         text: "Successfully registered, you can now login!",
-        severity: "success"
-      }
+        severity: "success",
+      },
     });
   } catch (err) {
     res
@@ -84,14 +89,14 @@ router.post("/login", async (req, res) => {
       { id: user.id, username: user.username },
       keys.jwtSecret,
       {
-        expiresIn: 3600 * 6
+        expiresIn: 3600 * 6,
       }
     );
 
     res.status(200).json({
       token,
       user,
-      status: { text: "Successfully logged in!", severity: "success" }
+      status: { text: "Successfully logged in!", severity: "success" },
     });
   } catch (err) {
     res
@@ -116,6 +121,120 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/user/forgot
+// @desc    request to change user password
+// @acess   Public
+router.get("/forgot", (req, res) => {
+  res.render("forgot");
+});
+
+// @route   POST /api/user/forgot
+// @desc    request to change user password
+// @acess   Public
+
+router.post("/forgot", async (req, res) => {
+  try {
+    const token = await crypto.randomBytes(20).toString("hex");
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) throw Error("No user with that email exists.");
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000;
+    await user.save();
+
+    const msg = {
+      to: user.email,
+      from: "passwordreset@crappit.com",
+      subject: "Crappit Password Reset",
+      text:
+        "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
+        "Please click on the following link, or paste this into your browser to complete the process:\n\n" +
+        "http://" +
+        req.headers.host +
+        "/api/user/reset/" +
+        token +
+        "\n\n" +
+        "If you did not request this, please ignore this email and your password will remain unchanged.\n",
+    };
+    await sgMail.send(msg);
+    res
+      .status(200)
+      .send(
+        `An e-mail has been sent to ${user.email} with further instuctions`
+      );
+  } catch (err) {
+    res.status(400).send(err.message + "Go back and try again.");
+  }
+});
+
+// @route   GET /api/user/reset/:token
+// @desc    change user password
+// @acess   Public
+
+router.get("/reset/:token", async (req, res) => {
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+    if (!user) throw Error("Token is invalid or has expired");
+    res.render("reset", { token: req.params.token });
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+// @route   POST /api/user/forgot
+// @desc    change user password
+// @acess   Public
+
+router.post("/reset/:token", async (req, res) => {
+  const { password, password2 } = req.body;
+  try {
+    if (!password || !password2) {
+      return res.status(400).json({
+        status: { text: "Missing required fields", severity: "error" },
+      });
+    }
+    if (password !== password2) {
+      return res.status(400).json({
+        status: { text: "Passwords are not the same", severity: "error" },
+      });
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: req.params.token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+    if (!user) throw Error("Token is invalid or has expired");
+
+    const salt = await bcyrpt.genSalt(10);
+    if (!salt) throw Error("Error with generating salt");
+
+    const hash = await bcyrpt.hash(password, salt);
+    if (!hash) throw Error("Error with generating hash");
+
+    user.password = hash;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    const msg = {
+      to: user.email,
+      from: "passwordreset@crappit.com",
+      subject: "Your password has been changed",
+      text:
+        "Hello,\n\n" +
+        "This is a confirmation that the password for your account " +
+        user.email +
+        " has just been changed.\n",
+    };
+    await sgMail.send(msg);
+    res.status(200).send("Your password has been changed");
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+});
+
 // @route   GET /api/user/u/:userid
 // @desc    Get user profile
 // @access  Public
@@ -127,7 +246,7 @@ router.get("/u/:userid", async (req, res) => {
     res.status(200).json(user);
   } catch (err) {
     res.status(400).json({
-      status: { text: err.message, severity: "error" }
+      status: { text: err.message, severity: "error" },
     });
   }
 });
