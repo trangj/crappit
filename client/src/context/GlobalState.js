@@ -8,7 +8,7 @@ const initialState = {
   posts: [],
   post: {},
   topics: [],
-  topic: {}
+  topic: {},
 };
 
 export const GlobalContext = createContext(initialState);
@@ -23,12 +23,12 @@ export const GlobalProvider = ({ children }) => {
       const data = await res.json();
       dispatch({
         type: "GET_TOPICS",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "TOPIC_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -43,12 +43,12 @@ export const GlobalProvider = ({ children }) => {
       if (!data.topic) throw Error("No topic exists");
       dispatch({
         type: "GET_TOPIC",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: { text: err.message, severity: "error" }
+        payload: { text: err.message, severity: "error" },
       });
     }
   }
@@ -62,12 +62,12 @@ export const GlobalProvider = ({ children }) => {
       if (!data.topic) throw Error("No topic exists");
       dispatch({
         type: "MORE_TOPIC",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: { text: err.message, severity: "error" }
+        payload: { text: err.message, severity: "error" },
       });
     }
   }
@@ -79,12 +79,12 @@ export const GlobalProvider = ({ children }) => {
       const data = await res.json();
       dispatch({
         type: "GET_POSTS",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -95,12 +95,12 @@ export const GlobalProvider = ({ children }) => {
       const data = await res.json();
       dispatch({
         type: "MORE_POSTS",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -115,12 +115,12 @@ export const GlobalProvider = ({ children }) => {
       if (!data.post) throw Error("No post exists");
       dispatch({
         type: "GET_POST",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: { text: err.message, severity: "error" }
+        payload: { text: err.message, severity: "error" },
       });
     }
   }
@@ -128,17 +128,17 @@ export const GlobalProvider = ({ children }) => {
   async function fetchUser() {
     try {
       const res = await fetch("http://localhost:5000/api/user", {
-        headers: { "x-auth-token": localStorage.token }
+        headers: { "x-auth-token": localStorage.token },
       });
       const data = await res.json();
       dispatch({
         type: "GET_USER",
-        payload: data.user
+        payload: data.user,
       });
     } catch (err) {
       dispatch({
         type: "USER_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -147,7 +147,7 @@ export const GlobalProvider = ({ children }) => {
     localStorage.removeItem("token");
     dispatch({
       type: "LOGOUT_USER",
-      payload: undefined
+      payload: undefined,
     });
   }
 
@@ -156,18 +156,18 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("http://localhost:5000/api/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
       });
       const data = await res.json();
       localStorage.setItem("token", data.token);
       dispatch({
         type: "LOGIN_USER",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "USER_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -177,18 +177,18 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("http://localhost:5000/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
       });
       const data = await res.json();
       localStorage.setItem("token", data.token);
       dispatch({
         type: "REGISTER_USER",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "USER_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -199,19 +199,19 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch("http://localhost:5000/api/index/t", {
         method: "POST",
         headers: {
-          "x-auth-token": localStorage.token
+          "x-auth-token": localStorage.token,
         },
-        body: formData
+        body: formData,
       });
       const data = await res.json();
       dispatch({
         type: "ADD_TOPIC",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "TOPIC_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -222,19 +222,19 @@ export const GlobalProvider = ({ children }) => {
       const res = await fetch(`http://localhost:5000/api/index/t/${topic}/p`, {
         method: "POST",
         headers: {
-          "x-auth-token": localStorage.token
+          "x-auth-token": localStorage.token,
         },
-        body: formData
+        body: formData,
       });
       const data = await res.json();
       dispatch({
         type: "ADD_POST",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -248,20 +248,20 @@ export const GlobalProvider = ({ children }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-auth-token": localStorage.token
+            "x-auth-token": localStorage.token,
           },
-          body: JSON.stringify(newComment)
+          body: JSON.stringify(newComment),
         }
       );
       const data = await res.json();
       dispatch({
         type: "ADD_COMMENT",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "COMMENT_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -275,20 +275,20 @@ export const GlobalProvider = ({ children }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-auth-token": localStorage.token
+            "x-auth-token": localStorage.token,
           },
-          body: JSON.stringify(newReply)
+          body: JSON.stringify(newReply),
         }
       );
       const data = await res.json();
       dispatch({
         type: "ADD_REPLY",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "COMMENT_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -302,19 +302,19 @@ export const GlobalProvider = ({ children }) => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "x-auth-token": localStorage.token
-          }
+            "x-auth-token": localStorage.token,
+          },
         }
       );
       const data = await res.json();
       dispatch({
         type: "DELETE_POST",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -329,12 +329,12 @@ export const GlobalProvider = ({ children }) => {
       const data = await res.json();
       dispatch({
         type: data.comment.comment ? "DELETE_REPLY" : "DELETE_COMMENT",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "COMMENT_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -349,21 +349,21 @@ export const GlobalProvider = ({ children }) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "x-auth-token": localStorage.token
+            "x-auth-token": localStorage.token,
           },
-          body: JSON.stringify(newPost)
+          body: JSON.stringify(newPost),
         }
       );
       const data = await res.json();
       console.log(data);
       dispatch({
         type: "UPDATE_POST",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "POST_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -377,20 +377,20 @@ export const GlobalProvider = ({ children }) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "x-auth-token": localStorage.token
+            "x-auth-token": localStorage.token,
           },
-          body: JSON.stringify(newComment)
+          body: JSON.stringify(newComment),
         }
       );
       const data = await res.json();
       dispatch({
         type: data.comment.comment ? "UPDATE_REPLY" : "UPDATE_COMMENT",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "COMMENT_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -403,19 +403,19 @@ export const GlobalProvider = ({ children }) => {
         {
           method: "PUT",
           headers: {
-            "x-auth-token": localStorage.token
-          }
+            "x-auth-token": localStorage.token,
+          },
         }
       );
       const data = await res.json();
       dispatch({
         type: "CHANGE_VOTE",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "VOTE_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -428,19 +428,21 @@ export const GlobalProvider = ({ children }) => {
         {
           method: "PUT",
           headers: {
-            "x-auth-token": localStorage.token
-          }
+            "x-auth-token": localStorage.token,
+          },
         }
       );
       const data = await res.json();
       dispatch({
-        type: "CHANGE_COMMENT_VOTE",
-        payload: data
+        type: data.comment.comment
+          ? "CHANGE_REPLY_VOTE"
+          : "CHANGE_COMMENT_VOTE",
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "VOTE_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -453,19 +455,19 @@ export const GlobalProvider = ({ children }) => {
         {
           method: "POST",
           headers: {
-            "x-auth-token": localStorage.token
-          }
+            "x-auth-token": localStorage.token,
+          },
         }
       );
       const data = await res.json();
       dispatch({
         type: "FOLLOW_TOPIC",
-        payload: data
+        payload: data,
       });
     } catch (err) {
       dispatch({
         type: "FOLLOW_ERROR",
-        payload: err.data
+        payload: err.data,
       });
     }
   }
@@ -500,7 +502,7 @@ export const GlobalProvider = ({ children }) => {
         deleteComment,
         changeVote,
         changeCommentVote,
-        followTopic
+        followTopic,
       }}
     >
       {children}

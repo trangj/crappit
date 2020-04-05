@@ -8,7 +8,7 @@ const Search = () => {
   const [search, setSearch] = useState("");
   const [options, setOptions] = useState([]);
 
-  const handleChange = value => {
+  const handleChange = (value) => {
     setSearch(value);
     const fetchSearch = async () => {
       const res = await fetch(
@@ -22,18 +22,18 @@ const Search = () => {
 
   return (
     <Autocomplete
-      style={{ flex: 1, margin: "0 2rem 0 2rem" }}
+      style={{ flex: 1, margin: "0 1rem 0 2rem" }}
       options={options}
-      getOptionLabel={option => option.title}
-      renderInput={params => (
+      getOptionLabel={(option) => option.title}
+      renderInput={(params) => (
         <TextField
           {...params}
           value={search}
-          onChange={e => handleChange(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
           placeholder="Search..."
         />
       )}
-      renderOption={option =>
+      renderOption={(option) =>
         option.topic ? (
           <Link to={`/t/${option.topic}/p/${option._id}`} style={{ flex: 1 }}>
             {option.title} | Posted by {option.author} | t/{option.topic} |{" "}

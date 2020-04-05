@@ -7,7 +7,6 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   IconButton,
   Icon,
   Drawer,
@@ -15,14 +14,17 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Divider
+  Divider,
+  Menu,
+  MenuItem,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 import { GlobalContext } from "../context/GlobalState";
 
-const NavigationBar = () => {
+const NavigationBar = ({ handleTheme }) => {
   const [drawer, setDrawer] = useState(false);
+  const [anchor, setAnchor] = useState(null);
   const { fetchUser, logoutUser, user } = useContext(GlobalContext);
 
   useEffect(() => {
@@ -48,15 +50,46 @@ const NavigationBar = () => {
             Crappit
           </Typography>
           <Search />
+          <IconButton color="inherit" onClick={() => handleTheme()}>
+            <Icon>brightness_4</Icon>
+          </IconButton>
           {user === undefined ? (
             <>
               <Login />
               <Register />
             </>
           ) : (
-            <Button onClick={() => logoutUser()} color="inherit">
-              Logout
-            </Button>
+            <>
+              <IconButton
+                color="inherit"
+                onClick={(e) => setAnchor(e.currentTarget)}
+              >
+                <Icon>account_circle</Icon>
+              </IconButton>
+              <Menu
+                anchorEl={anchor}
+                keepMounted
+                open={Boolean(anchor)}
+                onClose={() => setAnchor(null)}
+              >
+                <MenuItem
+                  component={Link}
+                  to={`/u/${user._id}`}
+                  onClick={() => setAnchor(null)}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setAnchor(null);
+                    logoutUser();
+                  }}
+                  color="inherit"
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
+            </>
           )}
         </Toolbar>
       </AppBar>
@@ -85,12 +118,14 @@ const NavigationBar = () => {
             <ListItemText>Discover Topics</ListItemText>
           </ListItem>
           {user === undefined ? (
-            <ListItem>Sign up to follow topics!</ListItem>
+            <ListItem>
+              <ListItemText>Sign up to follow topics!</ListItemText>
+            </ListItem>
           ) : (
             <>
               <AddTopic />
               <Divider />
-              {user.followedTopics.map(topic => (
+              {user.followedTopics.map((topic) => (
                 <ListItem
                   button
                   component={Link}
