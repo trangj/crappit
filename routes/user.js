@@ -121,13 +121,6 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// @route   GET /api/user/forgot
-// @desc    request to change user password
-// @acess   Public
-router.get("/forgot", (req, res) => {
-  res.render("forgot", { msg: undefined });
-});
-
 // @route   POST /api/user/forgot
 // @desc    request to change user password
 // @acess   Public
@@ -148,19 +141,17 @@ router.post("/forgot", async (req, res) => {
       text:
         "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
         "Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-        "http://" +
-        req.headers.host +
-        "/api/user/reset/" +
+        "http://localhost:3000/reset/" +
         token +
         "\n\n" +
         "If you did not request this, please ignore this email and your password will remain unchanged.\n",
     };
     await sgMail.send(msg);
-    res.status(200).render("forgot", {
-      msg: "An email has been sent to your email for further instuctions",
+    res.status(200).json({
+      status: "An email has been sent to your email for further instructions",
     });
   } catch (err) {
-    res.status(400).render("forgot", { msg: err.message });
+    res.status(400).json({ status: err.message });
   }
 });
 
@@ -175,9 +166,9 @@ router.get("/reset/:token", async (req, res) => {
       resetPasswordExpires: { $gt: Date.now() },
     });
     if (!user) throw Error("Token is invalid or has expired");
-    res.render("reset", { token: req.params.token, msg: undefined });
+    res.json({ status: "Token is validated" });
   } catch (err) {
-    res.render("reset", { token: req.params.token, msg: err.message });
+    res.json({ status: err.message });
   }
 });
 
@@ -219,16 +210,9 @@ router.post("/reset/:token", async (req, res) => {
         " has just been changed.\n",
     };
     await sgMail.send(msg);
-    res
-      .status(200)
-      .render("reset", {
-        token: req.params.token,
-        msg: "Your password has been changed",
-      });
+    res.status(200).json({ status: "Your password has been changed" });
   } catch (err) {
-    res
-      .status(400)
-      .render("reset", { token: req.params.token, msg: err.message });
+    res.status(400).json({ status: err.message });
   }
 });
 

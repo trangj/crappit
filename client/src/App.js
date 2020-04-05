@@ -7,6 +7,8 @@ import Topic from "./components/Pages/Topic";
 import Profile from "./components/Pages/Profile";
 import AllTopics from "./components/Pages/AllTopics";
 import NotFound from "./components/Pages/NotFound";
+import Reset from "./components/Pages/Reset";
+import Forgot from "./components/Pages/Forgot";
 import { Container, createMuiTheme, CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import { GlobalProvider } from "./context/GlobalState";
@@ -19,8 +21,8 @@ function App() {
     palette: {
       type: "dark",
       primary: deepOrange,
-      secondary: indigo
-    }
+      secondary: indigo,
+    },
   });
 
   return (
@@ -36,6 +38,8 @@ function App() {
               <Route path="/t" exact component={AllTopics} />
               <Route path="/t/:topic" exact component={Topic} />
               <Route path="/t/:topic/p/:id" exact component={Post} />
+              <Route path="/forgot" exact component={Forgot} />
+              <Route path="/reset/:token" exact component={Reset} />
               <Route path="/u/:userid" exact component={Profile} />
               <Route path="/" component={NotFound} />
             </Switch>

@@ -4,6 +4,7 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { GlobalContext } from "../../context/GlobalState";
+import { Link } from "react-router-dom";
 
 const schema = yup.object({
   email: yup.string().email().required(),
@@ -52,9 +53,9 @@ const Login = () => {
               </Form>
             )}
           </Formik>
-          <a href="http://localhost:5000/api/user/forgot">
-            <small>Forgot your password?</small>
-          </a>
+          <Link to="/forgot" onClick={() => setOpen(false)}>
+            Forgot your password?
+          </Link>
         </DialogContent>
       </Dialog>
     </div>
