@@ -54,7 +54,9 @@ const Login = () => {
             )}
           </Formik>
           <Link to="/forgot" onClick={() => setOpen(false)}>
-            <small>Forgot your password?</small>
+            <div style={{ marginTop: ".5rem" }}>
+              <small>Forgot your password?</small>
+            </div>
           </Link>
         </DialogContent>
       </Dialog>
