@@ -70,7 +70,7 @@ const Register = () => {
                   component={TextFieldForm}
                 />
                 <Button type="submit" style={{ float: "right" }}>
-                  Post
+                  Register
                 </Button>
               </Form>
             )}

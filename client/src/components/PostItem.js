@@ -49,7 +49,7 @@ const PostItem = ({ post }) => {
                 display: "block",
                 maxWidth: "100%",
                 marginLeft: "auto",
-                marginRight: "auto"
+                marginRight: "auto",
               }}
             />
             <p>{post.content}</p>

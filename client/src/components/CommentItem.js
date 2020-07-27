@@ -41,7 +41,7 @@ const CommentItem = ({ comment }) => {
       </ListItem>
       <div style={{ marginLeft: "2rem" }}>
         {comment.comments
-          ? comment.comments.map(comment => (
+          ? comment.comments.map((comment) => (
               <CommentItem comment={comment} key={comment._id} />
             ))
           : null}

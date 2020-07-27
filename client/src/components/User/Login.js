@@ -7,8 +7,8 @@ import { GlobalContext } from "../../context/GlobalState";
 import { Link } from "react-router-dom";
 
 const schema = yup.object({
-  email: yup.string().email().required(),
-  password: yup.string().required(),
+  email: yup.string(),
+  password: yup.string(),
 });
 
 const Login = () => {
@@ -48,7 +48,7 @@ const Login = () => {
                   component={TextFieldForm}
                 />
                 <Button type="submit" style={{ float: "right" }}>
-                  Post
+                  Login
                 </Button>
               </Form>
             )}

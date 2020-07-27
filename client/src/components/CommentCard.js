@@ -7,7 +7,7 @@ import { Formik, Form, Field } from "formik";
 import { GlobalContext } from "../context/GlobalState";
 
 const schema = yup.object({
-  content: yup.string().required()
+  content: yup.string().required(),
 });
 
 const CommentCard = () => {
@@ -17,7 +17,7 @@ const CommentCard = () => {
   const handleSubmit = (values, { resetForm }) => {
     const { content } = values;
     const newComment = {
-      content
+      content,
     };
     addComment(post.topic, post._id, newComment);
     resetForm("");
@@ -51,7 +51,7 @@ const CommentCard = () => {
           </Formik>
         )}
         {comments &&
-          comments.map(comment => (
+          comments.map((comment) => (
             <CommentItem comment={comment} key={comment._id} />
           ))}
       </CardContent>

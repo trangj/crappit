@@ -22,10 +22,10 @@ const DeleteComment = ({ comment }) => {
             }}
             color="primary"
           >
-            Yes, I regret posting it!
+            Yes
           </Button>
           <Button onClick={() => setOpen(false)} color="secondary">
-            No, I like my comment!
+            No
           </Button>
         </DialogContent>
       </Dialog>

@@ -6,7 +6,7 @@ import {
   CardActions,
   Typography,
   Grid,
-  Divider
+  Divider,
 } from "@material-ui/core";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";

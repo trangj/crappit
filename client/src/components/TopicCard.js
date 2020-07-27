@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import AddPost from "./AddPost";
 import { GlobalContext } from "../context/GlobalState";
 import {
@@ -6,11 +6,14 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button
+  Button,
+  Icon,
+  Divider,
 } from "@material-ui/core";
 
 const TopicCard = () => {
   const { topic, followTopic, user } = useContext(GlobalContext);
+  const [open, setOpen] = useState(false);
 
   return (
     <Card style={{ marginBottom: "1rem" }}>
@@ -32,6 +35,25 @@ const TopicCard = () => {
         )}
         <AddPost />
       </CardContent>
+      <div
+        style={{ flex: 1, textAlign: "center", cursor: "pointer" }}
+        onClick={() => setOpen(!open)}
+      >
+        {open ? (
+          <Icon style={{ fontSize: 15 }}>arrow_drop_up</Icon>
+        ) : (
+          <Icon style={{ fontSize: 15 }}>arrow_drop_down</Icon>
+        )}
+      </div>
+      {open && (
+        <>
+          <Divider />
+          <div style={{ margin: "1rem" }}>
+            <h4>Rules</h4>
+            <h4>Moderators</h4>
+          </div>
+        </>
+      )}
     </Card>
   );
 };
