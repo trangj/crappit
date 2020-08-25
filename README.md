@@ -1,10 +1,12 @@
 # Crappit
 A less good version of Reddit developed using Node.js, React, and MongoDB. Users are able to sign up, login and create posts and comment on others. Posts, like in Reddit fashion, can be upvoted or downvoted.
 
+[![](http://img.youtube.com/vi/ZT3ha8ChiTo/0.jpg)](http://www.youtube.com/watch?v=ZT3ha8ChiTo "Demo")
+
 ## Current Features
 Crappit currently has these features:
 - sign up using email.
-- create topics, create posts for each topic, create comments for each post
+- create topics, create posts for each topic, create comments for each post, creat comment trees
 - upvote or downvote posts
 - browse latest topics and posts within topics
 - add topics to your favourites, such that they can be accessed easily from the navbar
@@ -12,10 +14,8 @@ Crappit currently has these features:
 
 ## Developing Features
 Features currently in development:
-- replies to comments
-- profile page
 - properly obtain hot posts based on number of upvotes
-- ability to sign in using OAuth2.
+- topic and post moderation
 
 ## Installation
 Want to run Crappit? Follow these steps:
@@ -38,7 +38,8 @@ module.exports = {
   aws: {
     AWS_ACCESS_KEY_ID: "<your aws access id>",
     AWS_SECRET_ACCESS_KEY: "<your aws access key>"
-  }
+  },
+  sendgrid: "<your sendgrid api key>"
 };
 
 ```
