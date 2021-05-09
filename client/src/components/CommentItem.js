@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ListItem, ListItemText } from "@material-ui/core";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
@@ -10,6 +10,7 @@ import { GlobalContext } from "../context/GlobalState";
 
 const CommentItem = ({ comment }) => {
   const { user } = useContext(GlobalContext);
+  const [hideComments, setHideComments] = useState(false);
 
   return (
     <>
@@ -39,13 +40,25 @@ const CommentItem = ({ comment }) => {
           </>
         ) : null}
       </ListItem>
-      <div style={{ marginLeft: "2rem" }}>
-        {comment.comments
-          ? comment.comments.map((comment) => (
-              <CommentItem comment={comment} key={comment._id} />
-            ))
-          : null}
-      </div>
+      {
+        !hideComments ? (
+          <div style={{display: 'flex', flexDirection: 'row'}}>
+            <div class="thread" onClick={() => setHideComments(true)}>
+            </div>
+            <div style={{ marginLeft: "1rem" }}>
+              {comment.comments
+                ? comment.comments.map((comment) => (
+                    <CommentItem comment={comment} key={comment._id} />
+                  ))
+                : null}
+            </div>
+          </div>
+        ) : (
+          <a class="showComments" style={{marginLeft: "1rem"}} onClick={() => setHideComments(false)}> 
+            Show Comments({comment.comments.length})
+          </a>
+        )
+      }
     </>
   );
 };
