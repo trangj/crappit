@@ -1,0 +1,25 @@
+body {
+	margin: 0;
+	font-family: "Roboto", sans-serif;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.thread {
+	width: 3px;
+	background-color: #f6ad55;
+}
+
+.thread:hover {
+	background-color: #ed8936;
+	cursor: pointer;
+}
+
+.alert {
+	position: fixed !important;
+	bottom: 0px;
+	width: 100% !important;
+}
