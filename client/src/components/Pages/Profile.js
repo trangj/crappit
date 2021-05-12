@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { Heading, Box, Text } from "@chakra-ui/react";
 
+const baseURL = process.env.SERVER_URL;
+
 const Profile = ({ match }) => {
 	const [profile, setProfile] = useState({});
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchProfile = async (id) => {
-			const res = await fetch(`http://localhost:5000/api/user/u/${id}`);
+			const res = await fetch(`${baseURL}/api/user/u/${id}`);
 			const data = await res.json();
 			setProfile(data);
 			setLoading(false);

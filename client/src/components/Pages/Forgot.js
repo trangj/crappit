@@ -5,6 +5,8 @@ import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import { GlobalContext } from "../../context/GlobalState";
 
+const baseURL = process.env.SERVER_URL;
+
 const schema = yup.object({
 	email: yup.string().email().required(),
 });
@@ -16,7 +18,7 @@ const Forgot = () => {
 		const { email } = values;
 		try {
 			setStatus({ text: "Awaiting response...", severity: "success" });
-			const res = await fetch("http://localhost:5000/api/user/forgot", {
+			const res = await fetch(`${baseURL}/api/user/forgot`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email }),

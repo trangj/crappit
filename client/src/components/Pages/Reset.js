@@ -5,6 +5,8 @@ import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import { GlobalContext } from "../../context/GlobalState";
 
+const baseURL = process.env.SERVER_URL;
+
 const schema = yup.object({
 	password: yup.string().required(),
 	password2: yup
@@ -20,7 +22,7 @@ const Forgot = ({ match }) => {
 		const confirmToken = async () => {
 			try {
 				const res = await fetch(
-					`http://localhost:5000/api/user/reset/${match.params.token}`
+					`${baseURL}/api/user/reset/${match.params.token}`
 				);
 				const data = await res.json();
 				setStatus({ text: data.status, severity: "success" });
@@ -36,7 +38,7 @@ const Forgot = ({ match }) => {
 		try {
 			setStatus({ text: "Awaiting response...", severity: "success" });
 			const res = await fetch(
-				`http://localhost:5000/api/user/reset/${match.params.token}`,
+				`${baseURL}/api/user/reset/${match.params.token}`,
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
