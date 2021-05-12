@@ -21,7 +21,7 @@ export const GlobalProvider = ({ children }) => {
 	async function fetchTopics() {
 		try {
 			dispatch({ type: "SET_LOADING" });
-			const res = await fetch("${baseURL}/api/index/t");
+			const res = await fetch(`${baseURL}/api/index/t`);
 			const data = await res.json();
 			dispatch({
 				type: "GET_TOPICS",
@@ -123,7 +123,7 @@ export const GlobalProvider = ({ children }) => {
 
 	async function fetchUser() {
 		try {
-			const res = await fetch("${baseURL}/api/user", {
+			const res = await fetch(`${baseURL}/api/user`, {
 				headers: { "x-auth-token": localStorage.token },
 			});
 			const data = await res.json();
@@ -149,7 +149,7 @@ export const GlobalProvider = ({ children }) => {
 
 	async function loginUser(user) {
 		try {
-			const res = await fetch("${baseURL}/api/user/login", {
+			const res = await fetch(`${baseURL}/api/user/login`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(user),
@@ -170,7 +170,7 @@ export const GlobalProvider = ({ children }) => {
 
 	async function registerUser(user) {
 		try {
-			const res = await fetch("${baseURL}/api/user/register", {
+			const res = await fetch(`${baseURL}/api/user/register`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(user),
@@ -192,7 +192,7 @@ export const GlobalProvider = ({ children }) => {
 	async function addTopic(formData) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch("${baseURL}/api/index/t", {
+			const res = await fetch(`${baseURL}/api/index/t`, {
 				method: "POST",
 				headers: {
 					"x-auth-token": localStorage.token,

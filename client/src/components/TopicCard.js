@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import AddPost from "./AddPost";
 import { GlobalContext } from "../context/GlobalState";
 import { Box, Heading, Image, Button, Text } from "@chakra-ui/react";

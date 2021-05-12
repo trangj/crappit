@@ -31,6 +31,7 @@ const Forgot = ({ match }) => {
 			}
 		};
 		confirmToken();
+		// eslint-disable-next-line
 	}, [match.params.token]);
 
 	const handleSubmit = async (values) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Login from "../components/User/Login";
 import Register from "../components/User/Register";
 import AddTopic from "../components/AddTopic";
@@ -14,7 +14,6 @@ import {
 	Heading,
 	HStack,
 	useColorMode,
-	color,
 	MenuGroup,
 	MenuDivider,
 } from "@chakra-ui/react";
