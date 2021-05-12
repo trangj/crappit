@@ -7,6 +7,7 @@ import {
 	ModalHeader,
 	Button,
 	Modal,
+	ModalOverlay,
 } from "@chakra-ui/react";
 
 const DeletePost = ({ post }) => {
@@ -18,8 +19,11 @@ const DeletePost = ({ post }) => {
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)}>Delete</Button>
+			<Button size="sm" onClick={() => setOpen(true)}>
+				Delete
+			</Button>
 			<Modal isOpen={open} onClose={() => setOpen(false)}>
+				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader id="form-dialog-title">
 						Are you sure you want to delete this post?
@@ -30,6 +34,7 @@ const DeletePost = ({ post }) => {
 								deletePost(post.topic, post._id);
 								setRedirect(true);
 							}}
+							mr="2"
 							color="primary"
 						>
 							Yes, I regret posting it!

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { VStack, IconButton } from "@chakra-ui/react";
+import { IconButton, HStack } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { GlobalContext } from "../context/GlobalState";
 
@@ -15,31 +15,31 @@ const CommentVoting = ({ comment }) => {
 	};
 
 	return user ? (
-		<VStack mr="4">
+		<HStack>
 			{comment.likes.includes(user._id) ? (
 				<IconButton
 					disabled
-					size="sm"
+					size="xs"
 					icon={<ArrowUpIcon color="orange.400" />}
 				/>
 			) : (
-				<IconButton onClick={handleUpvote} size="sm" icon={<ArrowUpIcon />} />
+				<IconButton onClick={handleUpvote} size="xs" icon={<ArrowUpIcon />} />
 			)}
 			<div>{comment.likes.length - comment.dislikes.length}</div>
 			{comment.dislikes.includes(user._id) ? (
 				<IconButton
 					disabled
-					size="sm"
+					size="xs"
 					icon={<ArrowDownIcon color="blue.600" />}
 				/>
 			) : (
 				<IconButton
 					onClick={handleDownvote}
-					size="sm"
+					size="xs"
 					icon={<ArrowDownIcon />}
 				/>
 			)}
-		</VStack>
+		</HStack>
 	) : null;
 };
 

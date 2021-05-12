@@ -16,7 +16,7 @@ const Voting = ({ post }) => {
 	};
 
 	return user && post.likes && post.dislikes ? (
-		<VStack mr="4">
+		<VStack mr="1">
 			{post.likes.includes(user._id) ? (
 				<IconButton
 					disabled

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Box, Text, HStack, Spacer, VStack, Button } from "@chakra-ui/react";
+import { Box, Text, HStack, VStack, Button, Flex } from "@chakra-ui/react";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
@@ -11,38 +11,65 @@ import { GlobalContext } from "../context/GlobalState";
 const CommentItem = ({ comment }) => {
 	const { user } = useContext(GlobalContext);
 	const [hideComments, setHideComments] = useState(false);
+	const [openEdit, setOpenEdit] = useState(false);
+	const [openReply, setOpenReply] = useState(false);
 
 	return (
 		<>
 			<Box mt="5">
-				<HStack>
-					<CommentVoting comment={comment} />
-					<VStack align="left">
-						<Text>{comment.content}</Text>
-						<Text fontSize="xs">
-							Commented by
-							<Link to={`/u/${comment.authorId}`}>
-								{" "}
-								{comment.author}{" "}
-							</Link> | {moment(comment.date).fromNow()}
-						</Text>
-					</VStack>
-					<Spacer />
-					{user !== undefined ? (
+				<VStack align="left">
+					<Text fontSize="xs">
+						<Link to={`/u/${comment.authorId}`}>{comment.author}</Link>{" "}
+						{moment(comment.date).fromNow()}
+					</Text>
+					{openEdit ? (
+						<UpdateComment
+							comment={comment}
+							openEdit={openEdit}
+							setOpenEdit={setOpenEdit}
+						/>
+					) : (
 						<>
-							<AddReply comment={comment} />
-							{user._id === comment.authorId && (
-								<>
-									<DeleteComment comment={comment} />
-									<UpdateComment comment={comment} />
-								</>
-							)}
+							<Text>{comment.content}</Text>
+							<HStack>
+								<CommentVoting comment={comment} />
+								{user !== undefined ? (
+									<>
+										<Button size="xs" onClick={() => setOpenReply(!openReply)}>
+											Reply
+										</Button>
+										{user._id === comment.authorId && (
+											<>
+												<DeleteComment comment={comment} />
+												<Button
+													size="xs"
+													onClick={() => setOpenEdit(!openEdit)}
+												>
+													Edit
+												</Button>
+											</>
+										)}
+									</>
+								) : null}
+							</HStack>
 						</>
-					) : null}
-				</HStack>
+					)}
+				</VStack>
 			</Box>
+			{openReply && (
+				<Flex>
+					<div className="thread" onClick={() => setHideComments(true)}></div>
+					<div style={{ marginLeft: "2.5rem", width: "100%" }}>
+						<AddReply
+							comment={comment}
+							openReply={openReply}
+							setOpenReply={setOpenReply}
+						/>
+					</div>
+				</Flex>
+			)}
 			{!hideComments ? (
-				<div style={{ display: "flex", flexDirection: "row" }}>
+				<Flex>
 					<div className="thread" onClick={() => setHideComments(true)}></div>
 					<div style={{ marginLeft: "2.5rem", width: "100%" }}>
 						{comment.comments
@@ -51,7 +78,7 @@ const CommentItem = ({ comment }) => {
 							  ))
 							: null}
 					</div>
-				</div>
+				</Flex>
 			) : (
 				<Button onClick={() => setHideComments(false)} size="xs" variant="link">
 					Show Comments({comment.comments.length})

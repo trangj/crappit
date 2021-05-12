@@ -8,6 +8,10 @@ a {
 	color: inherit;
 }
 
+p a:hover {
+	text-decoration: underline;
+}
+
 .thread {
 	width: 3px;
 	background-color: #f6ad55;

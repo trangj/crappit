@@ -5,6 +5,7 @@ import {
 	ModalContent,
 	ModalHeader,
 	ModalBody,
+	ModalOverlay,
 	Button,
 } from "@chakra-ui/react";
 
@@ -13,10 +14,11 @@ const DeleteComment = ({ comment }) => {
 	const [open, setOpen] = useState(false);
 	return (
 		<>
-			<Button className="mt-4" onClick={() => setOpen(true)}>
+			<Button size="xs" onClick={() => setOpen(true)}>
 				Delete
 			</Button>
 			<Modal isOpen={open} onClose={() => setOpen(false)}>
+				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader id="form-dialog-title">
 						Are you sure you want to delete this comment?

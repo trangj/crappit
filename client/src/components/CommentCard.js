@@ -31,7 +31,7 @@ const CommentCard = () => {
 			overflow="hidden"
 			id="comments"
 		>
-			<Box m="4">
+			<Box m="3">
 				<Heading>Comments</Heading>
 				{user ? (
 					<Formik
@@ -47,7 +47,7 @@ const CommentCard = () => {
 						)}
 					</Formik>
 				) : (
-					<Text mt="4">Register and Login to comment!</Text>
+					<Text mt="3">Register and Login to comment!</Text>
 				)}
 				<Divider mt="5" />
 				{comments &&

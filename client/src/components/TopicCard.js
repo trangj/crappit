@@ -9,10 +9,10 @@ const TopicCard = () => {
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
 			<Image alt={topic.imageName} src={topic.imageURL} />
-			<Box m="4">
+			<Box m="3">
 				<Heading>Welcome to t/{topic.title}!</Heading>
 				<Text>{topic.description}</Text>
-				<Box mt="2">
+				<Box mt="3">
 					{user && (
 						<Button onClick={() => followTopic(topic.title)} mr="2">
 							{user.followedTopics.includes(topic.title)

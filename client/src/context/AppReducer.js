@@ -63,6 +63,7 @@ export default (state, action) => {
 			return {
 				...state,
 				topics: [...state.topics, action.payload.topic],
+				status: action.payload.status,
 			};
 		case "ADD_POST":
 			return {

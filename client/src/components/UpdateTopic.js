@@ -58,7 +58,7 @@ const AddTopic = ({ topic }) => {
 									component={FileFieldForm}
 									setFieldValue={setFieldValue}
 								/>
-								<Button type="submit">Post</Button>
+								<Button type="submit">Update</Button>
 							</Form>
 						)}
 					</Formik>
