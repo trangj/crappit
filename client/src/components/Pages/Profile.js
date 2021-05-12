@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import SkeletonCard from "../Utils/SkeletonCard";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import axiosConfig from "../../axiosConfig";
 import { Heading, Box, Text } from "@chakra-ui/react";
-
-const baseURL = process.env.SERVER_URL;
 
 const Profile = ({ match }) => {
 	const [profile, setProfile] = useState({});
@@ -12,9 +11,8 @@ const Profile = ({ match }) => {
 
 	useEffect(() => {
 		const fetchProfile = async (id) => {
-			const res = await fetch(`${baseURL}/api/user/u/${id}`);
-			const data = await res.json();
-			setProfile(data);
+			const res = await axiosConfig.get(`/api/user/u/${id}`);
+			setProfile(res.data);
 			setLoading(false);
 		};
 		fetchProfile(match.params.userid);

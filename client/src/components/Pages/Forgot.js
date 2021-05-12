@@ -4,8 +4,7 @@ import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import { GlobalContext } from "../../context/GlobalState";
-
-const baseURL = process.env.SERVER_URL;
+import axiosConfig from "../../axiosConfig";
 
 const schema = yup.object({
 	email: yup.string().email().required(),
@@ -18,13 +17,9 @@ const Forgot = () => {
 		const { email } = values;
 		try {
 			setStatus({ text: "Awaiting response...", severity: "success" });
-			const res = await fetch(`${baseURL}/api/user/forgot`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email }),
-			});
-			const data = await res.json();
-			setStatus({ text: data.status, severity: "success" });
+			const res = await axiosConfig.post(`/api/user/forgot`, { email });
+			console.log(res.data);
+			setStatus({ text: res.data.status, severity: "success" });
 		} catch (err) {
 			setStatus({ text: err.message, severity: "error" });
 		}

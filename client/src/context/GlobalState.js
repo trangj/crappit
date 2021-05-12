@@ -1,7 +1,6 @@
 import React, { createContext, useReducer } from "react";
+import axiosConfig from "../axiosConfig";
 import AppReducer from "./AppReducer";
-
-const baseURL = process.env.SERVER_URL;
 
 const initialState = {
 	user: undefined,
@@ -21,11 +20,10 @@ export const GlobalProvider = ({ children }) => {
 	async function fetchTopics() {
 		try {
 			dispatch({ type: "SET_LOADING" });
-			const res = await fetch(`${baseURL}/api/index/t`);
-			const data = await res.json();
+			const res = await axiosConfig.get(`/api/index/t`);
 			dispatch({
 				type: "GET_TOPICS",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -38,12 +36,11 @@ export const GlobalProvider = ({ children }) => {
 	async function fetchTopic(topic) {
 		try {
 			dispatch({ type: "SET_LOADING" });
-			const res = await fetch(`${baseURL}/api/index/t/${topic}?skip=0`);
-			const data = await res.json();
-			if (!data.topic) throw Error("No topic exists");
+			const res = await axiosConfig.get(`/api/index/t/${topic}?skip=0`);
+			if (!res.data.topic) throw Error("No topic exists");
 			dispatch({
 				type: "GET_TOPIC",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -55,12 +52,11 @@ export const GlobalProvider = ({ children }) => {
 
 	async function moreTopic(topic, length) {
 		try {
-			const res = await fetch(`${baseURL}/api/index/t/${topic}?skip=${length}`);
-			const data = await res.json();
-			if (!data.topic) throw Error("No topic exists");
+			const res = await axiosConfig.get(`/api/index/t/${topic}?skip=${length}`);
+			if (!res.data.topic) throw Error("No topic exists");
 			dispatch({
 				type: "MORE_TOPIC",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -73,11 +69,10 @@ export const GlobalProvider = ({ children }) => {
 	async function fetchPosts() {
 		try {
 			dispatch({ type: "SET_LOADING" });
-			const res = await fetch(`${baseURL}/api/index?skip=0`);
-			const data = await res.json();
+			const res = await axiosConfig.get(`/api/index?skip=0`);
 			dispatch({
 				type: "GET_POSTS",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -89,11 +84,10 @@ export const GlobalProvider = ({ children }) => {
 
 	async function morePosts(length) {
 		try {
-			const res = await fetch(`${baseURL}/api/index?skip=${length}`);
-			const data = await res.json();
+			const res = await axiosConfig.get(`/api/index?skip=${length}`);
 			dispatch({
 				type: "MORE_POSTS",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -106,12 +100,11 @@ export const GlobalProvider = ({ children }) => {
 	async function fetchPost(topic, id) {
 		try {
 			dispatch({ type: "SET_LOADING" });
-			const res = await fetch(`${baseURL}/api/index/t/${topic}/p/${id}`);
-			const data = await res.json();
-			if (!data.post) throw Error("No post exists");
+			const res = await axiosConfig.get(`/api/index/t/${topic}/p/${id}`);
+			if (!res.data.post) throw Error("No post exists");
 			dispatch({
 				type: "GET_POST",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -123,13 +116,10 @@ export const GlobalProvider = ({ children }) => {
 
 	async function fetchUser() {
 		try {
-			const res = await fetch(`${baseURL}/api/user`, {
-				headers: { "x-auth-token": localStorage.token },
-			});
-			const data = await res.json();
+			const res = await axiosConfig.get(`/api/user`);
 			dispatch({
 				type: "GET_USER",
-				payload: data.user,
+				payload: res.data.user,
 			});
 		} catch (err) {
 			dispatch({
@@ -149,16 +139,11 @@ export const GlobalProvider = ({ children }) => {
 
 	async function loginUser(user) {
 		try {
-			const res = await fetch(`${baseURL}/api/user/login`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(user),
-			});
-			const data = await res.json();
-			localStorage.setItem("token", data.token);
+			const res = await axiosConfig.post(`/api/user/login`, user);
+			localStorage.setItem("token", res.data.token);
 			dispatch({
 				type: "LOGIN_USER",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -170,16 +155,11 @@ export const GlobalProvider = ({ children }) => {
 
 	async function registerUser(user) {
 		try {
-			const res = await fetch(`${baseURL}/api/user/register`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(user),
-			});
-			const data = await res.json();
-			localStorage.setItem("token", data.token);
+			const res = await axiosConfig.post(`/api/user/register`, user);
+			localStorage.setItem("token", res.data.token);
 			dispatch({
 				type: "REGISTER_USER",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -192,17 +172,10 @@ export const GlobalProvider = ({ children }) => {
 	async function addTopic(formData) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(`${baseURL}/api/index/t`, {
-				method: "POST",
-				headers: {
-					"x-auth-token": localStorage.token,
-				},
-				body: formData,
-			});
-			const data = await res.json();
+			const res = await axiosConfig.post(`/api/index/t`, formData);
 			dispatch({
 				type: "ADD_TOPIC",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -215,17 +188,10 @@ export const GlobalProvider = ({ children }) => {
 	async function addPost(topic, formData) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(`${baseURL}/api/index/t/${topic}/p`, {
-				method: "POST",
-				headers: {
-					"x-auth-token": localStorage.token,
-				},
-				body: formData,
-			});
-			const data = await res.json();
+			const res = await axiosConfig.post(`/api/index/t/${topic}/p`, formData);
 			dispatch({
 				type: "ADD_POST",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -238,18 +204,13 @@ export const GlobalProvider = ({ children }) => {
 	async function addComment(topic, id, newComment) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(`${baseURL}/api/index/t/${topic}/p/${id}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"x-auth-token": localStorage.token,
-				},
-				body: JSON.stringify(newComment),
-			});
-			const data = await res.json();
+			const res = await axiosConfig.post(
+				`/api/index/t/${topic}/p/${id}`,
+				newComment
+			);
 			dispatch({
 				type: "ADD_COMMENT",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -262,21 +223,13 @@ export const GlobalProvider = ({ children }) => {
 	async function addReply(topic, id, commentid, newReply) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(
-				`${baseURL}/api/index/t/${topic}/p/${id}/c/${commentid}/reply`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"x-auth-token": localStorage.token,
-					},
-					body: JSON.stringify(newReply),
-				}
+			const res = await axiosConfig.post(
+				`/api/index/t/${topic}/p/${id}/c/${commentid}/reply`,
+				newReply
 			);
-			const data = await res.json();
 			dispatch({
 				type: "ADD_REPLY",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -289,17 +242,10 @@ export const GlobalProvider = ({ children }) => {
 	async function deletePost(topic, id) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(`${baseURL}/api/index/t/${topic}/p/${id}`, {
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-					"x-auth-token": localStorage.token,
-				},
-			});
-			const data = await res.json();
+			const res = await axiosConfig.delete(`/api/index/t/${topic}/p/${id}`);
 			dispatch({
 				type: "DELETE_POST",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -312,14 +258,12 @@ export const GlobalProvider = ({ children }) => {
 	async function deleteComment(topic, id, commentid) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(
-				`${baseURL}/api/index/t/${topic}/p/${id}/c/${commentid}`,
-				{ method: "DELETE", headers: { "x-auth-token": localStorage.token } }
+			const res = await axiosConfig.delete(
+				`/api/index/t/${topic}/p/${id}/c/${commentid}`
 			);
-			const data = await res.json();
 			dispatch({
-				type: data.comment.comment ? "DELETE_REPLY" : "DELETE_COMMENT",
-				payload: data,
+				type: res.data.comment.comment ? "DELETE_REPLY" : "DELETE_COMMENT",
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -333,19 +277,13 @@ export const GlobalProvider = ({ children }) => {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
 
-			const res = await fetch(`${baseURL}/api/index/t/${topic}/p/${id}`, {
-				method: "PUT",
-				headers: {
-					"Content-Type": "application/json",
-					"x-auth-token": localStorage.token,
-				},
-				body: JSON.stringify(newPost),
-			});
-			const data = await res.json();
-			console.log(data);
+			const res = await axiosConfig.put(
+				`/api/index/t/${topic}/p/${id}`,
+				newPost
+			);
 			dispatch({
 				type: "UPDATE_POST",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -358,21 +296,13 @@ export const GlobalProvider = ({ children }) => {
 	async function updateComment(topic, postid, commentid, newComment) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(
-				`${baseURL}/api/index/t/${topic}/p/${postid}/c/${commentid}`,
-				{
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-						"x-auth-token": localStorage.token,
-					},
-					body: JSON.stringify(newComment),
-				}
+			const res = await axiosConfig.put(
+				`/api/index/t/${topic}/p/${postid}/c/${commentid}`,
+				newComment
 			);
-			const data = await res.json();
 			dispatch({
-				type: data.comment.comment ? "UPDATE_REPLY" : "UPDATE_COMMENT",
-				payload: data,
+				type: res.data.comment.comment ? "UPDATE_REPLY" : "UPDATE_COMMENT",
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -385,19 +315,12 @@ export const GlobalProvider = ({ children }) => {
 	async function changeVote(topic, id, vote) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(
-				`${baseURL}/api/index/t/${topic}/p/${id}/changevote?vote=${vote}`,
-				{
-					method: "PUT",
-					headers: {
-						"x-auth-token": localStorage.token,
-					},
-				}
+			const res = await axiosConfig.put(
+				`/api/index/t/${topic}/p/${id}/changevote?vote=${vote}`
 			);
-			const data = await res.json();
 			dispatch({
 				type: "CHANGE_VOTE",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -410,21 +333,14 @@ export const GlobalProvider = ({ children }) => {
 	async function changeCommentVote(topic, postid, commentid, vote) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(
-				`${baseURL}/api/index/t/${topic}/p/${postid}/c/${commentid}/changevote?vote=${vote}`,
-				{
-					method: "PUT",
-					headers: {
-						"x-auth-token": localStorage.token,
-					},
-				}
+			const res = await axiosConfig.put(
+				`/api/index/t/${topic}/p/${postid}/c/${commentid}/changevote?vote=${vote}`
 			);
-			const data = await res.json();
 			dispatch({
-				type: data.comment.comment
+				type: res.data.comment.comment
 					? "CHANGE_REPLY_VOTE"
 					: "CHANGE_COMMENT_VOTE",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({
@@ -437,16 +353,10 @@ export const GlobalProvider = ({ children }) => {
 	async function followTopic(topic) {
 		try {
 			dispatch({ type: "CLEAR_STATUS" });
-			const res = await fetch(`${baseURL}/api/index/t/${topic}/followtopic`, {
-				method: "POST",
-				headers: {
-					"x-auth-token": localStorage.token,
-				},
-			});
-			const data = await res.json();
+			const res = await axiosConfig.post(`/api/index/t/${topic}/followtopic`);
 			dispatch({
 				type: "FOLLOW_TOPIC",
-				payload: data,
+				payload: res.data,
 			});
 		} catch (err) {
 			dispatch({

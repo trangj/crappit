@@ -4,8 +4,7 @@ import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import { GlobalContext } from "../../context/GlobalState";
-
-const baseURL = process.env.SERVER_URL;
+import axiosConfig from "../../axiosConfig";
 
 const schema = yup.object({
 	password: yup.string().required(),
@@ -21,11 +20,10 @@ const Forgot = ({ match }) => {
 	useEffect(() => {
 		const confirmToken = async () => {
 			try {
-				const res = await fetch(
-					`${baseURL}/api/user/reset/${match.params.token}`
+				const res = await axiosConfig.get(
+					`/api/user/reset/${match.params.token}`
 				);
-				const data = await res.json();
-				setStatus({ text: data.status, severity: "success" });
+				setStatus({ text: res.data.status, severity: "success" });
 			} catch (err) {
 				setStatus({ text: err.message, severity: "error" });
 			}
@@ -38,16 +36,11 @@ const Forgot = ({ match }) => {
 		const { password, password2 } = values;
 		try {
 			setStatus({ text: "Awaiting response...", severity: "success" });
-			const res = await fetch(
-				`${baseURL}/api/user/reset/${match.params.token}`,
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ password, password2 }),
-				}
+			const res = await axiosConfig.post(
+				`/api/user/reset/${match.params.token}`,
+				{ password, password2 }
 			);
-			const data = await res.json();
-			setStatus({ text: data.status, severity: "success" });
+			setStatus({ text: res.data.status, severity: "success" });
 		} catch (err) {
 			setStatus({ text: err.message, severity: "error" });
 		}
