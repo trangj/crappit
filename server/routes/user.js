@@ -3,7 +3,6 @@ const router = express.Router();
 const bcyrpt = require("bcryptjs");
 const crypto = require("crypto");
 const sgMail = require("@sendgrid/mail");
-const keys = require("../config/keys");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/User");
