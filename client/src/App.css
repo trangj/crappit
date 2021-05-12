@@ -13,12 +13,11 @@ p a:hover {
 }
 
 .thread {
-	width: 3px;
-	background-color: #f6ad55;
+	border-right: 2px solid #f6ad55;
 }
 
 .thread:hover {
-	background-color: #ed8936;
+	border-right: 2px solid #ed8936;
 	cursor: pointer;
 }
 
