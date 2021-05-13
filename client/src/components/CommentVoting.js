@@ -18,7 +18,7 @@ const CommentVoting = ({ comment }) => {
 		<HStack>
 			{comment.likes.includes(user._id) ? (
 				<IconButton
-					disabled
+					onClick={handleUpvote}
 					size="xs"
 					icon={<ArrowUpIcon color="orange.400" />}
 				/>
@@ -28,7 +28,7 @@ const CommentVoting = ({ comment }) => {
 			<div>{comment.likes.length - comment.dislikes.length}</div>
 			{comment.dislikes.includes(user._id) ? (
 				<IconButton
-					disabled
+					onClick={handleDownvote}
 					size="xs"
 					icon={<ArrowDownIcon color="blue.600" />}
 				/>

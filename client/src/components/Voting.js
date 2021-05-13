@@ -19,7 +19,7 @@ const Voting = ({ post }) => {
 		<VStack mr="1">
 			{post.likes.includes(user._id) ? (
 				<IconButton
-					disabled
+					onClick={handleUpvote}
 					size="sm"
 					icon={<ArrowUpIcon color="orange.400" />}
 				/>
@@ -29,7 +29,7 @@ const Voting = ({ post }) => {
 			<div>{post.likes.length - post.dislikes.length}</div>
 			{post.dislikes.includes(user._id) ? (
 				<IconButton
-					disabled
+					onClick={handleDownvote}
 					size="sm"
 					icon={<ArrowDownIcon color="blue.600" />}
 				/>

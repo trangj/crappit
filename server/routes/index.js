@@ -133,26 +133,24 @@ router.put("/t/:topic/p/:id/changevote", auth, async (req, res) => {
 
 		if (req.query.vote == "like") {
 			if (post.likes.includes(req.user.id)) {
-				return res.json({
-					status: { text: "Already liked", severity: "error" },
-				});
-			}
-			if (post.dislikes.includes(req.user.id)) {
+				post.likes.pull(req.user.id);
+			} else if (post.dislikes.includes(req.user.id)) {
 				post.dislikes.pull(req.user.id);
+				post.likes.push(req.user.id);
+			} else {
+				post.likes.push(req.user.id);
 			}
-			post.likes.push(req.user.id);
 			await post.save();
 			res.status(200).json({ post });
 		} else if (req.query.vote == "dislike") {
 			if (post.dislikes.includes(req.user.id)) {
-				return res.json({
-					status: { text: "Already disliked", severity: "error" },
-				});
-			}
-			if (post.likes.includes(req.user.id)) {
+				post.dislikes.pull(req.user.id);
+			} else if (post.likes.includes(req.user.id)) {
 				post.likes.pull(req.user.id);
+				post.dislikes.push(req.user.id);
+			} else {
+				post.dislikes.push(req.user.id);
 			}
-			post.dislikes.push(req.user.id);
 			await post.save();
 			res.status(200).json({ post });
 		}
@@ -266,26 +264,24 @@ router.put(
 
 			if (req.query.vote == "like") {
 				if (comment.likes.includes(req.user.id)) {
-					return res.json({
-						status: { text: "Already liked", severity: "error" },
-					});
-				}
-				if (comment.dislikes.includes(req.user.id)) {
+					comment.likes.pull(req.user.id);
+				} else if (comment.dislikes.includes(req.user.id)) {
 					comment.dislikes.pull(req.user.id);
+					comment.likes.push(req.user.id);
+				} else {
+					comment.likes.push(req.user.id);
 				}
-				comment.likes.push(req.user.id);
 				await comment.save();
 				res.status(200).json({ comment });
 			} else if (req.query.vote == "dislike") {
 				if (comment.dislikes.includes(req.user.id)) {
-					return res.json({
-						status: { text: "Already disliked", severity: "error" },
-					});
-				}
-				if (comment.likes.includes(req.user.id)) {
+					comment.dislikes.pull(req.user.id);
+				} else if (comment.likes.includes(req.user.id)) {
 					comment.likes.pull(req.user.id);
+					comment.dislikes.push(req.user.id);
+				} else {
+					comment.dislikes.push(req.user.id);
 				}
-				comment.dislikes.push(req.user.id);
 				await comment.save();
 				res.status(200).json({ comment });
 			}

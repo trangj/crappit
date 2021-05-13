@@ -18,7 +18,7 @@ const PostItem = ({ post }) => {
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg">
-			<HStack ml="3" my="3">
+			<HStack m="3">
 				<Voting post={post} />
 				<Box>
 					<Heading>
