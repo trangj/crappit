@@ -47,33 +47,31 @@ const Forgot = ({ match }) => {
 	};
 
 	return (
-		<>
-			<Formik
-				initialValues={{ password: "", password2: "" }}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{() => (
-					<Form>
-						<Field
-							label="Password"
-							name="password"
-							type="password"
-							component={TextFieldForm}
-						/>
-						<Field
-							label="Confirm Password"
-							name="password2"
-							type="password"
-							component={TextFieldForm}
-						/>
-						<Button type="submit" mt="2">
-							Post
-						</Button>
-					</Form>
-				)}
-			</Formik>
-		</>
+		<Formik
+			initialValues={{ password: "", password2: "" }}
+			onSubmit={handleSubmit}
+			validationSchema={schema}
+		>
+			{() => (
+				<Form>
+					<Field
+						label="Password"
+						name="password"
+						type="password"
+						component={TextFieldForm}
+					/>
+					<Field
+						label="Confirm Password"
+						name="password2"
+						type="password"
+						component={TextFieldForm}
+					/>
+					<Button type="submit" mt="2">
+						Post
+					</Button>
+				</Form>
+			)}
+		</Formik>
 	);
 };
 

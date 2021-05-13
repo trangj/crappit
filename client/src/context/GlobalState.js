@@ -28,7 +28,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "TOPIC_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -45,7 +45,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: { text: err.message, severity: "error" },
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -61,7 +61,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: { text: err.message, severity: "error" },
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -77,7 +77,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -92,7 +92,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -109,7 +109,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: { text: err.message, severity: "error" },
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -124,7 +124,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "USER_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -148,7 +148,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "USER_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -164,7 +164,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "USER_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -180,7 +180,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "TOPIC_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -196,7 +196,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -215,7 +215,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "COMMENT_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -234,7 +234,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "COMMENT_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -250,7 +250,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -268,7 +268,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "COMMENT_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -288,7 +288,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "POST_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -307,7 +307,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "COMMENT_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -325,7 +325,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "VOTE_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -345,7 +345,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "VOTE_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}
@@ -361,7 +361,7 @@ export const GlobalProvider = ({ children }) => {
 		} catch (err) {
 			dispatch({
 				type: "FOLLOW_ERROR",
-				payload: err.data,
+				payload: err.response.data.status,
 			});
 		}
 	}

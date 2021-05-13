@@ -24,14 +24,7 @@ const Profile = ({ match }) => {
 		<>
 			<Box style={{ marginBottom: "1rem" }}>
 				<Box>
-					<Heading
-						gutterBottom
-						variant="h5"
-						component="h2"
-						style={{ marginTop: "1rem" }}
-					>
-						u/{profile.username}
-					</Heading>
+					<Heading>u/{profile.username}</Heading>
 					<Text>User since {moment(profile.register_date).fromNow()}</Text>
 				</Box>
 			</Box>

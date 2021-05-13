@@ -16,13 +16,13 @@ const TextFieldForm = ({ field, form, multiline, label, ...props }) => {
 			{!!multiline ? (
 				<>
 					<FormLabel>{label}</FormLabel>
-					<Textarea isFullWidth {...field} {...props} />
+					<Textarea {...field} {...props} />
 					<FormErrorMessage>{error}</FormErrorMessage>
 				</>
 			) : (
 				<>
 					<FormLabel>{label}</FormLabel>
-					<Input isFullWidth {...field} {...props} />
+					<Input {...field} {...props} />
 					<FormErrorMessage>{error}</FormErrorMessage>
 				</>
 			)}

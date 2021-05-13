@@ -61,8 +61,8 @@ const NavigationBar = () => {
 							) : (
 								<MenuGroup title="Followed Topics">
 									<AddTopic />
-									{user.followedTopics.map((topic) => (
-										<MenuItem as={Link} to={`/t/${topic}`}>
+									{user.followedTopics.map((topic, i) => (
+										<MenuItem as={Link} to={`/t/${topic}`} key={i}>
 											t/{topic}
 										</MenuItem>
 									))}
