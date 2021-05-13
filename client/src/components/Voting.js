@@ -15,7 +15,7 @@ const Voting = ({ post }) => {
 		changeVote(post.topic, post._id, "dislike");
 	};
 
-	return user && post.likes && post.dislikes ? (
+	return user ? (
 		<VStack mr="1">
 			{post.likes.includes(user._id) ? (
 				<IconButton

@@ -16,7 +16,7 @@ const PostCard = () => {
 			<Image alt={post.imageName} src={post.imageURL} width="100%" />
 			<Box m="3">
 				<HStack>
-					{post && <Voting post={post} />}
+					<Voting post={post} />
 					<Box width="100%">
 						<Text fontSize="xs">
 							<Link to={`/t/${post.topic}`} style={{ fontWeight: "bold" }}>

@@ -50,10 +50,9 @@ const CommentCard = () => {
 					<Text mt="3">Register and Login to comment!</Text>
 				)}
 				<Divider mt="5" />
-				{comments &&
-					comments.map((comment) => (
-						<CommentItem comment={comment} key={comment._id} />
-					))}
+				{comments.map((comment) => (
+					<CommentItem comment={comment} key={comment._id} />
+				))}
 			</Box>
 		</Box>
 	);

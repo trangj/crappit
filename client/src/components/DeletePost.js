@@ -37,10 +37,10 @@ const DeletePost = ({ post }) => {
 							mr="2"
 							color="primary"
 						>
-							Yes, I regret posting it!
+							Yes
 						</Button>
 						<Button onClick={() => setOpen(false)} color="secondary">
-							No, I like my post!
+							No
 						</Button>
 					</ModalBody>
 				</ModalContent>

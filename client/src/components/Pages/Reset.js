@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import { GlobalContext } from "../../context/GlobalState";
 import axiosConfig from "../../axiosConfig";
+import { Redirect } from "react-router";
 
 const schema = yup.object({
 	password: yup.string().required(),
@@ -16,6 +17,7 @@ const schema = yup.object({
 
 const Forgot = ({ match }) => {
 	const { setStatus } = useContext(GlobalContext);
+	const [redirect, setRedirect] = useState(false);
 
 	useEffect(() => {
 		const confirmToken = async () => {
@@ -32,6 +34,8 @@ const Forgot = ({ match }) => {
 		// eslint-disable-next-line
 	}, [match.params.token]);
 
+	if (redirect) return <Redirect to={`/`} />;
+
 	const handleSubmit = async (values) => {
 		const { password, password2 } = values;
 		try {
@@ -41,6 +45,7 @@ const Forgot = ({ match }) => {
 				{ password, password2 }
 			);
 			setStatus({ text: res.data.status, severity: "success" });
+			setRedirect(true);
 		} catch (err) {
 			setStatus({ text: err.message, severity: "error" });
 		}

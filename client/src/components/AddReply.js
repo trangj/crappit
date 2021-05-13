@@ -10,7 +10,7 @@ const schema = yup.object({
 });
 
 const AddPost = ({ comment, openReply, setOpenReply }) => {
-	const { addReply, user } = useContext(GlobalContext);
+	const { addReply } = useContext(GlobalContext);
 
 	const handleSubmit = (values) => {
 		const { content } = values;
@@ -22,7 +22,6 @@ const AddPost = ({ comment, openReply, setOpenReply }) => {
 	};
 
 	return (
-		user &&
 		openReply && (
 			<Formik
 				initialValues={{ content: "" }}
