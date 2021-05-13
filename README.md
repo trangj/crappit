@@ -2,7 +2,7 @@
 
 A less good version of Reddit developed using Node.js, React, and MongoDB. Users are able to sign up, login and create posts and comment on others. Posts, like in Reddit fashion, can be upvoted or downvoted.
 
-[![](http://img.youtube.com/vi/ZT3ha8ChiTo/0.jpg)](http://www.youtube.com/watch?v=ZT3ha8ChiTo "Demo")
+You can play around with a live build of this app [here](https://crappit.netlify.app/)
 
 ## Current Features
 
@@ -13,7 +13,6 @@ Crappit currently has these features:
 - upvote or downvote posts
 - browse latest topics and posts within topics
 - add topics to your favourites, such that they can be accessed easily from the navbar
-- look for topics and posts in the search bar.
 
 ## Developing Features
 
@@ -32,17 +31,16 @@ Want to run Crappit? Follow these steps:
 
 ```
 git clone https://github.com/trangj/Crappit.git
-cd Crappit-React
+cd Crappit/server
 npm i
-cd client
+cd ../client
 npm i
-cd ..
 ```
 
 4. You will need to set up your process variables in order for the app to function, ensure that you have the following variables setup:
 
 ```
-  mongoURI:"<your mongo uri>"
+  mongoURI: "<your mongo uri>"
   jwtSecret: "<your secret>"
   AWS_ACCESS_KEY_ID: "<your aws access id>"
   AWS_SECRET_ACCESS_KEY: "<your aws access key>"
