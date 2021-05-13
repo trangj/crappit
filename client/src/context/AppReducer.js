@@ -284,6 +284,11 @@ export default (state, action) => {
 				...state,
 				status: action.payload,
 			};
+		case "TOPIC_ERROR":
+			return {
+				...state,
+				status: action.payload,
+			};
 		case "COMMENT_ERROR":
 			return {
 				...state,
