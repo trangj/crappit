@@ -18,7 +18,9 @@ mongoose.connect(
 app.use(cors());
 
 // routes
-app.use("/api/index", require("./routes/index"));
+app.use("/api/index", require("./routes/comment"));
+app.use("/api/index", require("./routes/post"));
+app.use("/api/index", require("./routes/topic"));
 app.use("/api/user", require("./routes/user"));
 
 app.listen(process.env.PORT || 5000, () =>
