@@ -48,8 +48,9 @@ router.post("/register", async (req, res) => {
 		if (!savedUser) throw Error("Error with saving user");
 
 		res.status(200).json({
+			user: savedUser,
 			status: {
-				text: "Successfully registered, you can now login!",
+				text: "Successfully registered!",
 				severity: "success",
 			},
 		});

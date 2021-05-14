@@ -158,7 +158,7 @@ export const GlobalProvider = ({ children }) => {
 			const res = await axiosConfig.post(`/api/user/register`, user);
 			localStorage.setItem("token", res.data.token);
 			dispatch({
-				type: "REGISTER_USER",
+				type: "LOGIN_USER",
 				payload: res.data,
 			});
 		} catch (err) {
@@ -263,7 +263,7 @@ export const GlobalProvider = ({ children }) => {
 			);
 			console.log(res.data);
 			dispatch({
-				type: res.data.comment.comment ? "DELETE_REPLY" : "DELETE_COMMENT",
+				type: "DELETE_COMMENT",
 				payload: res.data,
 			});
 		} catch (err) {
@@ -302,7 +302,7 @@ export const GlobalProvider = ({ children }) => {
 				newComment
 			);
 			dispatch({
-				type: res.data.comment.comment ? "UPDATE_REPLY" : "UPDATE_COMMENT",
+				type: "UPDATE_COMMENT",
 				payload: res.data,
 			});
 		} catch (err) {
@@ -338,9 +338,7 @@ export const GlobalProvider = ({ children }) => {
 				`/api/index/t/${topic}/p/${postid}/c/${commentid}/changevote?vote=${vote}`
 			);
 			dispatch({
-				type: res.data.comment.comment
-					? "CHANGE_REPLY_VOTE"
-					: "CHANGE_COMMENT_VOTE",
+				type: "CHANGE_COMMENT_VOTE",
 				payload: res.data,
 			});
 		} catch (err) {

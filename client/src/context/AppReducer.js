@@ -53,12 +53,6 @@ export default (state, action) => {
 				user: action.payload.user,
 				status: action.payload.status,
 			};
-		case "REGISTER_USER":
-			return {
-				...state,
-				user: action.payload.user,
-				status: action.payload.status,
-			};
 		case "ADD_TOPIC":
 			return {
 				...state,
@@ -81,25 +75,25 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "ADD_REPLY":
+			const searchTree = (comment, id) => {
+				if (comment._id === id) {
+					comment.comments.push(action.payload.reply);
+					return comment;
+				}
+				if (comment.comments.length === 0) return comment;
+				comment.comments = comment.comments.map((comment) => {
+					comment = searchTree(comment, id);
+					return comment;
+				});
+				return comment;
+			};
+
 			return {
 				...state,
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
 						const id = action.payload.reply.comment;
-						function searchTree(comment, id) {
-							if (comment._id === id) {
-								comment.comments.push(action.payload.reply);
-								return comment;
-							}
-							if (comment.comments.length === 0) return comment;
-
-							comment.comments = comment.comments.map((comment) => {
-								comment = searchTree(comment, id);
-								return comment;
-							});
-							return comment;
-						}
 						comment = searchTree(comment, id);
 						return comment;
 					}),
@@ -112,49 +106,26 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "DELETE_COMMENT":
-			return {
-				...state,
-				post: {
-					...state.post,
-					comments: state.post.comments.map((comment) => {
-						if (action.payload.comment._id === comment._id) {
-							comment.author = action.payload.comment.author;
-							comment.authorId = action.payload.comment.authorId;
-							comment.content = action.payload.comment.content;
-						}
-						return comment;
-					}),
-				},
-				status: action.payload.status,
+			const searchTree = (comment) => {
+				if (comment._id === action.payload.comment._id) {
+					comment.author = action.payload.comment.author;
+					comment.authorId = action.payload.comment.authorId;
+					comment.content = action.payload.comment.content;
+				}
+				if (comment.comments.length === 0) return comment;
+				comment.comments = comment.comments.map((comment) => {
+					comment = searchTree(comment);
+					return comment;
+				});
+				return comment;
 			};
-		case "DELETE_REPLY":
+
 			return {
 				...state,
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
-						const id = action.payload.comment.comment;
-						function searchTree(comment, id) {
-							if (comment._id === id) {
-								comment.comments = comment.comments.map((comment) => {
-									if (comment._id === action.payload.comment._id) {
-										comment.author = action.payload.comment.author;
-										comment.authorId = action.payload.comment.authorId;
-										comment.content = action.payload.comment.content;
-									}
-									return comment;
-								});
-								return comment;
-							}
-							if (comment.comments.length === 0) return comment;
-
-							comment.comments = comment.comments.map((comment) => {
-								comment = searchTree(comment, id);
-								return comment;
-							});
-							return comment;
-						}
-						comment = searchTree(comment, id);
+						comment = searchTree(comment);
 						return comment;
 					}),
 				},
@@ -167,45 +138,24 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "UPDATE_COMMENT":
-			return {
-				...state,
-				post: {
-					...state.post,
-					comments: state.post.comments.map((comment) => {
-						if (action.payload.comment._id === comment._id) {
-							comment.content = action.payload.comment.content;
-						}
-						return comment;
-					}),
-				},
-				status: action.payload.status,
+			const searchTree = (comment) => {
+				if (comment._id === action.payload.comment._id) {
+					comment.content = action.payload.comment.content;
+				}
+				if (comment.comments.length === 0) return comment;
+				comment.comments = comment.comments.map((comment) => {
+					comment = searchTree(comment);
+					return comment;
+				});
+				return comment;
 			};
-		case "UPDATE_REPLY":
+
 			return {
 				...state,
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
-						const id = action.payload.comment.comment;
-						function searchTree(comment, id) {
-							if (comment._id === id) {
-								comment.comments = comment.comments.map((comment) => {
-									if (comment._id === action.payload.comment._id) {
-										comment.content = action.payload.comment.content;
-									}
-									return comment;
-								});
-								return comment;
-							}
-							if (comment.comments.length === 0) return comment;
-
-							comment.comments = comment.comments.map((comment) => {
-								comment = searchTree(comment, id);
-								return comment;
-							});
-							return comment;
-						}
-						comment = searchTree(comment, id);
+						comment = searchTree(comment);
 						return comment;
 					}),
 				},
@@ -229,47 +179,25 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "CHANGE_COMMENT_VOTE":
-			return {
-				...state,
-				post: {
-					...state.post,
-					comments: state.post.comments.map((comment) => {
-						if (action.payload.comment._id === comment._id) {
-							comment.likes = action.payload.comment.likes;
-							comment.dislikes = action.payload.comment.dislikes;
-						}
-						return comment;
-					}),
-				},
-				status: action.payload.status,
+			const searchTree = (comment) => {
+				if (comment._id === action.payload.comment._id) {
+					comment.likes = action.payload.comment.likes;
+					comment.dislikes = action.payload.comment.dislikes;
+				}
+				if (comment.comments.length === 0) return comment;
+				comment.comments = comment.comments.map((comment) => {
+					comment = searchTree(comment);
+					return comment;
+				});
+				return comment;
 			};
-		case "CHANGE_REPLY_VOTE":
+
 			return {
 				...state,
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
-						const id = action.payload.comment.comment;
-						function searchTree(comment, id) {
-							if (comment._id === id) {
-								comment.comments = comment.comments.map((comment) => {
-									if (comment._id === action.payload.comment._id) {
-										comment.likes = action.payload.comment.likes;
-										comment.dislikes = action.payload.comment.dislikes;
-									}
-									return comment;
-								});
-								return comment;
-							}
-							if (comment.comments.length === 0) return comment;
-
-							comment.comments = comment.comments.map((comment) => {
-								comment = searchTree(comment, id);
-								return comment;
-							});
-							return comment;
-						}
-						comment = searchTree(comment, id);
+						comment = searchTree(comment);
 						return comment;
 					}),
 				},
