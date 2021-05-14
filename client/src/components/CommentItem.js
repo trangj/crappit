@@ -19,7 +19,11 @@ const CommentItem = ({ comment }) => {
 			<Box mt="5">
 				<VStack align="left">
 					<Text fontSize="xs">
-						<Link to={`/u/${comment.authorId}`}>{comment.author}</Link>{" "}
+						{comment.authorId ? (
+							<Link to={`/u/${comment.authorId}`}>{comment.author}</Link>
+						) : (
+							comment.author
+						)}{" "}
 						{moment(comment.date).fromNow()}
 					</Text>
 					{openEdit ? (
@@ -32,9 +36,9 @@ const CommentItem = ({ comment }) => {
 						<>
 							<Text>{comment.content}</Text>
 							<HStack>
-								<CommentVoting comment={comment} />
-								{user !== undefined ? (
+								{user !== undefined && comment.authorId ? (
 									<>
+										<CommentVoting comment={comment} />
 										<Button size="xs" onClick={() => setOpenReply(!openReply)}>
 											Reply
 										</Button>

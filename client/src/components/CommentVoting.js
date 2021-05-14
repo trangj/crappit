@@ -14,7 +14,7 @@ const CommentVoting = ({ comment }) => {
 		changeCommentVote(comment.topic, comment.post, comment._id, "dislike");
 	};
 
-	return user ? (
+	return (
 		<HStack>
 			{comment.likes.includes(user._id) ? (
 				<IconButton
@@ -40,7 +40,7 @@ const CommentVoting = ({ comment }) => {
 				/>
 			)}
 		</HStack>
-	) : null;
+	);
 };
 
 export default CommentVoting;

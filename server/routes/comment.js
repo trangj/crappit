@@ -66,21 +66,22 @@ router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 
 router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOneAndDelete({
-			_id: req.params.commentid,
-			authorId: req.user.id,
-		});
+		const comment = await Comment.findOneAndUpdate(
+			{
+				_id: req.params.commentid,
+				authorId: req.user.id,
+			},
+			{
+				$set: {
+					author: "[deleted]",
+					authorId: null,
+					content: "[deleted]",
+				},
+			},
+			{ useFindAndModify: false, new: true }
+		);
 		if (!comment)
 			throw Error("Comment does not exist or you are not the author");
-		await Comment.deleteMany(
-			{ comment: comment._id },
-			{ $pull: { comments: comment._id } }
-		);
-		await Post.updateOne(
-			{ _id: req.params.id, authorId: req.user.id },
-			{ $pull: { comments: req.params.commentid } },
-			{ useFindAndModify: true }
-		);
 		res.status(200).json({
 			comment,
 			status: { text: "Comment succesfully deleted", severity: "success" },

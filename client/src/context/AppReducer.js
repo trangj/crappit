@@ -116,9 +116,14 @@ export default (state, action) => {
 				...state,
 				post: {
 					...state.post,
-					comments: state.post.comments.filter(
-						(comment) => comment._id !== action.payload.comment._id
-					),
+					comments: state.post.comments.map((comment) => {
+						if (action.payload.comment._id === comment._id) {
+							comment.author = action.payload.comment.author;
+							comment.authorId = action.payload.comment.authorId;
+							comment.content = action.payload.comment.content;
+						}
+						return comment;
+					}),
 				},
 				status: action.payload.status,
 			};
@@ -131,9 +136,14 @@ export default (state, action) => {
 						const id = action.payload.comment.comment;
 						function searchTree(comment, id) {
 							if (comment._id === id) {
-								comment.comments = comment.comments.filter(
-									(comment) => comment._id !== action.payload.comment._id
-								);
+								comment.comments = comment.comments.map((comment) => {
+									if (comment._id === action.payload.comment._id) {
+										comment.author = action.payload.comment.author;
+										comment.authorId = action.payload.comment.authorId;
+										comment.content = action.payload.comment.content;
+									}
+									return comment;
+								});
 								return comment;
 							}
 							if (comment.comments.length === 0) return comment;

@@ -261,6 +261,7 @@ export const GlobalProvider = ({ children }) => {
 			const res = await axiosConfig.delete(
 				`/api/index/t/${topic}/p/${id}/c/${commentid}`
 			);
+			console.log(res.data);
 			dispatch({
 				type: res.data.comment.comment ? "DELETE_REPLY" : "DELETE_COMMENT",
 				payload: res.data,
