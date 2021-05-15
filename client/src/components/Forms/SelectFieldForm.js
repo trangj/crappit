@@ -2,26 +2,23 @@ import React from "react";
 import { getIn } from "formik";
 import {
 	FormLabel,
-	Input,
-	Textarea,
+	Select,
 	FormErrorMessage,
 	FormControl,
 } from "@chakra-ui/react";
 
-const TextFieldForm = ({ field, form, multiline, label, ...props }) => {
+const SelectFieldForm = ({ field, form, children, label, ...props }) => {
 	const error =
 		getIn(form.touched, field.name) && getIn(form.errors, field.name);
 	return (
 		<FormControl isInvalid={!!error}>
 			<FormLabel>{label}</FormLabel>
-			{!!multiline ? (
-				<Textarea {...field} {...props} />
-			) : (
-				<Input {...field} {...props} />
-			)}
+			<Select placeholder="Choose a topic" {...field} {...props}>
+				{children}
+			</Select>
 			<FormErrorMessage>{error}</FormErrorMessage>
 		</FormControl>
 	);
 };
 
-export default TextFieldForm;
+export default SelectFieldForm;

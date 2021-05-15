@@ -22,7 +22,7 @@ const AllTopics = () => {
 				<Box mb="2" borderWidth="1px" borderRadius="lg" key={topic.title}>
 					<Box m="3">
 						<Heading>
-							<Link to={`t/${topic.title}`}>/t/{topic.title}</Link>
+							<Link to={`t/${topic.title}`}>t/{topic.title}</Link>
 						</Heading>
 						<Text>{topic.description}</Text>
 					</Box>

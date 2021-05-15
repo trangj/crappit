@@ -1,75 +1,76 @@
-import React, { useState, useContext } from "react";
-import {
-	Button,
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalCloseButton,
-} from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { Alert, AlertIcon, Button, HStack, Spacer } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { GlobalContext } from "../../context/GlobalState";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const schema = yup.object({
 	email: yup.string().required(),
 	password: yup.string().required(),
 });
 
-const Login = () => {
+const Login = (props) => {
 	const { loginUser } = useContext(GlobalContext);
-	const [open, setOpen] = useState(false);
+	const history = useHistory();
 
-	const handleSubmit = (values) => {
+	const handleSubmit = async (values) => {
 		const { email, password } = values;
 		const user = {
 			email,
 			password,
 		};
-		loginUser(user);
-		setOpen(false);
+		const res = await loginUser(user);
+		if (res === "success") {
+			if (
+				props.location &&
+				props.location.state &&
+				props.location.state.error
+			) {
+				history.push(props.location.state.from);
+			}
+			history.goBack();
+		}
 	};
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)}>Login</Button>
-			<Modal isOpen={open} onClose={() => setOpen(false)}>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader id="title">Login</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<Formik
-							initialValues={{ email: "", password: "" }}
-							onSubmit={handleSubmit}
-							validationSchema={schema}
-						>
-							{() => (
-								<Form>
-									<Field label="Email" name="email" component={TextFieldForm} />
-									<Field
-										label="Password"
-										name="password"
-										type="password"
-										component={TextFieldForm}
-									/>
-									<Button type="submit" mt="2">
-										Login
-									</Button>
-								</Form>
-							)}
-						</Formik>
-						<Link to="/forgot" onClick={() => setOpen(false)}>
-							<div style={{ marginTop: ".5rem" }}>
-								<small>Forgot your password?</small>
-							</div>
-						</Link>
-					</ModalBody>
-				</ModalContent>
-			</Modal>
+			{props.location.state && (
+				<Alert variant="solid" status="error">
+					<AlertIcon />
+					{props.location.state.error}
+				</Alert>
+			)}
+			<Formik
+				initialValues={{ email: "", password: "" }}
+				onSubmit={handleSubmit}
+				validationSchema={schema}
+			>
+				{() => (
+					<Form>
+						<Field label="Email" name="email" component={TextFieldForm} />
+						<Field
+							label="Password"
+							name="password"
+							type="password"
+							component={TextFieldForm}
+						/>
+						<Button type="submit" mt="2">
+							Login
+						</Button>
+					</Form>
+				)}
+			</Formik>
+			<HStack>
+				<Link to="/forgot">
+					<small>Forgot your password?</small>
+				</Link>
+				<Spacer />
+				<Link to="/register">
+					<small>Sign up for an account!</small>
+				</Link>
+			</HStack>
 		</>
 	);
 };

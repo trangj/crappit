@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import AddPost from "./AddPost";
 import { GlobalContext } from "../context/GlobalState";
 import { Box, Heading, Image, Button, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const TopicCard = () => {
 	const { topic, followTopic, user } = useContext(GlobalContext);
@@ -20,7 +20,9 @@ const TopicCard = () => {
 								: "Follow"}
 						</Button>
 					)}
-					<AddPost />
+					<Button as={Link} to={`/t/${topic.title}/submit`}>
+						Add Post
+					</Button>
 				</Box>
 			</Box>
 		</Box>

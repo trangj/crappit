@@ -8,7 +8,7 @@ import {
 	Button,
 	IconButton,
 } from "@chakra-ui/react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
 import { Link } from "react-router-dom";
 import moment from "moment";
@@ -32,11 +32,17 @@ const PostItem = ({ post }) => {
 						{moment(post.date).fromNow()}
 					</Text>
 					<HStack mt="2">
-						<IconButton
-							size="xs"
-							onClick={() => setOpen(!open)}
-							icon={open ? <MinusIcon /> : <AddIcon />}
-						/>
+						{post.type === "link" ? (
+							<a href={post.link} target="_blank" rel="noopener noreferrer">
+								<IconButton size="xs" icon={<LinkIcon />} />
+							</a>
+						) : (
+							<IconButton
+								size="xs"
+								onClick={() => setOpen(!open)}
+								icon={open ? <MinusIcon /> : <AddIcon />}
+							/>
+						)}
 						<Button
 							size="xs"
 							as={Link}
@@ -51,18 +57,20 @@ const PostItem = ({ post }) => {
 				<>
 					<Divider />
 					<Box id={post._id} m="3">
-						<img
-							alt={post.imageName}
-							src={post.imageURL}
-							style={{
-								display: "block",
-								maxWidth: "100%",
-								maxHeight: "400px",
-								marginLeft: "auto",
-								marginRight: "auto",
-							}}
-						/>
-						<Text mt="3">{post.content}</Text>
+						{post.type === "photo" && (
+							<img
+								alt={post.imageName}
+								src={post.imageURL}
+								style={{
+									display: "block",
+									maxWidth: "100%",
+									maxHeight: "400px",
+									marginLeft: "auto",
+									marginRight: "auto",
+								}}
+							/>
+						)}
+						{post.type === "text" && <Text mt="3">{post.content}</Text>}
 					</Box>
 				</>
 			)}

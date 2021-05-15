@@ -145,11 +145,13 @@ export const GlobalProvider = ({ children }) => {
 				type: "LOGIN_USER",
 				payload: res.data,
 			});
+			return "success";
 		} catch (err) {
 			dispatch({
 				type: "USER_ERROR",
 				payload: err.response.data.status,
 			});
+			return "error";
 		}
 	}
 
@@ -161,11 +163,13 @@ export const GlobalProvider = ({ children }) => {
 				type: "LOGIN_USER",
 				payload: res.data,
 			});
+			return "success";
 		} catch (err) {
 			dispatch({
 				type: "USER_ERROR",
 				payload: err.response.data.status,
 			});
+			return "error";
 		}
 	}
 

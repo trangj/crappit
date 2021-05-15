@@ -49,6 +49,8 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
 		author: req.user.username,
 		authorId: req.user.id,
 		content: req.body.content,
+		link: req.body.link,
+		type: req.body.type,
 		topic: req.params.topic,
 		imageURL: req.file ? req.file.location : "",
 		imageName: req.file ? req.file.key : "",
@@ -100,15 +102,15 @@ router.delete("/t/:topic/p/:id", auth, async (req, res) => {
 
 router.put("/t/:topic/p/:id", auth, async (req, res) => {
 	try {
-		if (!req.body.content || !req.body.title)
-			throw Error("Missing required fields");
+		if (!req.body.content) throw Error("Missing required fields");
 		const post = await Post.findOneAndUpdate(
 			{ _id: req.params.id, authorId: req.user.id },
-			{ $set: { content: req.body.content, title: req.body.title } },
+			{ $set: { content: req.body.content } },
 			{ useFindAndModify: false, new: true }
 		).populate("comments");
 		if (!post)
 			throw Error("Post does not exist or you are not the author of the post");
+		if (post.type !== "text") throw Error("You can only edit text posts");
 		res.status(200).json({
 			post,
 			status: { text: "Post successfully updated", severity: "success" },

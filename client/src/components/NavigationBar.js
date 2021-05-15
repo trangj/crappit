@@ -1,7 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import Login from "../components/User/Login";
-import Register from "../components/User/Register";
-import AddTopic from "../components/AddTopic";
 import {
 	Box,
 	IconButton,
@@ -60,7 +57,12 @@ const NavigationBar = () => {
 								<MenuItem>Sign up to follow topics!</MenuItem>
 							) : (
 								<MenuGroup title="Followed Topics">
-									<AddTopic />
+									<MenuItem as={Link} to={`/submit`}>
+										Create a post
+									</MenuItem>
+									<MenuItem as={Link} to={`/t/submit`}>
+										Create a topic
+									</MenuItem>
 									{user.followedTopics.map((topic, i) => (
 										<MenuItem as={Link} to={`/t/${topic}`} key={i}>
 											t/{topic}
@@ -77,8 +79,12 @@ const NavigationBar = () => {
 					/>
 					{user === undefined ? (
 						<>
-							<Login />
-							<Register />
+							<Button as={Link} to="/login">
+								Login
+							</Button>
+							<Button as={Link} to="/register">
+								Register
+							</Button>
 						</>
 					) : (
 						<>

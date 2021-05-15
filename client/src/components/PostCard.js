@@ -13,7 +13,9 @@ const PostCard = () => {
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
-			<Image alt={post.imageName} src={post.imageURL} width="100%" />
+			{post.type === "photo" && (
+				<Image alt={post.imageName} src={post.imageURL} width="100%" />
+			)}
 			<Box m="3">
 				<HStack>
 					<Voting post={post} />
@@ -26,6 +28,13 @@ const PostCard = () => {
 							<Link to={`/u/${post.authorId}`}>u/{post.author}</Link>{" "}
 							{moment(post.date).fromNow()}
 						</Text>
+						{post.type === "link" ? (
+							<a href={post.link} target="_blank" rel="noopener noreferrer">
+								<Heading>{post.title}</Heading>
+							</a>
+						) : (
+							<Heading>{post.title}</Heading>
+						)}
 						{openEdit ? (
 							<UpdatePost
 								post={post}
@@ -34,14 +43,15 @@ const PostCard = () => {
 							/>
 						) : (
 							<>
-								<Heading>{post.title}</Heading>
 								<Text mt="3">{post.content}</Text>
 								{user && user._id === post.authorId && (
 									<HStack mt="3">
 										<DeletePost post={post} />
-										<Button size="sm" onClick={() => setOpenEdit(!openEdit)}>
-											Edit
-										</Button>
+										{post.type === "text" && (
+											<Button size="sm" onClick={() => setOpenEdit(!openEdit)}>
+												Edit
+											</Button>
+										)}
 									</HStack>
 								)}
 							</>

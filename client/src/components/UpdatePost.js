@@ -6,7 +6,6 @@ import { GlobalContext } from "../context/GlobalState";
 import { Button } from "@chakra-ui/react";
 
 const schema = yup.object({
-	title: yup.string().required(),
 	content: yup.string().required(),
 });
 
@@ -14,9 +13,8 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 	const { updatePost } = useContext(GlobalContext);
 
 	const handleSubmit = (values) => {
-		const { title, content } = values;
+		const { content } = values;
 		const newPost = {
-			title,
 			content,
 		};
 		updatePost(post.topic, post._id, newPost);
@@ -26,19 +24,13 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 	return (
 		openEdit && (
 			<Formik
-				initialValues={{ title: post.title, content: post.content }}
+				initialValues={{ content: post.content }}
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
 				{() => (
 					<Form>
-						<Field label="Title" name="title" component={TextFieldForm} />
-						<Field
-							label="Content"
-							name="content"
-							multiline
-							component={TextFieldForm}
-						/>
+						<Field name="content" multiline component={TextFieldForm} />
 						<Button size="sm" mr="2" type="submit">
 							Update
 						</Button>

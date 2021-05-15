@@ -56,13 +56,13 @@ export default (state, action) => {
 		case "ADD_TOPIC":
 			return {
 				...state,
-				topics: [...state.topics, action.payload.topic],
+				topic: action.payload.topic,
 				status: action.payload.status,
 			};
 		case "ADD_POST":
 			return {
 				...state,
-				posts: [...state.posts, action.payload.post],
+				post: action.payload.post,
 				status: action.payload.status,
 			};
 		case "ADD_COMMENT":
@@ -75,14 +75,14 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "ADD_REPLY":
-			const searchTree = (comment, id) => {
+			const searchTreeAddReply = (comment, id) => {
 				if (comment._id === id) {
 					comment.comments.push(action.payload.reply);
 					return comment;
 				}
 				if (comment.comments.length === 0) return comment;
 				comment.comments = comment.comments.map((comment) => {
-					comment = searchTree(comment, id);
+					comment = searchTreeAddReply(comment, id);
 					return comment;
 				});
 				return comment;
@@ -94,7 +94,7 @@ export default (state, action) => {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
 						const id = action.payload.reply.comment;
-						comment = searchTree(comment, id);
+						comment = searchTreeAddReply(comment, id);
 						return comment;
 					}),
 				},
@@ -106,7 +106,7 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "DELETE_COMMENT":
-			const searchTree = (comment) => {
+			const searchTreeDeleteComment = (comment) => {
 				if (comment._id === action.payload.comment._id) {
 					comment.author = action.payload.comment.author;
 					comment.authorId = action.payload.comment.authorId;
@@ -114,7 +114,7 @@ export default (state, action) => {
 				}
 				if (comment.comments.length === 0) return comment;
 				comment.comments = comment.comments.map((comment) => {
-					comment = searchTree(comment);
+					comment = searchTreeDeleteComment(comment);
 					return comment;
 				});
 				return comment;
@@ -125,7 +125,7 @@ export default (state, action) => {
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
-						comment = searchTree(comment);
+						comment = searchTreeDeleteComment(comment);
 						return comment;
 					}),
 				},
@@ -138,13 +138,13 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "UPDATE_COMMENT":
-			const searchTree = (comment) => {
+			const searchTreeUpdateComment = (comment) => {
 				if (comment._id === action.payload.comment._id) {
 					comment.content = action.payload.comment.content;
 				}
 				if (comment.comments.length === 0) return comment;
 				comment.comments = comment.comments.map((comment) => {
-					comment = searchTree(comment);
+					comment = searchTreeUpdateComment(comment);
 					return comment;
 				});
 				return comment;
@@ -155,7 +155,7 @@ export default (state, action) => {
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
-						comment = searchTree(comment);
+						comment = searchTreeUpdateComment(comment);
 						return comment;
 					}),
 				},
@@ -179,14 +179,14 @@ export default (state, action) => {
 				status: action.payload.status,
 			};
 		case "CHANGE_COMMENT_VOTE":
-			const searchTree = (comment) => {
+			const searchTreeCommentVote = (comment) => {
 				if (comment._id === action.payload.comment._id) {
 					comment.likes = action.payload.comment.likes;
 					comment.dislikes = action.payload.comment.dislikes;
 				}
 				if (comment.comments.length === 0) return comment;
 				comment.comments = comment.comments.map((comment) => {
-					comment = searchTree(comment);
+					comment = searchTreeCommentVote(comment);
 					return comment;
 				});
 				return comment;
@@ -197,7 +197,7 @@ export default (state, action) => {
 				post: {
 					...state.post,
 					comments: state.post.comments.map((comment) => {
-						comment = searchTree(comment);
+						comment = searchTreeCommentVote(comment);
 						return comment;
 					}),
 				},

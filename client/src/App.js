@@ -9,6 +9,11 @@ import AllTopics from "./components/Pages/AllTopics";
 import NotFound from "./components/Pages/NotFound";
 import Reset from "./components/Pages/Reset";
 import Forgot from "./components/Pages/Forgot";
+import AddPost from "./components/Pages/AddPost";
+import AddTopic from "./components/Pages/AddTopic";
+import Login from "./components/User/Login";
+import Register from "./components/User/Register";
+import PrivateRoute from "./components/PrivateRoute";
 import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
 import { GlobalProvider } from "./context/GlobalState";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -28,9 +33,18 @@ function App() {
 							<Switch>
 								<Route path="/" exact component={Home} />
 								<Route path="/t" exact component={AllTopics} />
+								<PrivateRoute path="/t/submit" exact component={AddTopic} />
 								<Route path="/t/:topic" exact component={Topic} />
+								<PrivateRoute
+									path="/t/:topic/submit"
+									exact
+									component={AddPost}
+								/>
 								<Route path="/t/:topic/p/:id" exact component={Post} />
+								<PrivateRoute path="/submit" exact component={AddPost} />
 								<Route path="/forgot" exact component={Forgot} />
+								<Route path="/login" exact component={Login} />
+								<Route path="/register" exact component={Register} />
 								<Route path="/reset/:token" exact component={Reset} />
 								<Route path="/u/:userid" exact component={Profile} />
 								<Route path="/" component={NotFound} />
