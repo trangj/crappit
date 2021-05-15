@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalState";
 import { Route, Redirect, useLocation } from "react-router";
 
 const PrivateRoute = ({ children, ...rest }) => {
+	const { user } = useContext(GlobalContext);
 	const location = useLocation();
 	return (
 		<Route {...rest}>
-			{localStorage.token ? (
+			{user !== undefined ? (
 				children
 			) : (
 				<Redirect
