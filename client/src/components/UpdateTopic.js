@@ -1,10 +1,12 @@
-import React, { useState, useContext } from "react";
-import { Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import React from "react";
+import { Button } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
 import FileFieldForm from "./Forms/FileFieldForm";
-import { GlobalContext } from "../context/UserState";
+import { useMutation, useQueryClient } from "react-query";
+import { updateTopic } from "../query/topic-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -20,52 +22,54 @@ const schema = yup.object({
 		),
 });
 
-const UpdateTopic = ({ topic }) => {
-	const [open, setOpen] = useState(false);
-	const { updateTopic, user } = useContext(GlobalContext);
+const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
+	const queryClient = useQueryClient();
+	const { isError, isLoading, error, mutate } = useMutation(updateTopic, {
+		onSuccess: (res) => {
+			queryClient.invalidateQueries(["topic", topic.title]);
+			setOpenEdit(false);
+		},
+	});
 
 	const handleSubmit = (values) => {
 		const { description, file } = values;
 		const formData = new FormData();
 		formData.append("description", description);
 		formData.append("file", file);
-		updateTopic(formData);
-		setOpen(false);
+		mutate({ topic: topic.title, formData });
 	};
 
-	return topic.moderator.includes(user._id) ? (
-		<>
-			<Button onClick={() => setOpen(true)}>Edit</Button>
-			<Dialog open={open} onClose={() => setOpen(false)}>
-				<DialogTitle id="form-dialog-title">Update a topic!</DialogTitle>
-				<DialogContent>
-					<Formik
-						initialValues={{ description: "", file: "" }}
-						onSubmit={handleSubmit}
-						validationSchema={schema}
-					>
-						{({ setFieldValue }) => (
-							<Form>
-								<Field
-									label="Description"
-									name="description"
-									multiline
-									component={TextFieldForm}
-								/>
-								<Field
-									label="File"
-									name="file"
-									component={FileFieldForm}
-									setFieldValue={setFieldValue}
-								/>
-								<Button type="submit">Update</Button>
-							</Form>
-						)}
-					</Formik>
-				</DialogContent>
-			</Dialog>
-		</>
-	) : null;
+	return (
+		openEdit && (
+			<Formik
+				initialValues={{ description: topic.description, file: "" }}
+				onSubmit={handleSubmit}
+				validationSchema={schema}
+			>
+				{({ setFieldValue }) => (
+					<Form>
+						<Field
+							label="Description"
+							name="description"
+							multiline
+							component={TextFieldForm}
+						/>
+						<Field
+							label="File"
+							name="file"
+							component={FileFieldForm}
+							setFieldValue={setFieldValue}
+						/>
+						<Button mr="2" type="submit" isLoading={isLoading}>
+							Update
+						</Button>
+						<Button onClick={() => setOpenEdit(false)}>Cancel</Button>
+						{isError && <AlertStatus status={error} />}
+					</Form>
+				)}
+			</Formik>
+		)
+	);
 };
 
 export default UpdateTopic;

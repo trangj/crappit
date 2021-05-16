@@ -133,8 +133,8 @@ router.put("/t/:topic", auth, upload.single("file"), async (req, res) => {
 			{
 				$set: {
 					description: req.body.description,
-					...(req.file.location && { imageURL: req.file.location }),
-					...(req.file.key && { imageName: req.file.key }),
+					...(req.file && { imageURL: req.file.location }),
+					...(req.file && { imageName: req.file.key }),
 				},
 			},
 			{ useFindAndModify: false, new: true }

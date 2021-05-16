@@ -11,13 +11,3 @@ a {
 p a:hover {
 	text-decoration: underline;
 }
-
-.thread {
-	width: 10px;
-	border-left: 2px solid #f6ad55;
-}
-
-.thread:hover {
-	border-left: 2px solid #ed8936;
-	cursor: pointer;
-}

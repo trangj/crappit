@@ -35,3 +35,12 @@ export async function addTopic({ formData }) {
 		throw err.response.data;
 	}
 }
+
+export async function updateTopic({ topic, formData }) {
+	try {
+		const res = await axiosConfig.put(`/api/index/t/${topic}`, formData);
+		return res.data;
+	} catch (err) {
+		throw err.response.data;
+	}
+}

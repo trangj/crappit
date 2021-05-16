@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { IconButton, HStack } from "@chakra-ui/react";
+import { IconButton, HStack, Text } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { UserContext } from "../context/UserState";
 import { useMutation } from "react-query";
@@ -43,7 +43,17 @@ const CommentVoting = ({ comment }) => {
 			) : (
 				<IconButton onClick={handleUpvote} size="xs" icon={<ArrowUpIcon />} />
 			)}
-			<div>{comment.likes.length - comment.dislikes.length}</div>
+			<Text
+				color={
+					comment.likes.includes(user._id)
+						? "orange.400"
+						: comment.dislikes.includes(user._id)
+						? "blue.600"
+						: ""
+				}
+			>
+				{comment.likes.length - comment.dislikes.length}
+			</Text>
 			{comment.dislikes.includes(user._id) ? (
 				<IconButton
 					onClick={handleDownvote}

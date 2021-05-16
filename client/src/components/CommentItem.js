@@ -62,7 +62,7 @@ const CommentItem = ({ comment }) => {
 			</Box>
 			{openReply && (
 				<Flex>
-					<div className="thread"></div>
+					<Box width="10px" borderLeft="2px" borderLeftColor="orange.300"></Box>
 					<div style={{ marginLeft: "2rem", width: "100%" }}>
 						<AddReply
 							comment={comment}
@@ -74,7 +74,14 @@ const CommentItem = ({ comment }) => {
 			)}
 			{!hideComments ? (
 				<Flex>
-					<div className="thread" onClick={() => setHideComments(true)}></div>
+					<Box
+						width="10px"
+						borderLeft="2px"
+						borderLeftColor="orange.300"
+						cursor="pointer"
+						_hover={{ borderLeftColor: "orange.400" }}
+						onClick={() => setHideComments(true)}
+					></Box>
 					<div style={{ marginLeft: "2rem", width: "100%" }}>
 						{comment.comments
 							? comment.comments.map((comment) => (
