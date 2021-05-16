@@ -4,10 +4,11 @@ import { Box, Heading, Image, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-query";
 import { followTopic } from "../query/topic-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const TopicCard = ({ topic }) => {
 	const { user, setUser } = useContext(UserContext);
-	const followTopicMutation = useMutation(followTopic, {
+	const { isError, isLoading, error, mutate } = useMutation(followTopic, {
 		onSuccess: (res) => {
 			setUser(res.user);
 		},
@@ -22,7 +23,8 @@ const TopicCard = ({ topic }) => {
 				<Box mt="3">
 					{user && (
 						<Button
-							onClick={() => followTopicMutation.mutate(topic.title)}
+							isLoading={isLoading}
+							onClick={() => mutate(topic.title)}
 							mr="2"
 						>
 							{user.followedTopics.includes(topic.title)
@@ -33,6 +35,7 @@ const TopicCard = ({ topic }) => {
 					<Button as={Link} to={`/t/${topic.title}/submit`}>
 						Add Post
 					</Button>
+					{isError && <AlertStatus status={error} />}
 				</Box>
 			</Box>
 		</Box>

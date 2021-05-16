@@ -5,6 +5,7 @@ import TextFieldForm from "./Forms/TextFieldForm";
 import { Button } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "react-query";
 import { updatePost } from "../query/post-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const schema = yup.object({
 	content: yup.string().required(),
@@ -12,7 +13,7 @@ const schema = yup.object({
 
 const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 	const queryClient = useQueryClient();
-	const updatePostMutation = useMutation(updatePost, {
+	const { isError, isLoading, error, mutate } = useMutation(updatePost, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.post._id]);
 			setOpenEdit(false);
@@ -24,7 +25,7 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 		const newPost = {
 			content,
 		};
-		updatePostMutation.mutate({
+		mutate({
 			topic: post.topic,
 			postid: post._id,
 			newPost,
@@ -41,12 +42,13 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 				{() => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button size="sm" mr="2" type="submit">
+						<Button size="sm" mr="2" type="submit" isLoading={isLoading}>
 							Update
 						</Button>
 						<Button size="sm" onClick={() => setOpenEdit(false)}>
 							Cancel
 						</Button>
+						{isError && <AlertStatus status={error} />}
 					</Form>
 				)}
 			</Formik>

@@ -5,6 +5,7 @@ import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "react-query";
 import { updateComment } from "../query/comment-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const schema = yup.object({
 	content: yup.string().required(),
@@ -12,7 +13,7 @@ const schema = yup.object({
 
 const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 	const queryClient = useQueryClient();
-	const updateCommentMutation = useMutation(updateComment, {
+	const { isLoading, isError, error, mutate } = useMutation(updateComment, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.comment.post]);
 			setOpenEdit(false);
@@ -24,7 +25,7 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 		const newComment = {
 			content,
 		};
-		updateCommentMutation.mutate({
+		mutate({
 			topic: comment.topic,
 			postid: comment.post,
 			commentid: comment._id,
@@ -42,12 +43,13 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 				{() => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button type="submit" mr="2" size="sm">
+						<Button type="submit" mr="2" size="sm" isLoading={isLoading}>
 							Update
 						</Button>
 						<Button size="sm" onClick={() => setOpenEdit(false)}>
 							Cancel
 						</Button>
+						{isError && <AlertStatus status={error} />}
 					</Form>
 				)}
 			</Formik>

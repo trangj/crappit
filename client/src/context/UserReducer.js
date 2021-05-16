@@ -9,13 +9,11 @@ export default (state, action) => {
 			return {
 				...state,
 				user: undefined,
-				status: { text: "Successfully logged out", severity: "success" },
 			};
 		case "LOGIN_USER":
 			return {
 				...state,
 				user: action.payload.user,
-				status: action.payload.status,
 			};
 		case "SET_USER":
 			return {

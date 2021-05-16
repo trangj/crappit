@@ -5,6 +5,7 @@ import TextFieldForm from "./Forms/TextFieldForm";
 import { Button } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "react-query";
 import { addReply } from "../query/comment-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const schema = yup.object({
 	content: yup.string().required(),
@@ -12,7 +13,7 @@ const schema = yup.object({
 
 const AddReply = ({ comment, openReply, setOpenReply }) => {
 	const queryClient = useQueryClient();
-	const addReplyMutation = useMutation(addReply, {
+	const { isError, isLoading, error, mutate } = useMutation(addReply, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.reply.post]);
 			setOpenReply(false);
@@ -24,7 +25,7 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 		const reply = {
 			content,
 		};
-		addReplyMutation.mutate({
+		mutate({
 			topic: comment.topic,
 			postid: comment.post,
 			commentid: comment._id,
@@ -42,12 +43,13 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 				{({ setFieldValue }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button type="submit" mr="2" size="sm">
+						<Button type="submit" mr="2" size="sm" isLoading={isLoading}>
 							Reply
 						</Button>
 						<Button size="sm" onClick={() => setOpenReply(false)}>
 							Cancel
 						</Button>
+						{isError && <AlertStatus status={error} />}
 					</Form>
 				)}
 			</Formik>

@@ -44,17 +44,19 @@ const NavigationBar = () => {
 							<MenuItem as={Link} to="/t">
 								Discover Topics
 							</MenuItem>
+							<MenuItem as={Link} to={`/submit`}>
+								Create a post
+							</MenuItem>
+							<MenuItem as={Link} to={`/t/submit`}>
+								Create a topic
+							</MenuItem>
 							<MenuDivider />
 							{user === undefined ? (
-								<MenuItem>Sign up to follow topics!</MenuItem>
+								<MenuItem as={Link} to="/register">
+									Sign up to follow topics!
+								</MenuItem>
 							) : (
-								<MenuGroup>
-									<MenuItem as={Link} to={`/submit`}>
-										Create a post
-									</MenuItem>
-									<MenuItem as={Link} to={`/t/submit`}>
-										Create a topic
-									</MenuItem>
+								<MenuGroup title="Followed Topics">
 									{user.followedTopics.map((topic, i) => (
 										<MenuItem as={Link} to={`/t/${topic}`} key={i}>
 											t/{topic}

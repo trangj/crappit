@@ -20,7 +20,7 @@ const Home = () => {
 			pageStart={0}
 			loadMore={fetchNextPage}
 			hasMore={hasNextPage}
-			loader={<Spinner key={0} />}
+			loader={<Spinner key={0} mx="auto" display={"block"} />}
 		>
 			{data.pages.map((group, i) => (
 				<React.Fragment key={i}>

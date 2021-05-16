@@ -7,6 +7,7 @@ import { UserContext } from "../context/UserState";
 import { Heading, Box, Button, Divider, Text } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { addComment } from "../query/comment-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const schema = yup.object({
 	content: yup.string().required(),
@@ -15,7 +16,7 @@ const schema = yup.object({
 const CommentCard = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const { comments } = post;
-	const addReplyMutation = useMutation(addComment, {
+	const { isError, isLoading, error, mutate } = useMutation(addComment, {
 		onSuccess: (res) => {
 			post.comments = [...post.comments, res.comment];
 		},
@@ -26,7 +27,7 @@ const CommentCard = ({ post }) => {
 		const newComment = {
 			content,
 		};
-		addReplyMutation.mutate({
+		mutate({
 			topic: post.topic,
 			postid: post._id,
 			newComment,
@@ -53,7 +54,10 @@ const CommentCard = ({ post }) => {
 						{() => (
 							<Form>
 								<Field name="content" multiline component={TextFieldForm} />
-								<Button type="submit">Post</Button>
+								<Button type="submit" isLoading={isLoading}>
+									Post
+								</Button>
+								{isError && <AlertStatus status={error} />}
 							</Form>
 						)}
 					</Formik>
@@ -61,9 +65,13 @@ const CommentCard = ({ post }) => {
 					<Text mt="3">Register and Login to comment!</Text>
 				)}
 				<Divider mt="5" />
-				{comments.map((comment) => (
-					<CommentItem comment={comment} key={comment._id} />
-				))}
+				{comments.length === 0 ? (
+					<Text mt="3">It's a bit empty in here...</Text>
+				) : (
+					comments.map((comment) => (
+						<CommentItem comment={comment} key={comment._id} />
+					))
+				)}
 			</Box>
 		</Box>
 	);

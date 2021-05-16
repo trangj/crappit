@@ -8,7 +8,7 @@ import { voting } from "../query/post-query";
 
 const Voting = ({ post }) => {
 	const { user } = useContext(UserContext);
-	const voteMutation = useMutation(voting, {
+	const { mutate } = useMutation(voting, {
 		onSuccess: (res) => {
 			post.likes = res.post.likes;
 			post.dislikes = res.post.dislikes;
@@ -16,11 +16,11 @@ const Voting = ({ post }) => {
 	});
 
 	const handleUpvote = () => {
-		voteMutation.mutate({ topic: post.topic, id: post._id, vote: "like" });
+		mutate({ topic: post.topic, id: post._id, vote: "like" });
 	};
 
 	const handleDownvote = () => {
-		voteMutation.mutate({ topic: post.topic, id: post._id, vote: "dislike" });
+		mutate({ topic: post.topic, id: post._id, vote: "dislike" });
 	};
 
 	return user ? (

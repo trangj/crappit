@@ -26,7 +26,7 @@ const schema = yup.object({
 
 const AddTopic = () => {
 	const history = useHistory();
-	const addTopicMutation = useMutation(addTopic, {
+	const { isLoading, isError, error, mutate } = useMutation(addTopic, {
 		onSuccess: (res) => {
 			const { title } = res.topic;
 			history.push(`/t/${title}`);
@@ -38,12 +38,12 @@ const AddTopic = () => {
 		formData.append("title", title);
 		formData.append("description", description);
 		formData.append("file", file);
-		addTopicMutation.mutate({ formData });
+		mutate({ formData });
 	};
 
 	return (
 		<>
-			<Heading>Creat a topic</Heading>
+			<Heading>Create a topic</Heading>
 			<Divider my="3" />
 			<Formik
 				initialValues={{ title: "", description: "", file: "" }}
@@ -65,15 +65,13 @@ const AddTopic = () => {
 							component={FileFieldForm}
 							setFieldValue={setFieldValue}
 						/>
-						<Button type="submit" isLoading={addTopicMutation.isLoading}>
+						<Button type="submit" isLoading={isLoading}>
 							Post
 						</Button>
 					</Form>
 				)}
 			</Formik>
-			{addTopicMutation.isError && (
-				<AlertStatus status={addTopicMutation.error} />
-			)}
+			{isError && <AlertStatus status={error} />}
 		</>
 	);
 };

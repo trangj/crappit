@@ -39,13 +39,13 @@ const schema = yup.object({
 
 const AddPost = ({ match }) => {
 	const {
-		isLoading,
-		isError,
-		data: topics,
-		error,
+		isLoading: topicsIsLoading,
+		isError: topicsIsError,
+		data: topicsData,
+		error: topicsError,
 	} = useQuery(["topics"], fetchTopics);
 	const history = useHistory();
-	const addPostMutation = useMutation(addPost, {
+	const { isLoading, isError, error, mutate } = useMutation(addPost, {
 		onSuccess: (res) => {
 			const { topic, _id } = res.post;
 			history.push(`/t/${topic}/p/${_id}`);
@@ -62,12 +62,12 @@ const AddPost = ({ match }) => {
 		formData.append("link", link);
 		formData.append("content", content);
 		formData.append("type", types[selectedType]);
-		addPostMutation.mutate({ topic, formData });
+		mutate({ topic, formData });
 	};
 
 	return (
 		<>
-			<Heading>Creat a post</Heading>
+			<Heading>Create a post</Heading>
 			<Divider my="3" />
 			<Formik
 				initialValues={{
@@ -87,16 +87,16 @@ const AddPost = ({ match }) => {
 							name="topic"
 							component={SelectFieldForm}
 							placeholder={
-								isLoading
+								topicsIsLoading
 									? "Loading..."
-									: isError
-									? error.status.text
+									: topicsIsError
+									? topicsError.status.text
 									: "Choose a topic"
 							}
 							mb="2"
 						>
-							{!isLoading &&
-								topics.map((topic) => (
+							{!topicsIsLoading &&
+								topicsData.map((topic) => (
 									<option key={topic.title} value={topic.title}>
 										t/{topic.title}
 									</option>
@@ -122,22 +122,14 @@ const AddPost = ({ match }) => {
 										multiline
 										component={TextFieldForm}
 									/>
-									<Button
-										type="submit"
-										mt="2"
-										isLoading={addPostMutation.isLoading}
-									>
+									<Button type="submit" mt="2" isLoading={isLoading}>
 										Post
 									</Button>
 								</TabPanel>
 								<TabPanel>
 									<Field label="Title" name="title" component={TextFieldForm} />
 									<Field label="Link" name="link" component={TextFieldForm} />
-									<Button
-										type="submit"
-										mt="2"
-										isLoading={addPostMutation.isLoading}
-									>
+									<Button type="submit" mt="2" isLoading={isLoading}>
 										Post
 									</Button>
 								</TabPanel>
@@ -149,11 +141,7 @@ const AddPost = ({ match }) => {
 										component={FileFieldForm}
 										setFieldValue={setFieldValue}
 									/>
-									<Button
-										type="submit"
-										mt="2"
-										isLoading={addPostMutation.isLoading}
-									>
+									<Button type="submit" mt="2" isLoading={isLoading}>
 										Post
 									</Button>
 								</TabPanel>
@@ -162,9 +150,7 @@ const AddPost = ({ match }) => {
 					</Form>
 				)}
 			</Formik>
-			{addPostMutation.isError && (
-				<AlertStatus status={addPostMutation.error} />
-			)}
+			{isError && <AlertStatus status={error} />}
 		</>
 	);
 };

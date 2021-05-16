@@ -13,7 +13,7 @@ const schema = yup.object({
 });
 
 const Login = (props) => {
-	const { loginUser, user: currentUser } = useContext(UserContext);
+	const { loginUser } = useContext(UserContext);
 	const [status, setStatus] = useState(undefined);
 	const history = useHistory();
 
@@ -25,16 +25,14 @@ const Login = (props) => {
 				password,
 			};
 			await loginUser(user);
-			if (currentUser !== undefined) {
-				if (
-					props.location &&
-					props.location.state &&
-					props.location.state.status
-				) {
-					history.push(props.location.state.from);
-				} else {
-					history.goBack();
-				}
+			if (
+				props.location &&
+				props.location.state &&
+				props.location.state.status
+			) {
+				history.push(props.location.state.from);
+			} else {
+				history.goBack();
 			}
 		} catch (err) {
 			setStatus(err);

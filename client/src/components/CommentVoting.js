@@ -7,7 +7,7 @@ import { commentVoting } from "../query/comment-query";
 
 const CommentVoting = ({ comment }) => {
 	const { user } = useContext(UserContext);
-	const voteCommentMutation = useMutation(commentVoting, {
+	const { mutate } = useMutation(commentVoting, {
 		onSuccess: (res) => {
 			comment.likes = res.comment.likes;
 			comment.dislikes = res.comment.dislikes;
@@ -15,7 +15,7 @@ const CommentVoting = ({ comment }) => {
 	});
 
 	const handleUpvote = () => {
-		voteCommentMutation.mutate({
+		mutate({
 			topic: comment.topic,
 			postid: comment.post,
 			commentid: comment._id,
@@ -24,7 +24,7 @@ const CommentVoting = ({ comment }) => {
 	};
 
 	const handleDownvote = () => {
-		voteCommentMutation.mutate({
+		mutate({
 			topic: comment.topic,
 			postid: comment.post,
 			commentid: comment._id,

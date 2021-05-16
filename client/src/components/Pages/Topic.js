@@ -18,7 +18,6 @@ const Topic = ({ match }) => {
 				getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
 			}
 		);
-
 	const {
 		isLoading: topicLoading,
 		isError: topicIsError,
@@ -39,7 +38,7 @@ const Topic = ({ match }) => {
 				pageStart={0}
 				loadMore={fetchNextPage}
 				hasMore={hasNextPage}
-				loader={<Spinner key={0} />}
+				loader={<Spinner key={0} mx="auto" display={"block"} />}
 			>
 				{data.pages.map((group, i) => (
 					<React.Fragment key={i}>

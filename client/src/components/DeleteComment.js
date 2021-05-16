@@ -9,10 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteComment } from "../query/comment-query";
+import AlertStatus from "./Utils/AlertStatus";
 
 const DeleteComment = ({ comment }) => {
 	const queryClient = useQueryClient();
-	const deleteCommentMutation = useMutation(deleteComment, {
+	const { isError, isLoading, error, mutate } = useMutation(deleteComment, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.comment.post]);
 			setOpen(false);
@@ -30,11 +31,12 @@ const DeleteComment = ({ comment }) => {
 				<ModalContent>
 					<ModalHeader id="form-dialog-title">
 						Are you sure you want to delete this comment?
+						{isError && <AlertStatus status={error} />}
 					</ModalHeader>
 					<ModalFooter>
 						<Button
 							onClick={() => {
-								deleteCommentMutation.mutate({
+								mutate({
 									topic: comment.topic,
 									postid: comment.post,
 									commentid: comment._id,
@@ -42,6 +44,7 @@ const DeleteComment = ({ comment }) => {
 							}}
 							color="primary"
 							mr="2"
+							isLoading={isLoading}
 						>
 							Yes
 						</Button>
