@@ -20,7 +20,7 @@ const schema = yup.object({
 		),
 });
 
-const AddTopic = ({ topic }) => {
+const UpdateTopic = ({ topic }) => {
 	const [open, setOpen] = useState(false);
 	const { updateTopic, user } = useContext(GlobalContext);
 
@@ -68,4 +68,4 @@ const AddTopic = ({ topic }) => {
 	) : null;
 };
 
-export default AddTopic;
+export default UpdateTopic;

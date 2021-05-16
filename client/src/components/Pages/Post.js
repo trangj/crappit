@@ -1,25 +1,22 @@
-import React, { useEffect, useContext, useState } from "react";
+import React from "react";
 import PostCard from "../PostCard";
 import CommentCard from "../CommentCard";
 import SkeletonCard from "../Utils/SkeletonCard";
-import { GlobalContext } from "../../context/GlobalState";
+import { useQuery } from "react-query";
+import { fetchPost } from "../../query/post-query";
 
 const Post = ({ match }) => {
-	const [componentLoading, setLoading] = useState(true);
-	const { fetchPost, loading } = useContext(GlobalContext);
+	const { isLoading, isError, data, error } = useQuery(
+		["post", match.params.id],
+		() => fetchPost(match.params.topic, match.params.id)
+	);
 
-	useEffect(() => {
-		fetchPost(match.params.topic, match.params.id);
-		setLoading(false);
-		// eslint-disable-next-line
-	}, [match.params.topic, match.params.id]);
-
-	return loading || componentLoading ? (
+	return isLoading ? (
 		<SkeletonCard />
 	) : (
 		<>
-			<PostCard />
-			<CommentCard />
+			<PostCard post={data} />
+			<CommentCard post={data} />
 		</>
 	);
 };

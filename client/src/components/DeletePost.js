@@ -1,38 +1,43 @@
-import React, { useState, useContext } from "react";
-import { GlobalContext } from "../context/GlobalState";
-import { Redirect } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
-	ModalBody,
 	ModalContent,
 	ModalHeader,
 	Button,
 	Modal,
 	ModalOverlay,
+	ModalFooter,
 } from "@chakra-ui/react";
+import { useMutation } from "react-query";
+import { deletePost } from "../query/post-query";
 
 const DeletePost = ({ post }) => {
-	const { deletePost } = useContext(GlobalContext);
 	const [open, setOpen] = useState(false);
-	const [redirect, setRedirect] = useState(false);
-
-	if (redirect) return <Redirect to={`/t/${post.topic}`} />;
+	const history = useHistory();
+	const deletePostMutation = useMutation(deletePost, {
+		onSuccess: (res) => {
+			history.push(`/t/${post.topic}`);
+		},
+	});
 
 	return (
 		<>
 			<Button size="sm" onClick={() => setOpen(true)}>
 				Delete
 			</Button>
-			<Modal isOpen={open} onClose={() => setOpen(false)}>
+			<Modal isOpen={open} onClose={() => setOpen(false)} isCentered>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader id="form-dialog-title">
 						Are you sure you want to delete this post?
 					</ModalHeader>
-					<ModalBody>
+					<ModalFooter>
 						<Button
 							onClick={() => {
-								deletePost(post.topic, post._id);
-								setRedirect(true);
+								deletePostMutation.mutate({
+									topic: post.topic,
+									postid: post._id,
+								});
 							}}
 							mr="2"
 							color="primary"
@@ -42,7 +47,7 @@ const DeletePost = ({ post }) => {
 						<Button onClick={() => setOpen(false)} color="secondary">
 							No
 						</Button>
-					</ModalBody>
+					</ModalFooter>
 				</ModalContent>
 			</Modal>
 		</>

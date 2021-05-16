@@ -1,50 +1,51 @@
-import React, { useEffect, useContext, useState } from "react";
-import { GlobalContext } from "../../context/GlobalState";
+import React from "react";
 import PostItem from "../PostItem";
 import TopicCard from "../TopicCard";
 import SkeletonList from "../Utils/SkeletonList";
-import { CircularProgress } from "@chakra-ui/react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroller";
+import { Spinner } from "@chakra-ui/react";
+import { useQuery, useInfiniteQuery } from "react-query";
+import { fetchTopic } from "../../query/post-query";
+import { fetchTopicInfo } from "../../query/topic-query";
 
 const Topic = ({ match }) => {
-	const { posts, fetchTopic, moreTopic, loading } = useContext(GlobalContext);
-	const [componentLoading, setLoading] = useState(true);
-	const [fetching, setFetching] = useState(false);
+	const { data, error, fetchNextPage, hasNextPage, isLoading } =
+		useInfiniteQuery(
+			["posts", match.params.topic],
+			({ pageParam = 0 }) => fetchTopic(match.params.topic, pageParam),
+			{
+				getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+			}
+		);
 
-	useEffect(() => {
-		fetchTopic(match.params.topic);
-		setLoading(false);
-		// eslint-disable-next-line
-	}, [match.params.topic]);
+	const {
+		isLoading: topicLoading,
+		isError: topicIsError,
+		data: topicData,
+		error: topicError,
+	} = useQuery(["topic", match.params.topic], () =>
+		fetchTopicInfo(match.params.topic)
+	);
 
-	return loading || componentLoading ? (
+	return isLoading || topicLoading ? (
 		<SkeletonList />
 	) : (
 		<>
-			<TopicCard />
+			<TopicCard topic={topicData.topic} />
 			<InfiniteScroll
-				dataLength={posts.length}
-				next={() => {
-					setFetching(true);
-					moreTopic(match.params.topic, posts.length);
-					setFetching(false);
-				}}
-				hasMore={true}
+				pageStart={0}
+				loadMore={fetchNextPage}
+				hasMore={hasNextPage}
+				loader={<Spinner key={0} />}
 			>
-				{posts.map((post) => (
-					<PostItem post={post} key={post._id} />
+				{data.pages.map((group, i) => (
+					<React.Fragment key={i}>
+						{group.posts.map((post) => (
+							<PostItem post={post} key={post._id} />
+						))}
+					</React.Fragment>
 				))}
 			</InfiniteScroll>
-			{fetching && (
-				<CircularProgress
-					style={{
-						display: "block",
-						marginLeft: "auto",
-						marginRight: "auto",
-						marginBottom: "1rem",
-					}}
-				/>
-			)}
 		</>
 	);
 };

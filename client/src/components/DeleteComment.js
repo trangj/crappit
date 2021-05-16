@@ -1,33 +1,44 @@
-import React, { useState, useContext } from "react";
-import { GlobalContext } from "../context/GlobalState";
+import React, { useState } from "react";
 import {
 	Modal,
 	ModalContent,
 	ModalHeader,
-	ModalBody,
 	ModalOverlay,
 	Button,
+	ModalFooter,
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "react-query";
+import { deleteComment } from "../query/comment-query";
 
 const DeleteComment = ({ comment }) => {
-	const { deleteComment } = useContext(GlobalContext);
+	const queryClient = useQueryClient();
+	const deleteCommentMutation = useMutation(deleteComment, {
+		onSuccess: (res) => {
+			queryClient.invalidateQueries(["post", res.data.comment.post]);
+			setOpen(false);
+		},
+	});
 	const [open, setOpen] = useState(false);
+
 	return (
 		<>
 			<Button size="xs" onClick={() => setOpen(true)}>
 				Delete
 			</Button>
-			<Modal isOpen={open} onClose={() => setOpen(false)}>
+			<Modal isOpen={open} onClose={() => setOpen(false)} isCentered>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader id="form-dialog-title">
 						Are you sure you want to delete this comment?
 					</ModalHeader>
-					<ModalBody>
+					<ModalFooter>
 						<Button
 							onClick={() => {
-								deleteComment(comment.topic, comment.post, comment._id);
-								setOpen(false);
+								deleteCommentMutation.mutate({
+									topic: comment.topic,
+									postid: comment.post,
+									commentid: comment._id,
+								});
 							}}
 							color="primary"
 							mr="2"
@@ -37,7 +48,7 @@ const DeleteComment = ({ comment }) => {
 						<Button onClick={() => setOpen(false)} color="secondary">
 							No
 						</Button>
-					</ModalBody>
+					</ModalFooter>
 				</ModalContent>
 			</Modal>
 		</>

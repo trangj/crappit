@@ -1,4 +1,5 @@
 import axios from "axios";
+import { loadState } from "./localStorage";
 
 const instance = axios.create({
 	baseURL: process.env.REACT_APP_SERVER_URL,
@@ -8,7 +9,8 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-	config.headers["x-auth-token"] = localStorage.token;
+	const token = loadState("token");
+	config.headers["x-auth-token"] = token ? token : undefined;
 	return config;
 });
 

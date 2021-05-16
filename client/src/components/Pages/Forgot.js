@@ -3,7 +3,6 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
-import { GlobalContext } from "../../context/GlobalState";
 import axiosConfig from "../../axiosConfig";
 
 const schema = yup.object({
@@ -11,17 +10,11 @@ const schema = yup.object({
 });
 
 const Forgot = () => {
-	const { setStatus } = useContext(GlobalContext);
-
 	const handleSubmit = async (values) => {
 		const { email } = values;
 		try {
-			setStatus({ text: "Awaiting response...", severity: "success" });
 			const res = await axiosConfig.post(`/api/user/forgot`, { email });
-			setStatus({ text: res.data.status, severity: "success" });
-		} catch (err) {
-			setStatus({ text: err.message, severity: "error" });
-		}
+		} catch (err) {}
 	};
 
 	return (

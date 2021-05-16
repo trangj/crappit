@@ -1,11 +1,12 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { Button, Heading, Divider } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
-import { GlobalContext } from "../../context/GlobalState";
-import { Redirect } from "react-router";
+import { addTopic } from "../../query/topic-query";
+import { useMutation } from "react-query";
+import { useHistory } from "react-router";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -23,20 +24,21 @@ const schema = yup.object({
 });
 
 const AddTopic = () => {
-	const { addTopic, topic } = useContext(GlobalContext);
-	const [redirect, setRedirect] = useState(false);
-
+	const history = useHistory();
+	const addTopicMutation = useMutation(addTopic, {
+		onSuccess: (res) => {
+			const { title } = res.data.topic;
+			history.push(`/t/${title}`);
+		},
+	});
 	const handleSubmit = async (values) => {
 		const { title, description, file } = values;
 		const formData = new FormData();
 		formData.append("title", title);
 		formData.append("description", description);
 		formData.append("file", file);
-		await addTopic(formData);
-		setRedirect(true);
+		addTopicMutation.mutate({ formData });
 	};
-
-	if (redirect) return <Redirect to={`/t/${topic.title}`} />;
 
 	return (
 		<>

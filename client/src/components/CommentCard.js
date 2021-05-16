@@ -3,23 +3,34 @@ import CommentItem from "./CommentItem";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { GlobalContext } from "../context/GlobalState";
+import { UserContext } from "../context/GlobalState";
 import { Heading, Box, Button, Divider, Text } from "@chakra-ui/react";
+import { useMutation } from "react-query";
+import { addComment } from "../query/comment-query";
 
 const schema = yup.object({
 	content: yup.string().required(),
 });
 
-const CommentCard = () => {
-	const { user, post, addComment } = useContext(GlobalContext);
+const CommentCard = ({ post }) => {
+	const { user } = useContext(UserContext);
 	const { comments } = post;
+	const addReplyMutation = useMutation(addComment, {
+		onSuccess: (res) => {
+			post.comments = [...post.comments, res.data.comment];
+		},
+	});
 
 	const handleSubmit = (values, { resetForm }) => {
 		const { content } = values;
 		const newComment = {
 			content,
 		};
-		addComment(post.topic, post._id, newComment);
+		addReplyMutation.mutate({
+			topic: post.topic,
+			postid: post._id,
+			newComment,
+		});
 		resetForm("");
 	};
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Button,
 	Tabs,
@@ -14,8 +14,10 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
 import SelectFieldForm from "../Forms/SelectFieldForm";
-import { GlobalContext } from "../../context/GlobalState";
-import { Redirect } from "react-router";
+import { useQuery, useMutation } from "react-query";
+import { addPost } from "../../query/post-query";
+import { fetchTopics } from "../../query/topic-query";
+import { useHistory } from "react-router";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -35,14 +37,20 @@ const schema = yup.object({
 });
 
 const AddPost = ({ match }) => {
-	const { topics, fetchTopics, post, addPost } = useContext(GlobalContext);
+	const {
+		isLoading,
+		isError,
+		data: topics,
+		error,
+	} = useQuery(["topics"], fetchTopics);
+	const history = useHistory();
+	const addPostMutation = useMutation(addPost, {
+		onSuccess: (res) => {
+			const { topic, _id } = res.data.post;
+			history.push(`/t/${topic}/p/${_id}`);
+		},
+	});
 	const [selectedType, setSelectedType] = useState(0);
-	const [redirect, setRedirect] = useState(false);
-
-	useEffect(() => {
-		fetchTopics();
-		// eslint-disable-next-line
-	}, []);
 
 	const handleSubmit = async (values) => {
 		const { title, content, link, file, topic } = values;
@@ -53,11 +61,8 @@ const AddPost = ({ match }) => {
 		formData.append("link", link);
 		formData.append("content", content);
 		formData.append("type", types[selectedType]);
-		await addPost(topic, formData);
-		setRedirect(true);
+		addPostMutation.mutate({ topic, formData });
 	};
-
-	if (redirect) return <Redirect to={`/t/${post.topic}/p/${post._id}`} />;
 
 	return (
 		<>
@@ -82,11 +87,12 @@ const AddPost = ({ match }) => {
 							component={SelectFieldForm}
 							mb="2"
 						>
-							{topics.map((topic) => (
-								<option key={topic.title} value={topic.title}>
-									t/{topic.title}
-								</option>
-							))}
+							{!isLoading &&
+								topics.map((topic) => (
+									<option key={topic.title} value={topic.title}>
+										t/{topic.title}
+									</option>
+								))}
 						</Field>
 						<Tabs
 							variant="enclosed"

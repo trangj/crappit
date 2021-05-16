@@ -1,20 +1,15 @@
-import React, { useEffect, useContext, useState } from "react";
+import React from "react";
 import SkeletonList from "../Utils/SkeletonList";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { GlobalContext } from "../../context/GlobalState";
+import { useQuery } from "react-query";
+import { fetchTopics } from "../../query/topic-query";
 
 const AllTopics = () => {
-	const { fetchTopics, topics, loading } = useContext(GlobalContext);
-	const [componentLoading, setLoading] = useState(true);
+	const { isLoading, isError, data, error } = useQuery(["topics"], fetchTopics);
+	const topics = data;
 
-	useEffect(() => {
-		fetchTopics();
-		setLoading(false);
-		// eslint-disable-next-line
-	}, []);
-
-	return loading || componentLoading ? (
+	return isLoading ? (
 		<SkeletonList />
 	) : (
 		<>

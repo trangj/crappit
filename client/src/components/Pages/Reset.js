@@ -3,7 +3,6 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
-import { GlobalContext } from "../../context/GlobalState";
 import axiosConfig from "../../axiosConfig";
 import { Redirect } from "react-router";
 
@@ -16,7 +15,6 @@ const schema = yup.object({
 });
 
 const Forgot = ({ match }) => {
-	const { setStatus } = useContext(GlobalContext);
 	const [redirect, setRedirect] = useState(false);
 
 	useEffect(() => {
@@ -25,10 +23,7 @@ const Forgot = ({ match }) => {
 				const res = await axiosConfig.get(
 					`/api/user/reset/${match.params.token}`
 				);
-				setStatus({ text: res.data.status, severity: "success" });
-			} catch (err) {
-				setStatus({ text: err.message, severity: "error" });
-			}
+			} catch (err) {}
 		};
 		confirmToken();
 		// eslint-disable-next-line
@@ -39,16 +34,12 @@ const Forgot = ({ match }) => {
 	const handleSubmit = async (values) => {
 		const { password, password2 } = values;
 		try {
-			setStatus({ text: "Awaiting response...", severity: "success" });
 			const res = await axiosConfig.post(
 				`/api/user/reset/${match.params.token}`,
 				{ password, password2 }
 			);
-			setStatus({ text: res.data.status, severity: "success" });
 			setRedirect(true);
-		} catch (err) {
-			setStatus({ text: err.message, severity: "error" });
-		}
+		} catch (err) {}
 	};
 
 	return (

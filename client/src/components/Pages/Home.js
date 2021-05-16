@@ -1,49 +1,34 @@
 import React, { useEffect, useContext, useState } from "react";
-import { GlobalContext } from "../../context/GlobalState";
 import PostItem from "../PostItem";
 import SkeletonList from "../Utils/SkeletonList";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { CircularProgress } from "@chakra-ui/react";
+import InfiniteScroll from "react-infinite-scroller";
+import { Spinner } from "@chakra-ui/react";
+import { useInfiniteQuery } from "react-query";
+import { fetchPosts } from "../../query/post-query";
 
 const Home = () => {
-	const { posts, fetchPosts, morePosts, loading } = useContext(GlobalContext);
-	const [componentLoading, setLoading] = useState(true);
-	const [fetching, setFetching] = useState(false);
+	const { data, error, fetchNextPage, hasNextPage, isLoading } =
+		useInfiniteQuery(["posts"], ({ pageParam = 0 }) => fetchPosts(pageParam), {
+			getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+		});
 
-	useEffect(() => {
-		fetchPosts();
-		setLoading(false);
-		// eslint-disable-next-line
-	}, []);
-
-	return loading || componentLoading ? (
+	return isLoading ? (
 		<SkeletonList />
 	) : (
-		<>
-			<InfiniteScroll
-				dataLength={posts.length}
-				next={() => {
-					setFetching(true);
-					morePosts(posts.length);
-					setFetching(false);
-				}}
-				hasMore={true}
-			>
-				{posts.map((post) => (
-					<PostItem post={post} key={post._id} />
-				))}
-			</InfiniteScroll>
-			{fetching && (
-				<CircularProgress
-					style={{
-						display: "block",
-						marginLeft: "auto",
-						marginRight: "auto",
-						marginBottom: "1rem",
-					}}
-				/>
-			)}
-		</>
+		<InfiniteScroll
+			pageStart={0}
+			loadMore={fetchNextPage}
+			hasMore={hasNextPage}
+			loader={<Spinner key={0} />}
+		>
+			{data.pages.map((group, i) => (
+				<React.Fragment key={i}>
+					{group.posts.map((post) => (
+						<PostItem post={post} key={post._id} />
+					))}
+				</React.Fragment>
+			))}
+		</InfiniteScroll>
 	);
 };
 

@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { GlobalContext } from "../../context/GlobalState";
+import { UserContext } from "../../context/GlobalState";
 import { useHistory } from "react-router";
 
 const schema = yup.object({
@@ -17,7 +17,7 @@ const schema = yup.object({
 });
 
 const Register = () => {
-	const { registerUser } = useContext(GlobalContext);
+	const { registerUser } = useContext(UserContext);
 	const history = useHistory();
 
 	const handleSubmit = async (values) => {
@@ -28,10 +28,8 @@ const Register = () => {
 			password,
 			password2,
 		};
-		const res = await registerUser(user);
-		if (res === "success") {
-			history.goBack();
-		}
+		await registerUser(user);
+		history.goBack();
 	};
 
 	return (

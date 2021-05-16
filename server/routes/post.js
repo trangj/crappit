@@ -17,7 +17,14 @@ router.get("/", async (req, res) => {
 	try {
 		const posts = await Post.find().skip(parseInt(req.query.skip)).limit(10);
 		if (!posts) throw Error("Could not fetch posts");
-		res.status(200).json(posts);
+		res
+			.status(200)
+			.json({
+				posts,
+				nextCursor: posts.length
+					? parseInt(req.query.skip) + posts.length
+					: undefined,
+			});
 	} catch (err) {
 		res.status(400).json({ status: err.message });
 	}

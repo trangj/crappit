@@ -1,24 +1,35 @@
-import React, { useContext } from "react";
+import React from "react";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { GlobalContext } from "../context/GlobalState";
 import { Button } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "react-query";
+import { updateComment } from "../query/comment-query";
 
 const schema = yup.object({
 	content: yup.string().required(),
 });
 
 const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
-	const { updateComment } = useContext(GlobalContext);
+	const queryClient = useQueryClient();
+	const updateCommentMutation = useMutation(updateComment, {
+		onSuccess: (res) => {
+			queryClient.invalidateQueries(["post", res.data.comment.post]);
+			setOpenEdit(false);
+		},
+	});
 
 	const handleSubmit = (values) => {
 		const { content } = values;
 		const newComment = {
 			content,
 		};
-		updateComment(comment.topic, comment.post, comment._id, newComment);
-		setOpenEdit(false);
+		updateCommentMutation.mutate({
+			topic: comment.topic,
+			postid: comment.post,
+			commentid: comment._id,
+			newComment,
+		});
 	};
 
 	return (

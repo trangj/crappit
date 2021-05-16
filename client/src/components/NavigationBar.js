@@ -15,7 +15,7 @@ import {
 	MenuDivider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { GlobalContext } from "../context/GlobalState";
+import { UserContext } from "../context/GlobalState";
 import {
 	HamburgerIcon,
 	MoonIcon,
@@ -25,15 +25,7 @@ import {
 
 const NavigationBar = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
-	const { fetchUser, logoutUser, user } = useContext(GlobalContext);
-
-	useEffect(() => {
-		if (localStorage.token) {
-			fetchUser();
-		}
-		// eslint-disable-next-line
-	}, []);
-
+	const { logoutUser, user } = useContext(UserContext);
 	return (
 		<>
 			<Box bg={colorMode === "dark" ? "gray.700" : "gray.200"} p={3}>

@@ -6,10 +6,10 @@ import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { GlobalContext } from "../context/GlobalState";
+import { UserContext } from "../context/GlobalState";
 
 const CommentItem = ({ comment }) => {
-	const { user } = useContext(GlobalContext);
+	const { user } = useContext(UserContext);
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);

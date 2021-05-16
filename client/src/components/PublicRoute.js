@@ -7,14 +7,14 @@ const PrivateRoute = ({ children, ...rest }) => {
 	const location = useLocation();
 	return (
 		<Route {...rest}>
-			{user !== undefined ? (
+			{user === undefined ? (
 				children
 			) : (
 				<Redirect
 					to={{
-						pathname: "/login",
+						pathname: "/",
 						state: {
-							error: "Log in to access this feature",
+							error: "You are already logged in",
 							from: location.pathname,
 						},
 					}}

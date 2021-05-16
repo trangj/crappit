@@ -14,21 +14,22 @@ import AddTopic from "./components/Pages/AddTopic";
 import Login from "./components/User/Login";
 import Register from "./components/User/Register";
 import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
 import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
-import { GlobalProvider } from "./context/GlobalState";
+import { UserProvider } from "./context/GlobalState";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import theme from "./theme";
 import "./App.css";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
 	return (
-		<>
+		<QueryClientProvider client={new QueryClient()}>
 			<ColorModeScript initialColorMode={theme.config.initialColorMode} />
-			<GlobalProvider>
+			<UserProvider>
 				<ChakraProvider theme={theme}>
 					<BrowserRouter>
 						<NavigationBar />
-						<AlertStatus />
 						<Container style={{ marginTop: "2rem" }} maxW="container.lg">
 							<Switch>
 								<Route path="/" exact component={Home} />
@@ -43,8 +44,8 @@ function App() {
 								<Route path="/t/:topic/p/:id" exact component={Post} />
 								<PrivateRoute path="/submit" exact component={AddPost} />
 								<Route path="/forgot" exact component={Forgot} />
-								<Route path="/login" exact component={Login} />
-								<Route path="/register" exact component={Register} />
+								<PublicRoute path="/login" exact component={Login} />
+								<PublicRoute path="/register" exact component={Register} />
 								<Route path="/reset/:token" exact component={Reset} />
 								<Route path="/u/:userid" exact component={Profile} />
 								<Route path="/" component={NotFound} />
@@ -52,8 +53,8 @@ function App() {
 						</Container>
 					</BrowserRouter>
 				</ChakraProvider>
-			</GlobalProvider>
-		</>
+			</UserProvider>
+		</QueryClientProvider>
 	);
 }
 

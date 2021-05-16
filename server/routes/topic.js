@@ -16,7 +16,7 @@ router.get("/t", async (req, res) => {
 	try {
 		const topics = await Topic.find();
 		if (!topics) throw Error("Could not get topics");
-		res.status(200).json({ topics });
+		res.status(200).json(topics);
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message }, severity: "error" });
 	}
@@ -34,7 +34,28 @@ router.get("/t/:topic", async (req, res) => {
 			.skip(parseInt(req.query.skip))
 			.limit(10);
 		if (!posts) throw Error("No posts found");
-		res.status(200).json({ topic, posts });
+		res.status(200).json({
+			posts,
+			nextCursor: posts.length
+				? parseInt(req.query.skip) + posts.length
+				: undefined,
+		});
+	} catch (err) {
+		res.status(400).json({ status: { text: err.message, severity: "error" } });
+	}
+});
+
+// @route   GET /api/index/t/:topic/info
+// @desc    Get a topic's info
+// @access  Public
+
+router.get("/t/:topic/info", async (req, res) => {
+	try {
+		const topic = await Topic.findOne({ title: req.params.topic });
+		if (!topic) throw Error("Topic does not exist");
+		res.status(200).json({
+			topic,
+		});
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message, severity: "error" } });
 	}

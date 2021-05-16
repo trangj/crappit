@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import SkeletonCard from "../Utils/SkeletonCard";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import axiosConfig from "../../axiosConfig";
 import { Heading, Box, Text } from "@chakra-ui/react";
+import { useQuery } from "react-query";
+import { fetchProfile } from "../../query/user-query";
 
 const Profile = ({ match }) => {
-	const [profile, setProfile] = useState({});
-	const [loading, setLoading] = useState(true);
+	const { isLoading, isError, data, error } = useQuery(
+		["profile", match.params.userid],
+		() => fetchProfile(match.params.userid)
+	);
+	const profile = data;
 
-	useEffect(() => {
-		const fetchProfile = async (id) => {
-			const res = await axiosConfig.get(`/api/user/u/${id}`);
-			setProfile(res.data);
-			setLoading(false);
-		};
-		fetchProfile(match.params.userid);
-	}, [match.params.userid]);
-
-	return loading ? (
+	return isLoading ? (
 		<SkeletonCard />
 	) : (
 		<>
