@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { IconButton } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import { UserContext } from "../context/GlobalState";
+import { UserContext } from "../context/UserState";
 import { VStack } from "@chakra-ui/layout";
 import { useMutation } from "react-query";
 import { voting } from "../query/post-query";

@@ -6,7 +6,7 @@ import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { UserContext } from "../context/GlobalState";
+import { UserContext } from "../context/UserState";
 
 const CommentItem = ({ comment }) => {
 	const { user } = useContext(UserContext);

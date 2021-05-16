@@ -4,7 +4,7 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
 import FileFieldForm from "./Forms/FileFieldForm";
-import { GlobalContext } from "../context/GlobalState";
+import { GlobalContext } from "../context/UserState";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 320 * 1024;

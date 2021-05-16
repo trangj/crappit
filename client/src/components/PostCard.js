@@ -4,7 +4,7 @@ import UpdatePost from "./UpdatePost";
 import Voting from "./Voting";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/GlobalState";
+import { UserContext } from "../context/UserState";
 import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
 
 const PostCard = ({ post }) => {

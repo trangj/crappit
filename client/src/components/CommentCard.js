@@ -3,7 +3,7 @@ import CommentItem from "./CommentItem";
 import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { UserContext } from "../context/GlobalState";
+import { UserContext } from "../context/UserState";
 import { Heading, Box, Button, Divider, Text } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { addComment } from "../query/comment-query";

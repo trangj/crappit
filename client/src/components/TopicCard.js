@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { UserContext } from "../context/GlobalState";
+import { UserContext } from "../context/UserState";
 import { Box, Heading, Image, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useMutation } from "react-query";

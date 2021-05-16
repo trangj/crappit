@@ -16,7 +16,7 @@ import Register from "./components/User/Register";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
-import { UserProvider } from "./context/GlobalState";
+import { UserProvider } from "./context/UserState";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import theme from "./theme";
 import "./App.css";

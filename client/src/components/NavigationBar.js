@@ -15,7 +15,7 @@ import {
 	MenuDivider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/GlobalState";
+import { UserContext } from "../context/UserState";
 import {
 	HamburgerIcon,
 	MoonIcon,
