@@ -31,7 +31,7 @@ const Register = () => {
 				password,
 				password2,
 			};
-			const res = await registerUser(user);
+			await registerUser(user);
 			history.goBack();
 		} catch (err) {
 			setStatus(err);
