@@ -77,12 +77,15 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
 	});
 	try {
 		let topic = await Topic.findOne({ title: req.body.title });
-		if (topic)
-			return res.json({
-				status: { text: "Topic already exists", severity: "error" },
-			});
+		if (topic) throw Error("Topic already exists");
 		topic = await newTopic.save();
+
+		const user = await User.findOne({ _id: req.user.id }).select("-password");
+		user.followedTopics.push(topic.title);
+		await user.save();
+
 		res.status(200).json({
+			user,
 			topic,
 			status: { text: "Topic successfully created", severity: "success" },
 		});
