@@ -166,7 +166,7 @@ router.post("/t/:topic/p/:id/c/:commentid/reply", auth, async (req, res) => {
 		});
 	} catch (err) {
 		res.status(400).json({
-			status: { text: "Could not reply to comment", severity: "error" },
+			status: { text: err.message, severity: "error" },
 		});
 	}
 });

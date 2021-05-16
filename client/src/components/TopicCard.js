@@ -6,10 +6,10 @@ import { useMutation } from "react-query";
 import { followTopic } from "../query/topic-query";
 
 const TopicCard = ({ topic }) => {
-	const { user } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 	const followTopicMutation = useMutation(followTopic, {
 		onSuccess: (res) => {
-			user.followedTopics = res.data.user.followedTopics;
+			setUser(res.user);
 		},
 	});
 

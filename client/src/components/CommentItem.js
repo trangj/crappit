@@ -62,7 +62,7 @@ const CommentItem = ({ comment }) => {
 			</Box>
 			{openReply && (
 				<Flex>
-					<div className="thread" onClick={() => setHideComments(true)}></div>
+					<div className="thread"></div>
 					<div style={{ marginLeft: "2rem", width: "100%" }}>
 						<AddReply
 							comment={comment}

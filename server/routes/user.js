@@ -157,10 +157,15 @@ router.post("/forgot", async (req, res) => {
 		};
 		await sgMail.send(msg);
 		res.status(200).json({
-			status: "An email has been sent to your email for further instructions",
+			status: {
+				text: "A message has been sent to your email for further instructions",
+				severity: "success",
+			},
 		});
 	} catch (err) {
-		res.status(400).json({ status: err.message });
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
 	}
 });
 
@@ -175,9 +180,13 @@ router.get("/reset/:token", async (req, res) => {
 			resetPasswordExpires: { $gt: Date.now() },
 		});
 		if (!user) throw Error("Token is invalid or has expired");
-		res.json({ status: "Token is validated" });
+		res.json({
+			status: { text: "Token is validated", severity: "success" },
+		});
 	} catch (err) {
-		res.json({ status: err.message });
+		res.json({
+			status: { text: err.message, severity: "error" },
+		});
 	}
 });
 
@@ -219,9 +228,13 @@ router.post("/reset/:token", async (req, res) => {
 				" has just been changed.\n",
 		};
 		await sgMail.send(msg);
-		res.status(200).json({ status: "Your password has been changed" });
+		res.status(200).json({
+			status: { text: "Your password has been changed", severity: "success" },
+		});
 	} catch (err) {
-		res.status(400).json({ status: err.message });
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
 	}
 });
 

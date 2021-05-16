@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import {
 	Box,
 	IconButton,
@@ -48,7 +48,7 @@ const NavigationBar = () => {
 							{user === undefined ? (
 								<MenuItem>Sign up to follow topics!</MenuItem>
 							) : (
-								<MenuGroup title="Followed Topics">
+								<MenuGroup>
 									<MenuItem as={Link} to={`/submit`}>
 										Create a post
 									</MenuItem>

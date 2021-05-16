@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import axiosConfig from "../../axiosConfig";
 import { Redirect } from "react-router";
+import AlertStatus from "../Utils/AlertStatus";
 
 const schema = yup.object({
 	password: yup.string().required(),
@@ -16,6 +17,7 @@ const schema = yup.object({
 
 const Forgot = ({ match }) => {
 	const [redirect, setRedirect] = useState(false);
+	const [status, setStatus] = useState(undefined);
 
 	useEffect(() => {
 		const confirmToken = async () => {
@@ -23,13 +25,14 @@ const Forgot = ({ match }) => {
 				const res = await axiosConfig.get(
 					`/api/user/reset/${match.params.token}`
 				);
-			} catch (err) {}
+				setStatus(res.data);
+			} catch (err) {
+				setStatus(err.response.data);
+			}
 		};
 		confirmToken();
 		// eslint-disable-next-line
 	}, [match.params.token]);
-
-	if (redirect) return <Redirect to={`/`} />;
 
 	const handleSubmit = async (values) => {
 		const { password, password2 } = values;
@@ -38,36 +41,54 @@ const Forgot = ({ match }) => {
 				`/api/user/reset/${match.params.token}`,
 				{ password, password2 }
 			);
+			setStatus(res.data);
 			setRedirect(true);
-		} catch (err) {}
+		} catch (err) {
+			setStatus(err.response.data);
+		}
 	};
 
+	if (redirect)
+		return (
+			<Redirect
+				to={{
+					pathname: "/login",
+					state: {
+						status: status,
+					},
+				}}
+			/>
+		);
+
 	return (
-		<Formik
-			initialValues={{ password: "", password2: "" }}
-			onSubmit={handleSubmit}
-			validationSchema={schema}
-		>
-			{() => (
-				<Form>
-					<Field
-						label="Password"
-						name="password"
-						type="password"
-						component={TextFieldForm}
-					/>
-					<Field
-						label="Confirm Password"
-						name="password2"
-						type="password"
-						component={TextFieldForm}
-					/>
-					<Button type="submit" mt="2">
-						Post
-					</Button>
-				</Form>
-			)}
-		</Formik>
+		<>
+			<Formik
+				initialValues={{ password: "", password2: "" }}
+				onSubmit={handleSubmit}
+				validationSchema={schema}
+			>
+				{() => (
+					<Form>
+						<Field
+							label="Password"
+							name="password"
+							type="password"
+							component={TextFieldForm}
+						/>
+						<Field
+							label="Confirm Password"
+							name="password2"
+							type="password"
+							component={TextFieldForm}
+						/>
+						<Button type="submit" mt="2">
+							Post
+						</Button>
+					</Form>
+				)}
+			</Formik>
+			{status !== undefined && <AlertStatus status={status} />}
+		</>
 	);
 };
 

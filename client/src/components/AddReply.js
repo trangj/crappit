@@ -14,7 +14,7 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 	const queryClient = useQueryClient();
 	const addReplyMutation = useMutation(addReply, {
 		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", res.data.reply.post]);
+			queryClient.invalidateQueries(["post", res.reply.post]);
 			setOpenReply(false);
 		},
 	});

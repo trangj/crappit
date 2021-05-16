@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { UserContext } from "../../context/UserState";
 import { useHistory } from "react-router";
+import AlertStatus from "../Utils/AlertStatus";
 
 const schema = yup.object({
 	username: yup.string().required(),
@@ -18,18 +19,23 @@ const schema = yup.object({
 
 const Register = () => {
 	const { registerUser } = useContext(UserContext);
+	const [status, setStatus] = useState(undefined);
 	const history = useHistory();
 
 	const handleSubmit = async (values) => {
-		const { username, email, password, password2 } = values;
-		const user = {
-			username,
-			email,
-			password,
-			password2,
-		};
-		await registerUser(user);
-		history.goBack();
+		try {
+			const { username, email, password, password2 } = values;
+			const user = {
+				username,
+				email,
+				password,
+				password2,
+			};
+			const res = await registerUser(user);
+			history.goBack();
+		} catch (err) {
+			setStatus(err);
+		}
 	};
 
 	return (
@@ -66,6 +72,7 @@ const Register = () => {
 					</Form>
 				)}
 			</Formik>
+			{status !== undefined && <AlertStatus status={status} />}
 		</>
 	);
 };

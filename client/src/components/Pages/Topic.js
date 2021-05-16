@@ -7,6 +7,7 @@ import { Spinner } from "@chakra-ui/react";
 import { useQuery, useInfiniteQuery } from "react-query";
 import { fetchTopic } from "../../query/post-query";
 import { fetchTopicInfo } from "../../query/topic-query";
+import AlertStatus from "../Utils/AlertStatus";
 
 const Topic = ({ match }) => {
 	const { data, error, fetchNextPage, hasNextPage, isLoading } =
@@ -27,9 +28,11 @@ const Topic = ({ match }) => {
 		fetchTopicInfo(match.params.topic)
 	);
 
-	return isLoading || topicLoading ? (
-		<SkeletonList />
-	) : (
+	if (isLoading || topicLoading) return <SkeletonList />;
+	if (error || topicIsError)
+		return <AlertStatus status={error || topicError} />;
+
+	return (
 		<>
 			<TopicCard topic={topicData.topic} />
 			<InfiniteScroll

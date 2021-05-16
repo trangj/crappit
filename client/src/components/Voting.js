@@ -10,8 +10,8 @@ const Voting = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const voteMutation = useMutation(voting, {
 		onSuccess: (res) => {
-			post.likes = res.data.post.likes;
-			post.dislikes = res.data.post.dislikes;
+			post.likes = res.post.likes;
+			post.dislikes = res.post.dislikes;
 		},
 	});
 

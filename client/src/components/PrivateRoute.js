@@ -14,7 +14,10 @@ const PrivateRoute = ({ children, ...rest }) => {
 					to={{
 						pathname: "/login",
 						state: {
-							error: "Log in to access this feature",
+							status: {
+								text: "Log in to access this feature",
+								severity: "error",
+							},
 							from: location.pathname,
 						},
 					}}

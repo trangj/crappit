@@ -1,6 +1,5 @@
 import React from "react";
 import NavigationBar from "./components/NavigationBar";
-import AlertStatus from "./components/Utils/AlertStatus";
 import Home from "./components/Pages/Home";
 import Post from "./components/Pages/Post";
 import Topic from "./components/Pages/Topic";

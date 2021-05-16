@@ -1,29 +1,59 @@
 import axiosConfig from "../axiosConfig";
 
-export function updateComment({ topic, postid, commentid, newComment }) {
-	return axiosConfig.put(
-		`/api/index/t/${topic}/p/${postid}/c/${commentid}`,
-		newComment
-	);
+export async function updateComment({ topic, postid, commentid, newComment }) {
+	try {
+		const res = await axiosConfig.put(
+			`/api/index/t/${topic}/p/${postid}/c/${commentid}`,
+			newComment
+		);
+		return res.data;
+	} catch (err) {
+		throw err.response.data;
+	}
 }
 
-export function deleteComment({ topic, postid, commentid }) {
-	return axiosConfig.delete(`/api/index/t/${topic}/p/${postid}/c/${commentid}`);
+export async function deleteComment({ topic, postid, commentid }) {
+	try {
+		const res = await axiosConfig.delete(
+			`/api/index/t/${topic}/p/${postid}/c/${commentid}`
+		);
+		return res.data;
+	} catch (err) {
+		throw err.response.data;
+	}
 }
 
-export function commentVoting({ topic, postid, commentid, vote }) {
-	return axiosConfig.put(
-		`/api/index/t/${topic}/p/${postid}/c/${commentid}/changevote?vote=${vote}`
-	);
+export async function commentVoting({ topic, postid, commentid, vote }) {
+	try {
+		const res = await axiosConfig.put(
+			`/api/index/t/${topic}/p/${postid}/c/${commentid}/changevote?vote=${vote}`
+		);
+		return res.data;
+	} catch (err) {
+		throw err.response.data;
+	}
 }
 
-export function addReply({ topic, postid, commentid, reply }) {
-	return axiosConfig.post(
-		`/api/index/t/${topic}/p/${postid}/c/${commentid}/reply`,
-		reply
-	);
+export async function addReply({ topic, postid, commentid, reply }) {
+	try {
+		const res = await axiosConfig.post(
+			`/api/index/t/${topic}/p/${postid}/c/${commentid}/reply`,
+			reply
+		);
+		return res.data;
+	} catch (err) {
+		throw err.response.data;
+	}
 }
 
-export function addComment({ topic, postid, newComment }) {
-	return axiosConfig.post(`/api/index/t/${topic}/p/${postid}`, newComment);
+export async function addComment({ topic, postid, newComment }) {
+	try {
+		const res = await axiosConfig.post(
+			`/api/index/t/${topic}/p/${postid}`,
+			newComment
+		);
+		return res.data;
+	} catch (err) {
+		throw err.response.data;
+	}
 }

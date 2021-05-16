@@ -5,6 +5,6 @@ export async function fetchProfile(userid) {
 		const res = await axiosConfig.get(`/api/user/u/${userid}`);
 		return res.data;
 	} catch (err) {
-		//
+		throw err.response.data;
 	}
 }

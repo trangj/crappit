@@ -7,19 +7,7 @@ const PrivateRoute = ({ children, ...rest }) => {
 	const location = useLocation();
 	return (
 		<Route {...rest}>
-			{user === undefined ? (
-				children
-			) : (
-				<Redirect
-					to={{
-						pathname: "/",
-						state: {
-							error: "You are already logged in",
-							from: location.pathname,
-						},
-					}}
-				/>
-			)}
+			{user === undefined ? children : <Redirect to="/" />}
 		</Route>
 	);
 };

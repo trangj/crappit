@@ -18,7 +18,9 @@ router.get("/t", async (req, res) => {
 		if (!topics) throw Error("Could not get topics");
 		res.status(200).json(topics);
 	} catch (err) {
-		res.status(400).json({ status: { text: err.message }, severity: "error" });
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
 	}
 });
 

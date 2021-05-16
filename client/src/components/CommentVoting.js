@@ -9,8 +9,8 @@ const CommentVoting = ({ comment }) => {
 	const { user } = useContext(UserContext);
 	const voteCommentMutation = useMutation(commentVoting, {
 		onSuccess: (res) => {
-			comment.likes = res.data.comment.likes;
-			comment.dislikes = res.data.comment.dislikes;
+			comment.likes = res.comment.likes;
+			comment.dislikes = res.comment.dislikes;
 		},
 	});
 

@@ -7,6 +7,7 @@ import FileFieldForm from "../Forms/FileFieldForm";
 import { addTopic } from "../../query/topic-query";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
+import AlertStatus from "../Utils/AlertStatus";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -27,7 +28,7 @@ const AddTopic = () => {
 	const history = useHistory();
 	const addTopicMutation = useMutation(addTopic, {
 		onSuccess: (res) => {
-			const { title } = res.data.topic;
+			const { title } = res.topic;
 			history.push(`/t/${title}`);
 		},
 	});
@@ -64,10 +65,15 @@ const AddTopic = () => {
 							component={FileFieldForm}
 							setFieldValue={setFieldValue}
 						/>
-						<Button type="submit">Post</Button>
+						<Button type="submit" isLoading={addTopicMutation.isLoading}>
+							Post
+						</Button>
 					</Form>
 				)}
 			</Formik>
+			{addTopicMutation.isError && (
+				<AlertStatus status={addTopicMutation.error} />
+			)}
 		</>
 	);
 };

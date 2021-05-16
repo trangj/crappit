@@ -14,7 +14,7 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 	const queryClient = useQueryClient();
 	const updatePostMutation = useMutation(updatePost, {
 		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", res.data.post._id]);
+			queryClient.invalidateQueries(["post", res.post._id]);
 			setOpenEdit(false);
 		},
 	});

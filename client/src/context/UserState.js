@@ -31,10 +31,7 @@ export const UserProvider = ({ children }) => {
 				payload: res.data,
 			});
 		} catch (err) {
-			dispatch({
-				type: "USER_ERROR",
-				payload: err.response.data.status,
-			});
+			throw err.response.data;
 		}
 	}
 
@@ -48,11 +45,16 @@ export const UserProvider = ({ children }) => {
 				payload: res.data,
 			});
 		} catch (err) {
-			dispatch({
-				type: "USER_ERROR",
-				payload: err.response.data.status,
-			});
+			throw err.response.data;
 		}
+	}
+
+	function setUser(user) {
+		saveState(user, "user");
+		dispatch({
+			type: "SET_USER",
+			payload: user,
+		});
 	}
 
 	return (
@@ -62,6 +64,7 @@ export const UserProvider = ({ children }) => {
 				loginUser,
 				logoutUser,
 				registerUser,
+				setUser,
 			}}
 		>
 			{children}

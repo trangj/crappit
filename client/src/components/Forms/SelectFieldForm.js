@@ -13,7 +13,7 @@ const SelectFieldForm = ({ field, form, children, label, ...props }) => {
 	return (
 		<FormControl isInvalid={!!error}>
 			<FormLabel>{label}</FormLabel>
-			<Select placeholder="Choose a topic" {...field} {...props}>
+			<Select {...field} {...props}>
 				{children}
 			</Select>
 			<FormErrorMessage>{error}</FormErrorMessage>

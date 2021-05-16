@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	Tabs,
@@ -18,6 +18,7 @@ import { useQuery, useMutation } from "react-query";
 import { addPost } from "../../query/post-query";
 import { fetchTopics } from "../../query/topic-query";
 import { useHistory } from "react-router";
+import AlertStatus from "../Utils/AlertStatus";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -46,7 +47,7 @@ const AddPost = ({ match }) => {
 	const history = useHistory();
 	const addPostMutation = useMutation(addPost, {
 		onSuccess: (res) => {
-			const { topic, _id } = res.data.post;
+			const { topic, _id } = res.post;
 			history.push(`/t/${topic}/p/${_id}`);
 		},
 	});
@@ -82,9 +83,16 @@ const AddPost = ({ match }) => {
 				{({ setFieldValue }) => (
 					<Form>
 						<Field
-							label="Topic"
+							label={"Topic"}
 							name="topic"
 							component={SelectFieldForm}
+							placeholder={
+								isLoading
+									? "Loading..."
+									: isError
+									? error.status.text
+									: "Choose a topic"
+							}
 							mb="2"
 						>
 							{!isLoading &&
@@ -114,14 +122,22 @@ const AddPost = ({ match }) => {
 										multiline
 										component={TextFieldForm}
 									/>
-									<Button type="submit" mt="2">
+									<Button
+										type="submit"
+										mt="2"
+										isLoading={addPostMutation.isLoading}
+									>
 										Post
 									</Button>
 								</TabPanel>
 								<TabPanel>
 									<Field label="Title" name="title" component={TextFieldForm} />
 									<Field label="Link" name="link" component={TextFieldForm} />
-									<Button type="submit" mt="2">
+									<Button
+										type="submit"
+										mt="2"
+										isLoading={addPostMutation.isLoading}
+									>
 										Post
 									</Button>
 								</TabPanel>
@@ -133,7 +149,11 @@ const AddPost = ({ match }) => {
 										component={FileFieldForm}
 										setFieldValue={setFieldValue}
 									/>
-									<Button type="submit" mt="2">
+									<Button
+										type="submit"
+										mt="2"
+										isLoading={addPostMutation.isLoading}
+									>
 										Post
 									</Button>
 								</TabPanel>
@@ -142,6 +162,9 @@ const AddPost = ({ match }) => {
 					</Form>
 				)}
 			</Formik>
+			{addPostMutation.isError && (
+				<AlertStatus status={addPostMutation.error} />
+			)}
 		</>
 	);
 };

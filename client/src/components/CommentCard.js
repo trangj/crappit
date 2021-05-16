@@ -17,7 +17,7 @@ const CommentCard = ({ post }) => {
 	const { comments } = post;
 	const addReplyMutation = useMutation(addComment, {
 		onSuccess: (res) => {
-			post.comments = [...post.comments, res.data.comment];
+			post.comments = [...post.comments, res.comment];
 		},
 	});
 

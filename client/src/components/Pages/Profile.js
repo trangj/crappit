@@ -5,6 +5,7 @@ import moment from "moment";
 import { Heading, Box, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { fetchProfile } from "../../query/user-query";
+import AlertStatus from "../Utils/AlertStatus";
 
 const Profile = ({ match }) => {
 	const { isLoading, isError, data, error } = useQuery(
@@ -13,9 +14,10 @@ const Profile = ({ match }) => {
 	);
 	const profile = data;
 
-	return isLoading ? (
-		<SkeletonCard />
-	) : (
+	if (isLoading) return <SkeletonCard />;
+	if (isError) return <AlertStatus status={error} />;
+
+	return (
 		<>
 			<Box style={{ marginBottom: "1rem" }}>
 				<Box>

@@ -1,5 +1,6 @@
 import React from "react";
 import SkeletonList from "../Utils/SkeletonList";
+import AlertStatus from "../Utils/AlertStatus";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
@@ -8,6 +9,9 @@ import { fetchTopics } from "../../query/topic-query";
 const AllTopics = () => {
 	const { isLoading, isError, data, error } = useQuery(["topics"], fetchTopics);
 	const topics = data;
+
+	if (isLoading) return <SkeletonList />;
+	if (isError) return <AlertStatus status={error} />;
 
 	return isLoading ? (
 		<SkeletonList />

@@ -14,7 +14,7 @@ const DeleteComment = ({ comment }) => {
 	const queryClient = useQueryClient();
 	const deleteCommentMutation = useMutation(deleteComment, {
 		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", res.data.comment.post]);
+			queryClient.invalidateQueries(["post", res.comment.post]);
 			setOpen(false);
 		},
 	});

@@ -21,10 +21,3 @@ p a:hover {
 	border-left: 2px solid #ed8936;
 	cursor: pointer;
 }
-
-.alert {
-	position: fixed !important;
-	bottom: 0px;
-	width: 100% !important;
-	z-index: 15;
-}
