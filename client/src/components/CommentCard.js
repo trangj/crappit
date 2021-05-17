@@ -4,9 +4,10 @@ import * as yup from "yup";
 import TextFieldForm from "./Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { UserContext } from "../context/UserState";
-import { Heading, Box, Button, Divider, Text } from "@chakra-ui/react";
+import { Box, Button, Divider, Text } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { addComment } from "../query/comment-query";
+import { Link } from "react-router-dom";
 import AlertStatus from "./Utils/AlertStatus";
 
 const schema = yup.object({
@@ -44,7 +45,9 @@ const CommentCard = ({ post }) => {
 			id="comments"
 		>
 			<Box m="3">
-				<Heading>Comments</Heading>
+				<Text>
+					Comment as <Link to={`/u/${user._id}`}>{user.username}</Link>
+				</Text>
 				{user ? (
 					<Formik
 						initialValues={{ content: "" }}
@@ -55,7 +58,7 @@ const CommentCard = ({ post }) => {
 							<Form>
 								<Field name="content" multiline component={TextFieldForm} />
 								<Button type="submit" isLoading={isLoading}>
-									Post
+									Comment
 								</Button>
 								{isError && <AlertStatus status={error} />}
 							</Form>
@@ -66,7 +69,9 @@ const CommentCard = ({ post }) => {
 				)}
 				<Divider mt="5" />
 				{comments.length === 0 ? (
-					<Text mt="3">It's a bit empty in here...</Text>
+					<Text my="5" color="gray.500">
+						It's a bit empty in here...
+					</Text>
 				) : (
 					comments.map((comment) => (
 						<CommentItem comment={comment} key={comment._id} />

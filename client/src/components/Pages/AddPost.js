@@ -21,7 +21,7 @@ import { useHistory } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
-const FILE_SIZE = 320 * 1024;
+const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
 	title: yup.string().required(),
 	topic: yup.string().required(),

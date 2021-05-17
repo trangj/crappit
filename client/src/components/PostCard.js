@@ -13,12 +13,11 @@ const PostCard = ({ post }) => {
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
-			{post.type === "photo" && (
-				<Image alt={post.imageName} src={post.imageURL} width="100%" />
-			)}
 			<Box m="3">
 				<HStack>
-					<Voting post={post} />
+					<Box mb="auto">
+						<Voting post={post} />
+					</Box>
 					<Box width="100%">
 						<Text fontSize="xs">
 							<Link to={`/t/${post.topic}`} style={{ fontWeight: "bold" }}>
@@ -43,7 +42,15 @@ const PostCard = ({ post }) => {
 							/>
 						) : (
 							<>
-								<Text mt="3">{post.content}</Text>
+								{post.type === "text" && <Text mt="3">{post.content}</Text>}
+								{post.type === "photo" && (
+									<Image
+										alt={post.imageName}
+										src={post.imageURL}
+										maxHeight="400px"
+										mx="auto"
+									/>
+								)}
 								{user && user._id === post.authorId && (
 									<HStack mt="3">
 										<DeletePost post={post} />
