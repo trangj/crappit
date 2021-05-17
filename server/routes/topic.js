@@ -53,7 +53,10 @@ router.get("/t/:topic", async (req, res) => {
 
 router.get("/t/:topic/info", async (req, res) => {
 	try {
-		const topic = await Topic.findOne({ title: req.params.topic });
+		const topic = await Topic.findOne({ title: req.params.topic }).populate({
+			path: "moderators",
+			select: "username",
+		});
 		if (!topic) throw Error("Topic does not exist");
 		res.status(200).json({
 			topic,

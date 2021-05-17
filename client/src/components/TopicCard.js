@@ -22,32 +22,41 @@ const TopicCard = ({ topic }) => {
 			<Box m="3">
 				<Heading>Welcome to t/{topic.title}!</Heading>
 				{openEdit ? (
-					<UpdateTopic
-						topic={topic}
-						openEdit={openEdit}
-						setOpenEdit={setOpenEdit}
-					/>
+					<>
+						<UpdateTopic
+							topic={topic}
+							openEdit={openEdit}
+							setOpenEdit={setOpenEdit}
+						/>
+					</>
 				) : (
-					<Text>{topic.description}</Text>
+					<>
+						<Text>{topic.description}</Text>
+						<Box mt="3">
+							{user && (
+								<Button
+									isLoading={isLoading}
+									onClick={() => mutate(topic.title)}
+									mr="2"
+								>
+									{user.followedTopics.includes(topic.title)
+										? "Unfollow"
+										: "Follow"}
+								</Button>
+							)}
+							<Button as={Link} to={`/t/${topic.title}/submit`} mr="2">
+								Add Post
+							</Button>
+							{user &&
+								!!topic.moderators.filter(
+									(moderator) => moderator._id === user._id
+								).length && (
+									<Button onClick={() => setOpenEdit(!openEdit)}>Edit</Button>
+								)}
+							{isError && <AlertStatus status={error} />}
+						</Box>
+					</>
 				)}
-				<Box mt="3">
-					{user && (
-						<Button
-							isLoading={isLoading}
-							onClick={() => mutate(topic.title)}
-							mr="2"
-						>
-							{user.followedTopics.includes(topic.title)
-								? "Unfollow"
-								: "Follow"}
-						</Button>
-					)}
-					<Button as={Link} to={`/t/${topic.title}/submit`} mr="2">
-						Add Post
-					</Button>
-					<Button onClick={() => setOpenEdit(!openEdit)}>Edit</Button>
-					{isError && <AlertStatus status={error} />}
-				</Box>
 			</Box>
 		</Box>
 	);
