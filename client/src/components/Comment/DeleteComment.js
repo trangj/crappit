@@ -21,7 +21,7 @@ const DeleteComment = ({ comment }) => {
 
 	return (
 		<>
-			<Button size="xs" onClick={() => setOpen(true)}>
+			<Button size="xs" onClick={() => setOpen(true)} variant="ghost">
 				Delete
 			</Button>
 			<AlertDialog

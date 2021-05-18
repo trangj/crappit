@@ -114,7 +114,7 @@ router.put("/t/:topic/p/:id", auth, async (req, res) => {
 		if (!req.body.content) throw Error("Missing required fields");
 		const post = await Post.findOneAndUpdate(
 			{ _id: req.params.id, authorId: req.user.id },
-			{ $set: { content: req.body.content } },
+			{ $set: { content: req.body.content, lastEditDate: Date.now() } },
 			{ useFindAndModify: false, new: true }
 		).populate("comments");
 		if (!post)

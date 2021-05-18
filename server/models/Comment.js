@@ -10,8 +10,11 @@ const commentSchema = new Schema({
 	comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 	likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
 	dislikes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-	date: { type: Date, default: Date.now },
 	post: { type: Schema.Types.ObjectId, ref: "Post" },
+	date: { type: Date, default: Date.now },
+	lastEditDate: {
+		type: Date,
+	},
 });
 
 function populateComments(next) {

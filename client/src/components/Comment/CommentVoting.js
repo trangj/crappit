@@ -31,10 +31,18 @@ const CommentVoting = ({ comment }) => {
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
-					icon={<ArrowUpIcon color="orange.400" />}
+					icon={<ArrowUpIcon />}
+					variant="ghost"
+					color="orange.400"
 				/>
 			) : (
-				<IconButton onClick={handleUpvote} size="xs" icon={<ArrowUpIcon />} />
+				<IconButton
+					onClick={handleUpvote}
+					size="xs"
+					icon={<ArrowUpIcon />}
+					variant="ghost"
+					_hover={{ color: "orange.400" }}
+				/>
 			)}
 			<Text
 				color={
@@ -51,13 +59,17 @@ const CommentVoting = ({ comment }) => {
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"
-					icon={<ArrowDownIcon color="blue.600" />}
+					icon={<ArrowDownIcon />}
+					variant="ghost"
+					color="blue.600"
 				/>
 			) : (
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"
 					icon={<ArrowDownIcon />}
+					variant="ghost"
+					_hover={{ color: "blue.600" }}
 				/>
 			)}
 		</HStack>

@@ -52,7 +52,12 @@ const CommentCard = ({ post }) => {
 						>
 							{() => (
 								<Form>
-									<Field name="content" multiline component={TextFieldForm} />
+									<Field
+										name="content"
+										multiline
+										component={TextFieldForm}
+										placeholder="What are your thoughts?"
+									/>
 									<Button type="submit" isLoading={isLoading}>
 										Comment
 									</Button>

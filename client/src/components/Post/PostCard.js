@@ -56,7 +56,11 @@ const PostCard = ({ post }) => {
 									<HStack mt="3">
 										<DeletePost post={post} />
 										{post.type === "text" && (
-											<Button size="sm" onClick={() => setOpenEdit(!openEdit)}>
+											<Button
+												size="sm"
+												onClick={() => setOpenEdit(!openEdit)}
+												variant="ghost"
+											>
 												Edit
 											</Button>
 										)}

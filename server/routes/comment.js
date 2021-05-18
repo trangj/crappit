@@ -45,7 +45,7 @@ router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 		if (!req.body.content) throw Error("Missing required fields");
 		const comment = await Comment.findOneAndUpdate(
 			{ _id: req.params.commentid, authorId: req.user.id },
-			{ $set: { content: req.body.content } },
+			{ $set: { content: req.body.content, lastEditDate: Date.now() } },
 			{ useFindAndModify: false, new: true }
 		);
 		if (!comment) throw Error("No comment exists or you are not the author");

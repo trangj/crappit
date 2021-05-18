@@ -23,8 +23,12 @@ const CommentItem = ({ comment }) => {
 							<Link to={`/u/${comment.authorId}`}>{comment.author}</Link>
 						) : (
 							comment.author
-						)}{" "}
+						)}
+						{" | "}
 						{moment(comment.date).fromNow()}
+						{comment.lastEditDate && (
+							<i> | edited {moment(comment.date).fromNow()}</i>
+						)}
 					</Text>
 					{openEdit ? (
 						<UpdateComment
@@ -39,7 +43,11 @@ const CommentItem = ({ comment }) => {
 								{user !== undefined && comment.authorId ? (
 									<>
 										<CommentVoting comment={comment} />
-										<Button size="xs" onClick={() => setOpenReply(!openReply)}>
+										<Button
+											size="xs"
+											onClick={() => setOpenReply(!openReply)}
+											variant="ghost"
+										>
 											Reply
 										</Button>
 										{user._id === comment.authorId && (
@@ -48,6 +56,7 @@ const CommentItem = ({ comment }) => {
 												<Button
 													size="xs"
 													onClick={() => setOpenEdit(!openEdit)}
+													variant="ghost"
 												>
 													Edit
 												</Button>

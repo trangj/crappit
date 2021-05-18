@@ -35,19 +35,21 @@ const PostItem = ({ post }) => {
 					<HStack mt="2">
 						{post.type === "link" ? (
 							<a href={post.link} target="_blank" rel="noopener noreferrer">
-								<IconButton size="xs" icon={<LinkIcon />} />
+								<IconButton size="xs" icon={<LinkIcon />} variant="ghost" />
 							</a>
 						) : (
 							<IconButton
 								size="xs"
 								onClick={() => setOpen(!open)}
 								icon={open ? <MinusIcon /> : <AddIcon />}
+								variant="ghost"
 							/>
 						)}
 						<Button
 							size="xs"
 							as={Link}
 							to={`/t/${post.topic}/p/${post._id}#comments`}
+							variant="ghost"
 						>
 							{post.comments.length} Comments
 						</Button>

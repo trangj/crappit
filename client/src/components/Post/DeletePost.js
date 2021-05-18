@@ -18,7 +18,7 @@ const DeletePost = ({ post }) => {
 
 	return (
 		<>
-			<Button size="sm" onClick={() => setOpen(true)}>
+			<Button size="sm" onClick={() => setOpen(true)} variant="ghost">
 				Delete
 			</Button>
 			<AlertDialog

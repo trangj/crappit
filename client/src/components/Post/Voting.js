@@ -22,11 +22,19 @@ const Voting = ({ post }) => {
 			{post.likes.includes(user._id) ? (
 				<IconButton
 					onClick={handleUpvote}
-					size="sm"
-					icon={<ArrowUpIcon color="orange.400" />}
+					size="xs"
+					icon={<ArrowUpIcon />}
+					variant="ghost"
+					color="orange.400"
 				/>
 			) : (
-				<IconButton onClick={handleUpvote} size="sm" icon={<ArrowUpIcon />} />
+				<IconButton
+					onClick={handleUpvote}
+					size="xs"
+					icon={<ArrowUpIcon />}
+					variant="ghost"
+					_hover={{ color: "orange.400" }}
+				/>
 			)}
 			<Text
 				color={
@@ -42,14 +50,18 @@ const Voting = ({ post }) => {
 			{post.dislikes.includes(user._id) ? (
 				<IconButton
 					onClick={handleDownvote}
-					size="sm"
-					icon={<ArrowDownIcon color="blue.600" />}
+					size="xs"
+					icon={<ArrowDownIcon />}
+					variant="ghost"
+					color="blue.600"
 				/>
 			) : (
 				<IconButton
 					onClick={handleDownvote}
-					size="sm"
+					size="xs"
 					icon={<ArrowDownIcon />}
+					variant="ghost"
+					_hover={{ color: "blue.600" }}
 				/>
 			)}
 		</VStack>
