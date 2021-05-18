@@ -67,11 +67,11 @@ const CommentCard = ({ post }) => {
 						</Formik>
 					</>
 				) : (
-					<Text mt="3">Log in or sign up to leave a comment</Text>
+					<Text>Log in or sign up to leave a comment</Text>
 				)}
-				<Divider mt="5" />
+				<Divider pt="5" />
 				{comments.length === 0 ? (
-					<Text my="5" color="gray.500">
+					<Text py="3" color="gray.500">
 						It's a bit empty in here...
 					</Text>
 				) : (

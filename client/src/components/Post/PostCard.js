@@ -10,11 +10,12 @@ import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
 const PostCard = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
+	console.log(user);
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
 			<Box m="3">
-				<HStack>
+				<HStack spacing="0">
 					<Box mb="auto">
 						<Voting post={post} />
 					</Box>
@@ -42,30 +43,39 @@ const PostCard = ({ post }) => {
 							/>
 						) : (
 							<>
-								{post.type === "text" && <Text mt="3">{post.content}</Text>}
+								{post.type === "text" && <Text mt="1">{post.content}</Text>}
 								{post.type === "photo" && (
 									<Image
 										alt={post.imageName}
 										src={post.imageURL}
 										maxHeight="400px"
 										mx="auto"
-										mt="3"
+										pt="1"
 									/>
 								)}
-								{user && user._id === post.authorId && (
-									<HStack mt="3">
-										<DeletePost post={post} />
-										{post.type === "text" && (
-											<Button
-												size="sm"
-												onClick={() => setOpenEdit(!openEdit)}
-												variant="ghost"
-											>
-												Edit
+								<HStack mt="1">
+									{user && user._id === post.authorId && (
+										<>
+											<DeletePost post={post} />
+											{post.type === "text" && (
+												<Button
+													size="sm"
+													variant="ghost"
+													onClick={() => setOpenEdit(!openEdit)}
+												>
+													Edit
+												</Button>
+											)}
+										</>
+									)}
+									{user &&
+										user._id !== post.authorId &&
+										user.topicsModerating.includes(post.topic) && (
+											<Button size="sm" variant="ghost">
+												Delete as Moderator
 											</Button>
 										)}
-									</HStack>
-								)}
+								</HStack>
 							</>
 						)}
 					</Box>
