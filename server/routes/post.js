@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 // middleware
-const upload = require("../middleware/upload");
+const { upload, deleteFile } = require("../middleware/upload");
 const auth = require("../middleware/auth");
 // schemas
 const Post = require("../models/Post");
@@ -86,12 +86,14 @@ router.post("/t/:topic/p", auth, upload.single("file"), async (req, res) => {
 
 router.delete("/t/:topic/p/:id", auth, async (req, res) => {
 	try {
-		const query = await Post.deleteOne({
+		const post = await Post.findOneAndDelete({
 			_id: req.params.id,
 			authorId: req.user.id,
 		});
-		if (!query.deletedCount)
-			throw Error("Post does not exist or you are not the author");
+		if (!post) throw Error("Post does not exist or you are not the author");
+
+		if (post.type === "photo") deleteFile(post.imageName);
+
 		await Comment.deleteMany({ post: req.params.id });
 		await Topic.updateOne(
 			{ title: req.params.topic },

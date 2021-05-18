@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 // middleware
-const upload = require("../middleware/upload");
+const { upload } = require("../middleware/upload");
 const auth = require("../middleware/auth");
 // schemas
 const Post = require("../models/Post");

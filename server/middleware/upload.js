@@ -25,4 +25,19 @@ const upload = multer({
 	}),
 });
 
-module.exports = upload;
+const deleteFile = (Key) => {
+	s3.deleteObject(
+		{
+			Bucket: "crappit-images",
+			Key,
+		},
+		(err, data) => {
+			if (err) throw Error(err);
+		}
+	);
+};
+
+module.exports = {
+	upload,
+	deleteFile,
+};
