@@ -1,17 +1,14 @@
 import React from "react";
-import PostItem from "../PostItem";
+import PostItem from "../Post/PostItem";
 import SkeletonList from "../Utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import { Spinner } from "@chakra-ui/react";
-import { useInfiniteQuery } from "react-query";
-import { fetchPosts } from "../../query/post-query";
+import usePosts from "../../hooks/post-query/usePosts";
 import AlertStatus from "../Utils/AlertStatus";
 
 const Home = () => {
 	const { data, error, fetchNextPage, hasNextPage, isLoading, isError } =
-		useInfiniteQuery(["posts"], ({ pageParam = 0 }) => fetchPosts(pageParam), {
-			getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
-		});
+		usePosts("");
 
 	if (isLoading) return <SkeletonList />;
 	if (isError) return <AlertStatus status={error} />;

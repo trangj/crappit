@@ -3,12 +3,10 @@ import SkeletonList from "../Utils/SkeletonList";
 import AlertStatus from "../Utils/AlertStatus";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
-import { fetchTopics } from "../../query/topic-query";
+import useTopics from "../../hooks/topic-query/useTopics";
 
 const AllTopics = () => {
-	const { isLoading, isError, data, error } = useQuery(["topics"], fetchTopics);
-	const topics = data;
+	const { isLoading, isError, data: topics, error } = useTopics();
 
 	if (isLoading) return <SkeletonList />;
 	if (isError) return <AlertStatus status={error} />;

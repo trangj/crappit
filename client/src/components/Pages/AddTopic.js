@@ -4,11 +4,9 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
-import { addTopic } from "../../query/topic-query";
-import { useMutation } from "react-query";
-import { useHistory } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
 import { UserContext } from "../../context/UserState";
+import useAddTopic from "../../hooks/topic-query/useAddTopic";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -27,14 +25,7 @@ const schema = yup.object({
 
 const AddTopic = () => {
 	const { setUser } = useContext(UserContext);
-	const history = useHistory();
-	const { isLoading, isError, error, mutate } = useMutation(addTopic, {
-		onSuccess: (res) => {
-			const { title } = res.topic;
-			setUser(res.user);
-			history.push(`/t/${title}`);
-		},
-	});
+	const { isLoading, isError, error, mutate } = useAddTopic(setUser);
 	const handleSubmit = async (values) => {
 		const { title, description, file } = values;
 		const formData = new FormData();

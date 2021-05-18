@@ -14,11 +14,9 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
 import SelectFieldForm from "../Forms/SelectFieldForm";
-import { useQuery, useMutation } from "react-query";
-import { addPost } from "../../query/post-query";
-import { fetchTopics } from "../../query/topic-query";
-import { useHistory } from "react-router";
+import useTopics from "../../hooks/topic-query/useTopics";
 import AlertStatus from "../Utils/AlertStatus";
+import useAddPost from "../../hooks/post-query/useAddPost";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 512 * 1024;
@@ -43,14 +41,8 @@ const AddPost = ({ match }) => {
 		isError: topicsIsError,
 		data: topicsData,
 		error: topicsError,
-	} = useQuery(["topics"], fetchTopics);
-	const history = useHistory();
-	const { isLoading, isError, error, mutate } = useMutation(addPost, {
-		onSuccess: (res) => {
-			const { topic, _id } = res.post;
-			history.push(`/t/${topic}/p/${_id}`);
-		},
-	});
+	} = useTopics();
+	const { isLoading, isError, error, mutate } = useAddPost();
 	const [selectedType, setSelectedType] = useState(0);
 
 	const handleSubmit = async (values) => {

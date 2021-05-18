@@ -30,8 +30,6 @@ router.get("/t", async (req, res) => {
 
 router.get("/t/:topic", async (req, res) => {
 	try {
-		const topic = await Topic.findOne({ title: req.params.topic });
-		if (!topic) throw Error("Topic does not exist");
 		const posts = await Post.find({ topic: req.params.topic })
 			.skip(parseInt(req.query.skip))
 			.limit(10);

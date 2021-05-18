@@ -1,24 +1,20 @@
 import React from "react";
 import * as yup from "yup";
-import TextFieldForm from "./Forms/TextFieldForm";
+import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "react-query";
-import { updateComment } from "../query/comment-query";
-import AlertStatus from "./Utils/AlertStatus";
+import useUpdateComment from "../../hooks/comment-query/useUpdateComment";
+import AlertStatus from "../Utils/AlertStatus";
 
 const schema = yup.object({
 	content: yup.string().required(),
 });
 
 const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
-	const queryClient = useQueryClient();
-	const { isLoading, isError, error, mutate } = useMutation(updateComment, {
-		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", res.comment.post]);
-			setOpenEdit(false);
-		},
-	});
+	const { isLoading, isError, error, mutate } = useUpdateComment(
+		setOpenEdit,
+		comment
+	);
 
 	const handleSubmit = (values) => {
 		const { content } = values;

@@ -1,15 +1,14 @@
 import React from "react";
-import PostCard from "../PostCard";
-import CommentCard from "../CommentCard";
+import PostCard from "../Post/PostCard";
+import CommentCard from "../Comment/CommentCard";
 import SkeletonCard from "../Utils/SkeletonCard";
 import AlertStatus from "../Utils/AlertStatus";
-import { useQuery } from "react-query";
-import { fetchPost } from "../../query/post-query";
+import usePost from "../../hooks/post-query/usePost";
 
 const Post = ({ match }) => {
-	const { isLoading, isError, data, error } = useQuery(
-		["post", match.params.id],
-		() => fetchPost(match.params.topic, match.params.id)
+	const { isLoading, isError, data, error } = usePost(
+		match.params.topic,
+		match.params.id
 	);
 
 	if (isLoading) return <SkeletonCard />;

@@ -3,16 +3,16 @@ import SkeletonCard from "../Utils/SkeletonCard";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { Heading, Box, Text } from "@chakra-ui/react";
-import { useQuery } from "react-query";
-import { fetchProfile } from "../../query/user-query";
+import useProfile from "../../hooks/user-query/useProfile";
 import AlertStatus from "../Utils/AlertStatus";
 
 const Profile = ({ match }) => {
-	const { isLoading, isError, data, error } = useQuery(
-		["profile", match.params.userid],
-		() => fetchProfile(match.params.userid)
-	);
-	const profile = data;
+	const {
+		isLoading,
+		isError,
+		data: profile,
+		error,
+	} = useProfile(match.params.userid);
 
 	if (isLoading) return <SkeletonCard />;
 	if (isError) return <AlertStatus status={error} />;

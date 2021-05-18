@@ -1,19 +1,12 @@
 import React, { useContext } from "react";
 import { IconButton, HStack, Text } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import { UserContext } from "../context/UserState";
-import { useMutation } from "react-query";
-import { commentVoting } from "../query/comment-query";
+import { UserContext } from "../../context/UserState";
+import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
 
 const CommentVoting = ({ comment }) => {
 	const { user } = useContext(UserContext);
-	const { mutate } = useMutation(commentVoting, {
-		onSuccess: (res) => {
-			comment.likes = res.comment.likes;
-			comment.dislikes = res.comment.dislikes;
-		},
-	});
-
+	const { mutate } = useCommentVoting(comment);
 	const handleUpvote = () => {
 		mutate({
 			topic: comment.topic,

@@ -1,20 +1,15 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../context/UserState";
+import { UserContext } from "../../context/UserState";
 import { Box, Heading, Image, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useMutation } from "react-query";
-import { followTopic } from "../query/topic-query";
-import AlertStatus from "./Utils/AlertStatus";
+import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
+import AlertStatus from "../Utils/AlertStatus";
 import UpdateTopic from "./UpdateTopic";
 
 const TopicCard = ({ topic }) => {
 	const { user, setUser } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
-	const { isError, isLoading, error, mutate } = useMutation(followTopic, {
-		onSuccess: (res) => {
-			setUser(res.user);
-		},
-	});
+	const { isError, isLoading, error, mutate } = useTopicFollow(setUser);
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">

@@ -7,19 +7,15 @@ import {
 	Button,
 	ModalFooter,
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "react-query";
-import { deleteComment } from "../query/comment-query";
-import AlertStatus from "./Utils/AlertStatus";
+import useDeleteComment from "../../hooks/comment-query/useDeleteComment";
+import AlertStatus from "../Utils/AlertStatus";
 
 const DeleteComment = ({ comment }) => {
-	const queryClient = useQueryClient();
-	const { isError, isLoading, error, mutate } = useMutation(deleteComment, {
-		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", res.comment.post]);
-			setOpen(false);
-		},
-	});
 	const [open, setOpen] = useState(false);
+	const { isError, isLoading, error, mutate } = useDeleteComment(
+		setOpen,
+		comment
+	);
 
 	return (
 		<>

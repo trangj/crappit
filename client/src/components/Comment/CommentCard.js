@@ -1,14 +1,13 @@
 import React, { useContext } from "react";
 import CommentItem from "./CommentItem";
 import * as yup from "yup";
-import TextFieldForm from "./Forms/TextFieldForm";
+import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { UserContext } from "../context/UserState";
+import { UserContext } from "../../context/UserState";
 import { Box, Button, Divider, Text } from "@chakra-ui/react";
-import { useMutation } from "react-query";
-import { addComment } from "../query/comment-query";
 import { Link } from "react-router-dom";
-import AlertStatus from "./Utils/AlertStatus";
+import AlertStatus from "../Utils/AlertStatus";
+import useAddComment from "../../hooks/comment-query/useAddComment";
 
 const schema = yup.object({
 	content: yup.string().required(),
@@ -17,11 +16,7 @@ const schema = yup.object({
 const CommentCard = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const { comments } = post;
-	const { isError, isLoading, error, mutate } = useMutation(addComment, {
-		onSuccess: (res) => {
-			post.comments = [...post.comments, res.comment];
-		},
-	});
+	const { isError, isLoading, error, mutate } = useAddComment(post);
 
 	const handleSubmit = (values, { resetForm }) => {
 		const { content } = values;
@@ -45,27 +40,29 @@ const CommentCard = ({ post }) => {
 			id="comments"
 		>
 			<Box m="3">
-				<Text>
-					Comment as <Link to={`/u/${user._id}`}>{user.username}</Link>
-				</Text>
 				{user ? (
-					<Formik
-						initialValues={{ content: "" }}
-						onSubmit={handleSubmit}
-						validationSchema={schema}
-					>
-						{() => (
-							<Form>
-								<Field name="content" multiline component={TextFieldForm} />
-								<Button type="submit" isLoading={isLoading}>
-									Comment
-								</Button>
-								{isError && <AlertStatus status={error} />}
-							</Form>
-						)}
-					</Formik>
+					<>
+						<Text>
+							Comment as <Link to={`/u/${user._id}`}>{user.username}</Link>
+						</Text>
+						<Formik
+							initialValues={{ content: "" }}
+							onSubmit={handleSubmit}
+							validationSchema={schema}
+						>
+							{() => (
+								<Form>
+									<Field name="content" multiline component={TextFieldForm} />
+									<Button type="submit" isLoading={isLoading}>
+										Comment
+									</Button>
+									{isError && <AlertStatus status={error} />}
+								</Form>
+							)}
+						</Formik>
+					</>
 				) : (
-					<Text mt="3">Register and Login to comment!</Text>
+					<Text mt="3">Log in or sign up to leave a comment</Text>
 				)}
 				<Divider mt="5" />
 				{comments.length === 0 ? (

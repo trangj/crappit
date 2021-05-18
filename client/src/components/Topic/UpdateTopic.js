@@ -2,11 +2,10 @@ import React from "react";
 import { Button } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "./Forms/TextFieldForm";
-import FileFieldForm from "./Forms/FileFieldForm";
-import { useMutation, useQueryClient } from "react-query";
-import { updateTopic } from "../query/topic-query";
-import AlertStatus from "./Utils/AlertStatus";
+import TextFieldForm from "../Forms/TextFieldForm";
+import FileFieldForm from "../Forms/FileFieldForm";
+import AlertStatus from "../Utils/AlertStatus";
+import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 320 * 1024;
@@ -23,13 +22,10 @@ const schema = yup.object({
 });
 
 const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
-	const queryClient = useQueryClient();
-	const { isError, isLoading, error, mutate } = useMutation(updateTopic, {
-		onSuccess: (res) => {
-			queryClient.invalidateQueries(["topic", topic.title]);
-			setOpenEdit(false);
-		},
-	});
+	const { isError, isLoading, error, mutate } = useUpdateTopic(
+		setOpenEdit,
+		topic
+	);
 
 	const handleSubmit = (values) => {
 		const { description, file } = values;

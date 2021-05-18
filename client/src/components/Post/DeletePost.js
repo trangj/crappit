@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import {
 	ModalContent,
 	ModalHeader,
@@ -8,18 +7,12 @@ import {
 	ModalOverlay,
 	ModalFooter,
 } from "@chakra-ui/react";
-import { useMutation } from "react-query";
-import { deletePost } from "../query/post-query";
-import AlertStatus from "./Utils/AlertStatus";
+import AlertStatus from "../Utils/AlertStatus";
+import useDeletePost from "../../hooks/post-query/useDeletePost";
 
 const DeletePost = ({ post }) => {
 	const [open, setOpen] = useState(false);
-	const history = useHistory();
-	const { isError, isLoading, error, mutate } = useMutation(deletePost, {
-		onSuccess: (res) => {
-			history.push(`/t/${post.topic}`);
-		},
-	});
+	const { isError, isLoading, error, mutate } = useDeletePost(post);
 
 	return (
 		<>

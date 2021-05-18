@@ -1,31 +1,23 @@
 import React from "react";
-import PostItem from "../PostItem";
-import TopicCard from "../TopicCard";
+import PostItem from "../Post/PostItem";
+import TopicCard from "../Topic/TopicCard";
 import SkeletonList from "../Utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import { Spinner } from "@chakra-ui/react";
-import { useQuery, useInfiniteQuery } from "react-query";
-import { fetchTopic } from "../../query/post-query";
-import { fetchTopicInfo } from "../../query/topic-query";
+import usePosts from "../../hooks/post-query/usePosts";
+import useTopic from "../../hooks/topic-query/useTopic";
 import AlertStatus from "../Utils/AlertStatus";
 
 const Topic = ({ match }) => {
-	const { data, error, fetchNextPage, hasNextPage, isLoading } =
-		useInfiniteQuery(
-			["posts", match.params.topic],
-			({ pageParam = 0 }) => fetchTopic(match.params.topic, pageParam),
-			{
-				getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
-			}
-		);
+	const { data, error, fetchNextPage, hasNextPage, isLoading } = usePosts(
+		match.params.topic
+	);
 	const {
 		isLoading: topicLoading,
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useQuery(["topic", match.params.topic], () =>
-		fetchTopicInfo(match.params.topic)
-	);
+	} = useTopic(match.params.topic);
 
 	if (isLoading || topicLoading) return <SkeletonList />;
 	if (error || topicIsError)
