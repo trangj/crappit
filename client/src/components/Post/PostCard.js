@@ -49,6 +49,7 @@ const PostCard = ({ post }) => {
 										src={post.imageURL}
 										maxHeight="400px"
 										mx="auto"
+										mt="3"
 									/>
 								)}
 								{user && user._id === post.authorId && (

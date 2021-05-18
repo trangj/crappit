@@ -7,6 +7,7 @@ import {
 	Divider,
 	Button,
 	IconButton,
+	Image,
 } from "@chakra-ui/react";
 import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
@@ -58,7 +59,7 @@ const PostItem = ({ post }) => {
 					<Divider />
 					<Box id={post._id} m="3">
 						{post.type === "photo" && (
-							<img
+							<Image
 								alt={post.imageName}
 								src={post.imageURL}
 								style={{

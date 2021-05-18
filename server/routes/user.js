@@ -27,11 +27,22 @@ router.post("/register", async (req, res) => {
 		});
 
 	try {
-		const user = await User.findOne({ email });
+		let user = await User.findOne({ email });
 		if (user)
-			return res
-				.status(400)
-				.json({ status: { text: "User already exists", severity: "error" } });
+			return res.status(400).json({
+				status: {
+					text: "User already exists with that email",
+					severity: "error",
+				},
+			});
+		user = await User.findOne({ username });
+		if (user)
+			return res.status(400).json({
+				status: {
+					text: "User already exists with that username",
+					severity: "error",
+				},
+			});
 
 		const salt = await bcyrpt.genSalt(10);
 		if (!salt) throw Error("Error with generating salt");

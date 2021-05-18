@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
-	ModalContent,
-	ModalHeader,
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogContent,
+	AlertDialogOverlay,
 	Button,
-	Modal,
-	ModalOverlay,
-	ModalFooter,
 } from "@chakra-ui/react";
 import AlertStatus from "../Utils/AlertStatus";
 import useDeletePost from "../../hooks/post-query/useDeletePost";
@@ -13,20 +14,32 @@ import useDeletePost from "../../hooks/post-query/useDeletePost";
 const DeletePost = ({ post }) => {
 	const [open, setOpen] = useState(false);
 	const { isError, isLoading, error, mutate } = useDeletePost(post);
+	const cancelRef = useRef();
 
 	return (
 		<>
 			<Button size="sm" onClick={() => setOpen(true)}>
 				Delete
 			</Button>
-			<Modal isOpen={open} onClose={() => setOpen(false)} isCentered>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader id="form-dialog-title">
-						Are you sure you want to delete this post?
+			<AlertDialog
+				isOpen={open}
+				onClose={() => setOpen(false)}
+				isCentered
+				leastDestructiveRef={cancelRef}
+			>
+				<AlertDialogOverlay />
+				<AlertDialogContent>
+					<AlertDialogHeader id="form-dialog-title">
+						Delete post?
 						{isError && <AlertStatus status={error} />}
-					</ModalHeader>
-					<ModalFooter>
+					</AlertDialogHeader>
+					<AlertDialogBody>
+						Are you sure you want to delete your post? You can't undo this.
+					</AlertDialogBody>
+					<AlertDialogFooter>
+						<Button onClick={() => setOpen(false)} mr="2" ref={cancelRef}>
+							Cancel
+						</Button>
 						<Button
 							onClick={() => {
 								mutate({
@@ -34,18 +47,14 @@ const DeletePost = ({ post }) => {
 									postid: post._id,
 								});
 							}}
-							mr="2"
-							color="primary"
 							isLoading={isLoading}
+							colorScheme="red"
 						>
-							Yes
+							Delete
 						</Button>
-						<Button onClick={() => setOpen(false)} color="secondary">
-							No
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</>
 	);
 };

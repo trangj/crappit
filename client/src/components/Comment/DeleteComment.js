@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalOverlay,
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogContent,
+	AlertDialogOverlay,
 	Button,
-	ModalFooter,
 } from "@chakra-ui/react";
 import useDeleteComment from "../../hooks/comment-query/useDeleteComment";
 import AlertStatus from "../Utils/AlertStatus";
@@ -16,20 +17,32 @@ const DeleteComment = ({ comment }) => {
 		setOpen,
 		comment
 	);
+	const cancelRef = useRef();
 
 	return (
 		<>
 			<Button size="xs" onClick={() => setOpen(true)}>
 				Delete
 			</Button>
-			<Modal isOpen={open} onClose={() => setOpen(false)} isCentered>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader id="form-dialog-title">
-						Are you sure you want to delete this comment?
+			<AlertDialog
+				isOpen={open}
+				onClose={() => setOpen(false)}
+				isCentered
+				leastDestructiveRef={cancelRef}
+			>
+				<AlertDialogOverlay />
+				<AlertDialogContent>
+					<AlertDialogHeader id="form-dialog-title">
+						Delete comment?
 						{isError && <AlertStatus status={error} />}
-					</ModalHeader>
-					<ModalFooter>
+					</AlertDialogHeader>
+					<AlertDialogBody>
+						Are you sure you want to delete your comment? You can't undo this.
+					</AlertDialogBody>
+					<AlertDialogFooter>
+						<Button onClick={() => setOpen(false)} mr="2" ref={cancelRef}>
+							Cancel
+						</Button>
 						<Button
 							onClick={() => {
 								mutate({
@@ -38,18 +51,14 @@ const DeleteComment = ({ comment }) => {
 									commentid: comment._id,
 								});
 							}}
-							color="primary"
-							mr="2"
+							colorScheme="red"
 							isLoading={isLoading}
 						>
-							Yes
+							Delete
 						</Button>
-						<Button onClick={() => setOpen(false)} color="secondary">
-							No
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</>
 	);
 };

@@ -21,6 +21,7 @@ app.use(cors());
 app.use("/api/index", require("./routes/comment"));
 app.use("/api/index", require("./routes/post"));
 app.use("/api/index", require("./routes/topic"));
+app.use("/api/moderation", require("./routes/moderation"));
 app.use("/api/user", require("./routes/user"));
 
 app.listen(process.env.PORT || 5000, () =>
