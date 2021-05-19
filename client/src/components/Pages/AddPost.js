@@ -45,8 +45,7 @@ const AddPost = ({ match }) => {
 	const { isLoading, isError, error, mutate } = useAddPost();
 	const [selectedType, setSelectedType] = useState(0);
 
-	const handleSubmit = async (values) => {
-		const { title, content, link, file, topic } = values;
+	const handleSubmit = ({ title, content, link, file, topic }) => {
 		const types = ["text", "link", "photo"];
 		const formData = new FormData();
 		formData.append("file", file);

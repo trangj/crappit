@@ -16,8 +16,7 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 		comment
 	);
 
-	const handleSubmit = (values) => {
-		const { content } = values;
+	const handleSubmit = ({ content }) => {
 		const reply = {
 			content,
 		};

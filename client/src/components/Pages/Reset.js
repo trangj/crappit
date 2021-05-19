@@ -34,8 +34,7 @@ const Forgot = ({ match }) => {
 		// eslint-disable-next-line
 	}, [match.params.token]);
 
-	const handleSubmit = async (values) => {
-		const { password, password2 } = values;
+	const handleSubmit = async ({ password, password2 }) => {
 		try {
 			const res = await axiosConfig.post(
 				`/api/user/reset/${match.params.token}`,

@@ -28,7 +28,7 @@ const CommentCard = ({ post }) => {
 			postid: post._id,
 			newComment,
 		});
-		resetForm("");
+		resetForm();
 	};
 
 	return (

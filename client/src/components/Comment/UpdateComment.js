@@ -16,8 +16,7 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 		comment
 	);
 
-	const handleSubmit = (values) => {
-		const { content } = values;
+	const handleSubmit = ({ content }) => {
 		const newComment = {
 			content,
 		};

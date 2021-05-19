@@ -27,8 +27,7 @@ const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
 		topic
 	);
 
-	const handleSubmit = (values) => {
-		const { description, file } = values;
+	const handleSubmit = ({ description, file }) => {
 		const formData = new FormData();
 		formData.append("description", description);
 		formData.append("file", file);

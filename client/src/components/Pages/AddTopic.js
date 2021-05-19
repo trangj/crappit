@@ -26,8 +26,7 @@ const schema = yup.object({
 const AddTopic = () => {
 	const { setUser } = useContext(UserContext);
 	const { isLoading, isError, error, mutate } = useAddTopic(setUser);
-	const handleSubmit = async (values) => {
-		const { title, description, file } = values;
+	const handleSubmit = ({ title, description, file }) => {
 		const formData = new FormData();
 		formData.append("title", title);
 		formData.append("description", description);

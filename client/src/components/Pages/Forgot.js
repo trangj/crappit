@@ -12,8 +12,7 @@ const schema = yup.object({
 
 const Forgot = () => {
 	const [status, setStatus] = useState(undefined);
-	const handleSubmit = async (values) => {
-		const { email } = values;
+	const handleSubmit = async ({ email }) => {
 		try {
 			const res = await axiosConfig.post(`/api/user/forgot`, { email });
 			setStatus(res.data);

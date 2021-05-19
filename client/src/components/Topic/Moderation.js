@@ -26,8 +26,7 @@ const Moderation = ({ topic }) => {
 	const { isLoading, isError, isSuccess, data, error, mutate } =
 		useAddModerator(topic);
 
-	const handleSubmit = (values) => {
-		const { username } = values;
+	const handleSubmit = ({ username }) => {
 		mutate({
 			topic: topic.title,
 			username,

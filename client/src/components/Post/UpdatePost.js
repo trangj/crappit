@@ -16,8 +16,7 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 		post
 	);
 
-	const handleSubmit = (values) => {
-		const { content } = values;
+	const handleSubmit = ({ content }) => {
 		const newPost = {
 			content,
 		};

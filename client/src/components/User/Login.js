@@ -17,9 +17,8 @@ const Login = (props) => {
 	const [status, setStatus] = useState(undefined);
 	const history = useHistory();
 
-	const handleSubmit = async (values) => {
+	const handleSubmit = async ({ email, password }) => {
 		try {
-			const { email, password } = values;
 			const user = {
 				email,
 				password,

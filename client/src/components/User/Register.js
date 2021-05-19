@@ -22,9 +22,8 @@ const Register = () => {
 	const [status, setStatus] = useState(undefined);
 	const history = useHistory();
 
-	const handleSubmit = async (values) => {
+	const handleSubmit = async ({ username, email, password, password2 }) => {
 		try {
-			const { username, email, password, password2 } = values;
 			const user = {
 				username,
 				email,
