@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from "react-query";
 import axios from "../../axiosConfig";
 
-async function deleteCommentModerator({ commentId }) {
+async function deleteComment({ commentId }) {
 	try {
-		const res = await axios.delete(`/api/moderation/${commentId}`);
+		const res = await axios.delete(`/api/comment/${commentId}`);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;
 	}
 }
 
-export default function useDeleteCommentModerator(setOpen) {
+export default function useDeleteComment(setOpen) {
 	const queryClient = useQueryClient();
-	return useMutation(deleteCommentModerator, {
+	return useMutation(deleteComment, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.comment.postId]);
 			setOpen(false);
