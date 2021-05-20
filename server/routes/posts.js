@@ -10,7 +10,10 @@ const Post = require("../models/Post");
 
 router.get("/", async (req, res) => {
 	try {
-		const posts = await Post.find().skip(parseInt(req.query.skip)).limit(10);
+		const posts = await Post.find()
+			.sort("-date")
+			.skip(parseInt(req.query.skip))
+			.limit(10);
 		if (!posts) throw Error("Could not fetch posts");
 		res.status(200).json({
 			posts,
@@ -32,6 +35,7 @@ router.get("/", async (req, res) => {
 router.get("/:topic", async (req, res) => {
 	try {
 		const posts = await Post.find({ topic: req.params.topic })
+			.sort("-date")
 			.skip(parseInt(req.query.skip))
 			.limit(10);
 		if (!posts) throw Error("No posts found");

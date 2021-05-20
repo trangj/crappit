@@ -13,7 +13,7 @@ async function addComment({ newComment }) {
 export default function useAddComment(post) {
 	return useMutation(addComment, {
 		onSuccess: (res) => {
-			post.comments = [...post.comments, res.comment];
+			post.comments = [res.comment, ...post.comments];
 		},
 	});
 }

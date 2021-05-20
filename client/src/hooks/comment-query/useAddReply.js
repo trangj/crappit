@@ -13,7 +13,7 @@ async function addReply({ commentId, reply }) {
 export default function useAddReply(setOpenReply, comment) {
 	return useMutation(addReply, {
 		onSuccess: (res) => {
-			comment.comments = [...comment.comments, res.reply];
+			comment.comments = [res.reply, ...comment.comments];
 			setOpenReply(false);
 		},
 	});

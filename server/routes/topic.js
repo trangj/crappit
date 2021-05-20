@@ -31,18 +31,17 @@ router.get("/:topic", async (req, res) => {
 // @access  Private
 
 router.post("/", auth, upload.single("file"), async (req, res) => {
-	const newTopic = new Topic({
-		title: req.body.title,
-		description: req.body.description,
-		imageURL: req.file ? req.file.location : "",
-		imageName: req.file ? req.file.key : "",
-		moderators: [req.user.id],
-	});
 	try {
 		let topic = await Topic.findOne({ title: req.body.title });
 		if (topic) throw Error("Topic already exists");
+		const newTopic = new Topic({
+			title: req.body.title,
+			description: req.body.description,
+			imageURL: req.file ? req.file.location : "",
+			imageName: req.file ? req.file.key : "",
+			moderators: [req.user.id],
+		});
 		topic = await newTopic.save();
-
 		const user = await User.findOne({ _id: req.user.id }).select("-password");
 		user.followedTopics.push(topic.title);
 		user.topicsModerating.push(topic.title);

@@ -17,6 +17,7 @@ router.get("/:id", async (req, res) => {
 	try {
 		const post = await Post.findOne({ _id: req.params.id }).populate({
 			path: "comments",
+			options: { sort: { date: -1 } },
 		});
 		if (!post) throw Error("Could not fetch post");
 		res.status(200).json({ post });
@@ -32,20 +33,20 @@ router.get("/:id", async (req, res) => {
 // @access  Private
 
 router.post("/", auth, upload.single("file"), async (req, res) => {
-	const newPost = new Post({
-		title: req.body.title,
-		author: req.user.username,
-		authorId: req.user.id,
-		content: req.body.content,
-		link: req.body.link,
-		type: req.body.type,
-		topic: req.body.topic,
-		imageURL: req.file ? req.file.location : "",
-		imageName: req.file ? req.file.key : "",
-	});
 	try {
 		const topic = await Topic.findOne({ title: req.body.topic });
 		if (!topic) throw Error("No topic exists");
+		const newPost = new Post({
+			title: req.body.title,
+			author: req.user.username,
+			authorId: req.user.id,
+			content: req.body.content,
+			link: req.body.link,
+			type: req.body.type,
+			topic: req.body.topic,
+			imageURL: req.file ? req.file.location : "",
+			imageName: req.file ? req.file.key : "",
+		});
 		const post = await newPost.save();
 		if (!post) throw Error("Post could not be made");
 		await topic.save();
@@ -93,7 +94,7 @@ router.put("/:id", auth, async (req, res) => {
 			{ _id: req.params.id, authorId: req.user.id },
 			{ $set: { content: req.body.content, lastEditDate: Date.now() } },
 			{ useFindAndModify: false, new: true }
-		).populate("comments");
+		);
 		if (!post)
 			throw Error("Post does not exist or you are not the author of the post");
 		if (post.type !== "text") throw Error("You can only edit text posts");

@@ -12,19 +12,19 @@ const Comment = require("../models/Comment");
 // @access  Private
 
 router.post("/", auth, async (req, res) => {
-	const newComment = new Comment({
-		author: req.user.username,
-		authorId: req.user.id,
-		content: req.body.content,
-		postId: req.body.postId,
-	});
 	try {
-		const comment = await newComment.save();
-		if (!comment) throw Error("No comment");
 		const post = await Post.findOne({ _id: req.body.postId });
 		if (!post) throw Error("No post");
-
-		post.comments.push(newComment);
+		const newComment = new Comment({
+			author: req.user.username,
+			authorId: req.user.id,
+			content: req.body.content,
+			postId: req.body.postId,
+			topic: post.topic,
+		});
+		const comment = await newComment.save();
+		if (!comment) throw Error("No comment");
+		post.comments.push(comment);
 		await post.save();
 		res.status(200).json({
 			comment,
@@ -59,7 +59,7 @@ router.put("/:commentid", auth, async (req, res) => {
 	}
 });
 
-// @route   GET /api/comment/:commentid
+// @route   DELETE /api/comment/:commentid
 // @desc    Delete a comment
 // @access  Private
 
@@ -138,18 +138,18 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 // @access  Private
 
 router.post("/:commentid/reply", auth, async (req, res) => {
-	const newComment = new Comment({
-		author: req.user.username,
-		authorId: req.user.id,
-		content: req.body.content,
-		postId: req.body.postId,
-	});
 	try {
-		const reply = await newComment.save();
-		if (!reply) throw Error("No reply");
 		const comment = await Comment.findOne({ _id: req.params.commentid });
 		if (!comment) throw Error("No comment");
-
+		const newComment = new Comment({
+			author: req.user.username,
+			authorId: req.user.id,
+			content: req.body.content,
+			postId: req.body.postId,
+			topic: req.body.topic,
+		});
+		const reply = await newComment.save();
+		if (!reply) throw Error("No reply");
 		comment.comments.push(reply);
 		await comment.save();
 

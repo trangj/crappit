@@ -7,6 +7,7 @@ import CommentVoting from "./CommentVoting";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { UserContext } from "../../context/UserState";
+import DeleteCommentModerator from "./DeleteCommentModerator";
 
 const CommentItem = ({ comment }) => {
 	const { user } = useContext(UserContext);
@@ -62,6 +63,10 @@ const CommentItem = ({ comment }) => {
 												</Button>
 											</>
 										)}
+										{user._id !== comment.authorId &&
+											user.topicsModerating.includes(comment.topic) && (
+												<DeleteCommentModerator comment={comment} />
+											)}
 									</>
 								) : null}
 							</HStack>

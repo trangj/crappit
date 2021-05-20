@@ -20,6 +20,7 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 		const reply = {
 			content,
 			postId: comment.postId,
+			topic: comment.topic,
 		};
 		mutate({
 			commentId: comment._id,
