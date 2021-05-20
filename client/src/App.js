@@ -14,7 +14,7 @@ import Login from "./components/User/Login";
 import Register from "./components/User/Register";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
-import { ChakraProvider, ColorModeScript, Container } from "@chakra-ui/react";
+import { ChakraProvider, Container } from "@chakra-ui/react";
 import { UserProvider } from "./context/UserState";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import theme from "./theme";
@@ -32,7 +32,6 @@ const queryClient = new QueryClient({
 function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 			<UserProvider>
 				<ChakraProvider theme={theme}>
 					<BrowserRouter>
