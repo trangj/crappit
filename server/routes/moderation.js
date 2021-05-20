@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 // middleware
-const upload = require("../middleware/upload");
+const { deleteFile } = require("../middleware/upload");
 const auth = require("../middleware/auth");
 // schemas
 const Topic = require("../models/Topic");
@@ -10,9 +10,9 @@ const User = require("../models/User");
 
 // @route   POST /api/moderation/t/:topic
 // @desc    Add a moderator to a topic
-// @access  Public
+// @access  Private
 
-router.post("/t/:topic", auth, async (req, res) => {
+router.post("/topic/:topic", auth, async (req, res) => {
 	try {
 		const user = await User.findOne({ username: req.body.username });
 		if (!user) throw Error("User does not exist");
@@ -42,7 +42,11 @@ router.post("/t/:topic", auth, async (req, res) => {
 	}
 });
 
-router.delete("/p/:post", auth, async (req, res) => {
+// @route   DELETE /api/moderation/p/:post
+// @desc    Delete a post
+// @access  Private
+
+router.delete("/post/:post", auth, async (req, res) => {
 	try {
 		const post = await Post.findOne({ _id: req.params.post });
 		if (!post) throw Error("Post does not exist");
@@ -59,15 +63,15 @@ router.delete("/p/:post", auth, async (req, res) => {
 			throw Error("You are not a moderator for this topic");
 
 		const query = await Post.deleteOne({
-			_id: req.params.id,
+			_id: req.params.post,
 		});
 		if (!query.deletedCount)
 			throw Error("Post does not exist or you are not the author");
-		await Comment.deleteMany({ post: req.params.id });
-		await Topic.updateOne(
-			{ title: req.params.topic },
-			{ $pull: { posts: req.params.id } }
-		);
+
+		if (post.type === "photo") deleteFile(post.imageName);
+
+		await Comment.deleteMany({ postId: req.params.post });
+
 		res.status(200).json({
 			status: { text: "Post successfully deleted", severity: "success" },
 		});

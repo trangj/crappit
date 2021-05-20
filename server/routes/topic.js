@@ -5,51 +5,13 @@ const router = express.Router();
 const { upload } = require("../middleware/upload");
 const auth = require("../middleware/auth");
 // schemas
-const Post = require("../models/Post");
 const Topic = require("../models/Topic");
 
-// @route   GET /api/index/t
-// @desc    Get all topics
-// @access  Public
-
-router.get("/t", async (req, res) => {
-	try {
-		const topics = await Topic.find();
-		if (!topics) throw Error("Could not get topics");
-		res.status(200).json(topics);
-	} catch (err) {
-		res.status(400).json({
-			status: { text: err.message, severity: "error" },
-		});
-	}
-});
-
-// @route   GET /api/index/t/:topic
+// @route   GET /api/topic
 // @desc    Get a topic
 // @access  Public
 
-router.get("/t/:topic", async (req, res) => {
-	try {
-		const posts = await Post.find({ topic: req.params.topic })
-			.skip(parseInt(req.query.skip))
-			.limit(10);
-		if (!posts) throw Error("No posts found");
-		res.status(200).json({
-			posts,
-			nextCursor: posts.length
-				? parseInt(req.query.skip) + posts.length
-				: undefined,
-		});
-	} catch (err) {
-		res.status(400).json({ status: { text: err.message, severity: "error" } });
-	}
-});
-
-// @route   GET /api/index/t/:topic/info
-// @desc    Get a topic's info
-// @access  Public
-
-router.get("/t/:topic/info", async (req, res) => {
+router.get("/:topic", async (req, res) => {
 	try {
 		const topic = await Topic.findOne({ title: req.params.topic }).populate({
 			path: "moderators",
@@ -64,11 +26,11 @@ router.get("/t/:topic/info", async (req, res) => {
 	}
 });
 
-// @route   POST /api/index/t
+// @route   POST /api/topic
 // @desc    Create a topic
 // @access  Private
 
-router.post("/t", auth, upload.single("file"), async (req, res) => {
+router.post("/", auth, upload.single("file"), async (req, res) => {
 	const newTopic = new Topic({
 		title: req.body.title,
 		description: req.body.description,
@@ -83,6 +45,7 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
 
 		const user = await User.findOne({ _id: req.user.id }).select("-password");
 		user.followedTopics.push(topic.title);
+		user.topicsModerating.push(topic.title);
 		await user.save();
 
 		res.status(200).json({
@@ -95,11 +58,11 @@ router.post("/t", auth, upload.single("file"), async (req, res) => {
 	}
 });
 
-// @route   POST /api/index/t/:topic/followtopic
+// @route   POST /api/topic/:topic/followtopic
 // @desc    Follow a topic
 // @access  Private
 
-router.post("/t/:topic/followtopic", auth, async (req, res) => {
+router.post("/:topic/followtopic", auth, async (req, res) => {
 	try {
 		const user = await User.findOne({ _id: req.user.id }).select("-password");
 		if (!user) throw Error("No user exists");
@@ -126,11 +89,11 @@ router.post("/t/:topic/followtopic", auth, async (req, res) => {
 	}
 });
 
-// @route   PUT /api/index/t/:topic
+// @route   PUT /api/topic/:topic
 // @desc    Update a topic
 // @access  Private
 
-router.put("/t/:topic", auth, upload.single("file"), async (req, res) => {
+router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 	try {
 		const topic = await Topic.findOneAndUpdate(
 			{ title: req.params.topic, moderators: [req.user.id] },

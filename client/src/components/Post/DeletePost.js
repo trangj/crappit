@@ -13,7 +13,7 @@ import useDeletePost from "../../hooks/post-query/useDeletePost";
 
 const DeletePost = ({ post }) => {
 	const [open, setOpen] = useState(false);
-	const { isError, isLoading, error, mutate } = useDeletePost(post);
+	const { isError, isLoading, error, mutate } = useDeletePost(post.topic);
 	const cancelRef = useRef();
 
 	return (
@@ -43,7 +43,6 @@ const DeletePost = ({ post }) => {
 						<Button
 							onClick={() => {
 								mutate({
-									topic: post.topic,
 									postid: post._id,
 								});
 							}}

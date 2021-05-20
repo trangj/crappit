@@ -3,7 +3,7 @@ import axios from "../../axiosConfig";
 
 async function fetchTopic(topic) {
 	try {
-		const res = await axios.get(`/api/index/t/${topic}/info`);
+		const res = await axios.get(`/api/topic/${topic}`);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

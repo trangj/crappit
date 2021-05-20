@@ -1,11 +1,9 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 
-async function voting({ topic, id, vote }) {
+async function voting({ id, vote }) {
 	try {
-		const res = await axios.put(
-			`/api/index/t/${topic}/p/${id}/changevote?vote=${vote}`
-		);
+		const res = await axios.put(`/api/post/${id}/changevote?vote=${vote}`);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

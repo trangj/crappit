@@ -3,7 +3,7 @@ import axios from "../../axiosConfig";
 
 async function updateTopic({ topic, formData }) {
 	try {
-		const res = await axios.put(`/api/index/t/${topic}`, formData);
+		const res = await axios.put(`/api/topic/${topic}`, formData);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

@@ -8,7 +8,7 @@ import AlertStatus from "../Utils/AlertStatus";
 import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 320 * 1024;
+const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
 	description: yup.string().required(),
 	file: yup

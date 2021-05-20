@@ -53,7 +53,8 @@ const AddPost = ({ match }) => {
 		formData.append("link", link);
 		formData.append("content", content);
 		formData.append("type", types[selectedType]);
-		mutate({ topic, formData });
+		formData.append("topic", topic);
+		mutate({ formData });
 	};
 
 	return (

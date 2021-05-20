@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import {
 	AlertDialog,
 	AlertDialogBody,
@@ -8,18 +8,18 @@ import {
 	AlertDialogOverlay,
 	Button,
 } from "@chakra-ui/react";
-import useDeleteComment from "../../hooks/comment-query/useDeleteComment";
 import AlertStatus from "../Utils/AlertStatus";
+import useDeletePostModerator from "../../hooks/post-query/useDeletePostModerator";
 
-const DeleteComment = ({ comment }) => {
+const DeletePostModerator = ({ post }) => {
 	const [open, setOpen] = useState(false);
-	const { isError, isLoading, error, mutate } = useDeleteComment(setOpen);
+	const { isError, isLoading, error, mutate } = useDeletePostModerator(post);
 	const cancelRef = useRef();
 
 	return (
 		<>
-			<Button size="xs" onClick={() => setOpen(true)} variant="ghost">
-				Delete
+			<Button size="sm" onClick={() => setOpen(true)} variant="ghost">
+				Delete as Moderator
 			</Button>
 			<AlertDialog
 				isOpen={open}
@@ -30,11 +30,11 @@ const DeleteComment = ({ comment }) => {
 				<AlertDialogOverlay />
 				<AlertDialogContent>
 					<AlertDialogHeader id="form-dialog-title">
-						Delete comment?
+						Delete post?
 						{isError && <AlertStatus status={error} />}
 					</AlertDialogHeader>
 					<AlertDialogBody>
-						Are you sure you want to delete your comment? You can't undo this.
+						Are you sure you want to delete this post? You can't undo this.
 					</AlertDialogBody>
 					<AlertDialogFooter>
 						<Button onClick={() => setOpen(false)} mr="2" ref={cancelRef}>
@@ -43,11 +43,12 @@ const DeleteComment = ({ comment }) => {
 						<Button
 							onClick={() => {
 								mutate({
-									commentId: comment._id,
+									topic: post.topic,
+									postid: post._id,
 								});
 							}}
-							colorScheme="red"
 							isLoading={isLoading}
+							colorScheme="red"
 						>
 							Delete
 						</Button>
@@ -58,4 +59,4 @@ const DeleteComment = ({ comment }) => {
 	);
 };
 
-export default DeleteComment;
+export default DeletePostModerator;

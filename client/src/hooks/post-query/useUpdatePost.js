@@ -1,9 +1,9 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 
-async function updatePost({ topic, postid, newPost }) {
+async function updatePost({ postid, newPost }) {
 	try {
-		const res = await axios.put(`/api/index/t/${topic}/p/${postid}`, newPost);
+		const res = await axios.put(`/api/post/${postid}`, newPost);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

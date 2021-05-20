@@ -12,8 +12,6 @@ const TopicCard = ({ topic }) => {
 	const [openEdit, setOpenEdit] = useState(false);
 	const { isError, isLoading, error, mutate } = useTopicFollow(setUser);
 
-	console.log(topic);
-
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
 			<Image alt={topic.imageName} src={topic.imageURL} maxHeight="200px" />

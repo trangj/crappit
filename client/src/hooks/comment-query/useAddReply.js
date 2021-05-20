@@ -1,12 +1,9 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 
-async function addReply({ topic, postid, commentid, reply }) {
+async function addReply({ commentId, reply }) {
 	try {
-		const res = await axios.post(
-			`/api/index/t/${topic}/p/${postid}/c/${commentid}/reply`,
-			reply
-		);
+		const res = await axios.post(`/api/comment/${commentId}/reply`, reply);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

@@ -3,10 +3,7 @@ import axios from "../../axiosConfig";
 
 async function fetchPosts(topic, pageParam) {
 	try {
-		const res =
-			topic !== ""
-				? await axios.get(`/api/index/t/${topic}?skip=${pageParam}`)
-				: await axios.get(`/api/index?skip=${pageParam}`);
+		const res = await axios.get(`/api/posts/${topic}?skip=${pageParam}`);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

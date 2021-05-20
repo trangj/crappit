@@ -7,22 +7,21 @@ const auth = require("../middleware/auth");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 
-// @route   POST /api/index/t/:topic/p/:id
+// @route   POST /api/comment
 // @desc    Create a comment
 // @access  Private
 
-router.post("/t/:topic/p/:id", auth, async (req, res) => {
+router.post("/", auth, async (req, res) => {
 	const newComment = new Comment({
 		author: req.user.username,
 		authorId: req.user.id,
 		content: req.body.content,
-		topic: req.params.topic,
-		post: req.params.id,
+		postId: req.body.postId,
 	});
 	try {
 		const comment = await newComment.save();
 		if (!comment) throw Error("No comment");
-		const post = await Post.findOne({ _id: req.params.id });
+		const post = await Post.findOne({ _id: req.body.postId });
 		if (!post) throw Error("No post");
 
 		post.comments.push(newComment);
@@ -36,11 +35,11 @@ router.post("/t/:topic/p/:id", auth, async (req, res) => {
 	}
 });
 
-// @route   PUT /api/index/t/:topic/p/:id/c/:commentid
+// @route   PUT /api/comment/:commentid
 // @desc    Update a comment
 // @access  Private
 
-router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
+router.put("/:commentid", auth, async (req, res) => {
 	try {
 		if (!req.body.content) throw Error("Missing required fields");
 		const comment = await Comment.findOneAndUpdate(
@@ -60,11 +59,11 @@ router.put("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 	}
 });
 
-// @route   GET /api/index/t/:topic/p/:id/c/:commentid
+// @route   GET /api/comment/:commentid
 // @desc    Delete a comment
 // @access  Private
 
-router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
+router.delete("/:commentid", auth, async (req, res) => {
 	try {
 		const comment = await Comment.findOneAndUpdate(
 			{
@@ -93,63 +92,57 @@ router.delete("/t/:topic/p/:id/c/:commentid", auth, async (req, res) => {
 	}
 });
 
-// @route   PUT /api/index/t/:topic/p/:id/c/:commentid/changevote
+// @route   PUT /api/comment/:commentid/changevote
 // @desc    Change vote on comment
 // @access  Private
 
-router.put(
-	"/t/:topic/p/:id/c/:commentid/changevote",
-	auth,
-	async (req, res) => {
-		try {
-			const comment = await Comment.findOne({ _id: req.params.commentid });
-			if (!comment) throw Error("No comment exists");
-			const user = await User.findOne({ _id: req.user.id });
-			if (!user) throw Error("No user exists");
+router.put("/:commentid/changevote", auth, async (req, res) => {
+	try {
+		const comment = await Comment.findOne({ _id: req.params.commentid });
+		if (!comment) throw Error("No comment exists");
+		const user = await User.findOne({ _id: req.user.id });
+		if (!user) throw Error("No user exists");
 
-			if (req.query.vote == "like") {
-				if (comment.likes.includes(req.user.id)) {
-					comment.likes.pull(req.user.id);
-				} else if (comment.dislikes.includes(req.user.id)) {
-					comment.dislikes.pull(req.user.id);
-					comment.likes.push(req.user.id);
-				} else {
-					comment.likes.push(req.user.id);
-				}
-				await comment.save();
-				res.status(200).json({ comment });
-			} else if (req.query.vote == "dislike") {
-				if (comment.dislikes.includes(req.user.id)) {
-					comment.dislikes.pull(req.user.id);
-				} else if (comment.likes.includes(req.user.id)) {
-					comment.likes.pull(req.user.id);
-					comment.dislikes.push(req.user.id);
-				} else {
-					comment.dislikes.push(req.user.id);
-				}
-				await comment.save();
-				res.status(200).json({ comment });
+		if (req.query.vote == "like") {
+			if (comment.likes.includes(req.user.id)) {
+				comment.likes.pull(req.user.id);
+			} else if (comment.dislikes.includes(req.user.id)) {
+				comment.dislikes.pull(req.user.id);
+				comment.likes.push(req.user.id);
+			} else {
+				comment.likes.push(req.user.id);
 			}
-		} catch (err) {
-			res.status(400).json({
-				status: { text: err.message, severity: "error" },
-			});
+			await comment.save();
+			res.status(200).json({ comment });
+		} else if (req.query.vote == "dislike") {
+			if (comment.dislikes.includes(req.user.id)) {
+				comment.dislikes.pull(req.user.id);
+			} else if (comment.likes.includes(req.user.id)) {
+				comment.likes.pull(req.user.id);
+				comment.dislikes.push(req.user.id);
+			} else {
+				comment.dislikes.push(req.user.id);
+			}
+			await comment.save();
+			res.status(200).json({ comment });
 		}
+	} catch (err) {
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
 	}
-);
+});
 
-// @route   POST /api/index/t/:topic/p/:id/c/:commentid/reply
+// @route   POST /api/comment/:commentid/reply
 // @desc    Add a reply to a comment
 // @access  Private
 
-router.post("/t/:topic/p/:id/c/:commentid/reply", auth, async (req, res) => {
+router.post("/:commentid/reply", auth, async (req, res) => {
 	const newComment = new Comment({
 		author: req.user.username,
 		authorId: req.user.id,
 		content: req.body.content,
-		topic: req.params.topic,
-		post: req.params.id,
-		comment: req.params.commentid,
+		postId: req.body.postId,
 	});
 	try {
 		const reply = await newComment.save();

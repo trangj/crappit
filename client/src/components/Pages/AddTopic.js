@@ -9,7 +9,7 @@ import { UserContext } from "../../context/UserState";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 320 * 1024;
+const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
 	title: yup.string().required(),
 	description: yup.string().required(),

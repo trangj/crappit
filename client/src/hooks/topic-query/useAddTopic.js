@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 
 async function addTopic({ formData }) {
 	try {
-		const res = await axios.post(`/api/index/t`, formData);
+		const res = await axios.post(`/api/topic`, formData);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

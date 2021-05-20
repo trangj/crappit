@@ -9,18 +9,14 @@ const CommentVoting = ({ comment }) => {
 	const { mutate } = useCommentVoting(comment);
 	const handleUpvote = () => {
 		mutate({
-			topic: comment.topic,
-			postid: comment.post,
-			commentid: comment._id,
+			commentId: comment._id,
 			vote: "like",
 		});
 	};
 
 	const handleDownvote = () => {
 		mutate({
-			topic: comment.topic,
-			postid: comment.post,
-			commentid: comment._id,
+			commentId: comment._id,
 			vote: "dislike",
 		});
 	};

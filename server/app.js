@@ -18,9 +18,11 @@ mongoose.connect(
 app.use(cors());
 
 // routes
-app.use("/api/index", require("./routes/comment"));
-app.use("/api/index", require("./routes/post"));
-app.use("/api/index", require("./routes/topic"));
+app.use("/api/comment", require("./routes/comment"));
+app.use("/api/post", require("./routes/post"));
+app.use("/api/posts", require("./routes/posts"));
+app.use("/api/topic", require("./routes/topic"));
+app.use("/api/topics", require("./routes/topics"));
 app.use("/api/moderation", require("./routes/moderation"));
 app.use("/api/user", require("./routes/user"));
 

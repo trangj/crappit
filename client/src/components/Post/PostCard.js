@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import DeletePostModerator from "./DeletePostModerator";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
 import Voting from "./Voting";
@@ -10,7 +11,6 @@ import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
 const PostCard = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
-	console.log(user);
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
@@ -71,9 +71,7 @@ const PostCard = ({ post }) => {
 									{user &&
 										user._id !== post.authorId &&
 										user.topicsModerating.includes(post.topic) && (
-											<Button size="sm" variant="ghost">
-												Delete as Moderator
-											</Button>
+											<DeletePostModerator post={post} />
 										)}
 								</HStack>
 							</>

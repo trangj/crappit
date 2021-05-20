@@ -22,10 +22,9 @@ const CommentCard = ({ post }) => {
 		const { content } = values;
 		const newComment = {
 			content,
+			postId: post._id,
 		};
 		mutate({
-			topic: post.topic,
-			postid: post._id,
 			newComment,
 		});
 		resetForm();

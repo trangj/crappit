@@ -10,11 +10,11 @@ const Voting = ({ post }) => {
 	const { mutate } = useVoting(post);
 
 	const handleUpvote = () => {
-		mutate({ topic: post.topic, id: post._id, vote: "like" });
+		mutate({ id: post._id, vote: "like" });
 	};
 
 	const handleDownvote = () => {
-		mutate({ topic: post.topic, id: post._id, vote: "dislike" });
+		mutate({ id: post._id, vote: "dislike" });
 	};
 
 	return user ? (
