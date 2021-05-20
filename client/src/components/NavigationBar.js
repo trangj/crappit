@@ -88,7 +88,7 @@ const NavigationBar = () => {
 									icon={<HamburgerIcon />}
 								></MenuButton>
 								<MenuList>
-									<MenuItem as={Link} to={`/u/${user._id}`}>
+									<MenuItem as={Link} to={`/user/${user._id}`}>
 										Profile
 									</MenuItem>
 									<MenuItem

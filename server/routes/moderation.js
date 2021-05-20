@@ -8,7 +8,7 @@ const auth = require("../middleware/auth");
 const Topic = require("../models/Topic");
 const User = require("../models/User");
 
-// @route   POST /api/moderation/t/:topic
+// @route   POST /api/moderation/topic/:topic
 // @desc    Add a moderator to a topic
 // @access  Private
 
@@ -42,7 +42,7 @@ router.post("/topic/:topic", auth, async (req, res) => {
 	}
 });
 
-// @route   DELETE /api/moderation/p/:post
+// @route   DELETE /api/moderation/post/:post
 // @desc    Delete a post
 // @access  Private
 

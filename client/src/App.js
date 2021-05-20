@@ -48,13 +48,13 @@ function App() {
 									exact
 									component={AddPost}
 								/>
-								<Route path="/t/:topic/p/:id" exact component={Post} />
+								<Route path="/t/:topic/comments/:id" exact component={Post} />
 								<PrivateRoute path="/submit" exact component={AddPost} />
 								<Route path="/forgot" exact component={Forgot} />
 								<PublicRoute path="/login" exact component={Login} />
 								<PublicRoute path="/register" exact component={Register} />
 								<Route path="/reset/:token" exact component={Reset} />
-								<Route path="/u/:userid" exact component={Profile} />
+								<Route path="/user/:userid" exact component={Profile} />
 								<Route path="/" component={NotFound} />
 							</Switch>
 						</Container>

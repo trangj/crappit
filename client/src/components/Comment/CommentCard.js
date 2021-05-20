@@ -42,7 +42,7 @@ const CommentCard = ({ post }) => {
 				{user ? (
 					<>
 						<Text>
-							Comment as <Link to={`/u/${user._id}`}>{user.username}</Link>
+							Comment as <Link to={`/user/${user._id}`}>{user.username}</Link>
 						</Text>
 						<Formik
 							initialValues={{ content: "" }}

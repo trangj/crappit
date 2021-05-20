@@ -20,7 +20,7 @@ const CommentItem = ({ comment }) => {
 				<VStack align="left">
 					<Text fontSize="xs">
 						{comment.authorId ? (
-							<Link to={`/u/${comment.authorId}`}>{comment.author}</Link>
+							<Link to={`/user/${comment.authorId}`}>{comment.author}</Link>
 						) : (
 							comment.author
 						)}

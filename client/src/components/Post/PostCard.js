@@ -25,7 +25,7 @@ const PostCard = ({ post }) => {
 								t/{post.topic}
 							</Link>{" "}
 							| Posted by{" "}
-							<Link to={`/u/${post.authorId}`}>u/{post.author}</Link>{" "}
+							<Link to={`/user/${post.authorId}`}>u/{post.author}</Link>{" "}
 							{moment(post.date).fromNow()}
 						</Text>
 						{post.type === "link" ? (

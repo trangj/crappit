@@ -51,7 +51,7 @@ const Moderation = ({ topic }) => {
 									<Heading size="sm">Current Moderators</Heading>
 									{topic.moderators.map((moderator) => (
 										<Text key={moderator._id}>
-											<Link to={`/u/${moderator._id}`}>
+											<Link to={`/user/${moderator._id}`}>
 												u/{moderator.username}
 											</Link>
 										</Text>

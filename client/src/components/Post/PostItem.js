@@ -23,13 +23,16 @@ const PostItem = ({ post }) => {
 				<Voting post={post} />
 				<Box>
 					<Heading>
-						<Link to={`/t/${post.topic}/p/${post._id}`}>{post.title}</Link>
+						<Link to={`/t/${post.topic}/comments/${post._id}`}>
+							{post.title}
+						</Link>
 					</Heading>
 					<Text fontSize="sm">
 						<Link to={`/t/${post.topic}`} style={{ fontWeight: "bold" }}>
 							t/{post.topic}
 						</Link>{" "}
-						| Posted by <Link to={`/u/${post.authorId}`}>u/{post.author}</Link>{" "}
+						| Posted by{" "}
+						<Link to={`/user/${post.authorId}`}>u/{post.author}</Link>{" "}
 						{moment(post.date).fromNow()}
 					</Text>
 					<HStack mt="2">
@@ -48,7 +51,7 @@ const PostItem = ({ post }) => {
 						<Button
 							size="xs"
 							as={Link}
-							to={`/t/${post.topic}/p/${post._id}#comments`}
+							to={`/t/${post.topic}/comments/${post._id}#comments`}
 							variant="ghost"
 						>
 							{post.comments.length} Comments
