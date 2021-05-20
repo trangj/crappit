@@ -28,7 +28,7 @@ const CommentItem = ({ comment }) => {
 						{" | "}
 						{moment(comment.date).fromNow()}
 						{comment.lastEditDate && (
-							<i> | edited {moment(comment.date).fromNow()}</i>
+							<i> | edited {moment(comment.lastEditDate).fromNow()}</i>
 						)}
 					</Text>
 					{openEdit ? (
