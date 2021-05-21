@@ -3,7 +3,7 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
-import axiosConfig from "../../axiosConfig";
+import axios from "../../axiosConfig";
 import AlertStatus from "../Utils/AlertStatus";
 
 const schema = yup.object({
@@ -14,7 +14,7 @@ const Forgot = () => {
 	const [status, setStatus] = useState(undefined);
 	const handleSubmit = async ({ email }) => {
 		try {
-			const res = await axiosConfig.post(`/api/user/forgot`, { email });
+			const res = await axios.post(`/api/user/forgot`, { email });
 			setStatus(res.data);
 		} catch (err) {
 			setStatus(err.response.data);

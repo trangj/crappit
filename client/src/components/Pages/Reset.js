@@ -3,7 +3,7 @@ import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
-import axiosConfig from "../../axiosConfig";
+import axios from "../../axiosConfig";
 import { Redirect } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
 
@@ -22,9 +22,7 @@ const Forgot = ({ match }) => {
 	useEffect(() => {
 		const confirmToken = async () => {
 			try {
-				const res = await axiosConfig.get(
-					`/api/user/reset/${match.params.token}`
-				);
+				const res = await axios.get(`/api/user/reset/${match.params.token}`);
 				setStatus(res.data);
 			} catch (err) {
 				setStatus(err.response.data);
@@ -36,10 +34,10 @@ const Forgot = ({ match }) => {
 
 	const handleSubmit = async ({ password, password2 }) => {
 		try {
-			const res = await axiosConfig.post(
-				`/api/user/reset/${match.params.token}`,
-				{ password, password2 }
-			);
+			const res = await axios.post(`/api/user/reset/${match.params.token}`, {
+				password,
+				password2,
+			});
 			setStatus(res.data);
 			setRedirect(true);
 		} catch (err) {

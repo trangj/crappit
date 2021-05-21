@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import axiosConfig from "../axiosConfig";
+import axios from "../axiosConfig";
 import UserReducer from "./UserReducer";
 import { loadState, saveState } from "../localStorage";
 
@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
 
 	async function loginUser(user) {
 		try {
-			const res = await axiosConfig.post(`/api/user/login`, user);
+			const res = await axios.post(`/api/user/login`, user);
 			saveState(res.data.token, "token");
 			saveState(res.data.user, "user");
 			dispatch({
@@ -37,7 +37,7 @@ export const UserProvider = ({ children }) => {
 
 	async function registerUser(user) {
 		try {
-			const res = await axiosConfig.post(`/api/user/register`, user);
+			const res = await axios.post(`/api/user/register`, user);
 			saveState(res.data.token, "token");
 			saveState(res.data.user, "user");
 			dispatch({

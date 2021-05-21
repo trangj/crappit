@@ -1,5 +1,5 @@
 import React from "react";
-import NavigationBar from "./components/NavigationBar";
+import NavigationBar from "./components/NavigationBar/NavigationBar";
 import Home from "./components/Pages/Home";
 import Post from "./components/Pages/Post";
 import Topic from "./components/Pages/Topic";
@@ -20,6 +20,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import theme from "./theme";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import Settings from "./components/Pages/Settings";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -54,6 +55,7 @@ function App() {
 								<PublicRoute path="/register" exact component={Register} />
 								<Route path="/reset/:token" exact component={Reset} />
 								<Route path="/user/:userid" exact component={Profile} />
+								<PrivateRoute path="/settings" exact component={Settings} />
 								<Route path="/" component={NotFound} />
 							</Switch>
 						</Container>
