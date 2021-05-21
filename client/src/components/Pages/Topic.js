@@ -9,9 +9,8 @@ import useTopic from "../../hooks/topic-query/useTopic";
 import AlertStatus from "../Utils/AlertStatus";
 
 const Topic = ({ match }) => {
-	const { data, error, fetchNextPage, hasNextPage, isLoading } = usePosts(
-		match.params.topic
-	);
+	const { data, error, fetchNextPage, hasNextPage, isLoading, isFetching } =
+		usePosts(match.params.topic);
 	const {
 		isLoading: topicLoading,
 		isError: topicIsError,
@@ -29,7 +28,7 @@ const Topic = ({ match }) => {
 			<InfiniteScroll
 				pageStart={0}
 				loadMore={fetchNextPage}
-				hasMore={hasNextPage}
+				hasMore={!isFetching && hasNextPage}
 				loader={<Spinner key={0} mx="auto" display={"block"} />}
 			>
 				{data.pages.map((group, i) => (

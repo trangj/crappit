@@ -7,8 +7,15 @@ import usePosts from "../../hooks/post-query/usePosts";
 import AlertStatus from "../Utils/AlertStatus";
 
 const Home = () => {
-	const { data, error, fetchNextPage, hasNextPage, isLoading, isError } =
-		usePosts("");
+	const {
+		data,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isLoading,
+		isError,
+		isFetching,
+	} = usePosts("");
 
 	if (isLoading) return <SkeletonList />;
 	if (isError) return <AlertStatus status={error} />;
@@ -16,7 +23,7 @@ const Home = () => {
 		<InfiniteScroll
 			pageStart={0}
 			loadMore={fetchNextPage}
-			hasMore={hasNextPage}
+			hasMore={!isFetching && hasNextPage}
 			loader={<Spinner key={0} mx="auto" display={"block"} />}
 		>
 			{data.pages.map((group, i) => (
