@@ -13,6 +13,7 @@ import {
 	useColorMode,
 	MenuGroup,
 	MenuDivider,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserState";
@@ -24,13 +25,16 @@ import {
 } from "@chakra-ui/icons";
 
 const NavigationBar = () => {
-	const { colorMode, toggleColorMode } = useColorMode();
 	const { logoutUser, user } = useContext(UserContext);
+	const { toggleColorMode } = useColorMode();
+	const bg = useColorModeValue("gray.200", "gray.700");
+	const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
+
 	return (
 		<>
-			<Box bg={colorMode === "dark" ? "gray.700" : "gray.200"} p={3}>
+			<Box bg={bg} p={3}>
 				<HStack>
-					<Heading mx="4">
+					<Heading mr="2">
 						<Link to="/">Crappit</Link>
 					</Heading>
 					<Menu>
@@ -67,10 +71,7 @@ const NavigationBar = () => {
 						</MenuList>
 					</Menu>
 					<Spacer />
-					<IconButton
-						icon={colorMode === "dark" ? <SunIcon /> : <MoonIcon />}
-						onClick={toggleColorMode}
-					/>
+					<IconButton icon={icon} onClick={toggleColorMode} />
 					{user === undefined ? (
 						<>
 							<Button as={Link} to="/login">
