@@ -4,7 +4,6 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
-import AlertStatus from "../Utils/AlertStatus";
 import { UserContext } from "../../context/UserState";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
 
@@ -25,7 +24,7 @@ const schema = yup.object({
 
 const AddTopic = () => {
 	const { setUser } = useContext(UserContext);
-	const { isLoading, isError, error, mutate } = useAddTopic(setUser);
+	const { isLoading, mutate } = useAddTopic(setUser);
 	const handleSubmit = ({ title, description, file }) => {
 		const formData = new FormData();
 		formData.append("title", title);
@@ -64,7 +63,6 @@ const AddTopic = () => {
 					</Form>
 				)}
 			</Formik>
-			{isError && <AlertStatus status={error} />}
 		</>
 	);
 };

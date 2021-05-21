@@ -4,17 +4,13 @@ import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import useUpdateComment from "../../hooks/comment-query/useUpdateComment";
-import AlertStatus from "../Utils/AlertStatus";
 
 const schema = yup.object({
 	content: yup.string().required(),
 });
 
 const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
-	const { isLoading, isError, error, mutate } = useUpdateComment(
-		setOpenEdit,
-		comment
-	);
+	const { isLoading, mutate } = useUpdateComment(setOpenEdit, comment);
 
 	const handleSubmit = ({ content }) => {
 		const newComment = {
@@ -42,7 +38,6 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 						<Button size="sm" onClick={() => setOpenEdit(false)}>
 							Cancel
 						</Button>
-						{isError && <AlertStatus status={error} />}
 					</Form>
 				)}
 			</Formik>

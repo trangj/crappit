@@ -9,11 +9,10 @@ import {
 	Button,
 } from "@chakra-ui/react";
 import useDeleteComment from "../../hooks/comment-query/useDeleteComment";
-import AlertStatus from "../Utils/AlertStatus";
 
 const DeleteComment = ({ comment }) => {
 	const [open, setOpen] = useState(false);
-	const { isError, isLoading, error, mutate } = useDeleteComment(setOpen);
+	const { isLoading, mutate } = useDeleteComment(setOpen);
 	const cancelRef = useRef();
 
 	return (
@@ -31,7 +30,6 @@ const DeleteComment = ({ comment }) => {
 				<AlertDialogContent>
 					<AlertDialogHeader id="form-dialog-title">
 						Delete comment?
-						{isError && <AlertStatus status={error} />}
 					</AlertDialogHeader>
 					<AlertDialogBody>
 						Are you sure you want to delete your comment? You can't undo this.

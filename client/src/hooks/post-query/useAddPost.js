@@ -1,6 +1,7 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 import { useHistory } from "react-router-dom";
+import { createStandaloneToast } from "@chakra-ui/toast";
 
 async function addPost({ formData }) {
 	try {
@@ -17,6 +18,14 @@ export default function useAddPost() {
 		onSuccess: (res) => {
 			const { topic, _id } = res.post;
 			history.push(`/t/${topic}/comments/${_id}`);
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

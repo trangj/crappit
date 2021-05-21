@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import {
+	LinkBox,
 	Box,
 	Heading,
 	Text,
 	HStack,
-	Divider,
 	Button,
 	IconButton,
 	Image,
+	LinkOverlay,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
@@ -16,16 +18,22 @@ import moment from "moment";
 
 const PostItem = ({ post }) => {
 	const [open, setOpen] = useState(false);
+	const color = useColorModeValue("black", "white");
 
 	return (
-		<Box mb="2" borderWidth="1px" borderRadius="lg">
+		<LinkBox
+			mb="2"
+			borderWidth="1px"
+			borderRadius="lg"
+			_hover={{ borderColor: color }}
+		>
 			<HStack m="3" spacing="0">
 				<Voting post={post} />
 				<Box>
 					<Heading>
-						<Link to={`/t/${post.topic}/comments/${post._id}`}>
+						<LinkOverlay as={Link} to={`/t/${post.topic}/comments/${post._id}`}>
 							{post.title}
-						</Link>
+						</LinkOverlay>
 					</Heading>
 					<Text fontSize="sm">
 						<Link to={`/t/${post.topic}`} style={{ fontWeight: "bold" }}>
@@ -61,7 +69,6 @@ const PostItem = ({ post }) => {
 			</HStack>
 			{open && (
 				<>
-					<Divider />
 					<Box id={post._id} m="3">
 						{post.type === "photo" && (
 							<Image
@@ -80,7 +87,7 @@ const PostItem = ({ post }) => {
 					</Box>
 				</>
 			)}
-		</Box>
+		</LinkBox>
 	);
 };
 

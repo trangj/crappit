@@ -3,7 +3,7 @@ import { Alert, AlertIcon } from "@chakra-ui/react";
 
 const AlertStatus = ({ status }) => {
 	return (
-		<Alert className="alert" status={status.status.severity}>
+		<Alert mt="2" status={status.status.severity}>
 			<AlertIcon />
 			{status.status.text}
 		</Alert>

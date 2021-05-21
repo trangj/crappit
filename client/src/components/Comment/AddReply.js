@@ -3,7 +3,6 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Button } from "@chakra-ui/react";
-import AlertStatus from "../Utils/AlertStatus";
 import useAddReply from "../../hooks/comment-query/useAddReply";
 
 const schema = yup.object({
@@ -11,10 +10,7 @@ const schema = yup.object({
 });
 
 const AddReply = ({ comment, openReply, setOpenReply }) => {
-	const { isError, isLoading, error, mutate } = useAddReply(
-		setOpenReply,
-		comment
-	);
+	const { isLoading, mutate } = useAddReply(setOpenReply, comment);
 
 	const handleSubmit = ({ content }) => {
 		const reply = {
@@ -35,7 +31,7 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{({ setFieldValue }) => (
+				{() => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
 						<Button type="submit" mr="2" size="sm" isLoading={isLoading}>
@@ -44,7 +40,6 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 						<Button size="sm" onClick={() => setOpenReply(false)}>
 							Cancel
 						</Button>
-						{isError && <AlertStatus status={error} />}
 					</Form>
 				)}
 			</Formik>

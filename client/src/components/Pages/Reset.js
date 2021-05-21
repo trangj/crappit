@@ -81,10 +81,10 @@ const Forgot = ({ match }) => {
 						<Button type="submit" mt="2">
 							Post
 						</Button>
+						{status !== undefined && <AlertStatus status={status} />}
 					</Form>
 				)}
 			</Formik>
-			{status !== undefined && <AlertStatus status={status} />}
 		</>
 	);
 };

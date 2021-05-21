@@ -15,7 +15,6 @@ import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
 import SelectFieldForm from "../Forms/SelectFieldForm";
 import useTopics from "../../hooks/topic-query/useTopics";
-import AlertStatus from "../Utils/AlertStatus";
 import useAddPost from "../../hooks/post-query/useAddPost";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
@@ -42,7 +41,7 @@ const AddPost = ({ match }) => {
 		data: topicsData,
 		error: topicsError,
 	} = useTopics();
-	const { isLoading, isError, error, mutate } = useAddPost();
+	const { isLoading, mutate } = useAddPost();
 	const [selectedType, setSelectedType] = useState(0);
 
 	const handleSubmit = ({ title, content, link, file, topic }) => {
@@ -142,7 +141,6 @@ const AddPost = ({ match }) => {
 					</Form>
 				)}
 			</Formik>
-			{isError && <AlertStatus status={error} />}
 		</>
 	);
 };

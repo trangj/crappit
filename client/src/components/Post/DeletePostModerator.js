@@ -8,12 +8,11 @@ import {
 	AlertDialogOverlay,
 	Button,
 } from "@chakra-ui/react";
-import AlertStatus from "../Utils/AlertStatus";
 import useDeletePostModerator from "../../hooks/post-query/useDeletePostModerator";
 
 const DeletePostModerator = ({ post }) => {
 	const [open, setOpen] = useState(false);
-	const { isError, isLoading, error, mutate } = useDeletePostModerator(post);
+	const { isLoading, mutate } = useDeletePostModerator(post);
 	const cancelRef = useRef();
 
 	return (
@@ -31,7 +30,6 @@ const DeletePostModerator = ({ post }) => {
 				<AlertDialogContent>
 					<AlertDialogHeader id="form-dialog-title">
 						Delete post?
-						{isError && <AlertStatus status={error} />}
 					</AlertDialogHeader>
 					<AlertDialogBody>
 						Are you sure you want to delete this post? You can't undo this.

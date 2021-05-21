@@ -4,7 +4,6 @@ import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
-import AlertStatus from "../Utils/AlertStatus";
 import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
@@ -22,10 +21,7 @@ const schema = yup.object({
 });
 
 const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
-	const { isError, isLoading, error, mutate } = useUpdateTopic(
-		setOpenEdit,
-		topic
-	);
+	const { isLoading, mutate } = useUpdateTopic(setOpenEdit, topic);
 
 	const handleSubmit = ({ description, file }) => {
 		const formData = new FormData();
@@ -59,7 +55,6 @@ const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
 							Update
 						</Button>
 						<Button onClick={() => setOpenEdit(false)}>Cancel</Button>
-						{isError && <AlertStatus status={error} />}
 					</Form>
 				)}
 			</Formik>

@@ -1,3 +1,4 @@
+import { createStandaloneToast } from "@chakra-ui/toast";
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 
@@ -15,6 +16,14 @@ export default function useUpdateTopic(setOpenEdit, topic) {
 		onSuccess: (res) => {
 			topic.description = res.topic.description;
 			setOpenEdit(false);
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

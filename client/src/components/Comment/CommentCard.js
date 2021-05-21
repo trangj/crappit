@@ -6,7 +6,6 @@ import { Formik, Form, Field } from "formik";
 import { UserContext } from "../../context/UserState";
 import { Box, Button, Divider, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import AlertStatus from "../Utils/AlertStatus";
 import useAddComment from "../../hooks/comment-query/useAddComment";
 
 const schema = yup.object({
@@ -16,7 +15,7 @@ const schema = yup.object({
 const CommentCard = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const { comments } = post;
-	const { isError, isLoading, error, mutate } = useAddComment(post);
+	const { isLoading, mutate } = useAddComment(post);
 
 	const handleSubmit = (values, { resetForm }) => {
 		const { content } = values;
@@ -60,7 +59,6 @@ const CommentCard = ({ post }) => {
 									<Button type="submit" isLoading={isLoading}>
 										Comment
 									</Button>
-									{isError && <AlertStatus status={error} />}
 								</Form>
 							)}
 						</Formik>

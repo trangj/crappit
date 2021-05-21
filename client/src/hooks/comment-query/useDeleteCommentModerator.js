@@ -1,6 +1,7 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 import { useQueryClient } from "react-query";
+import { createStandaloneToast } from "@chakra-ui/toast";
 
 async function deleteCommentModerator({ commentId }) {
 	try {
@@ -17,6 +18,14 @@ export default function useDeleteCommentModerator(setOpen) {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.comment.postId]);
 			setOpen(false);
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

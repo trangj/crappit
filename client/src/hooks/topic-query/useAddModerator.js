@@ -1,3 +1,4 @@
+import { createStandaloneToast } from "@chakra-ui/toast";
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 
@@ -16,6 +17,14 @@ export default function useAddModerator(topic) {
 	return useMutation(addModerator, {
 		onSuccess: (res) => {
 			topic.moderators = res.topic.moderators;
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

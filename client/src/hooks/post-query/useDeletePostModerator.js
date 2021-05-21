@@ -1,3 +1,4 @@
+import { createStandaloneToast } from "@chakra-ui/toast";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import axios from "../../axiosConfig";
@@ -16,6 +17,14 @@ export default function useDeletePostModerator(post) {
 	return useMutation(deletePostModerator, {
 		onSuccess: (res) => {
 			history.push(`/t/${post.topic}`);
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

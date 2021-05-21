@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { IconButton, HStack, Text } from "@chakra-ui/react";
+import { IconButton, HStack, Text, useColorModeValue } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { UserContext } from "../../context/UserState";
 import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
@@ -7,6 +7,8 @@ import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
 const CommentVoting = ({ comment }) => {
 	const { user } = useContext(UserContext);
 	const { mutate } = useCommentVoting(comment);
+	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
+
 	const handleUpvote = () => {
 		mutate({
 			commentId: comment._id,
@@ -37,7 +39,7 @@ const CommentVoting = ({ comment }) => {
 					size="xs"
 					icon={<ArrowUpIcon />}
 					variant="ghost"
-					_hover={{ color: "orange.400" }}
+					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
 			)}
 			<Text
@@ -65,7 +67,7 @@ const CommentVoting = ({ comment }) => {
 					size="xs"
 					icon={<ArrowDownIcon />}
 					variant="ghost"
-					_hover={{ color: "blue.600" }}
+					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
 			)}
 		</HStack>

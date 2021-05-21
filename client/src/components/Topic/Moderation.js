@@ -13,7 +13,6 @@ import {
 	Heading,
 } from "@chakra-ui/react";
 import useAddModerator from "../../hooks/topic-query/useAddModerator";
-import AlertStatus from "../Utils/AlertStatus";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Link } from "react-router-dom";
 
@@ -23,8 +22,7 @@ const schema = yup.object({
 
 const Moderation = ({ topic }) => {
 	const [open, setOpen] = useState(false);
-	const { isLoading, isError, isSuccess, data, error, mutate } =
-		useAddModerator(topic);
+	const { isLoading, mutate } = useAddModerator(topic);
 
 	const handleSubmit = ({ username }) => {
 		mutate({
@@ -61,8 +59,6 @@ const Moderation = ({ topic }) => {
 										name="username"
 										component={TextFieldForm}
 									/>
-									{isError && <AlertStatus status={error} />}
-									{isSuccess && <AlertStatus status={data} />}
 								</ModalBody>
 								<ModalFooter>
 									<Button onClick={() => setOpen(false)} mr="2">

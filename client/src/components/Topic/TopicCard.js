@@ -3,14 +3,13 @@ import { UserContext } from "../../context/UserState";
 import { Box, Heading, Image, Button, Text, HStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
-import AlertStatus from "../Utils/AlertStatus";
 import UpdateTopic from "./UpdateTopic";
 import Moderation from "./Moderation";
 
 const TopicCard = ({ topic }) => {
 	const { user, setUser } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
-	const { isError, isLoading, error, mutate } = useTopicFollow(setUser);
+	const { isLoading, mutate } = useTopicFollow(setUser);
 
 	return (
 		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
@@ -51,7 +50,6 @@ const TopicCard = ({ topic }) => {
 										<Moderation topic={topic} />
 									</>
 								)}
-							{isError && <AlertStatus status={error} />}
 						</HStack>
 					</>
 				)}

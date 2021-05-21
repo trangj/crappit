@@ -1,6 +1,7 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 import { useHistory } from "react-router-dom";
+import { createStandaloneToast } from "@chakra-ui/toast";
 
 async function addTopic({ formData }) {
 	try {
@@ -18,6 +19,14 @@ export default function useAddTopic(setUser) {
 			const { title } = res.topic;
 			setUser(res.user);
 			history.push(`/t/${title}`);
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

@@ -1,3 +1,4 @@
+import { createStandaloneToast } from "@chakra-ui/toast";
 import { useMutation, useQueryClient } from "react-query";
 import axios from "../../axiosConfig";
 
@@ -16,6 +17,14 @@ export default function useDeleteComment(setOpen) {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", res.comment.postId]);
 			setOpen(false);
+		},
+		onSettled: (data, error) => {
+			const res = data || error;
+			const toast = createStandaloneToast();
+			toast({
+				description: res.status.text,
+				status: res.status.severity,
+			});
 		},
 	});
 }

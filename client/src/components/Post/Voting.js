@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { IconButton, Text } from "@chakra-ui/react";
+import { IconButton, Text, useColorModeValue } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
 import { UserContext } from "../../context/UserState";
 import { VStack } from "@chakra-ui/layout";
@@ -8,6 +8,7 @@ import useVoting from "../../hooks/post-query/useVoting";
 const Voting = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const { mutate } = useVoting(post);
+	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 
 	const handleUpvote = () => {
 		mutate({ id: post._id, vote: "like" });
@@ -18,7 +19,7 @@ const Voting = ({ post }) => {
 	};
 
 	return user ? (
-		<VStack mr="3">
+		<VStack mr="3" style={{ zIndex: "10" }}>
 			{post.likes.includes(user._id) ? (
 				<IconButton
 					onClick={handleUpvote}
@@ -33,7 +34,7 @@ const Voting = ({ post }) => {
 					size="xs"
 					icon={<ArrowUpIcon />}
 					variant="ghost"
-					_hover={{ color: "orange.400" }}
+					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
 			)}
 			<Text
@@ -61,7 +62,7 @@ const Voting = ({ post }) => {
 					size="xs"
 					icon={<ArrowDownIcon />}
 					variant="ghost"
-					_hover={{ color: "blue.600" }}
+					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
 			)}
 		</VStack>
