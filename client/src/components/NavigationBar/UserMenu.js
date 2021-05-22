@@ -13,22 +13,24 @@ const UserMenu = ({ user, logoutUser }) => {
 	return (
 		<Menu>
 			<MenuButton as={IconButton} icon={<HamburgerIcon />}></MenuButton>
-			<MenuList>
-				<MenuItem as={Link} to={`/user/${user._id}`}>
-					Profile
-				</MenuItem>
-				<MenuItem as={Link} to={"/settings"}>
-					Settings
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						logoutUser();
-					}}
-					color="inherit"
-				>
-					Logout
-				</MenuItem>
-			</MenuList>
+			<div style={{ zIndex: "2" }}>
+				<MenuList>
+					<MenuItem as={Link} to={`/user/${user._id}`}>
+						Profile
+					</MenuItem>
+					<MenuItem as={Link} to={"/settings"}>
+						Settings
+					</MenuItem>
+					<MenuItem
+						onClick={() => {
+							logoutUser();
+						}}
+						color="inherit"
+					>
+						Logout
+					</MenuItem>
+				</MenuList>
+			</div>
 		</Menu>
 	);
 };

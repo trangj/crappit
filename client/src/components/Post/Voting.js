@@ -19,7 +19,7 @@ const Voting = ({ post }) => {
 	};
 
 	return user ? (
-		<VStack mr="3" style={{ zIndex: "10" }}>
+		<VStack mr="3" style={{ zIndex: "1" }}>
 			{post.likes.includes(user._id) ? (
 				<IconButton
 					onClick={handleUpvote}
