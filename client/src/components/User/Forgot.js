@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import axios from "../../axiosConfig";
 import AlertStatus from "../Utils/AlertStatus";
+import Card from "../Utils/Card";
 
 const schema = yup.object({
 	email: yup.string().email().required(),
@@ -22,7 +23,8 @@ const Forgot = () => {
 	};
 
 	return (
-		<>
+		<Card>
+			<Heading mb="3">Forgot</Heading>
 			<Formik
 				initialValues={{ email: "" }}
 				onSubmit={handleSubmit}
@@ -41,7 +43,7 @@ const Forgot = () => {
 					</Form>
 				)}
 			</Formik>
-		</>
+		</Card>
 	);
 };
 

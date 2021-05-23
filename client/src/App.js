@@ -6,8 +6,8 @@ import Topic from "./components/Pages/Topic";
 import Profile from "./components/Pages/Profile";
 import AllTopics from "./components/Pages/AllTopics";
 import NotFound from "./components/Pages/NotFound";
-import Reset from "./components/Pages/Reset";
-import Forgot from "./components/Pages/Forgot";
+import Reset from "./components/User/Reset";
+import Forgot from "./components/User/Forgot";
 import AddPost from "./components/Pages/AddPost";
 import AddTopic from "./components/Pages/AddTopic";
 import Login from "./components/User/Login";
@@ -20,7 +20,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import theme from "./theme";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import Settings from "./components/Pages/Settings";
+import Settings from "./components/User/Settings";
 
 const queryClient = new QueryClient({
 	defaultOptions: {

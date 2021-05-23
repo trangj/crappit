@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { Button, HStack, Spacer } from "@chakra-ui/react";
+import { Button, Heading, HStack, Spacer } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { UserContext } from "../../context/UserState";
 import { Link, useHistory } from "react-router-dom";
 import AlertStatus from "../Utils/AlertStatus";
+import Card from "../Utils/Card";
 
 const schema = yup.object({
 	email: yup.string().required(),
@@ -39,7 +40,8 @@ const Login = (props) => {
 	};
 
 	return (
-		<>
+		<Card>
+			<Heading mb="3">Login</Heading>
 			<Formik
 				initialValues={{ email: "", password: "" }}
 				onSubmit={handleSubmit}
@@ -60,7 +62,7 @@ const Login = (props) => {
 					</Form>
 				)}
 			</Formik>
-			<HStack>
+			<HStack my="2">
 				<Link to="/forgot">
 					<small>Forgot your password?</small>
 				</Link>
@@ -73,7 +75,7 @@ const Login = (props) => {
 			{props.location.state && (
 				<AlertStatus status={{ status: props.location.state.status }} />
 			)}
-		</>
+		</Card>
 	);
 };
 

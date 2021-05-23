@@ -16,6 +16,7 @@ import FileFieldForm from "../Forms/FileFieldForm";
 import SelectFieldForm from "../Forms/SelectFieldForm";
 import useTopics from "../../hooks/topic-query/useTopics";
 import useAddPost from "../../hooks/post-query/useAddPost";
+import Card from "../Utils/Card";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 512 * 1024;
@@ -57,7 +58,7 @@ const AddPost = ({ match }) => {
 	};
 
 	return (
-		<>
+		<Card>
 			<Heading>Create a post</Heading>
 			<Divider my="3" />
 			<Formik
@@ -94,10 +95,11 @@ const AddPost = ({ match }) => {
 								))}
 						</Field>
 						<Tabs
-							variant="enclosed"
+							variant="soft-rounded"
 							isFitted
 							index={selectedType}
 							onChange={setSelectedType}
+							mt="5"
 						>
 							<TabList>
 								<Tab>Text</Tab>
@@ -141,7 +143,7 @@ const AddPost = ({ match }) => {
 					</Form>
 				)}
 			</Formik>
-		</>
+		</Card>
 	);
 };
 export default AddPost;

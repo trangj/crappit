@@ -6,6 +6,7 @@ import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
 import { UserContext } from "../../context/UserState";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
+import Card from "../Utils/Card";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 512 * 1024;
@@ -34,7 +35,7 @@ const AddTopic = () => {
 	};
 
 	return (
-		<>
+		<Card>
 			<Heading>Create a topic</Heading>
 			<Divider my="3" />
 			<Formik
@@ -63,7 +64,7 @@ const AddTopic = () => {
 					</Form>
 				)}
 			</Formik>
-		</>
+		</Card>
 	);
 };
 

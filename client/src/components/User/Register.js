@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { UserContext } from "../../context/UserState";
 import { useHistory } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
+import Card from "../Utils/Card";
 
 const schema = yup.object({
 	username: yup.string().required(),
@@ -38,7 +39,8 @@ const Register = () => {
 	};
 
 	return (
-		<>
+		<Card>
+			<Heading mb="3">Register</Heading>
 			<Formik
 				initialValues={{
 					username: "",
@@ -72,7 +74,7 @@ const Register = () => {
 				)}
 			</Formik>
 			{status !== undefined && <AlertStatus status={status} />}
-		</>
+		</Card>
 	);
 };
 

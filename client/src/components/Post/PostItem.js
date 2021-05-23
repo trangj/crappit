@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-	LinkBox,
 	Box,
 	Heading,
 	Text,
@@ -9,25 +8,19 @@ import {
 	IconButton,
 	Image,
 	LinkOverlay,
-	useColorModeValue,
 } from "@chakra-ui/react";
 import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import LinkCard from "../Utils/LinkCard";
 
 const PostItem = ({ post }) => {
 	const [open, setOpen] = useState(false);
-	const color = useColorModeValue("black", "white");
 
 	return (
-		<LinkBox
-			mb="2"
-			borderWidth="1px"
-			borderRadius="lg"
-			_hover={{ borderColor: color }}
-		>
-			<HStack m="3" spacing="0">
+		<LinkCard>
+			<HStack spacing="0">
 				<Voting post={post} />
 				<Box>
 					<Heading>
@@ -69,7 +62,7 @@ const PostItem = ({ post }) => {
 			</HStack>
 			{open && (
 				<>
-					<Box id={post._id} m="3">
+					<Box id={post._id} mt="3">
 						{post.type === "photo" && (
 							<Image
 								alt={post.imageName}
@@ -87,7 +80,7 @@ const PostItem = ({ post }) => {
 					</Box>
 				</>
 			)}
-		</LinkBox>
+		</LinkCard>
 	);
 };
 

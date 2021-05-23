@@ -3,6 +3,7 @@ import { Button, Heading, Text, Divider } from "@chakra-ui/react";
 import { UserContext } from "../../context/UserState";
 import axios from "../../axiosConfig";
 import AlertStatus from "../Utils/AlertStatus";
+import Card from "../Utils/Card";
 
 const Settings = () => {
 	const { user } = useContext(UserContext);
@@ -18,7 +19,7 @@ const Settings = () => {
 	};
 
 	return (
-		<>
+		<Card>
 			<Heading>Settings</Heading>
 			<Divider my="3" />
 			<Text mb="2">Forgot your password?</Text>
@@ -26,7 +27,7 @@ const Settings = () => {
 				Request Password Change
 			</Button>
 			{status !== undefined && <AlertStatus status={status} />}
-		</>
+		</Card>
 	);
 };
 

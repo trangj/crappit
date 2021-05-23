@@ -6,6 +6,7 @@ import { Button } from "@chakra-ui/react";
 import axios from "../../axiosConfig";
 import { Redirect } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
+import Card from "../Utils/Card";
 
 const schema = yup.object({
 	password: yup.string().required(),
@@ -58,7 +59,7 @@ const Forgot = ({ match }) => {
 		);
 
 	return (
-		<>
+		<Card>
 			<Formik
 				initialValues={{ password: "", password2: "" }}
 				onSubmit={handleSubmit}
@@ -85,7 +86,7 @@ const Forgot = ({ match }) => {
 					</Form>
 				)}
 			</Formik>
-		</>
+		</Card>
 	);
 };
 

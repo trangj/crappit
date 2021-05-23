@@ -1,5 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Box, Text, HStack, VStack, Button, Flex } from "@chakra-ui/react";
+import {
+	Box,
+	Text,
+	HStack,
+	VStack,
+	Button,
+	Flex,
+	useColorModeValue,
+} from "@chakra-ui/react";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
@@ -14,6 +22,8 @@ const CommentItem = ({ comment }) => {
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);
+	const color = useColorModeValue("gray.300", "gray.600");
+	const colorHover = useColorModeValue("gray.500", "gray.300");
 
 	return (
 		<>
@@ -94,9 +104,9 @@ const CommentItem = ({ comment }) => {
 					<Box
 						width="10px"
 						borderLeft="2px"
-						borderLeftColor="orange.300"
+						borderLeftColor={color}
 						cursor="pointer"
-						_hover={{ borderLeftColor: "orange.400" }}
+						_hover={{ borderLeftColor: colorHover }}
 						onClick={() => setHideComments(true)}
 					></Box>
 					<div style={{ marginLeft: "2rem", width: "100%" }}>

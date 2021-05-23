@@ -1,6 +1,14 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../context/UserState";
-import { Box, Heading, Image, Button, Text, HStack } from "@chakra-ui/react";
+import {
+	Box,
+	Heading,
+	Image,
+	Button,
+	Text,
+	HStack,
+	useColorModeValue,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
 import UpdateTopic from "./UpdateTopic";
@@ -12,9 +20,14 @@ const TopicCard = ({ topic }) => {
 	const { isLoading, mutate } = useTopicFollow(setUser);
 
 	return (
-		<Box mb="2" borderWidth="1px" borderRadius="lg" overflow="hidden">
+		<Box
+			mb="2"
+			borderRadius="lg"
+			overflow="hidden"
+			backgroundColor={useColorModeValue("white", "gray.700")}
+		>
 			<Image alt={topic.imageName} src={topic.imageURL} maxHeight="200px" />
-			<Box m="3">
+			<Box p="3">
 				<Heading>Welcome to t/{topic.title}!</Heading>
 				{openEdit ? (
 					<>
