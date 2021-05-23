@@ -58,7 +58,7 @@ const AddTopic = () => {
 							component={FileFieldForm}
 							setFieldValue={setFieldValue}
 						/>
-						<Button type="submit" isLoading={isLoading}>
+						<Button type="submit" isLoading={isLoading} mt="2">
 							Post
 						</Button>
 					</Form>

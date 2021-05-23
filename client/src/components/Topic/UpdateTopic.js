@@ -55,7 +55,7 @@ const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
 							mr="2"
 							type="submit"
 							isLoading={isLoading}
-							isDisabled={!!!values.content}
+							isDisabled={!!!values.description}
 						>
 							Update
 						</Button>

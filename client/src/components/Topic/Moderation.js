@@ -34,7 +34,7 @@ const Moderation = ({ topic }) => {
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>Moderation</Button>
-			<Modal isOpen={open}>
+			<Modal isOpen={open} isCentered>
 				<ModalOverlay />
 				<Formik
 					initialValues={{ username: "" }}
@@ -64,13 +64,12 @@ const Moderation = ({ topic }) => {
 									<Button
 										type="submit"
 										isLoading={isLoading}
-										isDisabled={!!!values.content}
+										mr="2"
+										isDisabled={!!!values.username}
 									>
 										Add Moderator
 									</Button>
-									<Button onClick={() => setOpen(false)} mr="2">
-										Close
-									</Button>
+									<Button onClick={() => setOpen(false)}>Close</Button>
 								</ModalFooter>
 							</ModalContent>
 						</Form>

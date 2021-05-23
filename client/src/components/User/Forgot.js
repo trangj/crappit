@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button, Heading } from "@chakra-ui/react";
+import { Button, Divider, Heading } from "@chakra-ui/react";
 import axios from "../../axiosConfig";
 import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
@@ -25,6 +25,7 @@ const Forgot = () => {
 	return (
 		<Card>
 			<Heading mb="3">Forgot</Heading>
+			<Divider my="3" />
 			<Formik
 				initialValues={{ email: "" }}
 				onSubmit={handleSubmit}

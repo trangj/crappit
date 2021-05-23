@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Heading } from "@chakra-ui/react";
+import { Button, Divider, Heading } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
@@ -41,6 +41,7 @@ const Register = () => {
 	return (
 		<Card>
 			<Heading mb="3">Register</Heading>
+			<Divider my="3" />
 			<Formik
 				initialValues={{
 					username: "",
