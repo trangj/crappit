@@ -6,7 +6,7 @@ import { Button } from "@chakra-ui/react";
 import useUpdatePost from "../../hooks/post-query/useUpdatePost";
 
 const schema = yup.object({
-	content: yup.string().required(),
+	content: yup.string().required(""),
 });
 
 const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
@@ -29,10 +29,16 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{() => (
+				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button size="sm" mr="2" type="submit" isLoading={isLoading}>
+						<Button
+							size="sm"
+							mr="2"
+							type="submit"
+							isLoading={isLoading}
+							isDisabled={!!!values.content}
+						>
 							Update
 						</Button>
 						<Button size="sm" onClick={() => setOpenEdit(false)}>

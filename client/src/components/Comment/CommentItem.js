@@ -89,7 +89,7 @@ const CommentItem = ({ comment }) => {
 			</Box>
 			{openReply && (
 				<Flex>
-					<Box width="10px" borderLeft="2px" borderLeftColor="orange.300"></Box>
+					<Box width="10px" borderLeft="2px" borderLeftColor={color}></Box>
 					<div style={{ marginLeft: "2rem", width: "100%" }}>
 						<AddReply
 							comment={comment}

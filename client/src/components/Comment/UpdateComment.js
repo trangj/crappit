@@ -6,7 +6,7 @@ import { Button } from "@chakra-ui/react";
 import useUpdateComment from "../../hooks/comment-query/useUpdateComment";
 
 const schema = yup.object({
-	content: yup.string().required(),
+	content: yup.string().required(""),
 });
 
 const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
@@ -29,10 +29,16 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{() => (
+				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button type="submit" mr="2" size="sm" isLoading={isLoading}>
+						<Button
+							type="submit"
+							mr="2"
+							size="sm"
+							isLoading={isLoading}
+							isDisabled={!!!values.content}
+						>
 							Update
 						</Button>
 						<Button size="sm" onClick={() => setOpenEdit(false)}>

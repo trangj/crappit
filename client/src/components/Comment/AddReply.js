@@ -6,7 +6,7 @@ import { Button } from "@chakra-ui/react";
 import useAddReply from "../../hooks/comment-query/useAddReply";
 
 const schema = yup.object({
-	content: yup.string().required(),
+	content: yup.string().required(""),
 });
 
 const AddReply = ({ comment, openReply, setOpenReply }) => {
@@ -31,10 +31,16 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{() => (
+				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button type="submit" mr="2" size="sm" isLoading={isLoading}>
+						<Button
+							type="submit"
+							mr="2"
+							size="sm"
+							isLoading={isLoading}
+							isDisabled={!!!values.content}
+						>
 							Reply
 						</Button>
 						<Button size="sm" onClick={() => setOpenReply(false)}>

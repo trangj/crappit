@@ -11,8 +11,8 @@ import Card from "../Utils/Card";
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
-	title: yup.string().required(),
-	description: yup.string().required(),
+	title: yup.string().required("Enter a title for your topic"),
+	description: yup.string().required("Enter a description about your topic"),
 	file: yup
 		.mixed()
 		.test("fileSize", "File Size is too large", (value) =>

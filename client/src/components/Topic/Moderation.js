@@ -17,7 +17,7 @@ import TextFieldForm from "../Forms/TextFieldForm";
 import { Link } from "react-router-dom";
 
 const schema = yup.object({
-	username: yup.string().required(),
+	username: yup.string().required(""),
 });
 
 const Moderation = ({ topic }) => {
@@ -41,7 +41,7 @@ const Moderation = ({ topic }) => {
 					onSubmit={handleSubmit}
 					validationSchema={schema}
 				>
-					{() => (
+					{({ values }) => (
 						<Form>
 							<ModalContent>
 								<ModalHeader>Moderation</ModalHeader>
@@ -61,11 +61,15 @@ const Moderation = ({ topic }) => {
 									/>
 								</ModalBody>
 								<ModalFooter>
+									<Button
+										type="submit"
+										isLoading={isLoading}
+										isDisabled={!!!values.content}
+									>
+										Add Moderator
+									</Button>
 									<Button onClick={() => setOpen(false)} mr="2">
 										Close
-									</Button>
-									<Button type="submit" isLoading={isLoading}>
-										Add Moderator
 									</Button>
 								</ModalFooter>
 							</ModalContent>

@@ -8,7 +8,7 @@ import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 
 const schema = yup.object({
-	email: yup.string().email().required(),
+	email: yup.string().email("Enter a valid email").required("Enter an email"),
 });
 
 const Forgot = () => {

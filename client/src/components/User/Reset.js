@@ -9,11 +9,11 @@ import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 
 const schema = yup.object({
-	password: yup.string().required(),
+	password: yup.string().required("Enter a password"),
 	password2: yup
 		.string()
 		.oneOf([yup.ref("password"), null], "Passwords must match")
-		.required(),
+		.required("Confirm your password"),
 });
 
 const Forgot = ({ match }) => {

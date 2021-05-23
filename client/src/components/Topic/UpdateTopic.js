@@ -9,7 +9,7 @@ import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
-	description: yup.string().required(),
+	description: yup.string().required(""),
 	file: yup
 		.mixed()
 		.test("fileSize", "File Size is too large", (value) =>
@@ -37,7 +37,7 @@ const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{({ setFieldValue }) => (
+				{({ setFieldValue, values }) => (
 					<Form>
 						<Field
 							label="Description"
@@ -51,7 +51,12 @@ const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
 							component={FileFieldForm}
 							setFieldValue={setFieldValue}
 						/>
-						<Button mr="2" type="submit" isLoading={isLoading}>
+						<Button
+							mr="2"
+							type="submit"
+							isLoading={isLoading}
+							isDisabled={!!!values.content}
+						>
 							Update
 						</Button>
 						<Button onClick={() => setOpenEdit(false)}>Cancel</Button>

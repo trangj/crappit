@@ -9,8 +9,8 @@ import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 
 const schema = yup.object({
-	email: yup.string().required(),
-	password: yup.string().required(),
+	email: yup.string().required("Enter an email"),
+	password: yup.string().required("Enter a password"),
 });
 
 const Login = (props) => {

@@ -9,13 +9,13 @@ import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 
 const schema = yup.object({
-	username: yup.string().required(),
-	email: yup.string().email().required(),
-	password: yup.string().required(),
+	username: yup.string().required("Enter an username"),
+	email: yup.string().email().required("Enter an email"),
+	password: yup.string().required("Enter a password"),
 	password2: yup
 		.string()
 		.oneOf([yup.ref("password"), null], "Passwords must match")
-		.required(),
+		.required("Confirm your password"),
 });
 
 const Register = () => {

@@ -10,7 +10,7 @@ import useAddComment from "../../hooks/comment-query/useAddComment";
 import Card from "../Utils/Card";
 
 const schema = yup.object({
-	content: yup.string().required(),
+	content: yup.string().required(""),
 });
 
 const CommentCard = ({ post }) => {
@@ -42,7 +42,7 @@ const CommentCard = ({ post }) => {
 						onSubmit={handleSubmit}
 						validationSchema={schema}
 					>
-						{() => (
+						{({ values }) => (
 							<Form>
 								<Field
 									name="content"
@@ -50,7 +50,11 @@ const CommentCard = ({ post }) => {
 									component={TextFieldForm}
 									placeholder="What are your thoughts?"
 								/>
-								<Button type="submit" isLoading={isLoading}>
+								<Button
+									type="submit"
+									isLoading={isLoading}
+									isDisabled={!!!values.content}
+								>
 									Comment
 								</Button>
 							</Form>
