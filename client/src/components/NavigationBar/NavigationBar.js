@@ -18,7 +18,7 @@ import BrowseMenu from "./BrowseMenu";
 const NavigationBar = () => {
 	const { logoutUser, user } = useContext(UserContext);
 	const { toggleColorMode } = useColorMode();
-	const bg = useColorModeValue("white", "gray.900");
+	const bg = useColorModeValue("gray.100", "gray.700");
 	const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
 
 	return (

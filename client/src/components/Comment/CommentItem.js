@@ -22,8 +22,8 @@ const CommentItem = ({ comment }) => {
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);
-	const color = useColorModeValue("gray.200", "gray.600");
-	const colorHover = useColorModeValue("gray.500", "gray.200");
+	const color = useColorModeValue("gray.300", "gray.600");
+	const colorHover = useColorModeValue("gray.500", "gray.300");
 
 	return (
 		<>
