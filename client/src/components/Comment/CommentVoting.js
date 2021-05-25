@@ -5,8 +5,8 @@ import { UserContext } from "../../context/UserState";
 import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
 
 const CommentVoting = ({ comment }) => {
-	const { user } = useContext(UserContext);
-	const { mutate } = useCommentVoting(comment);
+	const { user, setUser } = useContext(UserContext);
+	const { mutate } = useCommentVoting(comment, setUser);
 	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 
 	const handleUpvote = () => {
@@ -25,7 +25,7 @@ const CommentVoting = ({ comment }) => {
 
 	return (
 		<HStack>
-			{comment.likes.includes(user._id) ? (
+			{user.likedComments.includes(comment._id) ? (
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
@@ -44,16 +44,16 @@ const CommentVoting = ({ comment }) => {
 			)}
 			<Text
 				color={
-					comment.likes.includes(user._id)
+					user.likedComments.includes(comment._id)
 						? "orange.400"
-						: comment.dislikes.includes(user._id)
+						: user.dislikedComments.includes(comment._id)
 						? "blue.600"
 						: ""
 				}
 			>
-				{comment.likes.length - comment.dislikes.length}
+				{comment.vote}
 			</Text>
-			{comment.dislikes.includes(user._id) ? (
+			{user.dislikedComments.includes(comment._id) ? (
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"

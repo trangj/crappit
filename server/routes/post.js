@@ -119,27 +119,35 @@ router.put("/:id/changevote", auth, async (req, res) => {
 		if (!user) throw Error("No user exists");
 
 		if (req.query.vote == "like") {
-			if (post.likes.includes(req.user.id)) {
-				post.likes.pull(req.user.id);
-			} else if (post.dislikes.includes(req.user.id)) {
-				post.dislikes.pull(req.user.id);
-				post.likes.push(req.user.id);
+			if (user.likedPosts.includes(post._id)) {
+				user.likedPosts.pull(post._id);
+				post.vote -= 1;
+			} else if (user.dislikedPosts.includes(post._id)) {
+				user.dislikedPosts.pull(post._id);
+				user.likedPosts.push(post._id);
+				post.vote += 2;
 			} else {
-				post.likes.push(req.user.id);
+				user.likedPosts.push(post._id);
+				post.vote += 1;
 			}
+			await user.save();
 			await post.save();
-			res.status(200).json({ post });
+			res.status(200).json({ post, user });
 		} else if (req.query.vote == "dislike") {
-			if (post.dislikes.includes(req.user.id)) {
-				post.dislikes.pull(req.user.id);
-			} else if (post.likes.includes(req.user.id)) {
-				post.likes.pull(req.user.id);
-				post.dislikes.push(req.user.id);
+			if (user.dislikedPosts.includes(post._id)) {
+				user.dislikedPosts.pull(post._id);
+				post.vote += 1;
+			} else if (user.likedPosts.includes(post._id)) {
+				user.likedPosts.pull(post._id);
+				user.dislikedPosts.push(post._id);
+				post.vote -= 2;
 			} else {
-				post.dislikes.push(req.user.id);
+				user.dislikedPosts.push(post._id);
+				post.vote -= 1;
 			}
+			await user.save();
 			await post.save();
-			res.status(200).json({ post });
+			res.status(200).json({ post, user });
 		}
 	} catch (err) {
 		res.status(400).json({

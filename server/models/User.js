@@ -5,6 +5,7 @@ const userSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
+		unique: true,
 	},
 	password: {
 		type: String,
@@ -17,6 +18,10 @@ const userSchema = new Schema({
 	},
 	followedTopics: [String],
 	topicsModerating: [String],
+	likedComments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+	dislikedComments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+	likedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+	dislikedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 	register_date: {
 		type: Date,
 		default: Date.now,

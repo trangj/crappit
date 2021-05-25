@@ -11,7 +11,7 @@ const LinkCard = ({ children }) => {
 			borderRadius="lg"
 			borderColor={useColorModeValue("gray.50", "gray.700")}
 			backgroundColor={useColorModeValue("gray.50", "gray.700")}
-			_hover={{ borderColor: "gray.400" }}
+			_hover={{ borderColor: useColorModeValue("black", "white") }}
 		>
 			{children}
 		</LinkBox>

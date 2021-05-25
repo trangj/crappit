@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const topicSchema = new Schema({
-	title: { type: String, required: true },
+	title: { type: String, required: true, unique: true },
 	description: { type: String, required: true },
 	imageURL: String,
 	imageName: String,

@@ -6,10 +6,9 @@ const commentSchema = new Schema({
 	authorId: { type: Schema.Types.ObjectId, required: true },
 	content: { type: String, required: true },
 	topic: { type: String, required: true },
-	comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-	likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-	dislikes: [{ type: Schema.Types.ObjectId, ref: "User" }],
 	postId: { type: Schema.Types.ObjectId, ref: "Post" },
+	comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+	vote: { type: Number, default: 0 },
 	date: { type: Date, default: Date.now },
 	lastEditDate: {
 		type: Date,

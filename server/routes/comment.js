@@ -104,27 +104,35 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 		if (!user) throw Error("No user exists");
 
 		if (req.query.vote == "like") {
-			if (comment.likes.includes(req.user.id)) {
-				comment.likes.pull(req.user.id);
-			} else if (comment.dislikes.includes(req.user.id)) {
-				comment.dislikes.pull(req.user.id);
-				comment.likes.push(req.user.id);
+			if (user.likedComments.includes(comment._id)) {
+				user.likedComments.pull(comment._id);
+				comment.vote -= 1;
+			} else if (user.dislikedComments.includes(comment._id)) {
+				user.dislikedComments.pull(comment._id);
+				user.likedComments.push(comment._id);
+				comment.vote += 2;
 			} else {
-				comment.likes.push(req.user.id);
+				user.likedComments.push(comment._id);
+				comment.vote += 1;
 			}
+			await user.save();
 			await comment.save();
-			res.status(200).json({ comment });
+			res.status(200).json({ comment, user });
 		} else if (req.query.vote == "dislike") {
-			if (comment.dislikes.includes(req.user.id)) {
-				comment.dislikes.pull(req.user.id);
-			} else if (comment.likes.includes(req.user.id)) {
-				comment.likes.pull(req.user.id);
-				comment.dislikes.push(req.user.id);
+			if (user.dislikedComments.includes(comment._id)) {
+				user.dislikedComments.pull(comment._id);
+				comment.vote += 1;
+			} else if (user.likedComments.includes(comment._id)) {
+				user.likedComments.pull(comment._id);
+				user.dislikedComments.push(comment._id);
+				comment.vote -= 2;
 			} else {
-				comment.dislikes.push(req.user.id);
+				user.dislikedComments.push(comment._id);
+				comment.vote -= 1;
 			}
+			await user.save();
 			await comment.save();
-			res.status(200).json({ comment });
+			res.status(200).json({ comment, user });
 		}
 	} catch (err) {
 		res.status(400).json({

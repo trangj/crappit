@@ -12,11 +12,11 @@ async function commentVoting({ commentId, vote }) {
 	}
 }
 
-export default function useCommentVoting(comment) {
+export default function useCommentVoting(comment, setUser) {
 	return useMutation(commentVoting, {
 		onSuccess: (res) => {
-			comment.likes = res.comment.likes;
-			comment.dislikes = res.comment.dislikes;
+			comment.vote = res.comment.vote;
+			setUser(res.user);
 		},
 	});
 }

@@ -6,8 +6,8 @@ import { VStack } from "@chakra-ui/layout";
 import useVoting from "../../hooks/post-query/useVoting";
 
 const Voting = ({ post }) => {
-	const { user } = useContext(UserContext);
-	const { mutate } = useVoting(post);
+	const { user, setUser } = useContext(UserContext);
+	const { mutate } = useVoting(post, setUser);
 	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 
 	const handleUpvote = () => {
@@ -20,7 +20,7 @@ const Voting = ({ post }) => {
 
 	return user ? (
 		<VStack mr="3" style={{ zIndex: "1" }}>
-			{post.likes.includes(user._id) ? (
+			{user.likedPosts.includes(post._id) ? (
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
@@ -39,16 +39,16 @@ const Voting = ({ post }) => {
 			)}
 			<Text
 				color={
-					post.likes.includes(user._id)
+					user.likedPosts.includes(post._id)
 						? "orange.400"
-						: post.dislikes.includes(user._id)
+						: user.dislikedPosts.includes(post._id)
 						? "blue.600"
 						: ""
 				}
 			>
-				{post.likes.length - post.dislikes.length}
+				{post.vote}
 			</Text>
-			{post.dislikes.includes(user._id) ? (
+			{user.dislikedPosts.includes(post._id) ? (
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"

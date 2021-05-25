@@ -9,11 +9,11 @@ async function voting({ id, vote }) {
 		throw err.response.data;
 	}
 }
-export default function useVoting(post) {
+export default function useVoting(post, setUser) {
 	return useMutation(voting, {
 		onSuccess: (res) => {
-			post.likes = res.post.likes;
-			post.dislikes = res.post.dislikes;
+			post.vote = res.post.vote;
+			setUser(res.user);
 		},
 	});
 }
