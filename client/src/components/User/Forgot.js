@@ -38,7 +38,7 @@ const Forgot = () => {
 						</h3>
 						<Field label="Email" name="email" component={TextFieldForm} />
 						<Button type="submit" mt="2">
-							Post
+							Request Password Change
 						</Button>
 						{status !== undefined && <AlertStatus status={status} />}
 					</Form>

@@ -9,7 +9,7 @@ const Card = ({ children }) => {
 			p="3"
 			borderRadius="lg"
 			overflow="hidden"
-			backgroundColor={useColorModeValue("gray.100", "gray.700")}
+			backgroundColor={useColorModeValue("gray.50", "gray.700")}
 		>
 			{children}
 		</Box>

@@ -9,8 +9,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-	const token = loadState("token");
-	config.headers["x-auth-token"] = token ? token : undefined;
+	config.headers["x-auth-token"] = loadState("token");
 	return config;
 });
 

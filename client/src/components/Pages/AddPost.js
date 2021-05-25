@@ -21,7 +21,7 @@ import Card from "../Utils/Card";
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
-	title: yup.string().required("Enter a title"),
+	title: yup.string().required("Enter a title for your post"),
 	topic: yup.string().required("Select a topic to post to"),
 	content: yup.string(),
 	link: yup.string().url("Enter a valid URL"),
@@ -72,7 +72,7 @@ const AddPost = ({ match }) => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{({ setFieldValue }) => (
+				{({ setFieldValue, values }) => (
 					<Form>
 						<Field
 							label={"Topic"}
@@ -101,44 +101,41 @@ const AddPost = ({ match }) => {
 							onChange={setSelectedType}
 							mt="5"
 						>
-							<TabList>
+							<TabList mb="3">
 								<Tab>Text</Tab>
 								<Tab>Link</Tab>
 								<Tab>Photo/GIF</Tab>
 							</TabList>
+							<Field label="Title" name="title" component={TextFieldForm} />
 							<TabPanels>
-								<TabPanel>
-									<Field label="Title" name="title" component={TextFieldForm} />
+								<TabPanel p="0">
 									<Field
 										label="Content"
 										name="content"
 										multiline
 										component={TextFieldForm}
 									/>
-									<Button type="submit" mt="2" isLoading={isLoading}>
-										Post
-									</Button>
 								</TabPanel>
-								<TabPanel>
-									<Field label="Title" name="title" component={TextFieldForm} />
+								<TabPanel p="0">
 									<Field label="Link" name="link" component={TextFieldForm} />
-									<Button type="submit" mt="2" isLoading={isLoading}>
-										Post
-									</Button>
 								</TabPanel>
-								<TabPanel>
-									<Field label="Title" name="title" component={TextFieldForm} />
+								<TabPanel p="0">
 									<Field
 										label="File"
 										name="file"
 										component={FileFieldForm}
 										setFieldValue={setFieldValue}
 									/>
-									<Button type="submit" mt="2" isLoading={isLoading}>
-										Post
-									</Button>
 								</TabPanel>
 							</TabPanels>
+							<Button
+								type="submit"
+								mt="2"
+								isLoading={isLoading}
+								isDisabled={!!!values.title || !!!values.topic}
+							>
+								Post
+							</Button>
 						</Tabs>
 					</Form>
 				)}

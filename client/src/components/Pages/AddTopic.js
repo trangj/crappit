@@ -43,7 +43,7 @@ const AddTopic = () => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{({ setFieldValue }) => (
+				{({ setFieldValue, values }) => (
 					<Form>
 						<Field label="Title" name="title" component={TextFieldForm} />
 						<Field
@@ -58,7 +58,12 @@ const AddTopic = () => {
 							component={FileFieldForm}
 							setFieldValue={setFieldValue}
 						/>
-						<Button type="submit" isLoading={isLoading} mt="2">
+						<Button
+							type="submit"
+							isLoading={isLoading}
+							mt="2"
+							isDisabled={!!!values.title || !!!values.description}
+						>
 							Post
 						</Button>
 					</Form>
