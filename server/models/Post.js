@@ -12,6 +12,7 @@ const postSchema = new Schema({
 	imageURL: String,
 	imageName: String,
 	comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+	numberOfComments: { type: Number, default: 0 },
 	vote: { type: Number, default: 0 },
 	date: {
 		type: Date,

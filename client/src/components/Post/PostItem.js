@@ -55,7 +55,7 @@ const PostItem = ({ post }) => {
 							to={`/t/${post.topic}/comments/${post._id}#comments`}
 							variant="ghost"
 						>
-							{post.comments.length} Comments
+							{post.numberOfComments} Comments
 						</Button>
 					</HStack>
 				</Box>

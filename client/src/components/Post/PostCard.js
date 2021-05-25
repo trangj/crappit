@@ -54,6 +54,9 @@ const PostCard = ({ post }) => {
 								/>
 							)}
 							<HStack mt="1">
+								<Button size="sm" variant="ghost">
+									{post.numberOfComments} Comments
+								</Button>
 								{user && user._id === post.authorId && (
 									<>
 										<DeletePost post={post} />

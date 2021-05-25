@@ -25,6 +25,7 @@ router.post("/", auth, async (req, res) => {
 		const comment = await newComment.save();
 		if (!comment) throw Error("No comment");
 		post.comments.push(comment);
+		post.numberOfComments += 1;
 		await post.save();
 		res.status(200).json({
 			comment,
@@ -149,6 +150,8 @@ router.post("/:commentid/reply", auth, async (req, res) => {
 	try {
 		const comment = await Comment.findOne({ _id: req.params.commentid });
 		if (!comment) throw Error("No comment");
+		const post = await Post.findOne({ _id: comment.postId });
+		if (!post) throw Error("No post");
 		const newComment = new Comment({
 			author: req.user.username,
 			authorId: req.user.id,
@@ -159,8 +162,9 @@ router.post("/:commentid/reply", auth, async (req, res) => {
 		const reply = await newComment.save();
 		if (!reply) throw Error("No reply");
 		comment.comments.push(reply);
+		post.numberOfComments += 1;
 		await comment.save();
-
+		await post.save();
 		res.status(200).json({
 			reply,
 			status: { text: "reply made successfully", severity: "success" },
