@@ -1,5 +1,6 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
+import { createStandaloneToast } from "@chakra-ui/toast";
 
 async function addReply({ commentId, reply }) {
 	try {
@@ -15,6 +16,13 @@ export default function useAddReply(setOpenReply, comment) {
 		onSuccess: (res) => {
 			comment.comments = [res.reply, ...comment.comments];
 			setOpenReply(false);
+		},
+		onError: (err) => {
+			const toast = createStandaloneToast();
+			toast({
+				description: err.status.text,
+				status: err.status.severity,
+			});
 		},
 	});
 }

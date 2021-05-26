@@ -1,4 +1,5 @@
 import { useMutation } from "react-query";
+import { createStandaloneToast } from "@chakra-ui/toast";
 import axios from "../../axiosConfig";
 
 async function commentVoting({ commentId, vote }) {
@@ -17,6 +18,13 @@ export default function useCommentVoting(comment, setUser) {
 		onSuccess: (res) => {
 			comment.vote = res.comment.vote;
 			setUser(res.user);
+		},
+		onError: (err) => {
+			const toast = createStandaloneToast();
+			toast({
+				description: err.status.text,
+				status: err.status.severity,
+			});
 		},
 	});
 }

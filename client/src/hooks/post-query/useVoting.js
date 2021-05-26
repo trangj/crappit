@@ -1,5 +1,6 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
+import { createStandaloneToast } from "@chakra-ui/toast";
 
 async function voting({ id, vote }) {
 	try {
@@ -14,6 +15,13 @@ export default function useVoting(post, setUser) {
 		onSuccess: (res) => {
 			post.vote = res.post.vote;
 			setUser(res.user);
+		},
+		onError: (err) => {
+			const toast = createStandaloneToast();
+			toast({
+				description: err.status.text,
+				status: err.status.severity,
+			});
 		},
 	});
 }
