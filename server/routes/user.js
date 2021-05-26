@@ -243,15 +243,47 @@ router.post("/reset/:token", async (req, res) => {
 	}
 });
 
-// @route   GET /api/user/u/:userid
+// @route   GET /api/user/:userid
 // @desc    Get user profile
 // @access  Public
 
-router.get("/u/:userid", async (req, res) => {
+router.get("/:userid", async (req, res) => {
 	try {
 		const user = await User.findOne({ _id: req.params.userid });
 		if (!user) throw Error("No user found");
 		res.status(200).json(user);
+	} catch (err) {
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
+	}
+});
+
+// @route   POST /api/user/email
+// @desc    Change user email
+// @access  Private
+
+router.post("/email", auth, async (req, res) => {
+	try {
+		const user = await User.findOne({ _id: req.user.id });
+		if (!user) throw Error("No user found");
+		if (user.email === req.body.newEmail)
+			throw Error("You already are using that email");
+
+		const otherUser = await User.findOne({ email: req.body.newEmail });
+		if (otherUser) throw Error("A different user has that email");
+
+		const isMatch = await bcyrpt.compare(req.body.password, user.password);
+		if (!isMatch)
+			return res
+				.status(400)
+				.json({ status: { text: "Incorrect password", severity: "error" } });
+		user.email = req.body.newEmail;
+		await user.save();
+		res.status(200).json({
+			user,
+			status: { text: "Your email has been changed", severity: "success" },
+		});
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },

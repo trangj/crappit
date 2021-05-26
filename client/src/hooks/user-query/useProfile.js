@@ -3,7 +3,7 @@ import axios from "../../axiosConfig";
 
 async function fetchProfile(userid) {
 	try {
-		const res = await axios.get(`/api/user/u/${userid}`);
+		const res = await axios.get(`/api/user/${userid}`);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

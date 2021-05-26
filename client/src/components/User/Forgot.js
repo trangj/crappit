@@ -36,7 +36,12 @@ const Forgot = () => {
 						<h3>
 							Forgot your password? Enter your email to change your password.
 						</h3>
-						<Field label="Email" name="email" component={TextFieldForm} />
+						<Field
+							label="Email"
+							name="email"
+							type="email"
+							component={TextFieldForm}
+						/>
 						<Button type="submit" mt="2">
 							Request Password Change
 						</Button>

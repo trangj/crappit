@@ -11,7 +11,10 @@ import Card from "../Utils/Card";
 const schema = yup.object({
 	username: yup.string().required("Enter an username"),
 	email: yup.string().email().required("Enter an email"),
-	password: yup.string().required("Enter a password"),
+	password: yup
+		.string()
+		.required("Enter a password")
+		.min(6, "Your password must be at least 6 characters long"),
 	password2: yup
 		.string()
 		.oneOf([yup.ref("password"), null], "Passwords must match")
@@ -55,7 +58,12 @@ const Register = () => {
 				{() => (
 					<Form>
 						<Field label="Username" name="username" component={TextFieldForm} />
-						<Field label="Email" name="email" component={TextFieldForm} />
+						<Field
+							label="Email"
+							name="email"
+							type="email"
+							component={TextFieldForm}
+						/>
 						<Field
 							label="Password"
 							name="password"

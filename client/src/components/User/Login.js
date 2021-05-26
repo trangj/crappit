@@ -50,7 +50,12 @@ const Login = (props) => {
 			>
 				{() => (
 					<Form>
-						<Field label="Email" name="email" component={TextFieldForm} />
+						<Field
+							label="Email"
+							name="email"
+							type="email"
+							component={TextFieldForm}
+						/>
 						<Field
 							label="Password"
 							name="password"
