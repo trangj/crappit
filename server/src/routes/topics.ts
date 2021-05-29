@@ -1,8 +1,7 @@
-// express setup
-const express = require("express");
+import express from "express";
+import { DI } from '../app'
+
 const router = express.Router();
-// schemas
-const Topic = require("../models/Topic");
 
 // @route   GET /api/topics
 // @desc    Get all topics
@@ -10,7 +9,7 @@ const Topic = require("../models/Topic");
 
 router.get("/", async (req, res) => {
 	try {
-		const topics = await Topic.find();
+		const topics = await DI.topicRepo.findAll();
 		if (!topics) throw Error("Could not get topics");
 		res.status(200).json(topics);
 	} catch (err) {
@@ -20,4 +19,4 @@ router.get("/", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const TopicsRouter = router;

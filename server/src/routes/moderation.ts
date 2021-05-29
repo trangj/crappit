@@ -1,12 +1,8 @@
-// express setup
-const express = require("express");
+import express from "express";
+import { deleteFile } from "../middleware/upload";
+import auth from "../middleware/auth";
+
 const router = express.Router();
-// middleware
-const { deleteFile } = require("../middleware/upload");
-const auth = require("../middleware/auth");
-// schemas
-const Topic = require("../models/Topic");
-const User = require("../models/User");
 
 // @route   POST /api/moderation/topic/:topic
 // @desc    Add a moderator to a topic
@@ -122,4 +118,4 @@ router.delete("/comment/:commentid", auth, async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const ModerationRouter = router;

@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from 'express'
 
-function auth(req, res, next) {
+function auth(req: Request, res: Response, next: NextFunction) {
 	const token = req.header("x-auth-token");
-
 	if (!token)
 		res
 			.status(401)
@@ -19,4 +19,4 @@ function auth(req, res, next) {
 	}
 }
 
-module.exports = auth;
+export default auth;

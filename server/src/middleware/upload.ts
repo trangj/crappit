@@ -1,8 +1,8 @@
 // uploading to aws
-const AWS = require("aws-sdk");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-const path = require("path");
+import AWS from "aws-sdk";
+import multer from "multer";
+import multerS3 from "multer-s3";
+import path from "path";
 
 AWS.config.update({
 	accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -11,7 +11,7 @@ AWS.config.update({
 });
 const s3 = new AWS.S3({ apiVersion: "latest" });
 
-const upload = multer({
+export const upload = multer({
 	storage: multerS3({
 		s3,
 		bucket: "crappit-images",
@@ -25,19 +25,14 @@ const upload = multer({
 	}),
 });
 
-const deleteFile = (Key) => {
+export const deleteFile = (Key: string) => {
 	s3.deleteObject(
 		{
 			Bucket: "crappit-images",
 			Key,
 		},
 		(err, data) => {
-			if (err) throw Error(err);
+			if (err) throw Error(err.message);
 		}
 	);
-};
-
-module.exports = {
-	upload,
-	deleteFile,
 };

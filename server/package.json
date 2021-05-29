@@ -8,14 +8,17 @@
     "npm": "6.14.7"
   },
   "scripts": {
-    "test": "node app.js",
-    "server": "nodemon app.js",
+    "start": "ts-node src/app.ts",
+    "server": "nodemon --exec ts-node --files src/app.ts",
     "client": "npm start --prefix ../client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mikro-orm/cli": "^4.5.5",
+    "@mikro-orm/core": "^4.5.5",
+    "@mikro-orm/postgresql": "^4.5.5",
     "@sendgrid/mail": "^7.4.4",
     "aws-sdk": "^2.907.0",
     "bcryptjs": "^2.4.3",
@@ -28,6 +31,22 @@
     "multer-s3": "^2.9.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/multer": "^1.4.5",
+    "@types/multer-s3": "^2.7.9",
+    "@types/node": "^15.6.1",
+    "nodemon": "^2.0.7",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }

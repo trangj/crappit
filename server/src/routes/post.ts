@@ -1,13 +1,9 @@
-// express setup
-const express = require("express");
+import express from "express";
+import { upload, deleteFile } from "../middleware/upload";
+import auth from "../middleware/auth";
+import { DI } from "../app";
+
 const router = express.Router();
-// middleware
-const { upload, deleteFile } = require("../middleware/upload");
-const auth = require("../middleware/auth");
-// schemas
-const Post = require("../models/Post");
-const Comment = require("../models/Comment");
-const Topic = require("../models/Topic");
 
 // @route   GET /api/post/:id
 // @desc    Get a post
@@ -15,10 +11,7 @@ const Topic = require("../models/Topic");
 
 router.get("/:id", async (req, res) => {
 	try {
-		const post = await Post.findOne({ _id: req.params.id }).populate({
-			path: "comments",
-			options: { sort: { date: -1 } },
-		});
+		const post = await DI.postRepo.findOne(parseInt(req.params.id));
 		if (!post) throw Error("Could not fetch post");
 		res.status(200).json({ post });
 	} catch (err) {
@@ -34,25 +27,26 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", auth, upload.single("file"), async (req, res) => {
 	try {
-		const topic = await Topic.findOne({ title: req.body.topic });
+		const topic = DI.topicRepo.getReference(req.body.topic);
 		if (!topic) throw Error("No topic exists");
-		const newPost = new Post({
+
+		const user = DI.userRepo.getReference(req.user.id)
+		if (!user) throw Error("No user exists");
+
+		const newPost = DI.postRepo.create({
 			title: req.body.title,
-			author: req.user.username,
-			authorId: req.user.id,
-			content: req.body.content,
-			link: req.body.link,
 			type: req.body.type,
-			topic: req.body.topic,
+			content: req.body.content,
 			imageURL: req.file ? req.file.location : "",
 			imageName: req.file ? req.file.key : "",
+			author: user,
+			topic: topic,
 		});
-		const post = await newPost.save();
-		if (!post) throw Error("Post could not be made");
-		await topic.save();
+		console.log(newPost)
+		// DI.postRepo.persistAndFlush(newPost)
 		res.status(200).json({
 			status: { text: "Post successfully created", severity: "success" },
-			post,
+			newPost,
 		});
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message, severity: "error" } });
@@ -65,16 +59,10 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
 	try {
-		const post = await Post.findOneAndDelete({
-			_id: req.params.id,
-			authorId: req.user.id,
-		});
+		const post = await DI.postRepo.findOne(parseInt(req.params.id))
 		if (!post) throw Error("Post does not exist or you are not the author");
-
+		// await DI.postRepo.removeAndFlush(post);
 		if (post.type === "photo") deleteFile(post.imageName);
-
-		await Comment.deleteMany({ postId: req.params.id });
-
 		res.status(200).json({
 			status: { text: "Post successfully deleted", severity: "success" },
 		});
@@ -89,15 +77,18 @@ router.delete("/:id", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
 	try {
+		const user = DI.userRepo.getReference(req.user.id)
+
 		if (!req.body.content) throw Error("Missing required fields");
-		const post = await Post.findOneAndUpdate(
-			{ _id: req.params.id, authorId: req.user.id },
-			{ $set: { content: req.body.content, lastEditDate: Date.now() } },
-			{ useFindAndModify: false, new: true }
-		);
+		const post = await DI.postRepo.findOne({ id: parseInt(req.params.id), author: user });
 		if (!post)
 			throw Error("Post does not exist or you are not the author of the post");
 		if (post.type !== "text") throw Error("You can only edit text posts");
+
+		post.content = req.body.content
+
+		DI.postRepo.flush()
+
 		res.status(200).json({
 			post,
 			status: { text: "Post successfully updated", severity: "success" },
@@ -156,4 +147,4 @@ router.put("/:id/changevote", auth, async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const PostRouter = router;

@@ -1,8 +1,7 @@
-// express setup
-const express = require("express");
+import express from "express";
+import { DI } from "../app";
+
 const router = express.Router();
-// schemas
-const Post = require("../models/Post");
 
 // @route   GET /api/posts
 // @desc    Get all posts
@@ -10,15 +9,12 @@ const Post = require("../models/Post");
 
 router.get("/", async (req, res) => {
 	try {
-		const posts = await Post.find()
-			.sort("-date")
-			.skip(parseInt(req.query.skip))
-			.limit(10);
+		const posts = await DI.postRepo.findAll({ limit: 10, offset: parseInt(req.query.skip as string) })
 		if (!posts) throw Error("Could not fetch posts");
 		res.status(200).json({
 			posts,
 			nextCursor: posts.length
-				? parseInt(req.query.skip) + posts.length
+				? parseInt(req.query.skip as string) + posts.length
 				: undefined,
 		});
 	} catch (err) {
@@ -34,15 +30,12 @@ router.get("/", async (req, res) => {
 
 router.get("/:topic", async (req, res) => {
 	try {
-		const posts = await Post.find({ topic: req.params.topic })
-			.sort("-date")
-			.skip(parseInt(req.query.skip))
-			.limit(10);
+		const posts = await DI.postRepo.find({ topic: parseInt(req.params.topic as string) })
 		if (!posts) throw Error("No posts found");
 		res.status(200).json({
 			posts,
 			nextCursor: posts.length
-				? parseInt(req.query.skip) + posts.length
+				? parseInt(req.query.skip as string) + posts.length
 				: undefined,
 		});
 	} catch (err) {
@@ -50,4 +43,4 @@ router.get("/:topic", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const PostsRouter = router;

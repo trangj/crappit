@@ -1,11 +1,7 @@
-// express setup
-const express = require("express");
+import express from "express";
+import auth from "../middleware/auth";
+
 const router = express.Router();
-// middleware
-const auth = require("../middleware/auth");
-// schemas
-const Post = require("../models/Post");
-const Comment = require("../models/Comment");
 
 // @route   POST /api/comment
 // @desc    Create a comment
@@ -176,4 +172,4 @@ router.post("/:commentid/reply", auth, async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const CommentRouter = router;
