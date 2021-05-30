@@ -9,6 +9,12 @@ export class Topic extends BaseEntity {
     @Column({ type: 'text' })
     description!: string
 
+    @Column()
+    imageURL?: string
+
+    @Column()
+    imageName?: string
+
     @ManyToMany(() => User, user => user.topicsFollowed)
     followers: User[]
 

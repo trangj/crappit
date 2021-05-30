@@ -140,14 +140,14 @@ router.delete("/:commentid", auth, async (req, res) => {
 
 router.post("/:commentid/reply", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOne(parseInt(req.params.commentid));
-		if (!comment) throw Error("No comment");
-		const user = await User.findOne(req.user.id)
+		const comment = await Comment.findOneOrFail(parseInt(req.params.commentid));
+		const user = await User.findOneOrFail(req.user.id)
+		const post = await Post.findOneOrFail(req.body.postId)
 		const newComment = Comment.create({
 			author: user,
 			content: req.body.content,
-			post: null,
-			parent_comment: comment
+			post: post,
+			parentComment: comment
 		});
 
 		await newComment.save()

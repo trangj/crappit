@@ -24,14 +24,11 @@ export class Post extends BaseEntity {
     @Column()
     imageName?: string
 
-    @OneToMany(() => Comment, comment => comment.post)
-    comments: Comment[]
-
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, { eager: true })
     @JoinColumn([{ name: 'authorId', referencedColumnName: 'id' }])
     author!: User
 
-    @ManyToOne(() => Topic)
+    @ManyToOne(() => Topic, { eager: true })
     @JoinColumn([{ name: 'topicId', referencedColumnName: 'id' }])
     topic!: Topic
 

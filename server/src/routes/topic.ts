@@ -30,6 +30,8 @@ router.post("/", auth, async (req, res) => {
 		const newTopic = Topic.create({
 			title: req.body.title,
 			description: req.body.description,
+			imageURL: req.file ? req.file.location : "",
+			imageName: req.file ? req.file.key : "",
 			moderators: [user],
 			followers: [user]
 		});
@@ -86,6 +88,11 @@ router.put("/:topic", auth, async (req, res) => {
 		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator")
 
 		topic.description = req.body.description
+		if (req.file) {
+			topic.imageURL = req.file.location
+			topic.imageName = req.file.key
+		}
+
 		await topic.save()
 
 		res.status(200).json({

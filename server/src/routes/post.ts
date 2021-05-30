@@ -2,7 +2,6 @@ import express from "express";
 import { upload, deleteFile } from "../middleware/upload";
 import auth from "../middleware/auth";
 import { Comment, Post, Topic, User } from "../entities";
-import { getManager } from "typeorm";
 
 const router = express.Router();
 
@@ -15,10 +14,14 @@ router.get("/:id", async (req, res) => {
 		const post = await Post.findOne(parseInt(req.params.id));
 		if (!post) throw Error("Post does not exist");
 
-		const manager = getManager()
-		const trees = await manager.getTreeRepository(Comment).findTrees()
+		let comments = await Comment.find({ where: { post }, relations: ['author'] })
 
-		res.status(200).json({ trees });
+		const makeForest = (id: any, xs: Comment[]): any => {
+			return xs.filter(({ parentCommentId }) => parentCommentId === id)
+				.map(({ id, parentCommentId, ...rest }) => ({ id, ...rest, children: makeForest(id, xs) }))
+		}
+
+		res.status(200).json({ post: { ...post, comments: makeForest(null, comments) } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },

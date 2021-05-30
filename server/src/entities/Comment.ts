@@ -1,25 +1,26 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User, Post } from ".";
 
 @Entity()
-@Tree('closure-table')
 export class Comment extends BaseEntity {
     @Column({ type: 'text', nullable: true })
     content!: string
 
-    // consider splitting this into author: string and authorId: number as filling relations in tree entities is not supported in typeorm
     @ManyToOne(() => User, { nullable: true })
     @JoinColumn([{ name: 'authorId', referencedColumnName: 'id' }])
     author!: User
 
-    @ManyToOne(() => Post, post => post.comments, { nullable: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => Post, { nullable: true, onDelete: 'CASCADE' })
+    @JoinColumn([{ name: 'postId', referencedColumnName: 'id' }])
     post!: Post
 
-    // wait a new release of typeorm to address the cascade on delete for tree entities
-    @TreeParent()
-    parent_comment?: Comment
+    @Column({ nullable: true })
+    parentCommentId: number
 
-    @TreeChildren()
+    @ManyToOne(() => Comment, comment => comment.children, { nullable: true, onDelete: "CASCADE" })
+    parentComment?: Comment
+
+    @OneToMany(() => Comment, comment => comment.parentComment)
     children: Comment[]
 
     @PrimaryGeneratedColumn()
