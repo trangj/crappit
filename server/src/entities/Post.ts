@@ -1,46 +1,46 @@
-import { Cascade, Collection, Entity, Enum, ManyToOne, OneToMany, Property, SerializedPrimaryKey } from "@mikro-orm/core";
-import { Comment } from "./Comment";
-import { User } from "./User";
-import { Topic } from './Topic'
-import { BaseEntity } from "./BaseEntity";
+import { Comment, User, Topic } from ".";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
-export class Post extends BaseEntity {
-    @Property()
-    title!: string
-
-    @Enum({ unique: true })
-    type!: PostType
-
-    @Property({ type: 'text' })
-    content?: string
-
-    @Property()
-    imageURL?: string
-
-    @Property()
-    imageName?: string
-
-    @OneToMany(() => Comment, comment => comment.post, { cascade: [Cascade.REMOVE] })
-    comments = new Collection<Comment>(this)
-
-    @ManyToOne()
-    author!: User
-
-    @ManyToOne()
-    topic!: Topic
-
-    constructor(title: string, type: PostType, author: User, topic: Topic) {
-        super();
-        this.title = title
-        this.type = type
-        this.author = author
-        this.topic = topic
-    }
-}
-
-export enum PostType {
+enum PostType {
     TEXT = 'text',
     URL = 'url',
     PHOTO = 'photo'
+}
+
+@Entity()
+export class Post extends BaseEntity {
+    @Column()
+    title!: string
+
+    @Column({ type: 'enum', enum: PostType })
+    type!: PostType
+
+    @Column({ type: 'text' })
+    content?: string
+
+    @Column()
+    imageURL?: string
+
+    @Column()
+    imageName?: string
+
+    @OneToMany(() => Comment, comment => comment.post)
+    comments: Comment[]
+
+    @ManyToOne(() => User)
+    @JoinColumn([{ name: 'authorId', referencedColumnName: 'id' }])
+    author!: User
+
+    @ManyToOne(() => Topic)
+    @JoinColumn([{ name: 'topicId', referencedColumnName: 'id' }])
+    topic!: Topic
+
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @UpdateDateColumn()
+    updatedAt: Date
 }

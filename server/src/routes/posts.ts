@@ -1,5 +1,5 @@
 import express from "express";
-import { DI } from "../app";
+import { Post } from "../entities";
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
 	try {
-		const posts = await DI.postRepo.findAll({ limit: 10, offset: parseInt(req.query.skip as string) })
+		const posts = await Post.find({ take: 10, skip: parseInt(req.query.skip as string) })
 		if (!posts) throw Error("Could not fetch posts");
 		res.status(200).json({
 			posts,
@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:topic", async (req, res) => {
 	try {
-		const posts = await DI.postRepo.find({ topic: parseInt(req.params.topic as string) })
+		const posts = await Post.find({ where: { topic: parseInt(req.params.topic) }, take: 10, skip: parseInt(req.query.skip as string) })
 		if (!posts) throw Error("No posts found");
 		res.status(200).json({
 			posts,

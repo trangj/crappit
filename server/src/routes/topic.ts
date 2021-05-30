@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "../middleware/auth";
-import { DI } from '../app'
+import { Topic, User } from '../entities'
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/:topic", async (req, res) => {
 	try {
-		const topic = await DI.topicRepo.findOne({ title: req.params.topic }, ['followers'])
+		const topic = await Topic.findOne(parseInt(req.params.topic), { relations: ['moderators', 'followers'] })
 		if (!topic) throw Error("Topic does not exist");
 		res.status(200).json({
 			topic,
@@ -26,16 +26,15 @@ router.get("/:topic", async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
 	try {
-		const topic = await DI.topicRepo.findOne({ title: req.body.title });
-		if (topic) throw Error("Topic already exists");
-		const newTopic = DI.topicRepo.create({
+		const user = await User.findOne(req.user.id)
+		const newTopic = Topic.create({
 			title: req.body.title,
 			description: req.body.description,
+			moderators: [user],
+			followers: [user]
 		});
-		const user = DI.userRepo.getReference(req.user.id)
-		newTopic.followers.add(user)
-		newTopic.moderators.add(user)
-		await DI.topicRepo.persistAndFlush(newTopic);
+
+		await newTopic.save();
 
 		res.status(200).json({
 			newTopic,
@@ -52,18 +51,19 @@ router.post("/", auth, async (req, res) => {
 
 router.post("/:topic/followtopic", auth, async (req, res) => {
 	try {
-		const user = await DI.userRepo.findOne(req.user.id, ['topicsFollowed']);
-		const topic = await DI.topicRepo.findOne({ title: req.params.topic })
+		const user = await User.findOne(req.user.id, { relations: ['topicsFollowed'] });
+		const topic = await Topic.findOne(parseInt(req.params.topic))
+		if (!topic) throw Error('No topic exists')
 		let message;
 
-		if (user.topicsFollowed.contains(topic)) {
-			user.topicsFollowed.remove(topic)
+		if (user.topicsFollowed.some(curTopic => curTopic.id === topic.id)) {
+			user.topicsFollowed = user.topicsFollowed.filter(curTopic => curTopic.id !== topic.id)
 			message = "Successfully unfollowed"
 		} else {
-			user.topicsFollowed.add(topic)
+			user.topicsFollowed.push(topic)
 			message = "Successfully followed"
 		}
-		await DI.userRepo.flush()
+		await user.save()
 		res.status(200).json({
 			user,
 			status: { text: message, severity: "success" },
@@ -79,14 +79,14 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 
 router.put("/:topic", auth, async (req, res) => {
 	try {
-		const topic = await DI.topicRepo.findOne({ title: req.params.topic }, ['moderators']);
+		const topic = await Topic.findOne(parseInt(req.params.topic), { relations: ['moderators'] });
 		if (!topic) throw Error("Could not update topic");
 
-		const user = DI.userRepo.getReference(req.user.id)
-		if (!topic.moderators.contains(user)) throw Error("You are not a moderator")
+		const user = await User.findOne(req.user.id)
+		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator")
 
 		topic.description = req.body.description
-		DI.topicRepo.flush()
+		await topic.save()
 
 		res.status(200).json({
 			topic,

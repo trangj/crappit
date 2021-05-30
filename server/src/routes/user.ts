@@ -4,7 +4,8 @@ import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
 import auth from "../middleware/auth";
-import { DI } from '../app'
+import { User } from "../entities";
+import { MoreThan } from 'typeorm'
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.post("/register", async (req, res) => {
 		if (!username || !email || !password || !password2) throw Error("Missing field")
 		if (password !== password2) throw Error("Passwords are not the same")
 
-		const user = await DI.userRepo.findOne({ $or: [{ username }, { email }] });
+		const user = await User.findOne({ where: [{ username }, { email }] });
 		if (user) throw Error("User already exists with that username/email")
 
 		const salt = await bcyrpt.genSalt(10);
@@ -30,13 +31,11 @@ router.post("/register", async (req, res) => {
 		const hash = await bcyrpt.hash(password, salt);
 		if (!hash) throw Error("Error with generating hash");
 
-		const newUser = DI.userRepo.create({
+		const newUser = await User.create({
 			username,
 			email,
 			password: hash,
-		})
-
-		await DI.userRepo.persistAndFlush(newUser)
+		}).save()
 
 		const token = jwt.sign(
 			{ id: newUser.id, username: newUser.username },
@@ -67,7 +66,7 @@ router.post("/login", async (req, res) => {
 		const { email, password } = req.body;
 		if (!email || !password) throw Error("Missing fields")
 
-		const user = await DI.userRepo.findOne({ email }, ['topicsFollowed']);
+		const user = await User.findOne({ where: { email } });
 		if (!user) throw Error("User does not exist")
 
 		const isMatch = await bcyrpt.compare(password, user.password);
@@ -97,11 +96,11 @@ router.post("/login", async (req, res) => {
 router.post("/forgot", async (req, res) => {
 	try {
 		const token = crypto.randomBytes(20).toString("hex");
-		const user = await DI.userRepo.findOne({ email: req.body.email });
+		const user = await User.findOne({ where: { email: req.body.email } });
 		if (!user) throw Error("No user with that email exists.");
 		user.resetPasswordToken = token;
 		user.resetPasswordExpires = Date.now() + 3600000;
-		await DI.userRepo.flush()
+		await user.save()
 
 		const msg = {
 			to: user.email,
@@ -135,9 +134,12 @@ router.post("/forgot", async (req, res) => {
 
 router.get("/reset/:token", async (req, res) => {
 	try {
-		const user = await DI.userRepo.findOne({
-			resetPasswordToken: req.params.token,
-			resetPasswordExpires: { $gt: Date.now() },
+		const user = await User.findOne({
+			where:
+			{
+				resetPasswordToken: req.params.token,
+				resetPasswordExpires: MoreThan(Date.now())
+			}
 		});
 		if (!user) throw Error("Token is invalid or has expired");
 		res.json({
@@ -160,9 +162,11 @@ router.post("/reset/:token", async (req, res) => {
 		if (!password || !password2) throw Error("Please enter a new password");
 		if (password !== password2) throw Error("Passwords are not the same");
 
-		const user = await DI.userRepo.findOne({
-			resetPasswordToken: req.params.token,
-			resetPasswordExpires: { $gt: Date.now() },
+		const user = await User.findOne({
+			where: {
+				resetPasswordToken: req.params.token,
+				resetPasswordExpires: MoreThan(Date.now())
+			}
 		});
 		if (!user) throw Error("Token is invalid or has expired");
 
@@ -175,7 +179,7 @@ router.post("/reset/:token", async (req, res) => {
 		user.password = hash;
 		user.resetPasswordToken = null;
 		user.resetPasswordExpires = null;
-		await DI.userRepo.flush();
+		await user.save();
 
 		const msg = {
 			to: user.email,
@@ -204,7 +208,7 @@ router.post("/reset/:token", async (req, res) => {
 
 router.get("/:userid", async (req, res) => {
 	try {
-		const user = await DI.userRepo.findOne({ id: parseInt(req.params.userid as string) });
+		const user = await User.findOne({ id: parseInt(req.params.userid as string) });
 		if (!user) throw Error("No user found");
 		res.status(200).json(user);
 	} catch (err) {
@@ -220,19 +224,19 @@ router.get("/:userid", async (req, res) => {
 
 router.post("/email", auth, async (req, res) => {
 	try {
-		const user = await DI.userRepo.findOne({ id: req.user.id });
+		const user = await User.findOne({ id: req.user.id });
 		if (!user) throw Error("No user found");
 		if (user.email === req.body.newEmail)
 			throw Error("You already are using that email");
 
-		const otherUser = await DI.userRepo.findOne({ email: req.body.newEmail });
+		const otherUser = await User.findOne({ email: req.body.newEmail });
 		if (otherUser) throw Error("A different user has that email");
 
 		const isMatch = await bcyrpt.compare(req.body.password, user.password);
 		if (!isMatch) throw Error("Incorrect password")
 
 		user.email = req.body.newEmail;
-		await DI.userRepo.flush();
+		await user.save();
 
 		res.status(200).json({
 			user,

@@ -1,29 +1,33 @@
-import { Cascade, Collection, Entity, ManyToOne, OneToMany, Property, SerializedPrimaryKey } from "@mikro-orm/core";
-import { BaseEntity } from "./BaseEntity";
-import { Post } from "./Post";
-import { User } from "./User";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent, UpdateDateColumn } from "typeorm";
+import { User, Post } from ".";
 
 @Entity()
+@Tree('closure-table')
 export class Comment extends BaseEntity {
-    @Property({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     content!: string
 
-    @ManyToOne()
+    // consider splitting this into author: string and authorId: number as filling relations in tree entities is not supported in typeorm
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn([{ name: 'authorId', referencedColumnName: 'id' }])
     author!: User
 
-    @ManyToOne()
+    @ManyToOne(() => Post, post => post.comments, { nullable: true, onDelete: 'CASCADE' })
     post!: Post
 
-    @ManyToOne()
+    // wait a new release of typeorm to address the cascade on delete for tree entities
+    @TreeParent()
     parent_comment?: Comment
 
-    @OneToMany(() => Comment, comment => comment.parent_comment, { cascade: [Cascade.REMOVE] })
-    children = new Collection<Comment>(this)
+    @TreeChildren()
+    children: Comment[]
 
-    constructor(content: string, author: User, post: Post) {
-        super();
-        this.content = content
-        this.author = author
-        this.post = post
-    }
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @UpdateDateColumn()
+    updatedAt: Date
 }

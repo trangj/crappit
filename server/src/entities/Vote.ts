@@ -1,22 +1,22 @@
-import { Cascade, Entity, ManyToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
-import { Post } from "./Post";
-import { User } from "./User";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { Post, User } from ".";
 
 @Entity()
-export class Vote {
-    @ManyToOne({ primary: true })
+export class Vote extends BaseEntity {
+    @PrimaryColumn()
+    user_id: number
+
+    @PrimaryColumn()
+    post_id: number
+
+    @ManyToOne(() => User, user => user.id)
+    @JoinColumn({ name: 'userId' })
     user!: User
 
-    @ManyToOne({ primary: true })
+    @ManyToOne(() => Post, post => post.id)
+    @JoinColumn({ name: 'postId' })
     post!: Post
 
-    @Property()
-    value!: number
-
-    [PrimaryKeyType]: [number, number]
-
-    constructor(user: User, post: Post) {
-        this.user = user
-        this.post = post
-    }
+    @Column({ nullable: true })
+    value!: 1 | 0 | -1
 }

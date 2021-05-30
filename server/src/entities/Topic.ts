@@ -1,24 +1,26 @@
-import { Collection, Entity, ManyToMany, Property } from "@mikro-orm/core";
-import { BaseEntity } from "./BaseEntity";
-import { User } from "./User";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { User } from ".";
 
 @Entity()
 export class Topic extends BaseEntity {
-    @Property({ unique: true })
+    @Column({ unique: true })
     title!: string
 
-    @Property({ type: 'text' })
+    @Column({ type: 'text' })
     description!: string
 
     @ManyToMany(() => User, user => user.topicsFollowed)
-    followers = new Collection<User>(this)
+    followers: User[]
 
     @ManyToMany(() => User, user => user.topicsModerated)
-    moderators = new Collection<User>(this)
+    moderators: User[]
 
-    constructor(title: string, description: string) {
-        super();
-        this.title = title
-        this.description = description
-    }
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @UpdateDateColumn()
+    updatedAt: Date
 }

@@ -1,7 +1,8 @@
 import express from "express";
 import { upload, deleteFile } from "../middleware/upload";
 import auth from "../middleware/auth";
-import { DI } from "../app";
+import { Comment, Post, Topic, User } from "../entities";
+import { getManager } from "typeorm";
 
 const router = express.Router();
 
@@ -11,9 +12,13 @@ const router = express.Router();
 
 router.get("/:id", async (req, res) => {
 	try {
-		const post = await DI.postRepo.findOne(parseInt(req.params.id));
-		if (!post) throw Error("Could not fetch post");
-		res.status(200).json({ post });
+		const post = await Post.findOne(parseInt(req.params.id));
+		if (!post) throw Error("Post does not exist");
+
+		const manager = getManager()
+		const trees = await manager.getTreeRepository(Comment).findTrees()
+
+		res.status(200).json({ trees });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -27,13 +32,13 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", auth, upload.single("file"), async (req, res) => {
 	try {
-		const topic = DI.topicRepo.getReference(req.body.topic);
+		const topic = await Topic.findOne(req.body.topic);
 		if (!topic) throw Error("No topic exists");
 
-		const user = DI.userRepo.getReference(req.user.id)
+		const user = await User.findOne(req.user.id)
 		if (!user) throw Error("No user exists");
 
-		const newPost = DI.postRepo.create({
+		const newPost = Post.create({
 			title: req.body.title,
 			type: req.body.type,
 			content: req.body.content,
@@ -41,12 +46,13 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 			imageName: req.file ? req.file.key : "",
 			author: user,
 			topic: topic,
-		});
-		console.log(newPost)
-		// DI.postRepo.persistAndFlush(newPost)
+		})
+
+		await newPost.save()
+
 		res.status(200).json({
-			status: { text: "Post successfully created", severity: "success" },
 			newPost,
+			status: { text: "Post successfully created", severity: "success" },
 		});
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message, severity: "error" } });
@@ -59,9 +65,10 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
 	try {
-		const post = await DI.postRepo.findOne(parseInt(req.params.id))
+		const user = await User.findOne(req.user.id)
+		const post = await Post.findOne({ where: { id: parseInt(req.params.id), author: user } })
 		if (!post) throw Error("Post does not exist or you are not the author");
-		// await DI.postRepo.removeAndFlush(post);
+		await Post.remove(post);
 		if (post.type === "photo") deleteFile(post.imageName);
 		res.status(200).json({
 			status: { text: "Post successfully deleted", severity: "success" },
@@ -77,17 +84,16 @@ router.delete("/:id", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
 	try {
-		const user = DI.userRepo.getReference(req.user.id)
-
-		if (!req.body.content) throw Error("Missing required fields");
-		const post = await DI.postRepo.findOne({ id: parseInt(req.params.id), author: user });
+		const user = await User.findOne(req.user.id)
+		const post = await Post.findOne({ where: { id: parseInt(req.params.id), author: user } });
 		if (!post)
 			throw Error("Post does not exist or you are not the author of the post");
 		if (post.type !== "text") throw Error("You can only edit text posts");
 
+		if (!req.body.content) throw Error("Missing required fields");
 		post.content = req.body.content
 
-		DI.postRepo.flush()
+		await post.save()
 
 		res.status(200).json({
 			post,
@@ -102,49 +108,49 @@ router.put("/:id", auth, async (req, res) => {
 // @desc    Change vote on post
 // @access  Private
 
-router.put("/:id/changevote", auth, async (req, res) => {
-	try {
-		const post = await Post.findOne({ _id: req.params.id });
-		if (!post) throw Error("No post exists");
-		const user = await User.findOne({ _id: req.user.id });
-		if (!user) throw Error("No user exists");
+// router.put("/:id/changevote", auth, async (req, res) => {
+// 	try {
+// 		const post = await Post.findOne({ _id: req.params.id });
+// 		if (!post) throw Error("No post exists");
+// 		const user = await User.findOne({ _id: req.user.id });
+// 		if (!user) throw Error("No user exists");
 
-		if (req.query.vote == "like") {
-			if (user.likedPosts.includes(post._id)) {
-				user.likedPosts.pull(post._id);
-				post.vote -= 1;
-			} else if (user.dislikedPosts.includes(post._id)) {
-				user.dislikedPosts.pull(post._id);
-				user.likedPosts.push(post._id);
-				post.vote += 2;
-			} else {
-				user.likedPosts.push(post._id);
-				post.vote += 1;
-			}
-			await user.save();
-			await post.save();
-			res.status(200).json({ post, user });
-		} else if (req.query.vote == "dislike") {
-			if (user.dislikedPosts.includes(post._id)) {
-				user.dislikedPosts.pull(post._id);
-				post.vote += 1;
-			} else if (user.likedPosts.includes(post._id)) {
-				user.likedPosts.pull(post._id);
-				user.dislikedPosts.push(post._id);
-				post.vote -= 2;
-			} else {
-				user.dislikedPosts.push(post._id);
-				post.vote -= 1;
-			}
-			await user.save();
-			await post.save();
-			res.status(200).json({ post, user });
-		}
-	} catch (err) {
-		res.status(400).json({
-			status: { text: err.message, severity: "error" },
-		});
-	}
-});
+// 		if (req.query.vote == "like") {
+// 			if (user.likedPosts.includes(post._id)) {
+// 				user.likedPosts.pull(post._id);
+// 				post.vote -= 1;
+// 			} else if (user.dislikedPosts.includes(post._id)) {
+// 				user.dislikedPosts.pull(post._id);
+// 				user.likedPosts.push(post._id);
+// 				post.vote += 2;
+// 			} else {
+// 				user.likedPosts.push(post._id);
+// 				post.vote += 1;
+// 			}
+// 			await user.save();
+// 			await post.save();
+// 			res.status(200).json({ post, user });
+// 		} else if (req.query.vote == "dislike") {
+// 			if (user.dislikedPosts.includes(post._id)) {
+// 				user.dislikedPosts.pull(post._id);
+// 				post.vote += 1;
+// 			} else if (user.likedPosts.includes(post._id)) {
+// 				user.likedPosts.pull(post._id);
+// 				user.dislikedPosts.push(post._id);
+// 				post.vote -= 2;
+// 			} else {
+// 				user.dislikedPosts.push(post._id);
+// 				post.vote -= 1;
+// 			}
+// 			await user.save();
+// 			await post.save();
+// 			res.status(200).json({ post, user });
+// 		}
+// 	} catch (err) {
+// 		res.status(400).json({
+// 			status: { text: err.message, severity: "error" },
+// 		});
+// 	}
+// });
 
 export const PostRouter = router;

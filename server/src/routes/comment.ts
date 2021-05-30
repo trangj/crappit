@@ -1,5 +1,6 @@
 import express from "express";
 import auth from "../middleware/auth";
+import { Post, User, Comment } from "../entities";
 
 const router = express.Router();
 
@@ -9,22 +10,20 @@ const router = express.Router();
 
 router.post("/", auth, async (req, res) => {
 	try {
-		const post = await Post.findOne({ _id: req.body.postId });
+		const post = await Post.findOne(req.body.postId);
 		if (!post) throw Error("No post");
-		const newComment = new Comment({
-			author: req.user.username,
-			authorId: req.user.id,
+		const user = await User.findOne(req.user.id)
+		if (!user) throw Error("No user");
+		const newComment = Comment.create({
+			author: user,
 			content: req.body.content,
-			postId: req.body.postId,
-			topic: post.topic,
+			post: post,
 		});
-		const comment = await newComment.save();
-		if (!comment) throw Error("No comment");
-		post.comments.push(comment);
-		post.numberOfComments += 1;
-		await post.save();
+
+		await newComment.save()
+
 		res.status(200).json({
-			comment,
+			newComment,
 			status: { text: "Comment succesfully added", severity: "success" },
 		});
 	} catch (err) {
@@ -39,12 +38,15 @@ router.post("/", auth, async (req, res) => {
 router.put("/:commentid", auth, async (req, res) => {
 	try {
 		if (!req.body.content) throw Error("Missing required fields");
-		const comment = await Comment.findOneAndUpdate(
-			{ _id: req.params.commentid, authorId: req.user.id },
-			{ $set: { content: req.body.content, lastEditDate: Date.now() } },
-			{ useFindAndModify: false, new: true }
-		);
+		const user = await User.findOne(req.user.id)
+		const comment = await Comment.findOne(
+			{ id: parseInt(req.params.commentid), author: user });
 		if (!comment) throw Error("No comment exists or you are not the author");
+
+		comment.content = req.body.content
+
+		await comment.save()
+
 		res.status(200).json({
 			status: { text: "Comment successfully updated", severity: "success" },
 			comment,
@@ -62,22 +64,16 @@ router.put("/:commentid", auth, async (req, res) => {
 
 router.delete("/:commentid", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOneAndUpdate(
-			{
-				_id: req.params.commentid,
-				authorId: req.user.id,
-			},
-			{
-				$set: {
-					author: "[deleted]",
-					authorId: null,
-					content: "[deleted]",
-				},
-			},
-			{ useFindAndModify: false, new: true }
-		);
-		if (!comment)
-			throw Error("Comment does not exist or you are not the author");
+		const user = await User.findOne(req.user.id)
+		const comment = await Comment.findOne(
+			{ id: parseInt(req.params.commentid), author: user });
+		if (!comment) throw Error("No comment exists or you are not the author");
+
+		comment.content = null
+		comment.author = null
+
+		await comment.save()
+
 		res.status(200).json({
 			comment,
 			status: { text: "Comment succesfully deleted", severity: "success" },
@@ -93,50 +89,50 @@ router.delete("/:commentid", auth, async (req, res) => {
 // @desc    Change vote on comment
 // @access  Private
 
-router.put("/:commentid/changevote", auth, async (req, res) => {
-	try {
-		const comment = await Comment.findOne({ _id: req.params.commentid });
-		if (!comment) throw Error("No comment exists");
-		const user = await User.findOne({ _id: req.user.id });
-		if (!user) throw Error("No user exists");
+// router.put("/:commentid/changevote", auth, async (req, res) => {
+// 	try {
+// 		const comment = await Comment.findOne({ _id: req.params.commentid });
+// 		if (!comment) throw Error("No comment exists");
+// 		const user = await User.findOne({ _id: req.user.id });
+// 		if (!user) throw Error("No user exists");
 
-		if (req.query.vote == "like") {
-			if (user.likedComments.includes(comment._id)) {
-				user.likedComments.pull(comment._id);
-				comment.vote -= 1;
-			} else if (user.dislikedComments.includes(comment._id)) {
-				user.dislikedComments.pull(comment._id);
-				user.likedComments.push(comment._id);
-				comment.vote += 2;
-			} else {
-				user.likedComments.push(comment._id);
-				comment.vote += 1;
-			}
-			await user.save();
-			await comment.save();
-			res.status(200).json({ comment, user });
-		} else if (req.query.vote == "dislike") {
-			if (user.dislikedComments.includes(comment._id)) {
-				user.dislikedComments.pull(comment._id);
-				comment.vote += 1;
-			} else if (user.likedComments.includes(comment._id)) {
-				user.likedComments.pull(comment._id);
-				user.dislikedComments.push(comment._id);
-				comment.vote -= 2;
-			} else {
-				user.dislikedComments.push(comment._id);
-				comment.vote -= 1;
-			}
-			await user.save();
-			await comment.save();
-			res.status(200).json({ comment, user });
-		}
-	} catch (err) {
-		res.status(400).json({
-			status: { text: err.message, severity: "error" },
-		});
-	}
-});
+// 		if (req.query.vote == "like") {
+// 			if (user.likedComments.includes(comment._id)) {
+// 				user.likedComments.pull(comment._id);
+// 				comment.vote -= 1;
+// 			} else if (user.dislikedComments.includes(comment._id)) {
+// 				user.dislikedComments.pull(comment._id);
+// 				user.likedComments.push(comment._id);
+// 				comment.vote += 2;
+// 			} else {
+// 				user.likedComments.push(comment._id);
+// 				comment.vote += 1;
+// 			}
+// 			await user.save();
+// 			await comment.save();
+// 			res.status(200).json({ comment, user });
+// 		} else if (req.query.vote == "dislike") {
+// 			if (user.dislikedComments.includes(comment._id)) {
+// 				user.dislikedComments.pull(comment._id);
+// 				comment.vote += 1;
+// 			} else if (user.likedComments.includes(comment._id)) {
+// 				user.likedComments.pull(comment._id);
+// 				user.dislikedComments.push(comment._id);
+// 				comment.vote -= 2;
+// 			} else {
+// 				user.dislikedComments.push(comment._id);
+// 				comment.vote -= 1;
+// 			}
+// 			await user.save();
+// 			await comment.save();
+// 			res.status(200).json({ comment, user });
+// 		}
+// 	} catch (err) {
+// 		res.status(400).json({
+// 			status: { text: err.message, severity: "error" },
+// 		});
+// 	}
+// });
 
 // @route   POST /api/comment/:commentid/reply
 // @desc    Add a reply to a comment
@@ -144,26 +140,21 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 
 router.post("/:commentid/reply", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOne({ _id: req.params.commentid });
+		const comment = await Comment.findOne(parseInt(req.params.commentid));
 		if (!comment) throw Error("No comment");
-		const post = await Post.findOne({ _id: comment.postId });
-		if (!post) throw Error("No post");
-		const newComment = new Comment({
-			author: req.user.username,
-			authorId: req.user.id,
+		const user = await User.findOne(req.user.id)
+		const newComment = Comment.create({
+			author: user,
 			content: req.body.content,
-			postId: req.body.postId,
-			topic: req.body.topic,
+			post: null,
+			parent_comment: comment
 		});
-		const reply = await newComment.save();
-		if (!reply) throw Error("No reply");
-		comment.comments.push(reply);
-		post.numberOfComments += 1;
-		await comment.save();
-		await post.save();
+
+		await newComment.save()
+
 		res.status(200).json({
-			reply,
-			status: { text: "reply made successfully", severity: "success" },
+			newComment,
+			status: { text: "Reply made successfully", severity: "success" },
 		});
 	} catch (err) {
 		res.status(400).json({

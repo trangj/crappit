@@ -1,5 +1,5 @@
 import express from "express";
-import { DI } from '../app'
+import { Topic } from '../entities'
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
 	try {
-		const topics = await DI.topicRepo.findAll();
+		const topics = await Topic.find();
 		if (!topics) throw Error("Could not get topics");
 		res.status(200).json(topics);
 	} catch (err) {

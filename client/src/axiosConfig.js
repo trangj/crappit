@@ -9,7 +9,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-	config.headers["x-auth-token"] = loadState("token");
+	config.headers.Authorization = loadState("token");
 	return config;
 });
 

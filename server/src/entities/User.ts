@@ -1,34 +1,37 @@
-import { BigIntType, Collection, Entity, ManyToMany, Property } from "@mikro-orm/core";
-import { BaseEntity } from "./BaseEntity";
-import { Topic } from "./Topic";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Topic } from ".";
 
 @Entity()
 export class User extends BaseEntity {
-    @Property({ unique: true })
+    @Column({ unique: true })
     username!: string
 
-    @Property()
+    @Column()
     password!: string
 
-    @Property({ unique: true })
+    @Column({ unique: true })
     email!: string
 
-    @ManyToMany(() => Topic, topic => topic.followers, { owner: true })
-    topicsFollowed = new Collection<Topic>(this)
+    @ManyToMany(() => Topic, topic => topic.followers)
+    @JoinTable()
+    topicsFollowed: Topic[]
 
-    @ManyToMany(() => Topic, topic => topic.moderators, { owner: true })
-    topicsModerated = new Collection<Topic>(this)
+    @ManyToMany(() => Topic, topic => topic.moderators)
+    @JoinTable()
+    topicsModerated: Topic[]
 
-    @Property({ nullable: true })
+    @Column({ nullable: true })
     resetPasswordToken?: string
 
-    @Property({ type: BigIntType, nullable: true })
+    @Column({ type: 'bigint', nullable: true })
     resetPasswordExpires?: number
 
-    constructor(username: string, password: string, email: string) {
-        super()
-        this.username = username
-        this.password = password
-        this.email = email
-    }
+    @PrimaryGeneratedColumn()
+    id!: number;
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @UpdateDateColumn()
+    updatedAt: Date
 }
