@@ -137,15 +137,15 @@ router.put("/:id/changevote", auth, async (req, res) => {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user exists");
 
-		const vote = await Vote.findOne({ where: { post, user } })
-		let newVote
-
+		const vote = await Vote.findOne({ post, user })
 		if (!vote) {
-			newVote = await Vote.create({
+			const newVote = await Vote.create({
 				post,
 				user,
 				value: req.query.vote === "like" ? 1 : -1
 			}).save()
+			post.vote += req.query.vote === "like" ? 1 : -1
+			await post.save()
 			res.status(200).json({ value: newVote.value })
 		} else {
 			if (req.query.vote === "like") {
@@ -165,8 +165,8 @@ router.put("/:id/changevote", auth, async (req, res) => {
 					post.vote -= 1
 				}
 			}
-			vote.save()
-			post.save()
+			await vote.save()
+			await post.save()
 			res.status(200).json({ value: vote.value })
 		}
 	} catch (err) {

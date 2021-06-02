@@ -3,13 +3,19 @@ import { Post, User } from ".";
 
 @Entity()
 export class Vote extends BaseEntity {
-    @ManyToOne(() => User, user => user.id, { primary: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => User, user => user.id, { onDelete: 'CASCADE' })
     @JoinColumn()
     user!: User
 
-    @ManyToOne(() => Post, post => post.id, { primary: true, onDelete: 'CASCADE' })
+    @PrimaryColumn()
+    user_id: number
+
+    @ManyToOne(() => Post, post => post.id, { onDelete: 'CASCADE' })
     @JoinColumn()
     post!: Post
+
+    @PrimaryColumn()
+    post_id: number
 
     @Column()
     value!: 1 | 0 | -1
