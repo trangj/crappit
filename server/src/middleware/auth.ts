@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from 'express'
 
-function auth(req: Request, res: Response, next: NextFunction) {
+export const auth = (req: Request, res: Response, next: NextFunction) => {
 	const token = req.headers.authorization;
 	if (!token)
 		res
@@ -19,4 +19,14 @@ function auth(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
-export default auth;
+export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
+	const token = req.headers.authorization
+	if (!token) {
+		req.user = { id: null, user: null }
+		next()
+	} else {
+		const decoded = jwt.verify(token, process.env.jwtSecret)
+		req.user = decoded
+		next()
+	}
+}

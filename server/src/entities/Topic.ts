@@ -10,23 +10,23 @@ export class Topic extends BaseEntity {
     description!: string
 
     @Column()
-    imageURL?: string
+    image_url?: string
 
     @Column()
-    imageName?: string
+    image_name?: string
 
-    @ManyToMany(() => User, user => user.topicsFollowed)
+    @ManyToMany(() => User, user => user.topics_followed)
     followers: User[]
 
-    @ManyToMany(() => User, user => user.topicsModerated)
+    @ManyToMany(() => User, user => user.topics_moderated)
     moderators: User[]
 
     @PrimaryGeneratedColumn()
     id!: number;
 
     @CreateDateColumn()
-    createdAt: Date
+    created_at: Date
 
     @UpdateDateColumn()
-    updatedAt: Date
+    updated_at: Date
 }

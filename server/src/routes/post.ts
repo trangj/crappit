@@ -1,7 +1,7 @@
 import express from "express";
 import { upload, deleteFile } from "../middleware/upload";
-import auth from "../middleware/auth";
-import { Comment, Post, Topic, User } from "../entities";
+import { auth, optionalAuth } from "../middleware/auth";
+import { Comment, Post, Topic, User, Vote } from "../entities";
 
 const router = express.Router();
 
@@ -9,19 +9,38 @@ const router = express.Router();
 // @desc    Get a post
 // @access  Public
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", optionalAuth, async (req, res) => {
 	try {
-		const post = await Post.findOne(parseInt(req.params.id));
-		if (!post) throw Error("Post does not exist");
+		const post = await Post.query(`
+			select
+			p.*,
+			t.title topic,
+			u.username author,
+			v.value user_vote
+			from post p
+			inner join topic t on p.topic_id = t.id
+			inner join "user" u on p.author_id = u.id
+			left join vote v on p.id = v.post_id and v.user_id = $1
+			where p.id = $2
+		`, [req.user.id, req.params.id])
+		if (!post[0]) throw Error("Post does not exist");
 
-		let comments = await Comment.find({ where: { post }, relations: ['author'] })
+		const comments = await Comment.query(`
+			select
+			c.*,
+			u.username author
+			from comment c
+			inner join "user" u on c.author_id = u.id
+			left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
+			where c.post_id = $2
+		`, [req.user.id, req.params.id])
 
-		const makeForest = (id: any, xs: Comment[]): any => {
-			return xs.filter(({ parentCommentId }) => parentCommentId === id)
-				.map(({ id, parentCommentId, ...rest }) => ({ id, ...rest, children: makeForest(id, xs) }))
+		const createCommentThread = (id: any, comments: Comment[]): any => {
+			return comments.filter(({ parent_comment_id }) => parent_comment_id == id)
+				.map(({ id, parent_comment_id, ...rest }) => ({ id, ...rest, children: createCommentThread(id, comments) }))
 		}
 
-		res.status(200).json({ post: { ...post, comments: makeForest(null, comments) } });
+		res.status(200).json({ post: { ...post[0], comments: createCommentThread(null, comments) } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -45,8 +64,8 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 			title: req.body.title,
 			type: req.body.type,
 			content: req.body.content,
-			imageURL: req.file ? req.file.location : "",
-			imageName: req.file ? req.file.key : "",
+			image_url: req.file ? req.file.location : "",
+			image_name: req.file ? req.file.key : "",
 			author: user,
 			topic: topic,
 		})
@@ -54,7 +73,7 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 		await newPost.save()
 
 		res.status(200).json({
-			newPost,
+			post: { id: newPost.id, topic: newPost.topic.id },
 			status: { text: "Post successfully created", severity: "success" },
 		});
 	} catch (err) {
@@ -72,7 +91,7 @@ router.delete("/:id", auth, async (req, res) => {
 		const post = await Post.findOne({ where: { id: parseInt(req.params.id), author: user } })
 		if (!post) throw Error("Post does not exist or you are not the author");
 		await Post.remove(post);
-		if (post.type === "photo") deleteFile(post.imageName);
+		if (post.type === "photo") deleteFile(post.image_name);
 		res.status(200).json({
 			status: { text: "Post successfully deleted", severity: "success" },
 		});
@@ -99,7 +118,7 @@ router.put("/:id", auth, async (req, res) => {
 		await post.save()
 
 		res.status(200).json({
-			post,
+			post: { content: post.content },
 			status: { text: "Post successfully updated", severity: "success" },
 		});
 	} catch (err) {
@@ -111,49 +130,50 @@ router.put("/:id", auth, async (req, res) => {
 // @desc    Change vote on post
 // @access  Private
 
-// router.put("/:id/changevote", auth, async (req, res) => {
-// 	try {
-// 		const post = await Post.findOne({ _id: req.params.id });
-// 		if (!post) throw Error("No post exists");
-// 		const user = await User.findOne({ _id: req.user.id });
-// 		if (!user) throw Error("No user exists");
+router.put("/:id/changevote", auth, async (req, res) => {
+	try {
+		const post = await Post.findOne(req.params.id);
+		if (!post) throw Error("No post exists");
+		const user = await User.findOne(req.user.id);
+		if (!user) throw Error("No user exists");
 
-// 		if (req.query.vote == "like") {
-// 			if (user.likedPosts.includes(post._id)) {
-// 				user.likedPosts.pull(post._id);
-// 				post.vote -= 1;
-// 			} else if (user.dislikedPosts.includes(post._id)) {
-// 				user.dislikedPosts.pull(post._id);
-// 				user.likedPosts.push(post._id);
-// 				post.vote += 2;
-// 			} else {
-// 				user.likedPosts.push(post._id);
-// 				post.vote += 1;
-// 			}
-// 			await user.save();
-// 			await post.save();
-// 			res.status(200).json({ post, user });
-// 		} else if (req.query.vote == "dislike") {
-// 			if (user.dislikedPosts.includes(post._id)) {
-// 				user.dislikedPosts.pull(post._id);
-// 				post.vote += 1;
-// 			} else if (user.likedPosts.includes(post._id)) {
-// 				user.likedPosts.pull(post._id);
-// 				user.dislikedPosts.push(post._id);
-// 				post.vote -= 2;
-// 			} else {
-// 				user.dislikedPosts.push(post._id);
-// 				post.vote -= 1;
-// 			}
-// 			await user.save();
-// 			await post.save();
-// 			res.status(200).json({ post, user });
-// 		}
-// 	} catch (err) {
-// 		res.status(400).json({
-// 			status: { text: err.message, severity: "error" },
-// 		});
-// 	}
-// });
+		const vote = await Vote.findOne({ where: { post, user } })
+		let newVote
+
+		if (!vote) {
+			newVote = await Vote.create({
+				post,
+				user,
+				value: req.query.vote === "like" ? 1 : -1
+			}).save()
+			res.status(200).json({ value: newVote.value })
+		} else {
+			if (req.query.vote === "like") {
+				if (vote.value === 1) {
+					vote.value = 0;
+					post.vote -= 1
+				} else {
+					vote.value = 1;
+					post.vote += 1
+				}
+			} else {
+				if (vote.value === -1) {
+					vote.value = 0;
+					post.vote += 1
+				} else {
+					vote.value = -1;
+					post.vote -= 1
+				}
+			}
+			vote.save()
+			post.save()
+			res.status(200).json({ value: vote.value })
+		}
+	} catch (err) {
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
+	}
+});
 
 export const PostRouter = router;

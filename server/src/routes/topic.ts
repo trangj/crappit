@@ -1,5 +1,5 @@
 import express from "express";
-import auth from "../middleware/auth";
+import { auth, optionalAuth } from "../middleware/auth";
 import { Topic, User } from '../entities'
 
 const router = express.Router();
@@ -8,12 +8,21 @@ const router = express.Router();
 // @desc    Get a topic
 // @access  Public
 
-router.get("/:topic", async (req, res) => {
+router.get("/:topic", optionalAuth, async (req, res) => {
 	try {
-		const topic = await Topic.findOne(parseInt(req.params.topic), { relations: ['moderators', 'followers'] })
-		if (!topic) throw Error("Topic does not exist");
+		const topic = await Topic.query(`
+			select
+			t.*,
+			f.user_id user_followed_id,
+			m.user_id user_moderator_id
+			from topic t
+			left join user_topics_followed_topic f on f.topic_id = t.id and f.user_id = $1
+			left join user_topics_moderated_topic m on m.topic_id = t.id and m.user_id = $2
+			where t.id = $3
+		`, [req.user.id, req.user.id, req.params.topic])
+		if (!topic[0]) throw Error("Topic does not exist");
 		res.status(200).json({
-			topic,
+			topic: topic[0],
 		});
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message, severity: "error" } });
@@ -27,19 +36,18 @@ router.get("/:topic", async (req, res) => {
 router.post("/", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id)
-		const newTopic = Topic.create({
+		if (!user) throw Error("No user was found with that id")
+		const newTopic = await Topic.create({
 			title: req.body.title,
 			description: req.body.description,
-			imageURL: req.file ? req.file.location : "",
-			imageName: req.file ? req.file.key : "",
+			image_url: req.file ? req.file.location : "",
+			image_name: req.file ? req.file.key : "",
 			moderators: [user],
 			followers: [user]
-		});
-
-		await newTopic.save();
+		}).save();
 
 		res.status(200).json({
-			newTopic,
+			topic: { title: newTopic.title },
 			status: { text: "Topic successfully created", severity: "success" },
 		});
 	} catch (err) {
@@ -54,18 +62,23 @@ router.post("/", auth, async (req, res) => {
 router.post("/:topic/followtopic", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id, { relations: ['topicsFollowed'] });
+		if (!user) throw Error("No user was found with that id")
+
 		const topic = await Topic.findOne(parseInt(req.params.topic))
 		if (!topic) throw Error('No topic exists')
+
 		let message;
 
-		if (user.topicsFollowed.some(curTopic => curTopic.id === topic.id)) {
-			user.topicsFollowed = user.topicsFollowed.filter(curTopic => curTopic.id !== topic.id)
+		if (user.topics_followed.some(curTopic => curTopic.id === topic.id)) {
+			user.topics_followed = user.topics_followed.filter(curTopic => curTopic.id !== topic.id)
 			message = "Successfully unfollowed"
 		} else {
-			user.topicsFollowed.push(topic)
+			user.topics_followed.push(topic)
 			message = "Successfully followed"
 		}
+
 		await user.save()
+
 		res.status(200).json({
 			user,
 			status: { text: message, severity: "success" },
@@ -89,8 +102,8 @@ router.put("/:topic", auth, async (req, res) => {
 
 		topic.description = req.body.description
 		if (req.file) {
-			topic.imageURL = req.file.location
-			topic.imageName = req.file.key
+			topic.image_url = req.file.location
+			topic.image_name = req.file.key
 		}
 
 		await topic.save()

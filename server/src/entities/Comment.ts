@@ -6,29 +6,32 @@ export class Comment extends BaseEntity {
     @Column({ type: 'text', nullable: true })
     content!: string
 
+    @Column({ default: 0 })
+    vote: number
+
     @ManyToOne(() => User, { nullable: true })
-    @JoinColumn([{ name: 'authorId', referencedColumnName: 'id' }])
+    @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
     author!: User
 
     @ManyToOne(() => Post, { nullable: true, onDelete: 'CASCADE' })
-    @JoinColumn([{ name: 'postId', referencedColumnName: 'id' }])
+    @JoinColumn([{ name: 'post_id', referencedColumnName: 'id' }])
     post!: Post
 
     @Column({ nullable: true })
-    parentCommentId: number
+    parent_comment_id: number
 
     @ManyToOne(() => Comment, comment => comment.children, { nullable: true, onDelete: "CASCADE" })
-    parentComment?: Comment
+    parent_comment?: Comment
 
-    @OneToMany(() => Comment, comment => comment.parentComment)
+    @OneToMany(() => Comment, comment => comment.parent_comment)
     children: Comment[]
 
     @PrimaryGeneratedColumn()
     id!: number;
 
     @CreateDateColumn()
-    createdAt: Date
+    created_at: Date
 
     @UpdateDateColumn()
-    updatedAt: Date
+    updated_at: Date
 }

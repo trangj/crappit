@@ -1,4 +1,4 @@
-import { Comment, User, Topic } from ".";
+import { User, Topic } from ".";
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 enum PostType {
@@ -19,25 +19,28 @@ export class Post extends BaseEntity {
     content?: string
 
     @Column()
-    imageURL?: string
+    image_url?: string
 
     @Column()
-    imageName?: string
+    image_name?: string
 
-    @ManyToOne(() => User, { eager: true })
-    @JoinColumn([{ name: 'authorId', referencedColumnName: 'id' }])
+    @Column({ default: 0 })
+    vote: number
+
+    @ManyToOne(() => User)
+    @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
     author!: User
 
-    @ManyToOne(() => Topic, { eager: true })
-    @JoinColumn([{ name: 'topicId', referencedColumnName: 'id' }])
+    @ManyToOne(() => Topic)
+    @JoinColumn([{ name: 'topic_id', referencedColumnName: 'id' }])
     topic!: Topic
 
     @PrimaryGeneratedColumn()
     id!: number;
 
     @CreateDateColumn()
-    createdAt: Date
+    created_at: Date
 
     @UpdateDateColumn()
-    updatedAt: Date
+    updated_at: Date
 }

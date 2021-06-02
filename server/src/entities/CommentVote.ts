@@ -1,15 +1,15 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { Post, User } from ".";
+import { Comment, User } from ".";
 
 @Entity()
-export class Vote extends BaseEntity {
+export class CommentVote extends BaseEntity {
     @ManyToOne(() => User, user => user.id, { primary: true, onDelete: 'CASCADE' })
     @JoinColumn()
     user!: User
 
-    @ManyToOne(() => Post, post => post.id, { primary: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => Comment, comment => comment.id, { primary: true, onDelete: 'CASCADE' })
     @JoinColumn()
-    post!: Post
+    comment!: Comment
 
     @Column()
     value!: 1 | 0 | -1

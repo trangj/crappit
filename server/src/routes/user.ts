@@ -3,7 +3,7 @@ import bcyrpt from "bcryptjs";
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
-import auth from "../middleware/auth";
+import { auth } from "../middleware/auth";
 import { User } from "../entities";
 import { MoreThan } from 'typeorm'
 
@@ -98,8 +98,10 @@ router.post("/forgot", async (req, res) => {
 		const token = crypto.randomBytes(20).toString("hex");
 		const user = await User.findOne({ where: { email: req.body.email } });
 		if (!user) throw Error("No user with that email exists.");
-		user.resetPasswordToken = token;
-		user.resetPasswordExpires = Date.now() + 3600000;
+
+		user.reset_password_token = token;
+		user.reset_password_expires = Date.now() + 3600000;
+
 		await user.save()
 
 		const msg = {
@@ -137,8 +139,8 @@ router.get("/reset/:token", async (req, res) => {
 		const user = await User.findOne({
 			where:
 			{
-				resetPasswordToken: req.params.token,
-				resetPasswordExpires: MoreThan(Date.now())
+				reset_password_token: req.params.token,
+				reset_password_expires: MoreThan(Date.now())
 			}
 		});
 		if (!user) throw Error("Token is invalid or has expired");
@@ -177,8 +179,8 @@ router.post("/reset/:token", async (req, res) => {
 		if (!hash) throw Error("Error with generating hash");
 
 		user.password = hash;
-		user.resetPasswordToken = null;
-		user.resetPasswordExpires = null;
+		user.reset_password_token = null;
+		user.reset_password_expires = null;
 		await user.save();
 
 		const msg = {
@@ -208,9 +210,14 @@ router.post("/reset/:token", async (req, res) => {
 
 router.get("/:userid", async (req, res) => {
 	try {
-		const user = await User.findOne({ id: parseInt(req.params.userid as string) });
-		if (!user) throw Error("No user found");
-		res.status(200).json(user);
+		const user = await User.query(`
+			select
+			u.username, u.email, u.id, u.created_at, u.updated_at
+			from "user" u
+			where u.id = $1
+		`, [req.params.userid])
+		if (!user[0]) throw Error("No user found");
+		res.status(200).json({ user: user[0] });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },

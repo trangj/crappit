@@ -14,24 +14,24 @@ export class User extends BaseEntity {
 
     @ManyToMany(() => Topic, topic => topic.followers)
     @JoinTable()
-    topicsFollowed: Topic[]
+    topics_followed: Topic[]
 
     @ManyToMany(() => Topic, topic => topic.moderators)
     @JoinTable()
-    topicsModerated: Topic[]
+    topics_moderated: Topic[]
 
     @Column({ nullable: true })
-    resetPasswordToken?: string
+    reset_password_token?: string
 
     @Column({ type: 'bigint', nullable: true })
-    resetPasswordExpires?: number
+    reset_password_expires?: number
 
     @PrimaryGeneratedColumn()
     id!: number;
 
     @CreateDateColumn()
-    createdAt: Date
+    created_at: Date
 
     @UpdateDateColumn()
-    updatedAt: Date
+    updated_at: Date
 }

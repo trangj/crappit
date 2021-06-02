@@ -1,4 +1,5 @@
 import express from "express";
+import { optionalAuth } from "../middleware/auth";
 import { Post } from "../entities";
 
 const router = express.Router();
@@ -7,9 +8,20 @@ const router = express.Router();
 // @desc    Get all posts
 // @access  Public
 
-router.get("/", async (req, res) => {
+router.get("/", optionalAuth, async (req, res) => {
 	try {
-		const posts = await Post.find({ take: 10, skip: parseInt(req.query.skip as string) })
+		const posts = await Post.query(`
+			select
+			p.*,
+			t.title topic,
+			u.username author,
+			v.value user_vote
+			from post p
+			inner join topic t on p.topic_id = t.id
+			inner join "user" u on p.author_id = u.id
+			left join vote v on p.id = v.post_id and v.user_id = $1
+			limit 10 offset $2
+		`, [req.user.id, req.query.skip])
 		if (!posts) throw Error("Could not fetch posts");
 		res.status(200).json({
 			posts,
@@ -28,9 +40,21 @@ router.get("/", async (req, res) => {
 // @desc    Get a topic
 // @access  Public
 
-router.get("/:topic", async (req, res) => {
+router.get("/:topic", optionalAuth, async (req, res) => {
 	try {
-		const posts = await Post.find({ where: { topic: parseInt(req.params.topic) }, take: 10, skip: parseInt(req.query.skip as string) })
+		const posts = await Post.query(`
+			select
+			p.*,
+			t.title topic,
+			u.username author,
+			v.value user_vote
+			from post p
+			inner join topic t on p.topic_id = t.id
+			inner join "user" u on p.author_id = u.id
+			left join vote v on p.id = v.post_id and v.user_id = $1
+			where p.topic_id = $2
+			limit 10 offset $3
+		`, [req.user.id, req.params.topic, req.query.skip])
 		if (!posts) throw Error("No posts found");
 		res.status(200).json({
 			posts,
