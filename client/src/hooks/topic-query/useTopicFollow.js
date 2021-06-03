@@ -11,10 +11,10 @@ async function followTopic(topic) {
 	}
 }
 
-export default function useTopicsFollow(setUser) {
+export default function useTopicsFollow(topic) {
 	return useMutation(followTopic, {
 		onSuccess: (res) => {
-			setUser(res.user);
+			topic.user_followed_id = res.user_followed_id;
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

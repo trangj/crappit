@@ -13,11 +13,11 @@ async function commentVoting({ commentId, vote }) {
 	}
 }
 
-export default function useCommentVoting(comment, setUser) {
+export default function useCommentVoting(comment) {
 	return useMutation(commentVoting, {
 		onSuccess: (res) => {
-			comment.vote = res.comment.vote;
-			setUser(res.user);
+			comment.vote = res.vote;
+			comment.user_vote = res.user_vote;
 		},
 		onError: (err) => {
 			const toast = createStandaloneToast();

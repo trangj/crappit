@@ -16,8 +16,8 @@ export default function useAddPost() {
 	const history = useHistory();
 	return useMutation(addPost, {
 		onSuccess: (res) => {
-			const { topic, _id } = res.post;
-			history.push(`/t/${topic}/comments/${_id}`);
+			const { topic, id } = res.post;
+			history.push(`/t/${topic}/comments/${id}`);
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

@@ -7,22 +7,22 @@ import { Link, useLocation } from "react-router-dom";
 import useVoting from "../../hooks/post-query/useVoting";
 
 const Voting = ({ post }) => {
-	const { user, setUser } = useContext(UserContext);
-	const { mutate } = useVoting(post, setUser);
+	const { user } = useContext(UserContext);
+	const { mutate } = useVoting(post);
 	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 	const location = useLocation();
 
 	const handleUpvote = () => {
-		mutate({ id: post._id, vote: "like" });
+		mutate({ id: post.id, vote: "like" });
 	};
 
 	const handleDownvote = () => {
-		mutate({ id: post._id, vote: "dislike" });
+		mutate({ id: post.id, vote: "dislike" });
 	};
 
 	return user ? (
 		<VStack mr="3" style={{ zIndex: "1" }}>
-			{user.likedPosts.includes(post._id) ? (
+			{post.user_vote === 1 ? (
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
@@ -41,16 +41,16 @@ const Voting = ({ post }) => {
 			)}
 			<Text
 				color={
-					user.likedPosts.includes(post._id)
+					post.user_vote === 1
 						? "orange.400"
-						: user.dislikedPosts.includes(post._id)
+						: post.user_vote === -1
 						? "blue.600"
 						: ""
 				}
 			>
 				{post.vote}
 			</Text>
-			{user.dislikedPosts.includes(post._id) ? (
+			{post.user_vote === -1 ? (
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"

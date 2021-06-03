@@ -1,6 +1,7 @@
 import express from "express";
 import { auth, optionalAuth } from "../middleware/auth";
 import { Topic, User } from '../entities';
+import { upload } from "../middleware/upload";
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 // @desc    Create a topic
 // @access  Private
 
-router.post("/", auth, async (req, res) => {
+router.post("/", auth, upload.single("file"), async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user was found with that id");
@@ -68,19 +69,22 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 		if (!topic) throw Error('No topic exists');
 
 		let message;
+		let follow;
 
 		if (user.topics_followed.some(curTopic => curTopic.id === topic.id)) {
 			user.topics_followed = user.topics_followed.filter(curTopic => curTopic.id !== topic.id);
 			message = "Successfully unfollowed";
+			follow = null;
 		} else {
 			user.topics_followed.push(topic);
 			message = "Successfully followed";
+			follow = user.id;
 		}
 
 		await user.save();
 
 		res.status(200).json({
-			user,
+			user_followed_id: follow,
 			status: { text: message, severity: "success" },
 		});
 	} catch (err) {
@@ -92,7 +96,7 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 // @desc    Update a topic
 // @access  Private
 
-router.put("/:topic", auth, async (req, res) => {
+router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 	try {
 		const topic = await Topic.findOne(parseInt(req.params.topic), { relations: ['moderators'] });
 		if (!topic) throw Error("Could not update topic");

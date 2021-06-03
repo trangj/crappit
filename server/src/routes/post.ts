@@ -31,7 +31,7 @@ router.get("/:id", optionalAuth, async (req, res) => {
 			u.username author,
 			cv.value user_vote
 			from comment c
-			inner join "user" u on c.author_id = u.id
+			left join "user" u on c.author_id = u.id
 			left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
 			where c.post_id = $2
 		`, [req.user.id, req.params.id]);
@@ -55,7 +55,7 @@ router.get("/:id", optionalAuth, async (req, res) => {
 
 router.post("/", auth, upload.single("file"), async (req, res) => {
 	try {
-		const topic = await Topic.findOne(req.body.topic);
+		const topic = await Topic.findOne({ title: req.body.topic });
 		if (!topic) throw Error("No topic exists");
 
 		const user = await User.findOne(req.user.id);
@@ -74,7 +74,7 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 		await newPost.save();
 
 		res.status(200).json({
-			post: { id: newPost.id, topic: newPost.topic.id },
+			post: { id: newPost.id, topic: newPost.topic.title },
 			status: { text: "Post successfully created", severity: "success" },
 		});
 	} catch (err) {
@@ -147,7 +147,7 @@ router.put("/:id/changevote", auth, async (req, res) => {
 			}).save();
 			post.vote += req.query.vote === "like" ? 1 : -1;
 			await post.save();
-			res.status(200).json({ value: newVote.value });
+			res.status(200).json({ vote: post.vote, user_vote: newVote.value });
 		} else {
 			if (req.query.vote === "like") {
 				if (vote.value === 1) {
@@ -180,7 +180,7 @@ router.put("/:id/changevote", auth, async (req, res) => {
 			}
 			await vote.save();
 			await post.save();
-			res.status(200).json({ value: vote.value });
+			res.status(200).json({ vote: post.vote, user_vote: vote.value });
 		}
 	} catch (err) {
 		res.status(400).json({

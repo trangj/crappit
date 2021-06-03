@@ -1,4 +1,4 @@
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export default {
   "type": "postgres",
@@ -9,6 +9,5 @@ export default {
   "database": "crappit",
   "entities": ["./src/entities/**/*.ts"],
   "migrations": ["./src/migration/**/*.ts"],
-  "logging": true,
   "namingStrategy": new SnakeNamingStrategy()
-}
+};

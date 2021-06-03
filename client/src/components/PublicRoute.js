@@ -5,9 +5,7 @@ import { Route, Redirect } from "react-router";
 const PrivateRoute = ({ children, ...rest }) => {
 	const { user } = useContext(UserContext);
 	return (
-		<Route {...rest}>
-			{user === undefined ? children : <Redirect to="/" />}
-		</Route>
+		<Route {...rest}>{user === null ? children : <Redirect to="/" />}</Route>
 	);
 };
 

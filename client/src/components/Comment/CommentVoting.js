@@ -6,28 +6,28 @@ import { Link, useLocation } from "react-router-dom";
 import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
 
 const CommentVoting = ({ comment }) => {
-	const { user, setUser } = useContext(UserContext);
-	const { mutate } = useCommentVoting(comment, setUser);
+	const { user } = useContext(UserContext);
+	const { mutate } = useCommentVoting(comment);
 	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 	const location = useLocation();
 
 	const handleUpvote = () => {
 		mutate({
-			commentId: comment._id,
+			commentId: comment.id,
 			vote: "like",
 		});
 	};
 
 	const handleDownvote = () => {
 		mutate({
-			commentId: comment._id,
+			commentId: comment.id,
 			vote: "dislike",
 		});
 	};
 
 	return user ? (
 		<HStack>
-			{user.likedComments.includes(comment._id) ? (
+			{comment.user_vote === 1 ? (
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
@@ -46,16 +46,16 @@ const CommentVoting = ({ comment }) => {
 			)}
 			<Text
 				color={
-					user.likedComments.includes(comment._id)
+					comment.user_vote === 1
 						? "orange.400"
-						: user.dislikedComments.includes(comment._id)
+						: comment.user_vote === -1
 						? "blue.600"
 						: ""
 				}
 			>
 				{comment.vote}
 			</Text>
-			{user.dislikedComments.includes(comment._id) ? (
+			{comment.user_vote === -1 ? (
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"

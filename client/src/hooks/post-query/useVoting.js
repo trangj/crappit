@@ -10,11 +10,11 @@ async function voting({ id, vote }) {
 		throw err.response.data;
 	}
 }
-export default function useVoting(post, setUser) {
+export default function useVoting(post) {
 	return useMutation(voting, {
 		onSuccess: (res) => {
-			post.vote = res.post.vote;
-			setUser(res.user);
+			post.vote = res.vote;
+			post.user_vote = res.user_vote;
 		},
 		onError: (err) => {
 			const toast = createStandaloneToast();

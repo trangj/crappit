@@ -1,46 +1,46 @@
 import { User, Topic } from ".";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 enum PostType {
     TEXT = 'text',
-    URL = 'url',
+    LINK = 'link',
     PHOTO = 'photo'
 }
 
 @Entity()
 export class Post extends BaseEntity {
     @Column()
-    title!: string
+    title!: string;
 
     @Column({ type: 'enum', enum: PostType })
-    type!: PostType
+    type!: PostType;
 
     @Column({ type: 'text' })
-    content?: string
+    content?: string;
 
     @Column()
-    image_url?: string
+    image_url?: string;
 
     @Column()
-    image_name?: string
+    image_name?: string;
 
     @Column({ default: 0 })
-    vote: number
+    vote: number;
 
     @ManyToOne(() => User)
     @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
-    author!: User
+    author!: User;
 
     @ManyToOne(() => Topic)
     @JoinColumn([{ name: 'topic_id', referencedColumnName: 'id' }])
-    topic!: Topic
+    topic!: Topic;
 
     @PrimaryGeneratedColumn()
     id!: number;
 
     @CreateDateColumn()
-    created_at: Date
+    created_at: Date;
 
     @UpdateDateColumn()
-    updated_at: Date
+    updated_at: Date;
 }

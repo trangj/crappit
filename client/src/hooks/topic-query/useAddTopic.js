@@ -12,12 +12,11 @@ async function addTopic({ formData }) {
 	}
 }
 
-export default function useAddTopic(setUser) {
+export default function useAddTopic() {
 	const history = useHistory();
 	return useMutation(addTopic, {
 		onSuccess: (res) => {
 			const { title } = res.topic;
-			setUser(res.user);
 			history.push(`/t/${title}`);
 		},
 		onSettled: (data, error) => {

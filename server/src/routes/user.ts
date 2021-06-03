@@ -166,8 +166,8 @@ router.post("/reset/:token", async (req, res) => {
 
 		const user = await User.findOne({
 			where: {
-				resetPasswordToken: req.params.token,
-				resetPasswordExpires: MoreThan(Date.now())
+				reset_password_token: req.params.token,
+				reset_password_expires: MoreThan(Date.now())
 			}
 		});
 		if (!user) throw Error("Token is invalid or has expired");

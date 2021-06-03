@@ -29,7 +29,7 @@ const Home = () => {
 			{data.pages.map((group, i) => (
 				<React.Fragment key={i}>
 					{group.posts.map((post) => (
-						<PostItem post={post} key={post._id} />
+						<PostItem post={post} key={post.id} />
 					))}
 				</React.Fragment>
 			))}

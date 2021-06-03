@@ -52,7 +52,7 @@ const PostItem = ({ post }) => {
 						<Button
 							size="xs"
 							as={Link}
-							to={`/t/${post.topic}/comments/${post._id}#comments`}
+							to={`/t/${post.topic}/comments/${post.id}#comments`}
 							variant="ghost"
 						>
 							{post.numberOfComments} Comments

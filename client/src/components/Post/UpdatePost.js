@@ -17,7 +17,7 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }) => {
 			content,
 		};
 		mutate({
-			postid: post._id,
+			postid: post.id,
 			newPost,
 		});
 	};

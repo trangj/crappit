@@ -71,11 +71,11 @@ const PostCard = ({ post }) => {
 										)}
 									</>
 								)}
-								{user &&
+								{/* {user &&
 									user.id !== post.author_id &&
 									user.topicsModerating.includes(post.topic) && (
 										<DeletePostModerator post={post} />
-									)}
+									)} */}
 							</HStack>
 						</>
 					)}

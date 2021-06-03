@@ -32,7 +32,7 @@ const BrowseMenu = ({ user }) => {
 						Create a topic
 					</MenuItem>
 					<MenuDivider />
-					{user === undefined ? (
+					{user === null ? (
 						<MenuItem as={Link} to="/register">
 							Sign up to follow topics!
 						</MenuItem>

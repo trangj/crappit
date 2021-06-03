@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
 		localStorage.removeItem("user");
 		dispatch({
 			type: "LOGOUT_USER",
-			payload: undefined,
+			payload: null,
 		});
 	}
 

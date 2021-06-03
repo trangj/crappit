@@ -41,7 +41,7 @@ const DeletePost = ({ post }) => {
 						<Button
 							onClick={() => {
 								mutate({
-									postid: post._id,
+									postid: post.id,
 								});
 							}}
 							isLoading={isLoading}

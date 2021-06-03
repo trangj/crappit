@@ -29,7 +29,8 @@ router.post("/", auth, async (req, res) => {
 				author: user.username,
 				author_id: user.id,
 				post_id: post.id,
-				user_vote: null
+				user_vote: null,
+				children: []
 			},
 			status: { text: "Comment succesfully added", severity: "success" },
 		});
@@ -73,7 +74,7 @@ router.delete("/:commentid", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user with that id was found");
-		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
+		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user }, { relations: ['post'] });
 		if (!comment) throw Error("No comment exists or you are not the author");
 
 		comment.content = null;
@@ -112,7 +113,7 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 			}).save();
 			comment.vote += req.query.vote === "like" ? 1 : -1;
 			await comment.save();
-			res.status(200).json({ value: newVote.value });
+			res.status(200).json({ vote: comment.vote, user_vote: newVote.value });
 		} else {
 			if (req.query.vote === "like") {
 				if (vote.value === 1) {
@@ -145,7 +146,7 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 			}
 			await vote.save();
 			await comment.save();
-			res.status(200).json({ value: vote.value });
+			res.status(200).json({ vote: comment.vote, user_vote: vote.value });
 		}
 	} catch (err) {
 		res.status(400).json({

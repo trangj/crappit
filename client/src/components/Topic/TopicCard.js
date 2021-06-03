@@ -10,7 +10,7 @@ import Card from "../Utils/Card";
 const TopicCard = ({ topic }) => {
 	const { user, setUser } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
-	const { isLoading, mutate } = useTopicFollow(setUser);
+	const { isLoading, mutate } = useTopicFollow(topic);
 
 	return (
 		<Card>
@@ -29,24 +29,21 @@ const TopicCard = ({ topic }) => {
 					<Text>{topic.description}</Text>
 					<HStack mt="3">
 						{user && (
-							<Button isLoading={isLoading} onClick={() => mutate(topic.title)}>
-								{user.followedTopics.includes(topic.title)
-									? "Unfollow"
-									: "Follow"}
+							<Button isLoading={isLoading} onClick={() => mutate(topic.id)}>
+								{topic.user_followed_id ? "Unfollow" : "Follow"}
 							</Button>
 						)}
 						<Button as={Link} to={`/t/${topic.title}/submit`}>
 							Add Post
 						</Button>
-						{user &&
-							!!topic.moderators.filter(
-								(moderator) => moderator._id === user._id
-							).length && (
+						{/* {user &&
+							!!topic.moderators.filter((moderator) => moderator.id === user.id)
+								.length && (
 								<>
 									<Button onClick={() => setOpenEdit(!openEdit)}>Edit</Button>
 									<Moderation topic={topic} />
 								</>
-							)}
+							)} */}
 					</HStack>
 				</>
 			)}
