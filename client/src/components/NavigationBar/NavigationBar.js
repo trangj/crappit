@@ -31,7 +31,7 @@ const NavigationBar = () => {
 					<BrowseMenu user={user} />
 					<Spacer />
 					<IconButton icon={icon} onClick={toggleColorMode} />
-					{user === undefined ? (
+					{!user ? (
 						<>
 							<Button as={Link} to="/login">
 								Login

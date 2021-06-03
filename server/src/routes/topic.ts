@@ -1,6 +1,6 @@
 import express from "express";
 import { auth, optionalAuth } from "../middleware/auth";
-import { Topic, User } from '../entities'
+import { Topic, User } from '../entities';
 
 const router = express.Router();
 
@@ -18,8 +18,8 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			from topic t
 			left join user_topics_followed_topic f on f.topic_id = t.id and f.user_id = $1
 			left join user_topics_moderated_topic m on m.topic_id = t.id and m.user_id = $2
-			where t.id = $3
-		`, [req.user.id, req.user.id, req.params.topic])
+			where t.title = $3
+		`, [req.user.id, req.user.id, req.params.topic]);
 		if (!topic[0]) throw Error("Topic does not exist");
 		res.status(200).json({
 			topic: topic[0],
@@ -35,8 +35,8 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
 	try {
-		const user = await User.findOne(req.user.id)
-		if (!user) throw Error("No user was found with that id")
+		const user = await User.findOne(req.user.id);
+		if (!user) throw Error("No user was found with that id");
 		const newTopic = await Topic.create({
 			title: req.body.title,
 			description: req.body.description,
@@ -61,23 +61,23 @@ router.post("/", auth, async (req, res) => {
 
 router.post("/:topic/followtopic", auth, async (req, res) => {
 	try {
-		const user = await User.findOne(req.user.id, { relations: ['topicsFollowed'] });
-		if (!user) throw Error("No user was found with that id")
+		const user = await User.findOne(req.user.id, { relations: ['topics_followed'] });
+		if (!user) throw Error("No user was found with that id");
 
-		const topic = await Topic.findOne(parseInt(req.params.topic))
-		if (!topic) throw Error('No topic exists')
+		const topic = await Topic.findOne(parseInt(req.params.topic));
+		if (!topic) throw Error('No topic exists');
 
 		let message;
 
 		if (user.topics_followed.some(curTopic => curTopic.id === topic.id)) {
-			user.topics_followed = user.topics_followed.filter(curTopic => curTopic.id !== topic.id)
-			message = "Successfully unfollowed"
+			user.topics_followed = user.topics_followed.filter(curTopic => curTopic.id !== topic.id);
+			message = "Successfully unfollowed";
 		} else {
-			user.topics_followed.push(topic)
-			message = "Successfully followed"
+			user.topics_followed.push(topic);
+			message = "Successfully followed";
 		}
 
-		await user.save()
+		await user.save();
 
 		res.status(200).json({
 			user,
@@ -97,16 +97,16 @@ router.put("/:topic", auth, async (req, res) => {
 		const topic = await Topic.findOne(parseInt(req.params.topic), { relations: ['moderators'] });
 		if (!topic) throw Error("Could not update topic");
 
-		const user = await User.findOne(req.user.id)
-		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator")
+		const user = await User.findOne(req.user.id);
+		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
 
-		topic.description = req.body.description
+		topic.description = req.body.description;
 		if (req.file) {
-			topic.image_url = req.file.location
-			topic.image_name = req.file.key
+			topic.image_url = req.file.location;
+			topic.image_name = req.file.key;
 		}
 
-		await topic.save()
+		await topic.save();
 
 		res.status(200).json({
 			topic,

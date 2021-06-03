@@ -5,7 +5,7 @@ import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
 import { auth } from "../middleware/auth";
 import { User } from "../entities";
-import { MoreThan } from 'typeorm'
+import { MoreThan } from 'typeorm';
 
 const router = express.Router();
 
@@ -19,11 +19,11 @@ sgMail.setApiKey(process.env.sendgrid);
 router.post("/register", async (req, res) => {
 	try {
 		const { username, email, password, password2 } = req.body;
-		if (!username || !email || !password || !password2) throw Error("Missing field")
-		if (password !== password2) throw Error("Passwords are not the same")
+		if (!username || !email || !password || !password2) throw Error("Missing field");
+		if (password !== password2) throw Error("Passwords are not the same");
 
 		const user = await User.findOne({ where: [{ username }, { email }] });
-		if (user) throw Error("User already exists with that username/email")
+		if (user) throw Error("User already exists with that username/email");
 
 		const salt = await bcyrpt.genSalt(10);
 		if (!salt) throw Error("Error with generating salt");
@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
 			username,
 			email,
 			password: hash,
-		}).save()
+		}).save();
 
 		const token = jwt.sign(
 			{ id: newUser.id, username: newUser.username },
@@ -64,13 +64,13 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
-		if (!email || !password) throw Error("Missing fields")
+		if (!email || !password) throw Error("Missing fields");
 
 		const user = await User.findOne({ where: { email } });
-		if (!user) throw Error("User does not exist")
+		if (!user) throw Error("User does not exist");
 
 		const isMatch = await bcyrpt.compare(password, user.password);
-		if (!isMatch) throw Error("Invalid password")
+		if (!isMatch) throw Error("Invalid password");
 
 		const token = jwt.sign(
 			{ id: user.id, username: user.username },
@@ -102,7 +102,7 @@ router.post("/forgot", async (req, res) => {
 		user.reset_password_token = token;
 		user.reset_password_expires = Date.now() + 3600000;
 
-		await user.save()
+		await user.save();
 
 		const msg = {
 			to: user.email,
@@ -215,7 +215,7 @@ router.get("/:userid", async (req, res) => {
 			u.username, u.email, u.id, u.created_at, u.updated_at
 			from "user" u
 			where u.id = $1
-		`, [req.params.userid])
+		`, [req.params.userid]);
 		if (!user[0]) throw Error("No user found");
 		res.status(200).json({ user: user[0] });
 	} catch (err) {
@@ -240,7 +240,7 @@ router.post("/email", auth, async (req, res) => {
 		if (otherUser) throw Error("A different user has that email");
 
 		const isMatch = await bcyrpt.compare(req.body.password, user.password);
-		if (!isMatch) throw Error("Incorrect password")
+		if (!isMatch) throw Error("Incorrect password");
 
 		user.email = req.body.newEmail;
 		await user.save();

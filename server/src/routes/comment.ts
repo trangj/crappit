@@ -10,19 +10,27 @@ const router = express.Router();
 
 router.post("/", auth, async (req, res) => {
 	try {
-		const post = await Post.findOne(req.body.postId);
-		if (!post) throw Error("No post");
-		const user = await User.findOne(req.user.id)
+		const commentPost = await Post.findOne(req.body.postId);
+		if (!commentPost) throw Error("No post");
+		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user");
 
 		const newComment = await Comment.create({
 			author: user,
 			content: req.body.content,
-			post: post,
+			post: commentPost,
 		}).save();
 
+		const { post: post, ...rest } = newComment;
+
 		res.status(200).json({
-			newComment,
+			comment: {
+				...rest,
+				author: user.username,
+				author_id: user.id,
+				post_id: post.id,
+				user_vote: null
+			},
 			status: { text: "Comment succesfully added", severity: "success" },
 		});
 	} catch (err) {
@@ -37,14 +45,14 @@ router.post("/", auth, async (req, res) => {
 router.put("/:commentid", auth, async (req, res) => {
 	try {
 		if (!req.body.content) throw Error("Missing required fields");
-		const user = await User.findOne(req.user.id)
-		if (!user) throw Error("No user with that id was found")
+		const user = await User.findOne(req.user.id);
+		if (!user) throw Error("No user with that id was found");
 		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
 		if (!comment) throw Error("No comment exists or you are not the author");
 
-		comment.content = req.body.content
+		comment.content = req.body.content;
 
-		await comment.save()
+		await comment.save();
 
 		res.status(200).json({
 			comment: { content: comment.content },
@@ -63,15 +71,15 @@ router.put("/:commentid", auth, async (req, res) => {
 
 router.delete("/:commentid", auth, async (req, res) => {
 	try {
-		const user = await User.findOne(req.user.id)
-		if (!user) throw Error("No user with that id was found")
+		const user = await User.findOne(req.user.id);
+		if (!user) throw Error("No user with that id was found");
 		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
 		if (!comment) throw Error("No comment exists or you are not the author");
 
-		comment.content = null
-		comment.author = null
+		comment.content = null;
+		comment.author = null;
 
-		await comment.save()
+		await comment.save();
 
 		res.status(200).json({
 			status: { text: "Comment succesfully deleted", severity: "success" },
@@ -94,38 +102,50 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user exists");
 
-		const vote = await CommentVote.findOne({ where: { comment, user } })
+		const vote = await CommentVote.findOne({ where: { comment, user } });
 
 		if (!vote) {
 			const newVote = await CommentVote.create({
 				comment,
 				user,
 				value: req.query.vote === "like" ? 1 : -1
-			}).save()
-			comment.vote += req.query.vote === "like" ? 1 : -1
-			await comment.save()
-			res.status(200).json({ value: newVote.value })
+			}).save();
+			comment.vote += req.query.vote === "like" ? 1 : -1;
+			await comment.save();
+			res.status(200).json({ value: newVote.value });
 		} else {
 			if (req.query.vote === "like") {
 				if (vote.value === 1) {
+					// if user likes and already liked comment
 					vote.value = 0;
-					comment.vote -= 1
-				} else {
+					comment.vote -= 1;
+				} else if (vote.value === 0) {
+					// if user likes an unvoted comment
 					vote.value = 1;
-					comment.vote += 1
+					comment.vote += 1;
+				} else {
+					// if user likes an already disliked comment
+					vote.value = 1;
+					comment.vote += 2;
 				}
 			} else {
 				if (vote.value === -1) {
+					// if user dislikes an already disliked comment
 					vote.value = 0;
-					comment.vote += 1
-				} else {
+					comment.vote += 1;
+				} else if (vote.value === 0) {
+					// if user dislikes an unvoted comment
 					vote.value = -1;
-					comment.vote -= 1
+					comment.vote -= 1;
+				} else {
+					// if user dislikes an already liked comment
+					vote.value = -1;
+					comment.vote -= 2;
 				}
 			}
-			await vote.save()
-			await comment.save()
-			res.status(200).json({ value: vote.value })
+			await vote.save();
+			await comment.save();
+			res.status(200).json({ value: vote.value });
 		}
 	} catch (err) {
 		res.status(400).json({
@@ -141,23 +161,29 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 router.post("/:commentid/reply", auth, async (req, res) => {
 	try {
 		const comment = await Comment.findOne(parseInt(req.params.commentid));
-		if (!comment) throw Error("No comment was found with that id")
-		const user = await User.findOne(req.user.id)
-		if (!user) throw Error("No user was found with that id")
-		const post = await Post.findOne(req.body.postId)
-		if (!post) throw Error("No post was found with that id")
+		if (!comment) throw Error("No comment was found with that id");
+		const user = await User.findOne(req.user.id);
+		if (!user) throw Error("No user was found with that id");
+		const commentPost = await Post.findOne(req.body.postId);
+		if (!commentPost) throw Error("No post was found with that id");
 
-		const newComment = Comment.create({
+		const newComment = await Comment.create({
 			author: user,
 			content: req.body.content,
-			post: post,
+			post: commentPost,
 			parent_comment: comment
-		});
+		}).save();
 
-		await newComment.save()
+		const { post, parent_comment, ...rest } = newComment;
 
 		res.status(200).json({
-			newComment,
+			comment: {
+				...rest,
+				author: user.username,
+				author_id: user.id,
+				post_id: post.id,
+				user_vote: null,
+			},
 			status: { text: "Reply made successfully", severity: "success" },
 		});
 	} catch (err) {

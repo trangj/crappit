@@ -25,11 +25,11 @@ const PostCard = ({ post }) => {
 							t/{post.topic}
 						</Link>{" "}
 						| Posted by{" "}
-						<Link to={`/user/${post.authorId}`}>u/{post.author}</Link>{" "}
-						{moment(post.date).fromNow()}
+						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
+						{moment(post.created_at).fromNow()}
 					</Text>
 					{post.type === "link" ? (
-						<a href={post.link} target="_blank" rel="noopener noreferrer">
+						<a href={post.content} target="_blank" rel="noopener noreferrer">
 							<Heading>{post.title}</Heading>
 						</a>
 					) : (
@@ -46,8 +46,8 @@ const PostCard = ({ post }) => {
 							{post.type === "text" && <Text mt="1">{post.content}</Text>}
 							{post.type === "photo" && (
 								<Image
-									alt={post.imageName}
-									src={post.imageURL}
+									alt={post.image_name}
+									src={post.image_url}
 									maxHeight="400px"
 									mx="auto"
 									pt="3"
@@ -57,7 +57,7 @@ const PostCard = ({ post }) => {
 								<Button size="sm" variant="ghost">
 									{post.numberOfComments} Comments
 								</Button>
-								{user && user._id === post.authorId && (
+								{user && user.id === post.author_id && (
 									<>
 										<DeletePost post={post} />
 										{post.type === "text" && (
@@ -72,7 +72,7 @@ const PostCard = ({ post }) => {
 									</>
 								)}
 								{user &&
-									user._id !== post.authorId &&
+									user.id !== post.author_id &&
 									user.topicsModerating.includes(post.topic) && (
 										<DeletePostModerator post={post} />
 									)}

@@ -24,7 +24,7 @@ const PostItem = ({ post }) => {
 				<Voting post={post} />
 				<Box>
 					<Heading>
-						<LinkOverlay as={Link} to={`/t/${post.topic}/comments/${post._id}`}>
+						<LinkOverlay as={Link} to={`/t/${post.topic}/comments/${post.id}`}>
 							{post.title}
 						</LinkOverlay>
 					</Heading>
@@ -33,12 +33,12 @@ const PostItem = ({ post }) => {
 							t/{post.topic}
 						</Link>{" "}
 						| Posted by{" "}
-						<Link to={`/user/${post.authorId}`}>u/{post.author}</Link>{" "}
-						{moment(post.date).fromNow()}
+						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
+						{moment(post.created_at).fromNow()}
 					</Text>
 					<HStack mt="2">
 						{post.type === "link" ? (
-							<a href={post.link} target="_blank" rel="noopener noreferrer">
+							<a href={post.content} target="_blank" rel="noopener noreferrer">
 								<IconButton size="xs" icon={<LinkIcon />} variant="ghost" />
 							</a>
 						) : (
@@ -62,11 +62,11 @@ const PostItem = ({ post }) => {
 			</HStack>
 			{open && (
 				<>
-					<Box id={post._id} mt="3">
+					<Box id={post.id} mt="3">
 						{post.type === "photo" && (
 							<Image
-								alt={post.imageName}
-								src={post.imageURL}
+								alt={post.image_name}
+								src={post.image_url}
 								style={{
 									display: "block",
 									maxWidth: "100%",

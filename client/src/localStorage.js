@@ -5,5 +5,5 @@ export const saveState = (state, stateName) => {
 
 export const loadState = (stateName) => {
 	const serializedState = localStorage.getItem(stateName);
-	return serializedState ? JSON.parse(serializedState) : undefined;
+	return serializedState ? JSON.parse(serializedState) : null;
 };

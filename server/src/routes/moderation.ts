@@ -1,6 +1,7 @@
 import express from "express";
 import { deleteFile } from "../middleware/upload";
-import auth from "../middleware/auth";
+import { auth } from "../middleware/auth";
+import { User, Topic, Post, Comment } from "../entities";
 
 const router = express.Router();
 
@@ -12,10 +13,7 @@ router.post("/topic/:topic", auth, async (req, res) => {
 	try {
 		const user = await User.findOne({ username: req.body.username });
 		if (!user) throw Error("User does not exist");
-		const topic = await Topic.findOne({ title: req.params.topic }).populate({
-			path: "moderators",
-			select: "username",
-		});
+		const topic = await Topic.findOne({ title: req.params.topic });
 		if (!topic) throw Error("Topic does not exist");
 		if (
 			!!topic.moderators.filter(
@@ -23,12 +21,9 @@ router.post("/topic/:topic", auth, async (req, res) => {
 			).length
 		)
 			throw Error("User is already a moderator");
-		user.topicsModerating.push(topic.title);
-		topic.moderators.push(user);
+		user.topics_moderated.push(topic);
 		await user.save();
-		await topic.save();
 		res.status(200).json({
-			topic,
 			status: { text: "Moderator successfully added", severity: "success" },
 		});
 	} catch (err) {
@@ -44,12 +39,9 @@ router.post("/topic/:topic", auth, async (req, res) => {
 
 router.delete("/post/:post", auth, async (req, res) => {
 	try {
-		const post = await Post.findOne({ _id: req.params.post });
+		const post = await Post.findOne(req.params.post, { relations: ['topic'] });
 		if (!post) throw Error("Post does not exist");
-		const topic = await Topic.findOne({ title: post.topic }).populate({
-			path: "moderators",
-			select: "username",
-		});
+		const topic = await Topic.findOne({ title: post.topic.title });
 		if (!topic) throw Error("Topic does not exist");
 		if (
 			!!!topic.moderators.filter(
@@ -58,15 +50,9 @@ router.delete("/post/:post", auth, async (req, res) => {
 		)
 			throw Error("You are not a moderator for this topic");
 
-		const query = await Post.deleteOne({
-			_id: req.params.post,
-		});
-		if (!query.deletedCount)
-			throw Error("Post does not exist or you are not the author");
+		await Post.remove(post);
 
-		if (post.type === "photo") deleteFile(post.imageName);
-
-		await Comment.deleteMany({ postId: req.params.post });
+		if (post.type === "photo") deleteFile(post.image_name);
 
 		res.status(200).json({
 			status: { text: "Post successfully deleted", severity: "success" },
@@ -82,24 +68,9 @@ router.delete("/post/:post", auth, async (req, res) => {
 
 router.delete("/comment/:commentid", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOneAndUpdate(
-			{
-				_id: req.params.commentid,
-			},
-			{
-				$set: {
-					author: "[deleted]",
-					authorId: null,
-					content: "[deleted]",
-				},
-			},
-			{ useFindAndModify: false, new: true }
-		);
+		const comment = await Comment.findOne(req.params.commentid);
 		if (!comment) throw Error("Comment does not exist");
-		const topic = await Topic.findOne({ title: comment.topic }).populate({
-			path: "moderators",
-			select: "username",
-		});
+		const topic = await Topic.findOne({ title: comment.topic });
 		if (!topic) throw Error("Topic does not exist");
 		if (
 			!!!topic.moderators.filter(

@@ -4,7 +4,7 @@ import axios from "../../axiosConfig";
 async function fetchProfile(userid) {
 	try {
 		const res = await axios.get(`/api/user/${userid}`);
-		return res.data;
+		return res.data.user;
 	} catch (err) {
 		throw err.response.data;
 	}

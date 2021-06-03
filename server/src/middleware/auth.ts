@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Request, Response, NextFunction } from 'express'
+import { Request, Response, NextFunction } from 'express';
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
 	const token = req.headers.authorization;
@@ -17,16 +17,16 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 			.status(400)
 			.json({ status: { text: "Token is not valid", severity: "error" } });
 	}
-}
+};
 
 export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
-	const token = req.headers.authorization
-	if (!token) {
-		req.user = { id: null, user: null }
-		next()
+	const token = req.headers.authorization;
+	if (token === "null") {
+		req.user = { id: null, user: null };
+		next();
 	} else {
-		const decoded = jwt.verify(token, process.env.jwtSecret)
-		req.user = decoded
-		next()
+		const decoded = jwt.verify(token, process.env.jwtSecret);
+		req.user = decoded;
+		next();
 	}
-}
+};
