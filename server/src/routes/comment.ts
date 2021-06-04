@@ -22,6 +22,9 @@ router.post("/", auth, async (req, res) => {
 		}).save();
 
 		const { post: post, ...rest } = newComment;
+		commentPost.number_of_comments += 1;
+
+		commentPost.save();
 
 		res.status(200).json({
 			comment: {
@@ -176,6 +179,9 @@ router.post("/:commentid/reply", auth, async (req, res) => {
 		}).save();
 
 		const { post, parent_comment, ...rest } = newComment;
+		commentPost.number_of_comments += 1;
+
+		commentPost.save();
 
 		res.status(200).json({
 			comment: {

@@ -41,8 +41,7 @@ const DeletePostModerator = ({ post }) => {
 						<Button
 							onClick={() => {
 								mutate({
-									topic: post.topic,
-									postid: post._id,
+									postid: post.id,
 								});
 							}}
 							isLoading={isLoading}

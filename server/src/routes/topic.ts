@@ -65,7 +65,7 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 		const user = await User.findOne(req.user.id, { relations: ['topics_followed'] });
 		if (!user) throw Error("No user was found with that id");
 
-		const topic = await Topic.findOne(parseInt(req.params.topic));
+		const topic = await Topic.findOne({ title: req.params.topic });
 		if (!topic) throw Error('No topic exists');
 
 		let message;
@@ -84,6 +84,7 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 		await user.save();
 
 		res.status(200).json({
+			topic: topic.title,
 			user_followed_id: follow,
 			status: { text: message, severity: "success" },
 		});
@@ -98,7 +99,7 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 
 router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 	try {
-		const topic = await Topic.findOne(parseInt(req.params.topic), { relations: ['moderators'] });
+		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
 		if (!topic) throw Error("Could not update topic");
 
 		const user = await User.findOne(req.user.id);

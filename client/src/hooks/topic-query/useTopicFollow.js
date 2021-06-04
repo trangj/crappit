@@ -11,10 +11,23 @@ async function followTopic(topic) {
 	}
 }
 
-export default function useTopicsFollow(topic) {
+export default function useTopicsFollow(topic, user, setUser) {
 	return useMutation(followTopic, {
 		onSuccess: (res) => {
 			topic.user_followed_id = res.user_followed_id;
+			if (res.user_followed_id) {
+				setUser({
+					...user,
+					topics_followed: [...user.topics_followed, { title: res.topic }],
+				});
+			} else {
+				setUser({
+					...user,
+					topics_followed: user.topics_followed.filter(
+						(topic) => topic.title !== res.topic
+					),
+				});
+			}
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

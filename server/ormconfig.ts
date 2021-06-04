@@ -1,13 +1,10 @@
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import express from 'express';
 
 export default {
-  "type": "postgres",
-  "host": "localhost",
-  "port": "5432",
-  "username": "postgres",
-  "password": "123456",
-  "database": "crappit",
-  "entities": ["./src/entities/**/*.ts"],
-  "migrations": ["./src/migration/**/*.ts"],
-  "namingStrategy": new SnakeNamingStrategy()
+    type: 'postgres',
+    url: process.env.DATABASE_URL,
+    entities: ["./src/entities/**/*.ts"],
+    migrations: ["./src/migration/**/*.ts"],
+    namingStrategy: new SnakeNamingStrategy()
 };

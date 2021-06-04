@@ -38,11 +38,11 @@ const BrowseMenu = ({ user }) => {
 						</MenuItem>
 					) : (
 						<MenuGroup title="Followed Topics">
-							{/* {user.followedTopics.map((topic, i) => (
-								<MenuItem as={Link} to={`/t/${topic}`} key={i}>
-									t/{topic}
+							{user.topics_followed.map((topic, i) => (
+								<MenuItem as={Link} to={`/t/${topic.title}`} key={i}>
+									t/{topic.title}
 								</MenuItem>
-							))} */}
+							))}
 						</MenuGroup>
 					)}
 				</MenuList>

@@ -8,10 +8,19 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserState";
 import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
+import useTopic from "../../hooks/topic-query/useTopic";
 
 const PostCard = ({ post }) => {
 	const { user } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
+	const {
+		isLoading: topicLoading,
+		isError: topicIsError,
+		data: topicData,
+		error: topicError,
+	} = useTopic(post.topic);
+
+	console.log(topicData);
 
 	return (
 		<Card>
@@ -55,7 +64,8 @@ const PostCard = ({ post }) => {
 							)}
 							<HStack mt="1">
 								<Button size="sm" variant="ghost">
-									{post.numberOfComments} Comments
+									{post.number_of_comments}
+									{post.number_of_comments === 1 ? " Comment" : " Comments"}
 								</Button>
 								{user && user.id === post.author_id && (
 									<>
@@ -71,11 +81,12 @@ const PostCard = ({ post }) => {
 										)}
 									</>
 								)}
-								{/* {user &&
+								{user &&
+									!topicLoading &&
 									user.id !== post.author_id &&
-									user.topicsModerating.includes(post.topic) && (
+									topicData.topic.user_moderator_id && (
 										<DeletePostModerator post={post} />
-									)} */}
+									)}
 							</HStack>
 						</>
 					)}

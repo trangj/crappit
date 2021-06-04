@@ -4,7 +4,7 @@ import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
 import { auth } from "../middleware/auth";
-import { User } from "../entities";
+import { Topic, User } from "../entities";
 import { MoreThan } from 'typeorm';
 
 const router = express.Router();
@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
 
 		res.status(200).json({
 			token,
-			user: newUser,
+			user: { ...newUser, topics_followed: [] },
 			status: {
 				text: "Successfully registered!",
 				severity: "success",
@@ -69,6 +69,14 @@ router.post("/login", async (req, res) => {
 		const user = await User.findOne({ where: { email } });
 		if (!user) throw Error("User does not exist");
 
+		const topics_followed = await Topic.query(`
+			select
+			t.title title
+			from user_topics_followed_topic ft
+			left join topic t on ft.topic_id = t.id
+			where ft.user_id = $1
+		`, [user.id]);
+
 		const isMatch = await bcyrpt.compare(password, user.password);
 		if (!isMatch) throw Error("Invalid password");
 
@@ -79,7 +87,7 @@ router.post("/login", async (req, res) => {
 
 		res.status(200).json({
 			token,
-			user,
+			user: { ...user, topics_followed },
 			status: { text: "Successfully logged in!", severity: "success" },
 		});
 	} catch (err) {
@@ -210,14 +218,20 @@ router.post("/reset/:token", async (req, res) => {
 
 router.get("/:userid", async (req, res) => {
 	try {
-		const user = await User.query(`
+		const user = await User.findOne(req.params.userid);
+		if (!user) throw Error("No user found");
+
+		const topics_followed = await Topic.query(`
 			select
-			u.username, u.email, u.id, u.created_at, u.updated_at
-			from "user" u
-			where u.id = $1
+			t.title title
+			from user_topics_followed_topic ft
+			left join topic t on ft.topic_id = t.id
+			where ft.user_id = $1
 		`, [req.params.userid]);
-		if (!user[0]) throw Error("No user found");
-		res.status(200).json({ user: user[0] });
+
+		const { password, ...rest } = user;
+
+		res.status(200).json({ user: { ...rest, topics_followed } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },

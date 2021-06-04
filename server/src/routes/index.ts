@@ -1,4 +1,4 @@
-// export * from './moderation';
+export * from './moderation';
 export * from './comment';
 export * from './post';
 export * from './posts';

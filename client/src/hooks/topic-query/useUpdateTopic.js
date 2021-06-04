@@ -11,11 +11,10 @@ async function updateTopic({ topic, formData }) {
 	}
 }
 
-export default function useUpdateTopic(setOpenEdit, topic) {
+export default function useUpdateTopic(topic) {
 	return useMutation(updateTopic, {
 		onSuccess: (res) => {
 			topic.description = res.topic.description;
-			setOpenEdit(false);
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

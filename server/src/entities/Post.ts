@@ -27,6 +27,9 @@ export class Post extends BaseEntity {
     @Column({ default: 0 })
     vote: number;
 
+    @Column({ default: 0 })
+    number_of_comments: number;
+
     @ManyToOne(() => User)
     @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
     author!: User;
