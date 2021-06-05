@@ -38,7 +38,7 @@ function App() {
 				<ChakraProvider theme={theme}>
 					<BrowserRouter>
 						<NavigationBar />
-						<Container style={{ marginTop: "2rem" }} maxW="container.lg">
+						<Container mt="3" maxW="container.lg">
 							<Switch>
 								<Route path="/" exact component={Home} />
 								<Route path="/t" exact component={AllTopics} />

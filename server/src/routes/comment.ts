@@ -77,7 +77,7 @@ router.delete("/:commentid", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user with that id was found");
-		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user }, { relations: ['post'] });
+		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
 		if (!comment) throw Error("No comment exists or you are not the author");
 
 		comment.content = null;
@@ -106,7 +106,7 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user exists");
 
-		const vote = await CommentVote.findOne({ where: { comment, user } });
+		const vote = await CommentVote.findOne({ comment, user });
 
 		if (!vote) {
 			const newVote = await CommentVote.create({
@@ -164,7 +164,7 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 
 router.post("/:commentid/reply", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOne(parseInt(req.params.commentid));
+		const comment = await Comment.findOne(req.params.commentid);
 		if (!comment) throw Error("No comment was found with that id");
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user was found with that id");

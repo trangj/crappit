@@ -17,7 +17,7 @@ import moment from "moment";
 import { UserContext } from "../../context/UserState";
 import DeleteCommentModerator from "./DeleteCommentModerator";
 
-const CommentItem = ({ comment }) => {
+const CommentItem = ({ comment, topic }) => {
 	const { user } = useContext(UserContext);
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
@@ -25,6 +25,8 @@ const CommentItem = ({ comment }) => {
 	const color = useColorModeValue("gray.300", "gray.600");
 	const colorHover = useColorModeValue("gray.500", "gray.300");
 	const location = useLocation();
+
+	console.log(comment, topic);
 
 	return (
 		<>
@@ -38,7 +40,7 @@ const CommentItem = ({ comment }) => {
 						)}
 						{" | "}
 						{moment(comment.created_at).fromNow()}
-						{comment.lastEditDate && (
+						{comment.updated_at && (
 							<>
 								{" | "}
 								<i>edited {moment(comment.updated_at).fromNow()}</i>
@@ -78,10 +80,11 @@ const CommentItem = ({ comment }) => {
 													</Button>
 												</>
 											)}
-											{/* {user.id !== comment.author_id &&
-											user.topicsModerating.includes(comment.topic) && (
-												<DeleteCommentModerator comment={comment} />
-											)} */}
+											{topic &&
+												user.id !== comment.author_id &&
+												topic.user_moderator_id && (
+													<DeleteCommentModerator comment={comment} />
+												)}
 										</>
 									) : (
 										<Button
@@ -133,7 +136,11 @@ const CommentItem = ({ comment }) => {
 					<div style={{ marginLeft: "2rem", width: "100%" }}>
 						{comment.children
 							? comment.children.map((comment) => (
-									<CommentItem comment={comment} key={comment.id} />
+									<CommentItem
+										comment={comment}
+										topic={topic}
+										key={comment.id}
+									/>
 							  ))
 							: null}
 					</div>

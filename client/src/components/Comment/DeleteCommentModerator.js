@@ -12,7 +12,7 @@ import useDeleteCommentModerator from "../../hooks/comment-query/useDeleteCommen
 
 const DeleteCommentModerator = ({ comment }) => {
 	const [open, setOpen] = useState(false);
-	const { isLoading, mutate } = useDeleteCommentModerator(setOpen);
+	const { isLoading, mutate } = useDeleteCommentModerator(comment, setOpen);
 	const cancelRef = useRef();
 
 	return (
@@ -41,7 +41,7 @@ const DeleteCommentModerator = ({ comment }) => {
 						<Button
 							onClick={() => {
 								mutate({
-									commentId: comment._id,
+									commentId: comment.id,
 								});
 							}}
 							isLoading={isLoading}

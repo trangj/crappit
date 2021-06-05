@@ -13,7 +13,7 @@ const schema = yup.object({
 	content: yup.string().required(""),
 });
 
-const CommentCard = ({ post }) => {
+const CommentCard = ({ post, topic }) => {
 	const { user } = useContext(UserContext);
 	const { comments } = post;
 	const { isLoading, mutate } = useAddComment(post);
@@ -71,7 +71,7 @@ const CommentCard = ({ post }) => {
 				</Text>
 			) : (
 				comments.map((comment) => (
-					<CommentItem comment={comment} key={comment.id} />
+					<CommentItem comment={comment} key={comment.id} topic={topic} />
 				))
 			)}
 		</Card>

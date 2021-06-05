@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
 		const { email, password } = req.body;
 		if (!email || !password) throw Error("Missing fields");
 
-		const user = await User.findOne({ where: { email } });
+		const user = await User.findOne({ email });
 		if (!user) throw Error("User does not exist");
 
 		const topics_followed = await Topic.query(`
@@ -104,7 +104,7 @@ router.post("/login", async (req, res) => {
 router.post("/forgot", async (req, res) => {
 	try {
 		const token = crypto.randomBytes(20).toString("hex");
-		const user = await User.findOne({ where: { email: req.body.email } });
+		const user = await User.findOne({ email: req.body.email });
 		if (!user) throw Error("No user with that email exists.");
 
 		user.reset_password_token = token;
@@ -145,11 +145,8 @@ router.post("/forgot", async (req, res) => {
 router.get("/reset/:token", async (req, res) => {
 	try {
 		const user = await User.findOne({
-			where:
-			{
-				reset_password_token: req.params.token,
-				reset_password_expires: MoreThan(Date.now())
-			}
+			reset_password_token: req.params.token,
+			reset_password_expires: MoreThan(Date.now())
 		});
 		if (!user) throw Error("Token is invalid or has expired");
 		res.json({
@@ -173,10 +170,8 @@ router.post("/reset/:token", async (req, res) => {
 		if (password !== password2) throw Error("Passwords are not the same");
 
 		const user = await User.findOne({
-			where: {
-				reset_password_token: req.params.token,
-				reset_password_expires: MoreThan(Date.now())
-			}
+			reset_password_token: req.params.token,
+			reset_password_expires: MoreThan(Date.now())
 		});
 		if (!user) throw Error("Token is invalid or has expired");
 
@@ -245,7 +240,7 @@ router.get("/:userid", async (req, res) => {
 
 router.post("/email", auth, async (req, res) => {
 	try {
-		const user = await User.findOne({ id: req.user.id });
+		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user found");
 		if (user.email === req.body.newEmail)
 			throw Error("You already are using that email");

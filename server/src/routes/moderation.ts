@@ -66,27 +66,33 @@ router.delete("/post/:post", auth, async (req, res) => {
 // // @desc    Delete a comment
 // // @access  Private
 
-// router.delete("/comment/:commentid", auth, async (req, res) => {
-// 	try {
-// 		const comment = await Comment.findOne(req.params.commentid);
-// 		if (!comment) throw Error("Comment does not exist");
-// 		const topic = await Topic.findOne({ title: comment.topic });
-// 		if (!topic) throw Error("Topic does not exist");
-// 		if (
-// 			!!!topic.moderators.filter(
-// 				(moderator) => moderator.username === req.user.username
-// 			).length
-// 		)
-// 			throw Error("You are not a moderator for this topic");
-// 		res.status(200).json({
-// 			comment,
-// 			status: { text: "Comment succesfully deleted", severity: "success" },
-// 		});
-// 	} catch (err) {
-// 		res.status(400).json({
-// 			status: { text: err.message, severity: "error" },
-// 		});
-// 	}
-// });
+router.delete("/comment/:commentid", auth, async (req, res) => {
+	try {
+		const comment = await Comment.findOne(req.params.commentid, { relations: ['post', 'post.topic'] });
+		if (!comment) throw Error("Comment does not exist");
+		const topic = await Topic.findOne({ title: comment.post.topic.title }, { relations: ['moderators'] });
+		if (!topic) throw Error("Topic does not exist");
+		if (
+			!!!topic.moderators.filter(
+				(moderator) => moderator.username === req.user.username
+			).length
+		)
+			throw Error("You are not a moderator for this topic");
+
+		comment.content = null;
+		comment.author = null;
+
+		await comment.save();
+
+		res.status(200).json({
+			comment,
+			status: { text: "Comment succesfully deleted", severity: "success" },
+		});
+	} catch (err) {
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
+	}
+});
 
 export const ModerationRouter = router;

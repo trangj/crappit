@@ -1,7 +1,7 @@
 import express from "express";
 import { auth, optionalAuth } from "../middleware/auth";
 import { Topic, User } from '../entities';
-import { upload } from "../middleware/upload";
+import { deleteFile, upload } from "../middleware/upload";
 
 const router = express.Router();
 
@@ -107,6 +107,7 @@ router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 
 		topic.description = req.body.description;
 		if (req.file) {
+			deleteFile(topic.image_name);
 			topic.image_url = req.file.location;
 			topic.image_name = req.file.key;
 		}

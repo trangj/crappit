@@ -89,7 +89,7 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 router.delete("/:id", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
-		const post = await Post.findOne({ where: { id: parseInt(req.params.id), author: user } });
+		const post = await Post.findOne({ id: parseInt(req.params.id), author: user });
 		if (!post) throw Error("Post does not exist or you are not the author");
 		await Post.remove(post);
 		if (post.type === "photo") deleteFile(post.image_name);
@@ -108,7 +108,7 @@ router.delete("/:id", auth, async (req, res) => {
 router.put("/:id", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
-		const post = await Post.findOne({ where: { id: parseInt(req.params.id), author: user } });
+		const post = await Post.findOne({ id: parseInt(req.params.id), author: user });
 		if (!post)
 			throw Error("Post does not exist or you are not the author of the post");
 		if (post.type !== "text") throw Error("You can only edit text posts");
