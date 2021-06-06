@@ -55,6 +55,7 @@ router.put("/:commentid", auth, async (req, res) => {
 		if (!comment) throw Error("No comment exists or you are not the author");
 
 		comment.content = req.body.content;
+		comment.is_edited = true;
 
 		await comment.save();
 
@@ -82,6 +83,7 @@ router.delete("/:commentid", auth, async (req, res) => {
 
 		comment.content = null;
 		comment.author = null;
+		comment.is_deleted = true;
 
 		await comment.save();
 

@@ -1,37 +1,29 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 import { Topic } from ".";
+import { Template } from "./Template";
 
 @Entity()
-export class User extends BaseEntity {
+export class User extends Template {
     @Column({ unique: true })
-    username!: string
+    username!: string;
 
     @Column()
-    password!: string
+    password!: string;
 
     @Column({ unique: true })
-    email!: string
+    email!: string;
 
     @ManyToMany(() => Topic, topic => topic.followers)
-    @JoinTable()
-    topics_followed: Topic[]
+    @JoinTable({ name: 'follow' })
+    topics_followed: Topic[];
 
     @ManyToMany(() => Topic, topic => topic.moderators)
-    @JoinTable()
-    topics_moderated: Topic[]
+    @JoinTable({ name: 'moderator' })
+    topics_moderated: Topic[];
 
     @Column({ nullable: true })
-    reset_password_token?: string
+    reset_password_token?: string;
 
     @Column({ type: 'bigint', nullable: true })
-    reset_password_expires?: number
-
-    @PrimaryGeneratedColumn()
-    id!: number;
-
-    @CreateDateColumn()
-    created_at: Date
-
-    @UpdateDateColumn()
-    updated_at: Date
+    reset_password_expires?: number;
 }

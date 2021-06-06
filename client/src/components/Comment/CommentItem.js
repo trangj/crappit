@@ -33,14 +33,14 @@ const CommentItem = ({ comment, topic }) => {
 			<Box mt="5">
 				<VStack align="left">
 					<Text fontSize="xs">
-						{comment.author ? (
-							<Link to={`/user/${comment.authorId}`}>{comment.author}</Link>
-						) : (
+						{comment.is_deleted ? (
 							"[deleted]"
+						) : (
+							<Link to={`/user/${comment.author_id}`}>{comment.author}</Link>
 						)}
 						{" | "}
 						{moment(comment.created_at).fromNow()}
-						{comment.updated_at && (
+						{comment.is_edited && (
 							<>
 								{" | "}
 								<i>edited {moment(comment.updated_at).fromNow()}</i>
@@ -55,7 +55,7 @@ const CommentItem = ({ comment, topic }) => {
 						/>
 					) : (
 						<>
-							<Text>{comment.content ? comment.content : "[deleted]"}</Text>
+							<Text>{comment.is_deleted ? "[deleted]" : comment.content}</Text>
 							{comment.content ? (
 								<HStack>
 									<CommentVoting comment={comment} />

@@ -1,8 +1,9 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { User, Post } from ".";
+import { Template } from "./Template";
 
 @Entity()
-export class Comment extends BaseEntity {
+export class Comment extends Template {
     @Column({ type: 'text', nullable: true })
     content!: string;
 
@@ -26,12 +27,9 @@ export class Comment extends BaseEntity {
     @OneToMany(() => Comment, comment => comment.parent_comment)
     children: Comment[];
 
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @Column({ default: false })
+    is_edited: boolean;
 
-    @CreateDateColumn()
-    created_at: Date;
-
-    @UpdateDateColumn()
-    updated_at: Date;
+    @Column({ default: false })
+    is_deleted: boolean;
 }

@@ -1,4 +1,5 @@
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import express from 'express';
 
 export default {
     type: 'postgres',

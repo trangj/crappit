@@ -5,18 +5,18 @@ import { Comment, User } from ".";
 export class CommentVote extends BaseEntity {
     @ManyToOne(() => User, user => user.id, { onDelete: 'CASCADE' })
     @JoinColumn()
-    user!: User
+    user!: User;
 
     @PrimaryColumn()
-    user_id: number
+    user_id: number;
 
     @ManyToOne(() => Comment, comment => comment.id, { onDelete: 'CASCADE' })
     @JoinColumn()
-    comment!: Comment
+    comment!: Comment;
 
     @PrimaryColumn()
-    comment_id: number
+    comment_id: number;
 
     @Column()
-    value!: 1 | 0 | -1
+    value!: 1 | 0 | -1;
 }

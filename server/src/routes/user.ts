@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
 		const topics_followed = await Topic.query(`
 			select
 			t.title title
-			from user_topics_followed_topic ft
+			from follow ft
 			left join topic t on ft.topic_id = t.id
 			where ft.user_id = $1
 		`, [user.id]);
@@ -219,7 +219,7 @@ router.get("/:userid", async (req, res) => {
 		const topics_followed = await Topic.query(`
 			select
 			t.title title
-			from user_topics_followed_topic ft
+			from follow ft
 			left join topic t on ft.topic_id = t.id
 			where ft.user_id = $1
 		`, [req.params.userid]);

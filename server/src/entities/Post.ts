@@ -1,5 +1,6 @@
 import { User, Topic } from ".";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Template } from "./Template";
 
 enum PostType {
     TEXT = 'text',
@@ -8,7 +9,7 @@ enum PostType {
 }
 
 @Entity()
-export class Post extends BaseEntity {
+export class Post extends Template {
     @Column()
     title!: string;
 
@@ -37,13 +38,4 @@ export class Post extends BaseEntity {
     @ManyToOne(() => Topic)
     @JoinColumn([{ name: 'topic_id', referencedColumnName: 'id' }])
     topic!: Topic;
-
-    @PrimaryGeneratedColumn()
-    id!: number;
-
-    @CreateDateColumn()
-    created_at: Date;
-
-    @UpdateDateColumn()
-    updated_at: Date;
 }

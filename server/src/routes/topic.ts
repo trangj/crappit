@@ -17,8 +17,8 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			f.user_id user_followed_id,
 			m.user_id user_moderator_id
 			from topic t
-			left join user_topics_followed_topic f on f.topic_id = t.id and f.user_id = $1
-			left join user_topics_moderated_topic m on m.topic_id = t.id and m.user_id = $2
+			left join follow f on f.topic_id = t.id and f.user_id = $1
+			left join moderator m on m.topic_id = t.id and m.user_id = $2
 			where t.title = $3
 		`, [req.user.id, req.user.id, req.params.topic]);
 		if (!topic[0]) throw Error("Topic does not exist");
@@ -43,8 +43,7 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 			description: req.body.description,
 			image_url: req.file ? req.file.location : "",
 			image_name: req.file ? req.file.key : "",
-			moderators: [user],
-			followers: [user]
+			moderators: [user]
 		}).save();
 
 		res.status(200).json({

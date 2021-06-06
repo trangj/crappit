@@ -1,32 +1,24 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToMany } from "typeorm";
 import { User } from ".";
+import { Template } from "./Template";
 
 @Entity()
-export class Topic extends BaseEntity {
+export class Topic extends Template {
     @Column({ unique: true })
-    title!: string
+    title!: string;
 
     @Column({ type: 'text' })
-    description!: string
+    description!: string;
 
     @Column()
-    image_url?: string
+    image_url?: string;
 
     @Column()
-    image_name?: string
+    image_name?: string;
 
     @ManyToMany(() => User, user => user.topics_followed)
-    followers: User[]
+    followers: User[];
 
     @ManyToMany(() => User, user => user.topics_moderated)
-    moderators: User[]
-
-    @PrimaryGeneratedColumn()
-    id!: number;
-
-    @CreateDateColumn()
-    created_at: Date
-
-    @UpdateDateColumn()
-    updated_at: Date
+    moderators: User[];
 }
