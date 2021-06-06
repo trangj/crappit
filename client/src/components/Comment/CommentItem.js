@@ -26,8 +26,6 @@ const CommentItem = ({ comment, topic }) => {
 	const colorHover = useColorModeValue("gray.500", "gray.300");
 	const location = useLocation();
 
-	console.log(comment, topic);
-
 	return (
 		<>
 			<Box mt="5">

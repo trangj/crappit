@@ -192,6 +192,7 @@ router.post("/:commentid/reply", auth, async (req, res) => {
 				author_id: user.id,
 				post_id: post.id,
 				user_vote: null,
+				children: []
 			},
 			status: { text: "Reply made successfully", severity: "success" },
 		});
