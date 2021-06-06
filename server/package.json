@@ -8,7 +8,7 @@
     "npm": "6.14.7"
   },
   "scripts": {
-    "build": "tsc",
+    "postinstall": "tsc",
     "start": "node dist/app.js",
     "server": "nodemon --exec ts-node --files src/app.ts",
     "client": "npm start --prefix ../client",
