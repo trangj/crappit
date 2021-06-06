@@ -12,7 +12,8 @@ const schema = yup.object({
 	password: yup
 		.string()
 		.required("Enter a password")
-		.min(6, "Your password must be at least 6 characters long"),
+		.min(6, "Your password must be at least 6 characters long")
+		.matches(/^(\S+$)/, "Password cannot have any white space"),
 	password2: yup
 		.string()
 		.oneOf([yup.ref("password"), null], "Passwords must match")

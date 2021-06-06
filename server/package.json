@@ -12,7 +12,7 @@
     "start": "node dist/app.js",
     "server": "nodemon --exec ts-node --files src/app.ts",
     "client": "npm start --prefix ../client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/app.js\" \"npm run client\"",
     "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
   },
   "author": "",

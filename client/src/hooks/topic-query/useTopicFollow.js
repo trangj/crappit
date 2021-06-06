@@ -1,6 +1,8 @@
 import { createStandaloneToast } from "@chakra-ui/toast";
+import { useContext } from "react";
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
+import { UserContext } from "../../context/UserState";
 
 async function followTopic(topic) {
 	try {
@@ -11,7 +13,8 @@ async function followTopic(topic) {
 	}
 }
 
-export default function useTopicsFollow(topic, user, setUser) {
+export default function useTopicsFollow(topic) {
+	const { user, setUser } = useContext(UserContext);
 	return useMutation(followTopic, {
 		onSuccess: (res) => {
 			topic.user_followed_id = res.user_followed_id;

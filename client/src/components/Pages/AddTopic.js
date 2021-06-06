@@ -10,7 +10,10 @@ import Card from "../Utils/Card";
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 512 * 1024;
 const schema = yup.object({
-	title: yup.string().required("Enter a title for your topic"),
+	title: yup
+		.string()
+		.required("Enter a title for your topic")
+		.matches(/^(\S+$)/, "Title cannot have any white space"),
 	description: yup.string().required("Enter a description about your topic"),
 	file: yup
 		.mixed()

@@ -111,27 +111,40 @@ const CommentItem = ({ comment, topic }) => {
 			</Box>
 			{openReply && (
 				<Flex>
-					<Box width="10px" borderLeft="2px" borderLeftColor={color}></Box>
-					<div style={{ marginLeft: "2rem", width: "100%" }}>
+					<Box width="0.8rem">
+						<Box
+							borderRight="2px"
+							width="0.4rem"
+							height="100%"
+							borderRightColor={color}
+						></Box>
+					</Box>
+					<Box marginLeft="0.8rem" width="100%">
 						<AddReply
 							comment={comment}
 							openReply={openReply}
 							setOpenReply={setOpenReply}
 						/>
-					</div>
+					</Box>
 				</Flex>
 			)}
 			{!hideComments ? (
 				<Flex>
 					<Box
-						width="10px"
-						borderLeft="2px"
-						borderLeftColor={color}
+						width="0.8rem"
 						cursor="pointer"
-						_hover={{ borderLeftColor: colorHover }}
 						onClick={() => setHideComments(true)}
-					></Box>
-					<div style={{ marginLeft: "2rem", width: "100%" }}>
+						borderRightColor={color}
+						_hover={{ borderRightColor: colorHover }}
+					>
+						<Box
+							borderRight="2px"
+							width="0.4rem"
+							height="100%"
+							borderRightColor="inherit"
+						></Box>
+					</Box>
+					<Box marginLeft="0.8rem" width="100%">
 						{comment.children
 							? comment.children.map((comment) => (
 									<CommentItem
@@ -141,7 +154,7 @@ const CommentItem = ({ comment, topic }) => {
 									/>
 							  ))
 							: null}
-					</div>
+					</Box>
 				</Flex>
 			) : (
 				<Button onClick={() => setHideComments(false)} size="xs" variant="link">

@@ -6,13 +6,13 @@ import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
 import Card from "../Utils/Card";
 
 const TopicCard = ({ topic }) => {
-	const { user, setUser } = useContext(UserContext);
-	const { isLoading, mutate } = useTopicFollow(topic, user, setUser);
+	const { user } = useContext(UserContext);
+	const { isLoading, mutate } = useTopicFollow(topic);
 
 	return (
 		<Card>
 			<Image alt={topic.image_name} src={topic.image_url} maxHeight="200px" />
-			<Heading>Welcome to t/{topic.title}!</Heading>
+			<Heading>t/{topic.title}</Heading>
 			<Text>{topic.description}</Text>
 			<HStack mt="3">
 				{user && (
@@ -26,7 +26,7 @@ const TopicCard = ({ topic }) => {
 				{user && topic.user_moderator_id && (
 					<>
 						<Button as={Link} to={`/t/${topic.title}/moderation`}>
-							Topic Settings
+							Settings
 						</Button>
 					</>
 				)}
