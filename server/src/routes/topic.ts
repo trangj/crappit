@@ -41,7 +41,9 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 		const newTopic = await Topic.create({
 			title: req.body.title,
 			description: req.body.description,
+			// @ts-ignore
 			image_url: req.file ? req.file.location : "",
+			// @ts-ignore
 			image_name: req.file ? req.file.key : "",
 			moderators: [user]
 		}).save();
@@ -107,7 +109,9 @@ router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 		topic.description = req.body.description;
 		if (req.file) {
 			deleteFile(topic.image_name);
+			// @ts-ignore
 			topic.image_url = req.file.location;
+			// @ts-ignore
 			topic.image_name = req.file.key;
 		}
 

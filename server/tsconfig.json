@@ -8,12 +8,10 @@
 		"sourceMap": true,
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": {
-			"*": ["node_modules/*"]
-		},
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"typeRoots": ["./types"]
 	},
-	"include": ["src/**/*", "./"]
+	"exclude": ["node_modules"],
+	"include": ["./src/**/*.ts"]
 }

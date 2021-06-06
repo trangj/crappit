@@ -65,7 +65,9 @@ router.post("/", auth, upload.single("file"), async (req, res) => {
 			title: req.body.title,
 			type: req.body.type,
 			content: req.body.content,
+			// @ts-ignore
 			image_url: req.file ? req.file.location : "",
+			// @ts-ignore
 			image_name: req.file ? req.file.key : "",
 			author: user,
 			topic: topic,
