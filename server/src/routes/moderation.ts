@@ -11,9 +11,9 @@ const router = express.Router();
 
 router.post("/topic/:topic", auth, async (req, res) => {
 	try {
-		const user = await User.findOne({ username: req.body.username });
+		const user = await User.findOne({ username: req.body.username }, { relations: ['topics_moderated'] });
 		if (!user) throw Error("User does not exist");
-		const topic = await Topic.findOne({ title: req.params.topic });
+		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
 		if (!topic) throw Error("Topic does not exist");
 		if (
 			!!topic.moderators.filter(

@@ -22,9 +22,6 @@ router.post("/register", async (req, res) => {
 		if (!username || !email || !password || !password2) throw Error("Missing field");
 		if (password !== password2) throw Error("Passwords are not the same");
 
-		const user = await User.findOne({ where: [{ username }, { email }] });
-		if (user) throw Error("User already exists with that username/email");
-
 		const salt = await bcyrpt.genSalt(10);
 		if (!salt) throw Error("Error with generating salt");
 
@@ -35,7 +32,7 @@ router.post("/register", async (req, res) => {
 			username,
 			email,
 			password: hash,
-		}).save();
+		}).save().catch(err => { throw Error("A user already exists with that username or email"); });
 
 		const token = jwt.sign(
 			{ id: newUser.id, username: newUser.username },
@@ -119,7 +116,7 @@ router.post("/forgot", async (req, res) => {
 			text:
 				"You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
 				"Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-				"https://crappit.herokuapp.com/reset/" +
+				"https://crappit.netlify.com/reset/" +
 				token +
 				"\n\n" +
 				"If you did not request this, please ignore this email and your password will remain unchanged.\n",
@@ -245,14 +242,11 @@ router.post("/email", auth, async (req, res) => {
 		if (user.email === req.body.newEmail)
 			throw Error("You already are using that email");
 
-		const otherUser = await User.findOne({ email: req.body.newEmail });
-		if (otherUser) throw Error("A different user has that email");
-
 		const isMatch = await bcyrpt.compare(req.body.password, user.password);
 		if (!isMatch) throw Error("Incorrect password");
 
 		user.email = req.body.newEmail;
-		await user.save();
+		await user.save().catch(err => { throw Error("A user already exists with that email"); });
 
 		res.status(200).json({
 			user,

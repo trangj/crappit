@@ -15,9 +15,6 @@ async function addModerator({ topic, username }) {
 
 export default function useAddModerator(topic) {
 	return useMutation(addModerator, {
-		onSuccess: (res) => {
-			topic.moderators = res.topic.moderators;
-		},
 		onSettled: (data, error) => {
 			const res = data || error;
 			const toast = createStandaloneToast();
