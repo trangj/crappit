@@ -50,8 +50,7 @@ const AddPost = ({ match }) => {
 		const formData = new FormData();
 		formData.append("file", file);
 		formData.append("title", title);
-		formData.append("link", link);
-		formData.append("content", content);
+		formData.append("content", content ? content : link);
 		formData.append("type", types[selectedType]);
 		formData.append("topic", topic);
 		mutate({ formData });

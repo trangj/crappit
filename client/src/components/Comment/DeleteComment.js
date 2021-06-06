@@ -12,7 +12,7 @@ import useDeleteComment from "../../hooks/comment-query/useDeleteComment";
 
 const DeleteComment = ({ comment }) => {
 	const [open, setOpen] = useState(false);
-	const { isLoading, mutate } = useDeleteComment(setOpen);
+	const { isLoading, mutate } = useDeleteComment(comment, setOpen);
 	const cancelRef = useRef();
 
 	return (
@@ -41,7 +41,7 @@ const DeleteComment = ({ comment }) => {
 						<Button
 							onClick={() => {
 								mutate({
-									commentId: comment._id,
+									commentId: comment.id,
 								});
 							}}
 							colorScheme="red"

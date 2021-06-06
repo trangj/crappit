@@ -17,7 +17,7 @@ import moment from "moment";
 import { UserContext } from "../../context/UserState";
 import DeleteCommentModerator from "./DeleteCommentModerator";
 
-const CommentItem = ({ comment }) => {
+const CommentItem = ({ comment, topic }) => {
 	const { user } = useContext(UserContext);
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
@@ -26,22 +26,24 @@ const CommentItem = ({ comment }) => {
 	const colorHover = useColorModeValue("gray.500", "gray.300");
 	const location = useLocation();
 
+	console.log(comment, topic);
+
 	return (
 		<>
 			<Box mt="5">
 				<VStack align="left">
 					<Text fontSize="xs">
-						{comment.authorId ? (
-							<Link to={`/user/${comment.authorId}`}>{comment.author}</Link>
+						{comment.is_deleted ? (
+							"[deleted]"
 						) : (
-							comment.author
+							<Link to={`/user/${comment.author_id}`}>{comment.author}</Link>
 						)}
 						{" | "}
-						{moment(comment.date).fromNow()}
-						{comment.lastEditDate && (
+						{moment(comment.created_at).fromNow()}
+						{comment.is_edited && (
 							<>
 								{" | "}
-								<i>edited {moment(comment.lastEditDate).fromNow()}</i>
+								<i>edited {moment(comment.updated_at).fromNow()}</i>
 							</>
 						)}
 					</Text>
@@ -53,55 +55,58 @@ const CommentItem = ({ comment }) => {
 						/>
 					) : (
 						<>
-							<Text>{comment.content}</Text>
-							<HStack>
-								<CommentVoting comment={comment} />
-								{user !== undefined && comment.authorId ? (
-									<>
+							<Text>{comment.is_deleted ? "[deleted]" : comment.content}</Text>
+							{comment.content ? (
+								<HStack>
+									<CommentVoting comment={comment} />
+									{user !== null ? (
+										<>
+											<Button
+												size="xs"
+												onClick={() => setOpenReply(!openReply)}
+												variant="ghost"
+											>
+												Reply
+											</Button>
+											{user.id === comment.author_id && (
+												<>
+													<DeleteComment comment={comment} />
+													<Button
+														size="xs"
+														onClick={() => setOpenEdit(!openEdit)}
+														variant="ghost"
+													>
+														Edit
+													</Button>
+												</>
+											)}
+											{topic &&
+												user.id !== comment.author_id &&
+												topic.user_moderator_id && (
+													<DeleteCommentModerator comment={comment} />
+												)}
+										</>
+									) : (
 										<Button
 											size="xs"
-											onClick={() => setOpenReply(!openReply)}
+											as={Link}
+											to={{
+												pathname: "/login",
+												state: {
+													status: {
+														text: "Login to reply to comments",
+														severity: "error",
+													},
+													from: location.pathname,
+												},
+											}}
 											variant="ghost"
 										>
 											Reply
 										</Button>
-										{user._id === comment.authorId && (
-											<>
-												<DeleteComment comment={comment} />
-												<Button
-													size="xs"
-													onClick={() => setOpenEdit(!openEdit)}
-													variant="ghost"
-												>
-													Edit
-												</Button>
-											</>
-										)}
-										{user._id !== comment.authorId &&
-											user.topicsModerating.includes(comment.topic) && (
-												<DeleteCommentModerator comment={comment} />
-											)}
-									</>
-								) : (
-									<Button
-										size="xs"
-										as={Link}
-										to={{
-											pathname: "/login",
-											state: {
-												status: {
-													text: "Login to reply to comments",
-													severity: "error",
-												},
-												from: location.pathname,
-											},
-										}}
-										variant="ghost"
-									>
-										Reply
-									</Button>
-								)}
-							</HStack>
+									)}
+								</HStack>
+							) : null}
 						</>
 					)}
 				</VStack>
@@ -129,16 +134,20 @@ const CommentItem = ({ comment }) => {
 						onClick={() => setHideComments(true)}
 					></Box>
 					<div style={{ marginLeft: "2rem", width: "100%" }}>
-						{comment.comments
-							? comment.comments.map((comment) => (
-									<CommentItem comment={comment} key={comment._id} />
+						{comment.children
+							? comment.children.map((comment) => (
+									<CommentItem
+										comment={comment}
+										topic={topic}
+										key={comment.id}
+									/>
 							  ))
 							: null}
 					</div>
 				</Flex>
 			) : (
 				<Button onClick={() => setHideComments(false)} size="xs" variant="link">
-					Show Comments({comment.comments.length})
+					Show Comments({comment.children.length})
 				</Button>
 			)}
 		</>

@@ -15,6 +15,7 @@ export default function useUpdateComment(setOpenEdit, comment) {
 	return useMutation(updateComment, {
 		onSuccess: (res) => {
 			comment.content = res.comment.content;
+			comment.is_edited = true;
 			setOpenEdit(false);
 		},
 		onSettled: (data, error) => {

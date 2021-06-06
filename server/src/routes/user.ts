@@ -1,48 +1,29 @@
-const express = require("express");
+import express from "express";
+import bcyrpt from "bcryptjs";
+import crypto from "crypto";
+import sgMail from "@sendgrid/mail";
+import jwt from "jsonwebtoken";
+import { auth } from "../middleware/auth";
+import { Topic, User } from "../entities";
+import { MoreThan } from 'typeorm';
+
 const router = express.Router();
-const bcyrpt = require("bcryptjs");
-const crypto = require("crypto");
-const sgMail = require("@sendgrid/mail");
-const jwt = require("jsonwebtoken");
-const auth = require("../middleware/auth");
-const User = require("../models/User");
 
 // init sgMail
 sgMail.setApiKey(process.env.sendgrid);
 
-// @route   GET /api/user/register
+// @route   POST /api/user/register
 // @desc    Register user
 // @acess   Public
 
 router.post("/register", async (req, res) => {
-	const { username, email, password, password2 } = req.body;
-	if (!username || !email || !password || !password2)
-		return res
-			.status(400)
-			.json({ status: { text: "Missing fields", severity: "error" } });
-
-	if (password !== password2)
-		return res.status(400).json({
-			status: { text: "Passwords are not the same", severity: "error" },
-		});
-
 	try {
-		let user = await User.findOne({ email });
-		if (user)
-			return res.status(400).json({
-				status: {
-					text: "User already exists with that email",
-					severity: "error",
-				},
-			});
-		user = await User.findOne({ username });
-		if (user)
-			return res.status(400).json({
-				status: {
-					text: "User already exists with that username",
-					severity: "error",
-				},
-			});
+		const { username, email, password, password2 } = req.body;
+		if (!username || !email || !password || !password2) throw Error("Missing field");
+		if (password !== password2) throw Error("Passwords are not the same");
+
+		const user = await User.findOne({ where: [{ username }, { email }] });
+		if (user) throw Error("User already exists with that username/email");
 
 		const salt = await bcyrpt.genSalt(10);
 		if (!salt) throw Error("Error with generating salt");
@@ -50,22 +31,20 @@ router.post("/register", async (req, res) => {
 		const hash = await bcyrpt.hash(password, salt);
 		if (!hash) throw Error("Error with generating hash");
 
-		const newUser = new User({
+		const newUser = await User.create({
 			username,
 			email,
 			password: hash,
-		});
-		const savedUser = await newUser.save();
-		if (!savedUser) throw Error("Error with saving user");
+		}).save();
 
-		const token = await jwt.sign(
-			{ id: savedUser.id, username: savedUser.username },
+		const token = jwt.sign(
+			{ id: newUser.id, username: newUser.username },
 			process.env.jwtSecret
 		);
 
 		res.status(200).json({
 			token,
-			user: savedUser,
+			user: { ...newUser, topics_followed: [] },
 			status: {
 				text: "Successfully registered!",
 				severity: "success",
@@ -74,7 +53,7 @@ router.post("/register", async (req, res) => {
 	} catch (err) {
 		res
 			.status(400)
-			.json({ status: { text: "Error in creating user", severity: "error" } });
+			.json({ status: { text: err.message, severity: "error" } });
 	}
 });
 
@@ -83,55 +62,38 @@ router.post("/register", async (req, res) => {
 // @acess   Public
 
 router.post("/login", async (req, res) => {
-	const { email, password } = req.body;
-	if (!email || !password)
-		res
-			.status(400)
-			.json({ status: { text: "Missing fields", severity: "error" } });
-
 	try {
+		const { email, password } = req.body;
+		if (!email || !password) throw Error("Missing fields");
+
 		const user = await User.findOne({ email });
-		if (!user)
-			return res
-				.status(400)
-				.json({ status: { text: "User does not exist", severity: "error" } });
+		if (!user) throw Error("User does not exist");
+
+		const topics_followed = await Topic.query(`
+			select
+			t.title title
+			from follow ft
+			left join topic t on ft.topic_id = t.id
+			where ft.user_id = $1
+		`, [user.id]);
 
 		const isMatch = await bcyrpt.compare(password, user.password);
-		if (!isMatch)
-			return res
-				.status(400)
-				.json({ status: { text: "Invalid credentials", severity: "error" } });
+		if (!isMatch) throw Error("Invalid password");
 
-		const token = await jwt.sign(
+		const token = jwt.sign(
 			{ id: user.id, username: user.username },
 			process.env.jwtSecret
 		);
 
 		res.status(200).json({
 			token,
-			user,
+			user: { ...user, topics_followed },
 			status: { text: "Successfully logged in!", severity: "success" },
 		});
 	} catch (err) {
 		res
 			.status(400)
-			.json({ status: { text: "Could not login", severity: "error" } });
-	}
-});
-
-// @route   GET /api/user
-// @desc    Get user
-// @acess   Private
-
-router.get("/", auth, async (req, res) => {
-	try {
-		const user = await User.findById(req.user.id).select("-password");
-		if (!user) throw Error("No user");
-		res.status(200).json({ user });
-	} catch (err) {
-		res
-			.status(400)
-			.json({ status: { text: "Could not get user", severity: "error" } });
+			.json({ status: { text: err.message, severity: "error" } });
 	}
 });
 
@@ -141,11 +103,13 @@ router.get("/", auth, async (req, res) => {
 
 router.post("/forgot", async (req, res) => {
 	try {
-		const token = await crypto.randomBytes(20).toString("hex");
+		const token = crypto.randomBytes(20).toString("hex");
 		const user = await User.findOne({ email: req.body.email });
 		if (!user) throw Error("No user with that email exists.");
-		user.resetPasswordToken = token;
-		user.resetPasswordExpires = Date.now() + 3600000;
+
+		user.reset_password_token = token;
+		user.reset_password_expires = Date.now() + 3600000;
+
 		await user.save();
 
 		const msg = {
@@ -181,8 +145,8 @@ router.post("/forgot", async (req, res) => {
 router.get("/reset/:token", async (req, res) => {
 	try {
 		const user = await User.findOne({
-			resetPasswordToken: req.params.token,
-			resetPasswordExpires: { $gt: Date.now() },
+			reset_password_token: req.params.token,
+			reset_password_expires: MoreThan(Date.now())
 		});
 		if (!user) throw Error("Token is invalid or has expired");
 		res.json({
@@ -206,8 +170,8 @@ router.post("/reset/:token", async (req, res) => {
 		if (password !== password2) throw Error("Passwords are not the same");
 
 		const user = await User.findOne({
-			resetPasswordToken: req.params.token,
-			resetPasswordExpires: { $gt: Date.now() },
+			reset_password_token: req.params.token,
+			reset_password_expires: MoreThan(Date.now())
 		});
 		if (!user) throw Error("Token is invalid or has expired");
 
@@ -218,8 +182,8 @@ router.post("/reset/:token", async (req, res) => {
 		if (!hash) throw Error("Error with generating hash");
 
 		user.password = hash;
-		user.resetPasswordToken = undefined;
-		user.resetPasswordExpires = undefined;
+		user.reset_password_token = null;
+		user.reset_password_expires = null;
 		await user.save();
 
 		const msg = {
@@ -249,9 +213,20 @@ router.post("/reset/:token", async (req, res) => {
 
 router.get("/:userid", async (req, res) => {
 	try {
-		const user = await User.findOne({ _id: req.params.userid });
+		const user = await User.findOne(req.params.userid);
 		if (!user) throw Error("No user found");
-		res.status(200).json(user);
+
+		const topics_followed = await Topic.query(`
+			select
+			t.title title
+			from follow ft
+			left join topic t on ft.topic_id = t.id
+			where ft.user_id = $1
+		`, [req.params.userid]);
+
+		const { password, ...rest } = user;
+
+		res.status(200).json({ user: { ...rest, topics_followed } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -265,7 +240,7 @@ router.get("/:userid", async (req, res) => {
 
 router.post("/email", auth, async (req, res) => {
 	try {
-		const user = await User.findOne({ _id: req.user.id });
+		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user found");
 		if (user.email === req.body.newEmail)
 			throw Error("You already are using that email");
@@ -274,12 +249,11 @@ router.post("/email", auth, async (req, res) => {
 		if (otherUser) throw Error("A different user has that email");
 
 		const isMatch = await bcyrpt.compare(req.body.password, user.password);
-		if (!isMatch)
-			return res
-				.status(400)
-				.json({ status: { text: "Incorrect password", severity: "error" } });
+		if (!isMatch) throw Error("Incorrect password");
+
 		user.email = req.body.newEmail;
 		await user.save();
+
 		res.status(200).json({
 			user,
 			status: { text: "Your email has been changed", severity: "success" },
@@ -291,4 +265,4 @@ router.post("/email", auth, async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const UserRouter = router;

@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button, Heading, Divider } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import FileFieldForm from "../Forms/FileFieldForm";
-import { UserContext } from "../../context/UserState";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
 import Card from "../Utils/Card";
 
@@ -24,8 +23,7 @@ const schema = yup.object({
 });
 
 const AddTopic = () => {
-	const { setUser } = useContext(UserContext);
-	const { isLoading, mutate } = useAddTopic(setUser);
+	const { isLoading, mutate } = useAddTopic();
 	const handleSubmit = ({ title, description, file }) => {
 		const formData = new FormData();
 		formData.append("title", title);

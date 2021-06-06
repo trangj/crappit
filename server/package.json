@@ -8,10 +8,12 @@
     "npm": "6.14.7"
   },
   "scripts": {
-    "test": "node app.js",
-    "server": "nodemon app.js",
+    "postinstall": "tsc",
+    "start": "node dist/app.js",
+    "server": "nodemon --exec ts-node --files src/app.ts",
     "client": "npm start --prefix ../client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,11 +25,23 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.9",
     "multer": "^1.4.2",
-    "multer-s3": "^2.9.0"
+    "multer-s3": "^2.9.0",
+    "pg": "^8.6.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.32",
+    "typeorm-naming-strategies": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@types/multer": "^1.4.5",
+    "@types/multer-s3": "^2.7.9",
+    "@types/node": "^15.6.1",
+    "nodemon": "^2.0.7",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
   }
 }

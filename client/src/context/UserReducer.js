@@ -8,7 +8,7 @@ export default (state, action) => {
 		case "LOGOUT_USER":
 			return {
 				...state,
-				user: undefined,
+				user: null,
 			};
 		case "LOGIN_USER":
 			return {

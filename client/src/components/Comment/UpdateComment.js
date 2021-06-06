@@ -17,7 +17,7 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }) => {
 			content,
 		};
 		mutate({
-			commentId: comment._id,
+			commentId: comment.id,
 			newComment,
 		});
 	};

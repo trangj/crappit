@@ -7,7 +7,7 @@ const PrivateRoute = ({ children, ...rest }) => {
 	const location = useLocation();
 	return (
 		<Route {...rest}>
-			{user !== undefined ? (
+			{user !== null ? (
 				children
 			) : (
 				<Redirect

@@ -11,11 +11,11 @@ async function deleteComment({ commentId }) {
 	}
 }
 
-export default function useDeleteComment(setOpen) {
+export default function useDeleteComment(comment, setOpen) {
 	const queryClient = useQueryClient();
 	return useMutation(deleteComment, {
 		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", res.comment.postId]);
+			queryClient.invalidateQueries(["post", String(comment.post_id)]);
 			setOpen(false);
 		},
 		onSettled: (data, error) => {

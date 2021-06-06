@@ -21,6 +21,7 @@ import theme from "./theme";
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Settings from "./components/User/Settings";
+import Moderation from "./components/Pages/Moderation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -37,12 +38,17 @@ function App() {
 				<ChakraProvider theme={theme}>
 					<BrowserRouter>
 						<NavigationBar />
-						<Container style={{ marginTop: "2rem" }} maxW="container.lg">
+						<Container mt="3" maxW="container.lg">
 							<Switch>
 								<Route path="/" exact component={Home} />
 								<Route path="/t" exact component={AllTopics} />
 								<PrivateRoute path="/t/submit" exact component={AddTopic} />
 								<Route path="/t/:topic" exact component={Topic} />
+								<PrivateRoute
+									path="/t/:topic/moderation"
+									exact
+									component={Moderation}
+								/>
 								<PrivateRoute
 									path="/t/:topic/submit"
 									exact

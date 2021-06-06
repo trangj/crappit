@@ -15,11 +15,10 @@ const AddReply = ({ comment, openReply, setOpenReply }) => {
 	const handleSubmit = ({ content }) => {
 		const reply = {
 			content,
-			postId: comment.postId,
-			topic: comment.topic,
+			postId: comment.post_id,
 		};
 		mutate({
-			commentId: comment._id,
+			commentId: comment.id,
 			reply,
 		});
 	};

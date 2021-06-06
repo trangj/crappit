@@ -1,8 +1,7 @@
-// express setup
-const express = require("express");
+import express from "express";
+import { Topic } from '../entities'
+
 const router = express.Router();
-// schemas
-const Topic = require("../models/Topic");
 
 // @route   GET /api/topics
 // @desc    Get all topics
@@ -20,4 +19,4 @@ router.get("/", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export const TopicsRouter = router;

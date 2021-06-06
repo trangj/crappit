@@ -15,7 +15,7 @@ const UserMenu = ({ user, logoutUser }) => {
 			<MenuButton as={IconButton} icon={<HamburgerIcon />}></MenuButton>
 			<div style={{ zIndex: "2" }}>
 				<MenuList>
-					<MenuItem as={Link} to={`/user/${user._id}`}>
+					<MenuItem as={Link} to={`/user/${user.id}`}>
 						Profile
 					</MenuItem>
 					<MenuItem as={Link} to={"/settings"}>

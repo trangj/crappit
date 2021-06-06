@@ -13,7 +13,7 @@ const schema = yup.object({
 	content: yup.string().required(""),
 });
 
-const CommentCard = ({ post }) => {
+const CommentCard = ({ post, topic }) => {
 	const { user } = useContext(UserContext);
 	const { comments } = post;
 	const { isLoading, mutate } = useAddComment(post);
@@ -22,7 +22,7 @@ const CommentCard = ({ post }) => {
 		const { content } = values;
 		const newComment = {
 			content,
-			postId: post._id,
+			postId: post.id,
 		};
 		mutate({
 			newComment,
@@ -35,7 +35,7 @@ const CommentCard = ({ post }) => {
 			{user ? (
 				<>
 					<Text>
-						Comment as <Link to={`/user/${user._id}`}>{user.username}</Link>
+						Comment as <Link to={`/user/${user.id}`}>{user.username}</Link>
 					</Text>
 					<Formik
 						initialValues={{ content: "" }}
@@ -71,7 +71,7 @@ const CommentCard = ({ post }) => {
 				</Text>
 			) : (
 				comments.map((comment) => (
-					<CommentItem comment={comment} key={comment._id} />
+					<CommentItem comment={comment} key={comment.id} topic={topic} />
 				))
 			)}
 		</Card>

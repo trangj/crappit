@@ -32,15 +32,15 @@ const BrowseMenu = ({ user }) => {
 						Create a topic
 					</MenuItem>
 					<MenuDivider />
-					{user === undefined ? (
+					{user === null ? (
 						<MenuItem as={Link} to="/register">
 							Sign up to follow topics!
 						</MenuItem>
 					) : (
 						<MenuGroup title="Followed Topics">
-							{user.followedTopics.map((topic, i) => (
-								<MenuItem as={Link} to={`/t/${topic}`} key={i}>
-									t/{topic}
+							{user.topics_followed.map((topic, i) => (
+								<MenuItem as={Link} to={`/t/${topic.title}`} key={i}>
+									t/{topic.title}
 								</MenuItem>
 							))}
 						</MenuGroup>

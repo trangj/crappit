@@ -9,7 +9,10 @@ import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 
 const schema = yup.object({
-	password: yup.string().required("Enter a password"),
+	password: yup
+		.string()
+		.required("Enter a password")
+		.min(6, "Your password must be at least 6 characters long"),
 	password2: yup
 		.string()
 		.oneOf([yup.ref("password"), null], "Passwords must match")

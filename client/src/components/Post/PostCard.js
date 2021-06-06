@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserState";
 import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, topic }) => {
 	const { user } = useContext(UserContext);
 	const [openEdit, setOpenEdit] = useState(false);
 
@@ -25,11 +25,11 @@ const PostCard = ({ post }) => {
 							t/{post.topic}
 						</Link>{" "}
 						| Posted by{" "}
-						<Link to={`/user/${post.authorId}`}>u/{post.author}</Link>{" "}
-						{moment(post.date).fromNow()}
+						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
+						{moment(post.created_at).fromNow()}
 					</Text>
 					{post.type === "link" ? (
-						<a href={post.link} target="_blank" rel="noopener noreferrer">
+						<a href={post.content} target="_blank" rel="noopener noreferrer">
 							<Heading>{post.title}</Heading>
 						</a>
 					) : (
@@ -46,8 +46,8 @@ const PostCard = ({ post }) => {
 							{post.type === "text" && <Text mt="1">{post.content}</Text>}
 							{post.type === "photo" && (
 								<Image
-									alt={post.imageName}
-									src={post.imageURL}
+									alt={post.image_name}
+									src={post.image_url}
 									maxHeight="400px"
 									mx="auto"
 									pt="3"
@@ -55,9 +55,10 @@ const PostCard = ({ post }) => {
 							)}
 							<HStack mt="1">
 								<Button size="sm" variant="ghost">
-									{post.numberOfComments} Comments
+									{post.number_of_comments}
+									{post.number_of_comments === 1 ? " Comment" : " Comments"}
 								</Button>
-								{user && user._id === post.authorId && (
+								{user && user.id === post.author_id && (
 									<>
 										<DeletePost post={post} />
 										{post.type === "text" && (
@@ -72,8 +73,8 @@ const PostCard = ({ post }) => {
 									</>
 								)}
 								{user &&
-									user._id !== post.authorId &&
-									user.topicsModerating.includes(post.topic) && (
+									user.id !== post.author_id &&
+									topic.user_moderator_id && (
 										<DeletePostModerator post={post} />
 									)}
 							</HStack>

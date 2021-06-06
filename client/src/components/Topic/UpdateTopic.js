@@ -20,8 +20,8 @@ const schema = yup.object({
 		),
 });
 
-const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
-	const { isLoading, mutate } = useUpdateTopic(setOpenEdit, topic);
+const UpdateTopic = ({ topic }) => {
+	const { isLoading, mutate } = useUpdateTopic(topic);
 
 	const handleSubmit = ({ description, file }) => {
 		const formData = new FormData();
@@ -31,39 +31,36 @@ const UpdateTopic = ({ topic, openEdit, setOpenEdit }) => {
 	};
 
 	return (
-		openEdit && (
-			<Formik
-				initialValues={{ description: topic.description, file: "" }}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{({ setFieldValue, values }) => (
-					<Form>
-						<Field
-							label="Description"
-							name="description"
-							multiline
-							component={TextFieldForm}
-						/>
-						<Field
-							label="File"
-							name="file"
-							component={FileFieldForm}
-							setFieldValue={setFieldValue}
-						/>
-						<Button
-							mr="2"
-							type="submit"
-							isLoading={isLoading}
-							isDisabled={!!!values.description}
-						>
-							Update
-						</Button>
-						<Button onClick={() => setOpenEdit(false)}>Cancel</Button>
-					</Form>
-				)}
-			</Formik>
-		)
+		<Formik
+			initialValues={{ description: topic.description, file: "" }}
+			onSubmit={handleSubmit}
+			validationSchema={schema}
+		>
+			{({ setFieldValue, values }) => (
+				<Form>
+					<Field
+						label="Description"
+						name="description"
+						multiline
+						component={TextFieldForm}
+					/>
+					<Field
+						label="File"
+						name="file"
+						component={FileFieldForm}
+						setFieldValue={setFieldValue}
+					/>
+					<Button
+						mt="2"
+						type="submit"
+						isLoading={isLoading}
+						isDisabled={!!!values.description}
+					>
+						Update
+					</Button>
+				</Form>
+			)}
+		</Formik>
 	);
 };
 
