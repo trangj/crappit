@@ -13,6 +13,9 @@ import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 		migrations: ["dist/migration/**/*.js"],
 		url: process.env.DATABASE_URL,
 		namingStrategy: new SnakeNamingStrategy(),
+		ssl: {
+			rejectUnauthorized: false
+		}
 	});
 
 	app.use(express.json());
