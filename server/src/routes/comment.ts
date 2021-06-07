@@ -21,7 +21,7 @@ router.post("/", auth, async (req, res) => {
 			post: commentPost,
 		}).save();
 
-		const { post: post, ...rest } = newComment;
+		const { post, ...rest } = newComment;
 		commentPost.number_of_comments += 1;
 
 		commentPost.save();

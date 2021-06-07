@@ -15,12 +15,8 @@ router.post("/topic/:topic", auth, async (req, res) => {
 		if (!user) throw Error("User does not exist");
 		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
 		if (!topic) throw Error("Topic does not exist");
-		if (
-			!!topic.moderators.filter(
-				(moderator) => moderator.username === user.username
-			).length
-		)
-			throw Error("User is already a moderator");
+		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
+
 		user.topics_moderated.push(topic);
 		await user.save();
 		res.status(200).json({
@@ -43,17 +39,9 @@ router.delete("/post/:post", auth, async (req, res) => {
 		if (!post) throw Error("Post does not exist");
 		const topic = await Topic.findOne({ title: post.topic.title }, { relations: ['moderators'] });
 		if (!topic) throw Error("Topic does not exist");
-		if (
-			!!!topic.moderators.filter(
-				(moderator) => moderator.username === req.user.username
-			).length
-		)
-			throw Error("You are not a moderator for this topic");
-
+		if (!topic.moderators.some(moderator => moderator.id === req.user.id)) throw Error("You are not a moderator");
 		await Post.remove(post);
-
 		if (post.type === "photo") deleteFile(post.image_name);
-
 		res.status(200).json({
 			status: { text: "Post successfully deleted", severity: "success" },
 		});
@@ -72,15 +60,11 @@ router.delete("/comment/:commentid", auth, async (req, res) => {
 		if (!comment) throw Error("Comment does not exist");
 		const topic = await Topic.findOne({ title: comment.post.topic.title }, { relations: ['moderators'] });
 		if (!topic) throw Error("Topic does not exist");
-		if (
-			!!!topic.moderators.filter(
-				(moderator) => moderator.username === req.user.username
-			).length
-		)
-			throw Error("You are not a moderator for this topic");
+		if (!topic.moderators.some(moderator => moderator.id === req.user.id)) throw Error("You are not a moderator");
 
 		comment.content = null;
 		comment.author = null;
+		comment.is_deleted = true;
 
 		await comment.save();
 
