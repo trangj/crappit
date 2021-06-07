@@ -249,7 +249,7 @@ router.post("/email", auth, async (req, res) => {
 		await user.save().catch(err => { throw Error("A user already exists with that email"); });
 
 		res.status(200).json({
-			user,
+			user: { email: user.email },
 			status: { text: "Your email has been changed", severity: "success" },
 		});
 	} catch (err) {

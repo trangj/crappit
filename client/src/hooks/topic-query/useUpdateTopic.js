@@ -15,6 +15,8 @@ export default function useUpdateTopic(topic) {
 	return useMutation(updateTopic, {
 		onSuccess: (res) => {
 			topic.description = res.topic.description;
+			topic.image_url = res.topic.image_url;
+			topic.image_name = res.topic.image_name;
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

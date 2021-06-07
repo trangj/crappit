@@ -14,7 +14,7 @@ import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 
 const Settings = () => {
-	const { user } = useContext(UserContext);
+	const { user, setUser } = useContext(UserContext);
 	const [status, setStatus] = useState(undefined);
 	const [newEmail, setNewEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -32,6 +32,7 @@ const Settings = () => {
 		e.preventDefault();
 		try {
 			const res = await axios.post("/api/user/email", { newEmail, password });
+			setUser({ ...user, email: res.data.user.email });
 			setStatus(res.data);
 		} catch (err) {
 			setStatus(err.response.data);

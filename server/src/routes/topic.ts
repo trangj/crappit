@@ -114,7 +114,7 @@ router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 		await topic.save();
 
 		res.status(200).json({
-			topic,
+			topic: { description: topic.description, image_url: topic.image_url, image_name: topic.image_name },
 			status: { text: "Successfully updated topic", severity: "success" },
 		});
 	} catch (err) {
