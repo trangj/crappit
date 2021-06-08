@@ -2,9 +2,10 @@ import { useColorModeValue } from "@chakra-ui/color-mode";
 import { LinkBox } from "@chakra-ui/react";
 import React from "react";
 
-const LinkCard = ({ children }) => {
+const LinkCard = ({ children, ...props }) => {
 	return (
 		<LinkBox
+			{...props}
 			mb="2"
 			p="3"
 			borderWidth="1px"

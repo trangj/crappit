@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Heading, Divider } from "@chakra-ui/react";
+import { Button, Heading, Divider, Container } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
@@ -36,41 +36,43 @@ const AddTopic = () => {
 	};
 
 	return (
-		<Card>
-			<Heading>Create a topic</Heading>
-			<Divider my="3" />
-			<Formik
-				initialValues={{ title: "", description: "", file: "" }}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{({ setFieldValue, values }) => (
-					<Form>
-						<Field label="Title" name="title" component={TextFieldForm} />
-						<Field
-							label="Description"
-							name="description"
-							multiline
-							component={TextFieldForm}
-						/>
-						<Field
-							label="File"
-							name="file"
-							component={FileFieldForm}
-							setFieldValue={setFieldValue}
-						/>
-						<Button
-							type="submit"
-							isLoading={isLoading}
-							mt="2"
-							isDisabled={!!!values.title || !!!values.description}
-						>
-							Post
-						</Button>
-					</Form>
-				)}
-			</Formik>
-		</Card>
+		<Container maxW="container.md" mt="2">
+			<Card>
+				<Heading>Create a topic</Heading>
+				<Divider my="3" />
+				<Formik
+					initialValues={{ title: "", description: "", file: "" }}
+					onSubmit={handleSubmit}
+					validationSchema={schema}
+				>
+					{({ setFieldValue, values }) => (
+						<Form>
+							<Field label="Title" name="title" component={TextFieldForm} />
+							<Field
+								label="Description"
+								name="description"
+								multiline
+								component={TextFieldForm}
+							/>
+							<Field
+								label="File"
+								name="file"
+								component={FileFieldForm}
+								setFieldValue={setFieldValue}
+							/>
+							<Button
+								type="submit"
+								isLoading={isLoading}
+								mt="2"
+								isDisabled={!!!values.title || !!!values.description}
+							>
+								Post
+							</Button>
+						</Form>
+					)}
+				</Formik>
+			</Card>
+		</Container>
 	);
 };
 

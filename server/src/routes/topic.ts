@@ -105,8 +105,13 @@ router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
 
 		topic.description = req.body.description;
-		if (req.file) {
+		if (topic.image_name && req.file) {
+			// if topic already has banner and a photo has been uploaded
 			deleteFile(topic.image_name);
+			topic.image_url = req.file.location;
+			topic.image_name = req.file.key;
+		} else if (req.file) {
+			// if topic doesnt have a banner and a photo has been uploaded
 			topic.image_url = req.file.location;
 			topic.image_name = req.file.key;
 		}

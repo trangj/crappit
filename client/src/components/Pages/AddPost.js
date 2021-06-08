@@ -8,6 +8,7 @@ import {
 	Tab,
 	Heading,
 	Divider,
+	Container,
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
@@ -57,89 +58,91 @@ const AddPost = ({ match }) => {
 	};
 
 	return (
-		<Card>
-			<Heading>Create a post</Heading>
-			<Divider my="3" />
-			<Formik
-				initialValues={{
-					title: "",
-					content: "",
-					file: "",
-					link: "",
-					topic: match.params.topic,
-				}}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{({ setFieldValue, values }) => (
-					<Form>
-						<Field
-							label={"Topic"}
-							name="topic"
-							component={SelectFieldForm}
-							placeholder={
-								topicsIsLoading
-									? "Loading..."
-									: topicsIsError
-									? topicsError.status.text
-									: "Choose a topic"
-							}
-							mb="2"
-						>
-							{!topicsIsLoading &&
-								topicsData.map((topic) => (
-									<option key={topic.title} value={topic.title}>
-										t/{topic.title}
-									</option>
-								))}
-						</Field>
-						<Tabs
-							variant="soft-rounded"
-							isFitted
-							index={selectedType}
-							onChange={setSelectedType}
-							mt="5"
-						>
-							<TabList mb="3">
-								<Tab>Text</Tab>
-								<Tab>Link</Tab>
-								<Tab>Photo/GIF</Tab>
-							</TabList>
-							<Field label="Title" name="title" component={TextFieldForm} />
-							<TabPanels>
-								<TabPanel p="0">
-									<Field
-										label="Content"
-										name="content"
-										multiline
-										component={TextFieldForm}
-									/>
-								</TabPanel>
-								<TabPanel p="0">
-									<Field label="Link" name="link" component={TextFieldForm} />
-								</TabPanel>
-								<TabPanel p="0">
-									<Field
-										label="File"
-										name="file"
-										component={FileFieldForm}
-										setFieldValue={setFieldValue}
-									/>
-								</TabPanel>
-							</TabPanels>
-							<Button
-								type="submit"
-								mt="2"
-								isLoading={isLoading}
-								isDisabled={!!!values.title || !!!values.topic}
+		<Container maxW="container.md" mt="2">
+			<Card>
+				<Heading>Create a post</Heading>
+				<Divider my="3" />
+				<Formik
+					initialValues={{
+						title: "",
+						content: "",
+						file: "",
+						link: "",
+						topic: match.params.topic,
+					}}
+					onSubmit={handleSubmit}
+					validationSchema={schema}
+				>
+					{({ setFieldValue, values }) => (
+						<Form>
+							<Field
+								label={"Topic"}
+								name="topic"
+								component={SelectFieldForm}
+								placeholder={
+									topicsIsLoading
+										? "Loading..."
+										: topicsIsError
+										? topicsError.status.text
+										: "Choose a topic"
+								}
+								mb="2"
 							>
-								Post
-							</Button>
-						</Tabs>
-					</Form>
-				)}
-			</Formik>
-		</Card>
+								{!topicsIsLoading &&
+									topicsData.map((topic) => (
+										<option key={topic.title} value={topic.title}>
+											t/{topic.title}
+										</option>
+									))}
+							</Field>
+							<Tabs
+								variant="soft-rounded"
+								isFitted
+								index={selectedType}
+								onChange={setSelectedType}
+								mt="5"
+							>
+								<TabList mb="3">
+									<Tab>Text</Tab>
+									<Tab>Link</Tab>
+									<Tab>Photo/GIF</Tab>
+								</TabList>
+								<Field label="Title" name="title" component={TextFieldForm} />
+								<TabPanels>
+									<TabPanel p="0">
+										<Field
+											label="Content"
+											name="content"
+											multiline
+											component={TextFieldForm}
+										/>
+									</TabPanel>
+									<TabPanel p="0">
+										<Field label="Link" name="link" component={TextFieldForm} />
+									</TabPanel>
+									<TabPanel p="0">
+										<Field
+											label="File"
+											name="file"
+											component={FileFieldForm}
+											setFieldValue={setFieldValue}
+										/>
+									</TabPanel>
+								</TabPanels>
+								<Button
+									type="submit"
+									mt="2"
+									isLoading={isLoading}
+									isDisabled={!!!values.title || !!!values.topic}
+								>
+									Post
+								</Button>
+							</Tabs>
+						</Form>
+					)}
+				</Formik>
+			</Card>
+		</Container>
 	);
 };
 export default AddPost;

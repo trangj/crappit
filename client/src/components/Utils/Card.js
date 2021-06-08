@@ -2,10 +2,11 @@ import { Box } from "@chakra-ui/layout";
 import React from "react";
 import { useColorModeValue } from "@chakra-ui/react";
 
-const Card = ({ children }) => {
+const Card = ({ children, ...props }) => {
 	return (
 		<Box
-			mb="3"
+			{...props}
+			mb="2"
 			p="3"
 			borderRadius="lg"
 			overflow="hidden"

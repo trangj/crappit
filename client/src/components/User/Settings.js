@@ -7,6 +7,7 @@ import {
 	FormControl,
 	FormLabel,
 	Input,
+	Container,
 } from "@chakra-ui/react";
 import { UserContext } from "../../context/UserState";
 import axios from "../../axiosConfig";
@@ -40,41 +41,43 @@ const Settings = () => {
 	};
 
 	return (
-		<Card>
-			<Heading>Settings</Heading>
-			<Divider my="3" />
-			{status !== undefined && <AlertStatus status={status} />}
-			<Heading mb="3" size="md">
-				Change password
-			</Heading>
-			<Button onClick={() => handlePassword(user.email)}>
-				Request Password Change
-			</Button>
-			<Divider my="3" />
-			<form onSubmit={handleEmail}>
-				<FormControl>
-					<Heading size="md">Email address</Heading>
-					<Text mb="3">Your current email: {user.email}</Text>
-					<FormLabel>New Email</FormLabel>
-					<Input
-						type="email"
-						value={newEmail}
-						isRequired={true}
-						onChange={(e) => setNewEmail(e.target.value)}
-					/>
-					<FormLabel>Current Password</FormLabel>
-					<Input
-						type="password"
-						value={password}
-						isRequired={true}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-					<Button type="submit" mt="3">
-						Change Email
-					</Button>
-				</FormControl>
-			</form>
-		</Card>
+		<Container mt="2" maxW="container.lg">
+			<Card>
+				<Heading>Settings</Heading>
+				<Divider my="3" />
+				{status !== undefined && <AlertStatus status={status} />}
+				<Heading mb="3" size="md">
+					Change password
+				</Heading>
+				<Button onClick={() => handlePassword(user.email)}>
+					Request Password Change
+				</Button>
+				<Divider my="3" />
+				<form onSubmit={handleEmail}>
+					<FormControl>
+						<Heading size="md">Email address</Heading>
+						<Text mb="3">Your current email: {user.email}</Text>
+						<FormLabel>New Email</FormLabel>
+						<Input
+							type="email"
+							value={newEmail}
+							isRequired={true}
+							onChange={(e) => setNewEmail(e.target.value)}
+						/>
+						<FormLabel>Current Password</FormLabel>
+						<Input
+							type="password"
+							value={password}
+							isRequired={true}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+						<Button type="submit" mt="3">
+							Change Email
+						</Button>
+					</FormControl>
+				</form>
+			</Card>
+		</Container>
 	);
 };
 

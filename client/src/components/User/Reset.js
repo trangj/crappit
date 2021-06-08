@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button, Divider, Heading } from "@chakra-ui/react";
+import { Button, Container, Divider, Heading } from "@chakra-ui/react";
 import axios from "../../axiosConfig";
 import { Redirect } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
@@ -63,36 +63,38 @@ const Forgot = ({ match }) => {
 		);
 
 	return (
-		<Card>
-			<Heading mb="3">Forgot</Heading>
-			<Divider my="3" />
-			<Formik
-				initialValues={{ password: "", password2: "" }}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{() => (
-					<Form>
-						<Field
-							label="Password"
-							name="password"
-							type="password"
-							component={TextFieldForm}
-						/>
-						<Field
-							label="Confirm Password"
-							name="password2"
-							type="password"
-							component={TextFieldForm}
-						/>
-						<Button type="submit" mt="2">
-							Post
-						</Button>
-						{status !== undefined && <AlertStatus status={status} />}
-					</Form>
-				)}
-			</Formik>
-		</Card>
+		<Container mt="2">
+			<Card>
+				<Heading mb="3">Forgot</Heading>
+				<Divider my="3" />
+				<Formik
+					initialValues={{ password: "", password2: "" }}
+					onSubmit={handleSubmit}
+					validationSchema={schema}
+				>
+					{() => (
+						<Form>
+							<Field
+								label="Password"
+								name="password"
+								type="password"
+								component={TextFieldForm}
+							/>
+							<Field
+								label="Confirm Password"
+								name="password2"
+								type="password"
+								component={TextFieldForm}
+							/>
+							<Button type="submit" mt="2">
+								Post
+							</Button>
+							{status !== undefined && <AlertStatus status={status} />}
+						</Form>
+					)}
+				</Formik>
+			</Card>
+		</Container>
 	);
 };
 

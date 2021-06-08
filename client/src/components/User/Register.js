@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Divider, Heading } from "@chakra-ui/react";
+import { Button, Container, Divider, Heading } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
@@ -46,48 +46,54 @@ const Register = () => {
 	};
 
 	return (
-		<Card>
-			<Heading mb="3">Register</Heading>
-			<Divider my="3" />
-			<Formik
-				initialValues={{
-					username: "",
-					email: "",
-					password: "",
-					password2: "",
-				}}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{() => (
-					<Form>
-						<Field label="Username" name="username" component={TextFieldForm} />
-						<Field
-							label="Email"
-							name="email"
-							type="email"
-							component={TextFieldForm}
-						/>
-						<Field
-							label="Password"
-							name="password"
-							type="password"
-							component={TextFieldForm}
-						/>
-						<Field
-							label="Confirm Password"
-							name="password2"
-							type="password"
-							component={TextFieldForm}
-						/>
-						<Button type="submit" mt="2">
-							Register
-						</Button>
-					</Form>
-				)}
-			</Formik>
-			{status !== undefined && <AlertStatus status={status} />}
-		</Card>
+		<Container mt="2">
+			<Card>
+				<Heading mb="3">Register</Heading>
+				<Divider my="3" />
+				<Formik
+					initialValues={{
+						username: "",
+						email: "",
+						password: "",
+						password2: "",
+					}}
+					onSubmit={handleSubmit}
+					validationSchema={schema}
+				>
+					{() => (
+						<Form>
+							<Field
+								label="Username"
+								name="username"
+								component={TextFieldForm}
+							/>
+							<Field
+								label="Email"
+								name="email"
+								type="email"
+								component={TextFieldForm}
+							/>
+							<Field
+								label="Password"
+								name="password"
+								type="password"
+								component={TextFieldForm}
+							/>
+							<Field
+								label="Confirm Password"
+								name="password2"
+								type="password"
+								component={TextFieldForm}
+							/>
+							<Button type="submit" mt="2">
+								Register
+							</Button>
+						</Form>
+					)}
+				</Formik>
+				{status !== undefined && <AlertStatus status={status} />}
+			</Card>
+		</Container>
 	);
 };
 

@@ -22,14 +22,14 @@ const NavigationBar = () => {
 	const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
 
 	return (
-		<>
-			<Box bg={bg} p={3}>
+		<Box bg={bg} p="2" position="sticky" top="0" zIndex="3" shadow="md">
+			<HStack spacing="0">
+				<Heading pr="3" display={{ base: "none", md: "block" }}>
+					<Link to="/">Crappit</Link>
+				</Heading>
+				<BrowseMenu user={user} />
+				<Spacer />
 				<HStack>
-					<Heading mr="2">
-						<Link to="/">Crappit</Link>
-					</Heading>
-					<BrowseMenu user={user} />
-					<Spacer />
 					<IconButton icon={icon} onClick={toggleColorMode} />
 					{!user ? (
 						<>
@@ -44,8 +44,8 @@ const NavigationBar = () => {
 						<UserMenu user={user} logoutUser={logoutUser} />
 					)}
 				</HStack>
-			</Box>
-		</>
+			</HStack>
+		</Box>
 	);
 };
 

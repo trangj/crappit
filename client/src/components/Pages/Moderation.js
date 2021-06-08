@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Divider, Heading, Image, Text } from "@chakra-ui/react";
+import { Container, Divider, Heading, Image, Text } from "@chakra-ui/react";
 import useTopic from "../../hooks/topic-query/useTopic";
 import { UserContext } from "../../context/UserState";
 import Card from "../Utils/Card";
@@ -20,26 +20,30 @@ const Moderation = ({ match }) => {
 	if (topicLoading) return <SkeletonCard />;
 	if (topicIsError) return <AlertStatus status={topicError} />;
 
-	return topicData.topic.user_moderator_id === user.id ? (
-		<Card>
-			<Heading>Topic Settings</Heading>
-			<Divider my="3" />
-			<Heading size="md">Current Description and Banner</Heading>
-			<Image
-				alt={topicData.topic.image_name}
-				src={topicData.topic.image_url}
-				maxHeight="200px"
-			/>
-			<Text>{topicData.topic.description}</Text>
-			<Divider my="3" />
-			<Heading size="md">Description and Banner</Heading>
-			<UpdateTopic topic={topicData.topic} />
-			<Divider my="3" />
-			<Heading size="md">Moderators</Heading>
-			<AddModerator topic={topicData.topic} />
-		</Card>
-	) : (
-		<div>You are not a moderator of this topic</div>
+	return (
+		<Container mt="2" maxW="container.md">
+			{topicData.topic.user_moderator_id === user.id ? (
+				<Card>
+					<Heading>Topic Settings</Heading>
+					<Divider my="3" />
+					<Heading size="md">Current Description and Banner</Heading>
+					<Image
+						alt={topicData.topic.image_name}
+						src={topicData.topic.image_url}
+						maxHeight="200px"
+					/>
+					<Text>{topicData.topic.description}</Text>
+					<Divider my="3" />
+					<Heading size="md">Description and Banner</Heading>
+					<UpdateTopic topic={topicData.topic} />
+					<Divider my="3" />
+					<Heading size="md">Moderators</Heading>
+					<AddModerator topic={topicData.topic} />
+				</Card>
+			) : (
+				<div>You are not a moderator of this topic</div>
+			)}
+		</Container>
 	);
 };
 

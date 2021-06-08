@@ -7,6 +7,7 @@ import {
 	MenuDivider,
 	MenuGroup,
 	Button,
+	Box,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { TriangleDownIcon } from "@chakra-ui/icons";
@@ -14,8 +15,9 @@ import { TriangleDownIcon } from "@chakra-ui/icons";
 const BrowseMenu = ({ user }) => {
 	return (
 		<Menu>
-			<MenuButton as={Button} rightIcon={<TriangleDownIcon />}>
-				Browse
+			<MenuButton as={Button}>
+				<Box display={{ base: "none", sm: "inline" }}>Browse </Box>
+				<TriangleDownIcon />
 			</MenuButton>
 			<div style={{ zIndex: "2" }}>
 				<MenuList>
