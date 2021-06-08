@@ -13,13 +13,13 @@ const AllTopics = () => {
 	if (isError) return <AlertStatus status={error} />;
 
 	return (
-		<Container mt="3" maxW="container.md">
+		<Container>
 			{isLoading ? (
 				<SkeletonList />
 			) : (
 				<>
 					{topics.map((topic) => (
-						<LinkCard key={topic.title} borderRadius="lg" mt="3">
+						<LinkCard key={topic.title} borderRadius="lg" mb="3">
 							<Heading>
 								<LinkOverlay as={Link} to={`t/${topic.title}`}>
 									t/{topic.title}

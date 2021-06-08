@@ -11,6 +11,15 @@ const config = {
 			},
 		}),
 	},
+	components: {
+		Container: {
+			baseStyle: {
+				px: { base: "0", sm: "1rem" },
+				pt: "5",
+				maxW: "container.md",
+			},
+		},
+	},
 };
 
 const theme = extendTheme(config);

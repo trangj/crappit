@@ -21,7 +21,7 @@ const Moderation = ({ match }) => {
 	if (topicIsError) return <AlertStatus status={topicError} />;
 
 	return (
-		<Container mt="3" maxW="container.md">
+		<Container>
 			{topicData.topic.user_moderator_id === user.id ? (
 				<Card>
 					<Heading>Topic Settings</Heading>

@@ -19,7 +19,7 @@ const PostItem = ({ post, ...props }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<LinkCard {...props}>
+		<LinkCard {...props} mb="-1px">
 			<HStack spacing="0">
 				<Box mb="auto" zIndex="3">
 					<Voting post={post} />

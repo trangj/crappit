@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Container, Divider, Heading } from "@chakra-ui/react";
+import { Button, Container, Divider, Heading, HStack } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../Forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
@@ -7,6 +7,7 @@ import { UserContext } from "../../context/UserState";
 import { useHistory } from "react-router";
 import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
+import { Link } from "react-router-dom";
 
 const schema = yup.object({
 	username: yup
@@ -46,7 +47,7 @@ const Register = () => {
 	};
 
 	return (
-		<Container mt="3">
+		<Container>
 			<Card>
 				<Heading mb="3">Register</Heading>
 				<Divider my="3" />
@@ -91,6 +92,11 @@ const Register = () => {
 						</Form>
 					)}
 				</Formik>
+				<HStack my="2">
+					<Link to="/login">
+						<small>Already have an account?</small>
+					</Link>
+				</HStack>
 				{status !== undefined && <AlertStatus status={status} />}
 			</Card>
 		</Container>

@@ -3,13 +3,13 @@ import { Container, Skeleton } from "@chakra-ui/react";
 
 const SkeletonBox = () => {
 	return (
-		<Container mt="5" maxW="container.lg">
-			<Skeleton height={300} />
-			<Skeleton height={100} mt="2" />
-			<Skeleton height={100} mt="2" />
-			<Skeleton height={100} mt="2" style={{ opacity: "75%" }} />
-			<Skeleton height={100} mt="2" style={{ opacity: "50%" }} />
-			<Skeleton height={100} mt="2" style={{ opacity: "25%" }} />
+		<Container>
+			<Skeleton height={300} borderRadius="lg" />
+			<Skeleton height={100} mt="2" borderRadius="lg" />
+			<Skeleton height={100} mt="2" borderRadius="lg" />
+			<Skeleton height={100} mt="2" opacity="75%" borderRadius="lg" />
+			<Skeleton height={100} mt="2" opacity="50%" borderRadius="lg" />
+			<Skeleton height={100} mt="2" opacity="25%" borderRadius="lg" />
 		</Container>
 	);
 };

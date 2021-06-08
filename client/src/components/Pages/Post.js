@@ -21,7 +21,7 @@ const Post = ({ match }) => {
 		return <AlertStatus status={error || topicError} />;
 
 	return (
-		<Container mt="3" maxW="container.lg">
+		<Container>
 			<PostCard post={data} topic={topicData.topic} />
 			<CommentCard post={data} topic={topicData.topic} />
 		</Container>

@@ -34,7 +34,7 @@ const Home = () => {
 
 	if (isError) return <AlertStatus status={error} />;
 	return (
-		<Flex m="5">
+		<Flex mx={{ base: "0", sm: "5" }} my="5">
 			<Box width="100%">
 				<Card>
 					<HStack>
@@ -95,23 +95,25 @@ const Home = () => {
 			</Box>
 			<Flex
 				flexDirection="column"
-				width="400px"
+				width="312px"
 				ml="5"
 				display={{ base: "none", md: "block" }}
 			>
-				<Card>
-					<Heading size="md">Home</Heading>
-					<Text>
-						Your personal Crappit frontpage. Come here to check in with your
-						favorite communities.
-					</Text>
-					<Button as={Link} to={`/submit`} mt="2" isFullWidth>
-						Create Post
-					</Button>
-					<Button as={Link} to={`/submit`} mt="2" isFullWidth>
-						Create Topic
-					</Button>
-				</Card>
+				<Box width="inherit">
+					<Card>
+						<Heading size="md">Home</Heading>
+						<Text>
+							Your personal Crappit frontpage. Come here to check in with your
+							favorite communities.
+						</Text>
+						<Button as={Link} to={`/submit`} mt="2" isFullWidth>
+							Create Post
+						</Button>
+						<Button as={Link} to={`/submit`} mt="2" isFullWidth>
+							Create Topic
+						</Button>
+					</Card>
+				</Box>
 			</Flex>
 		</Flex>
 	);

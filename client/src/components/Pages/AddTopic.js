@@ -36,7 +36,7 @@ const AddTopic = () => {
 	};
 
 	return (
-		<Container maxW="container.md" mt="3">
+		<Container>
 			<Card>
 				<Heading>Create a topic</Heading>
 				<Divider my="3" />

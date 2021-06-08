@@ -46,7 +46,7 @@ const Topic = ({ match }) => {
 			) : (
 				<Skeleton width="100%" height="200px" />
 			)}
-			<Flex m="5">
+			<Flex px={{ base: "0", sm: "5" }} py="5">
 				<Box width="100%">
 					<Card>
 						<HStack>
@@ -110,44 +110,46 @@ const Topic = ({ match }) => {
 				</Box>
 				<Flex
 					flexDirection="column"
-					width="400px"
+					width="312px"
 					ml="5"
 					display={{ base: "none", md: "block" }}
 				>
-					{!topicLoading ? (
-						<Card>
-							<Flex>
-								<Heading size="md">About Community</Heading>
-								<Spacer />
-								{user && topicData.topic.user_moderator_id && (
-									<>
-										<Button
-											as={Link}
-											to={`/t/${topicData.topic.title}/moderation`}
-											size="sm"
-										>
-											Settings
-										</Button>
-									</>
-								)}
-							</Flex>
-							<Text pt="4">{topicData.topic.description}</Text>
-							<Divider pt="2" />
-							<Text pt="2">
-								Created {moment(topicData.topic.created_at).format("LL")}
-							</Text>
-							<Button
-								as={Link}
-								to={`/t/${topicData.topic.title}/submit`}
-								mt="2"
-								isFullWidth
-							>
-								Add Post
-							</Button>
-						</Card>
-					) : (
-						<Skeleton width="100%" height="300px" borderRadius="lg" />
-					)}
+					<Box width="inherit">
+						{!topicLoading ? (
+							<Card>
+								<Flex>
+									<Heading size="md">About Community</Heading>
+									<Spacer />
+									{user && topicData.topic.user_moderator_id && (
+										<>
+											<Button
+												as={Link}
+												to={`/t/${topicData.topic.title}/moderation`}
+												size="sm"
+											>
+												Settings
+											</Button>
+										</>
+									)}
+								</Flex>
+								<Text pt="4">{topicData.topic.description}</Text>
+								<Divider pt="2" />
+								<Text pt="2">
+									Created {moment(topicData.topic.created_at).format("LL")}
+								</Text>
+								<Button
+									as={Link}
+									to={`/t/${topicData.topic.title}/submit`}
+									mt="2"
+									isFullWidth
+								>
+									Add Post
+								</Button>
+							</Card>
+						) : (
+							<Skeleton width="100%" height="300px" borderRadius="lg" />
+						)}
+					</Box>
 				</Flex>
 			</Flex>
 		</>

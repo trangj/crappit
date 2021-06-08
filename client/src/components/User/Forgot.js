@@ -23,7 +23,7 @@ const Forgot = () => {
 	};
 
 	return (
-		<Container mt="3">
+		<Container>
 			<Card>
 				<Heading mb="3">Forgot</Heading>
 				<Divider my="3" />

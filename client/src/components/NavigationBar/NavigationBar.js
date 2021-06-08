@@ -33,16 +33,16 @@ const NavigationBar = () => {
 			borderColor={border}
 		>
 			<HStack spacing="0">
-				<Heading pr="3" display={{ base: "none", md: "block" }}>
+				<Heading pr="3" display={{ base: "none", sm: "block" }}>
 					<Link to="/">Crappit</Link>
 				</Heading>
 				<BrowseMenu user={user} />
 				<Spacer />
-				<HStack>
-					<IconButton icon={icon} onClick={toggleColorMode} />
+				<div>
+					<IconButton icon={icon} onClick={toggleColorMode} mr="2" />
 					{!user ? (
 						<>
-							<Button as={Link} to="/login">
+							<Button as={Link} to="/login" mr="2">
 								Login
 							</Button>
 							<Button as={Link} to="/register">
@@ -52,7 +52,7 @@ const NavigationBar = () => {
 					) : (
 						<UserMenu user={user} logoutUser={logoutUser} />
 					)}
-				</HStack>
+				</div>
 			</HStack>
 		</Box>
 	);

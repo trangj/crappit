@@ -19,7 +19,7 @@ const Profile = ({ match }) => {
 	if (isError) return <AlertStatus status={error} />;
 
 	return (
-		<Container mt="3" maxW="container.lg">
+		<Container>
 			<Card>
 				<Heading>u/{profile.username}</Heading>
 				<Text>User since {moment(profile.created_at).fromNow()}</Text>
