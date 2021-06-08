@@ -4,6 +4,7 @@ import TopicCard from "../Topic/TopicCard";
 import SkeletonList from "../Utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
+	Avatar,
 	Box,
 	Button,
 	Divider,
@@ -13,7 +14,6 @@ import {
 	Input,
 	Skeleton,
 	Spacer,
-	Spinner,
 	Text,
 } from "@chakra-ui/react";
 import usePosts from "../../hooks/post-query/usePosts";
@@ -48,15 +48,21 @@ const Topic = ({ match }) => {
 			)}
 			<Flex m="5">
 				<Box width="100%">
-					{!topicLoading ? (
-						<Card>
-							<Link to={`/t/${topicData.topic.title}/submit`}>
+					<Card>
+						<HStack>
+							<Avatar
+								size="sm"
+								as={Link}
+								to={user ? `/user/${user.id}` : "/login"}
+							/>
+							<Link
+								to={!topicLoading && `/t/${topicData.topic.title}/submit`}
+								style={{ width: "100%" }}
+							>
 								<Input placeholder="Create post" />
 							</Link>
-						</Card>
-					) : (
-						<Skeleton width="100%" height="4rem" mb="3" borderRadius="lg" />
-					)}
+						</HStack>
+					</Card>
 					<Card>
 						<HStack>
 							<Button
@@ -84,7 +90,7 @@ const Topic = ({ match }) => {
 							pageStart={0}
 							loadMore={fetchNextPage}
 							hasMore={!isFetching && hasNextPage}
-							loader={<Spinner key={0} mx="auto" display={"block"} />}
+							loader={<Skeleton height="105px" width="100%" />}
 						>
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>
@@ -92,9 +98,7 @@ const Topic = ({ match }) => {
 										<PostItem
 											post={post}
 											key={post.id}
-											style={{
-												borderRadius: i === 0 && y === 0 && "0.5rem 0.5rem 0 0",
-											}}
+											borderTopRadius={i === 0 && y === 0 && "lg"}
 										/>
 									))}
 								</React.Fragment>

@@ -29,7 +29,7 @@ const TopicCard = ({ topic }) => {
 			) : (
 				<Box width="100%" height="100px" bg="blue.100" />
 			)}
-			<Box bg={useColorModeValue("gray.50", "gray.700")} p="4">
+			<Box bg={useColorModeValue("white", "gray.700")} p="4">
 				<Box>
 					<HStack spacing="6">
 						<Heading size="lg">

@@ -1,23 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import PostItem from "../Post/PostItem";
 import SkeletonList from "../Utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
 	Button,
 	Flex,
-	Spinner,
 	Box,
 	Input,
 	HStack,
 	Text,
 	Heading,
+	Avatar,
+	Skeleton,
 } from "@chakra-ui/react";
 import usePosts from "../../hooks/post-query/usePosts";
 import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context/UserState";
 
 const Home = () => {
+	const { user } = useContext(UserContext);
 	const [sortParam, setSortParam] = useState("");
 	const {
 		data,
@@ -34,9 +37,16 @@ const Home = () => {
 		<Flex m="5">
 			<Box width="100%">
 				<Card>
-					<Link to={`/submit`}>
-						<Input placeholder="Create post" />
-					</Link>
+					<HStack>
+						<Avatar
+							size="sm"
+							as={Link}
+							to={user ? `/user/${user.id}` : "/login"}
+						/>
+						<Link to={`/submit`} style={{ width: "100%" }}>
+							<Input placeholder="Create post" />
+						</Link>
+					</HStack>
 				</Card>
 				<Card>
 					<HStack>
@@ -65,7 +75,7 @@ const Home = () => {
 						pageStart={0}
 						loadMore={fetchNextPage}
 						hasMore={!isFetching && hasNextPage}
-						loader={<Spinner key={0} mx="auto" display={"block"} />}
+						loader={<Skeleton height="105px" width="100%" />}
 					>
 						{data.pages.map((group, i) => (
 							<React.Fragment key={i}>
@@ -73,9 +83,7 @@ const Home = () => {
 									<PostItem
 										post={post}
 										key={post.id}
-										style={{
-											borderRadius: i === 0 && y === 0 && "0.5rem 0.5rem 0 0",
-										}}
+										borderTopRadius={i === 0 && y === 0 && "lg"}
 									/>
 								))}
 							</React.Fragment>

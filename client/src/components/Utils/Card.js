@@ -11,8 +11,8 @@ const Card = ({ children, ...props }) => {
 			border="1px"
 			borderRadius="lg"
 			overflow="hidden"
-			borderColor={useColorModeValue("gray.100", "gray.600")}
-			backgroundColor={useColorModeValue("gray.50", "gray.700")}
+			borderColor={useColorModeValue("gray.200", "gray.600")}
+			backgroundColor={useColorModeValue("white", "gray.700")}
 		>
 			{children}
 		</Box>
