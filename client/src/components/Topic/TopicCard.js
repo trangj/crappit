@@ -32,7 +32,9 @@ const TopicCard = ({ topic }) => {
 			<Box bg={useColorModeValue("gray.50", "gray.700")} p="4">
 				<Box>
 					<HStack spacing="6">
-						<Heading size="lg">{topic.headline}</Heading>
+						<Heading size="lg">
+							{topic.headline ? topic.headline : topic.title}
+						</Heading>
 						{user && (
 							<Button
 								isLoading={isLoading}
