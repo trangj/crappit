@@ -23,16 +23,21 @@ const schema = yup.object({
 const UpdateTopic = ({ topic }) => {
 	const { isLoading, mutate } = useUpdateTopic(topic);
 
-	const handleSubmit = ({ description, file }) => {
+	const handleSubmit = ({ description, file, headline }) => {
 		const formData = new FormData();
 		formData.append("description", description);
+		formData.append("headline", headline);
 		formData.append("file", file);
 		mutate({ topic: topic.title, formData });
 	};
 
 	return (
 		<Formik
-			initialValues={{ description: topic.description, file: "" }}
+			initialValues={{
+				description: topic.description,
+				file: "",
+				headline: topic.headline,
+			}}
 			onSubmit={handleSubmit}
 			validationSchema={schema}
 		>
@@ -44,6 +49,7 @@ const UpdateTopic = ({ topic }) => {
 						multiline
 						component={TextFieldForm}
 					/>
+					<Field label="Headline" name="headline" component={TextFieldForm} />
 					<Field
 						label="File"
 						name="file"

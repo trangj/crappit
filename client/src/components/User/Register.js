@@ -46,7 +46,7 @@ const Register = () => {
 	};
 
 	return (
-		<Container mt="2">
+		<Container mt="3">
 			<Card>
 				<Heading mb="3">Register</Heading>
 				<Divider my="3" />

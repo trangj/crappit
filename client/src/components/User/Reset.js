@@ -63,7 +63,7 @@ const Forgot = ({ match }) => {
 		);
 
 	return (
-		<Container mt="2">
+		<Container mt="3">
 			<Card>
 				<Heading mb="3">Forgot</Heading>
 				<Divider my="3" />

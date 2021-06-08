@@ -41,7 +41,7 @@ const Settings = () => {
 	};
 
 	return (
-		<Container mt="2" maxW="container.lg">
+		<Container mt="3" maxW="container.lg">
 			<Card>
 				<Heading>Settings</Heading>
 				<Divider my="3" />

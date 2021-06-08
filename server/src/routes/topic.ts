@@ -105,6 +105,7 @@ router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
 
 		topic.description = req.body.description;
+		topic.headline = req.body.headline;
 		if (topic.image_name && req.file) {
 			// if topic already has banner and a photo has been uploaded
 			deleteFile(topic.image_name);
@@ -119,7 +120,7 @@ router.put("/:topic", auth, upload.single("file"), async (req, res) => {
 		await topic.save();
 
 		res.status(200).json({
-			topic: { description: topic.description, image_url: topic.image_url, image_name: topic.image_name },
+			topic: { description: topic.description, image_url: topic.image_url, image_name: topic.image_name, headline: topic.headline },
 			status: { text: "Successfully updated topic", severity: "success" },
 		});
 	} catch (err) {

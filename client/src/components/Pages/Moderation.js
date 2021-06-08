@@ -21,18 +21,25 @@ const Moderation = ({ match }) => {
 	if (topicIsError) return <AlertStatus status={topicError} />;
 
 	return (
-		<Container mt="2" maxW="container.md">
+		<Container mt="3" maxW="container.md">
 			{topicData.topic.user_moderator_id === user.id ? (
 				<Card>
 					<Heading>Topic Settings</Heading>
 					<Divider my="3" />
-					<Heading size="md">Current Description and Banner</Heading>
-					<Image
-						alt={topicData.topic.image_name}
-						src={topicData.topic.image_url}
-						maxHeight="200px"
-					/>
+					<Heading size="md">Current Banner</Heading>
+					{topicData.topic.image_url ? (
+						<Image
+							alt={topicData.topic.image_name}
+							src={topicData.topic.image_url}
+							maxHeight="200px"
+						/>
+					) : (
+						<div>Image is not set...</div>
+					)}
+					<Heading size="md">Current Description</Heading>
 					<Text>{topicData.topic.description}</Text>
+					<Heading size="md">Current Headline</Heading>
+					<Text>{topicData.topic.headline}</Text>
 					<Divider my="3" />
 					<Heading size="md">Description and Banner</Heading>
 					<UpdateTopic topic={topicData.topic} />

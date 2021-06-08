@@ -6,13 +6,12 @@ const LinkCard = ({ children, ...props }) => {
 	return (
 		<LinkBox
 			{...props}
-			mb="2"
-			p="3"
-			borderWidth="1px"
-			borderRadius="lg"
-			borderColor={useColorModeValue("gray.50", "gray.700")}
+			p="2"
+			border="1px"
+			mb="-1px"
+			borderColor={useColorModeValue("gray.100", "gray.600")}
 			backgroundColor={useColorModeValue("gray.50", "gray.700")}
-			_hover={{ borderColor: useColorModeValue("black", "white") }}
+			_hover={{ borderColor: useColorModeValue("black", "white"), zIndex: "1" }}
 		>
 			{children}
 		</LinkBox>

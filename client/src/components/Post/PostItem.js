@@ -15,15 +15,17 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import LinkCard from "../Utils/LinkCard";
 
-const PostItem = ({ post }) => {
+const PostItem = ({ post, ...props }) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<LinkCard>
+		<LinkCard {...props}>
 			<HStack spacing="0">
-				<Voting post={post} />
-				<Box>
-					<Heading>
+				<Box mb="auto">
+					<Voting post={post} />
+				</Box>
+				<Box width="100%">
+					<Heading size="lg">
 						<LinkOverlay as={Link} to={`/t/${post.topic}/comments/${post.id}`}>
 							{post.title}
 						</LinkOverlay>
@@ -59,28 +61,27 @@ const PostItem = ({ post }) => {
 							{post.number_of_comments === 1 ? " Comment" : " Comments"}
 						</Button>
 					</HStack>
+					{open && (
+						<>
+							<Box id={post.id} mt="3">
+								{post.type === "photo" && (
+									<Image
+										alt={post.image_name}
+										src={post.image_url}
+										maxHeight="600px"
+										mx="auto"
+									/>
+								)}
+								{post.type === "text" && (
+									<Text mt="3" width={{ base: "100%", xl: "60%" }}>
+										{post.content}
+									</Text>
+								)}
+							</Box>
+						</>
+					)}
 				</Box>
 			</HStack>
-			{open && (
-				<>
-					<Box id={post.id} mt="3">
-						{post.type === "photo" && (
-							<Image
-								alt={post.image_name}
-								src={post.image_url}
-								style={{
-									display: "block",
-									maxWidth: "100%",
-									maxHeight: "400px",
-									marginLeft: "auto",
-									marginRight: "auto",
-								}}
-							/>
-						)}
-						{post.type === "text" && <Text mt="3">{post.content}</Text>}
-					</Box>
-				</>
-			)}
 		</LinkCard>
 	);
 };

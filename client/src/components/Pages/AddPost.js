@@ -58,7 +58,7 @@ const AddPost = ({ match }) => {
 	};
 
 	return (
-		<Container maxW="container.md" mt="2">
+		<Container maxW="container.md" mt="3">
 			<Card>
 				<Heading>Create a post</Heading>
 				<Divider my="3" />

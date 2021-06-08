@@ -7,6 +7,9 @@ export class Topic extends Template {
     @Column({ unique: true })
     title!: string;
 
+    @Column({ default: '' })
+    headline?: string;
+
     @Column({ type: 'text' })
     description!: string;
 

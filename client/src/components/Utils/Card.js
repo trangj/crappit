@@ -6,10 +6,12 @@ const Card = ({ children, ...props }) => {
 	return (
 		<Box
 			{...props}
-			mb="2"
+			mb="3"
 			p="3"
+			border="1px"
 			borderRadius="lg"
 			overflow="hidden"
+			borderColor={useColorModeValue("gray.100", "gray.600")}
 			backgroundColor={useColorModeValue("gray.50", "gray.700")}
 		>
 			{children}

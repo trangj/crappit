@@ -19,10 +19,19 @@ const NavigationBar = () => {
 	const { logoutUser, user } = useContext(UserContext);
 	const { toggleColorMode } = useColorMode();
 	const bg = useColorModeValue("gray.50", "gray.700");
+	const border = useColorModeValue("gray.100", "gray.600");
 	const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
 
 	return (
-		<Box bg={bg} p="2" position="sticky" top="0" zIndex="3" shadow="md">
+		<Box
+			bg={bg}
+			p="2"
+			position="sticky"
+			top="0"
+			zIndex="3"
+			borderBottom="1px"
+			borderColor={border}
+		>
 			<HStack spacing="0">
 				<Heading pr="3" display={{ base: "none", md: "block" }}>
 					<Link to="/">Crappit</Link>

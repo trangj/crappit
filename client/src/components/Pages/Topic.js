@@ -41,7 +41,7 @@ const Topic = ({ match }) => {
 	return (
 		<>
 			<TopicCard topic={topicData.topic} />
-			<Flex m="2">
+			<Flex m="5">
 				<Box width="100%">
 					<Card>
 						<Link to={`/t/${topicData.topic.title}/submit`}>
@@ -63,8 +63,14 @@ const Topic = ({ match }) => {
 					>
 						{data.pages.map((group, i) => (
 							<React.Fragment key={i}>
-								{group.posts.map((post) => (
-									<PostItem post={post} key={post.id} />
+								{group.posts.map((post, y) => (
+									<PostItem
+										post={post}
+										key={post.id}
+										style={{
+											borderRadius: i === 0 && y === 0 && "0.5rem 0.5rem 0 0",
+										}}
+									/>
 								))}
 							</React.Fragment>
 						))}
@@ -73,7 +79,7 @@ const Topic = ({ match }) => {
 				<Flex
 					flexDirection="column"
 					width="400px"
-					ml="2"
+					ml="5"
 					display={{ base: "none", md: "block" }}
 				>
 					<Card>
