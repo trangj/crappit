@@ -20,8 +20,12 @@ router.get("/", optionalAuth, async (req, res) => {
 			inner join topic t on p.topic_id = t.id
 			inner join "user" u on p.author_id = u.id
 			left join vote v on p.id = v.post_id and v.user_id = $1
-			limit 10 offset $2
-		`, [req.user.id, req.query.skip]);
+			order by 
+				(case when $2 = 'vote' then p.vote end) desc,
+				(case when $2 = 'created_at' then p.created_at end) desc
+			limit 7 offset $3
+		`, [req.user.id, req.query.sort, req.query.skip]);
+
 		if (!posts) throw Error("Could not fetch posts");
 		res.status(200).json({
 			posts,
@@ -53,8 +57,11 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			inner join "user" u on p.author_id = u.id
 			left join vote v on p.id = v.post_id and v.user_id = $1
 			where t.title = $2
-			limit 10 offset $3
-		`, [req.user.id, req.params.topic, req.query.skip]);
+			order by
+				(case when $3 = 'vote' then p.vote end) desc,
+				(case when $3 = 'created_at' then p.created_at end) desc
+			limit 7 offset $4
+		`, [req.user.id, req.params.topic, req.query.sort, req.query.skip]);
 		if (!posts) throw Error("No posts found");
 		res.status(200).json({
 			posts,

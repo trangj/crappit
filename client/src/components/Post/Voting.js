@@ -21,7 +21,7 @@ const Voting = ({ post }) => {
 	};
 
 	return user ? (
-		<VStack mr="3" style={{ zIndex: "1" }}>
+		<VStack mr="3">
 			{post.user_vote === 1 ? (
 				<IconButton
 					onClick={handleUpvote}
@@ -69,7 +69,7 @@ const Voting = ({ post }) => {
 			)}
 		</VStack>
 	) : (
-		<VStack mr="3" style={{ zIndex: "1" }}>
+		<VStack mr="3">
 			<IconButton
 				as={Link}
 				to={{

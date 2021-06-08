@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PostItem from "../Post/PostItem";
 import SkeletonList from "../Utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
@@ -18,6 +18,7 @@ import Card from "../Utils/Card";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+	const [sortParam, setSortParam] = useState("");
 	const {
 		data,
 		error,
@@ -26,9 +27,8 @@ const Home = () => {
 		isLoading,
 		isError,
 		isFetching,
-	} = usePosts("");
+	} = usePosts("", sortParam);
 
-	if (isLoading) return <SkeletonList />;
 	if (isError) return <AlertStatus status={error} />;
 	return (
 		<Flex m="5">
@@ -40,31 +40,50 @@ const Home = () => {
 				</Card>
 				<Card>
 					<HStack>
-						<Button>Hot</Button>
-						<Button>New</Button>
-						<Button>Top</Button>
+						<Button
+							isActive={sortParam === ""}
+							onClick={() => setSortParam("")}
+						>
+							Random
+						</Button>
+						<Button
+							isActive={sortParam === "created_at"}
+							onClick={() => setSortParam("created_at")}
+						>
+							New
+						</Button>
+						<Button
+							isActive={sortParam === "vote"}
+							onClick={() => setSortParam("vote")}
+						>
+							Top
+						</Button>
 					</HStack>
 				</Card>
-				<InfiniteScroll
-					pageStart={0}
-					loadMore={fetchNextPage}
-					hasMore={!isFetching && hasNextPage}
-					loader={<Spinner key={0} mx="auto" display={"block"} />}
-				>
-					{data.pages.map((group, i) => (
-						<React.Fragment key={i}>
-							{group.posts.map((post, y) => (
-								<PostItem
-									post={post}
-									key={post.id}
-									style={{
-										borderRadius: i === 0 && y === 0 && "0.5rem 0.5rem 0 0",
-									}}
-								/>
-							))}
-						</React.Fragment>
-					))}
-				</InfiniteScroll>
+				{!isLoading ? (
+					<InfiniteScroll
+						pageStart={0}
+						loadMore={fetchNextPage}
+						hasMore={!isFetching && hasNextPage}
+						loader={<Spinner key={0} mx="auto" display={"block"} />}
+					>
+						{data.pages.map((group, i) => (
+							<React.Fragment key={i}>
+								{group.posts.map((post, y) => (
+									<PostItem
+										post={post}
+										key={post.id}
+										style={{
+											borderRadius: i === 0 && y === 0 && "0.5rem 0.5rem 0 0",
+										}}
+									/>
+								))}
+							</React.Fragment>
+						))}
+					</InfiniteScroll>
+				) : (
+					<SkeletonList />
+				)}
 			</Box>
 			<Flex
 				flexDirection="column"

@@ -21,7 +21,7 @@ const PostItem = ({ post, ...props }) => {
 	return (
 		<LinkCard {...props}>
 			<HStack spacing="0">
-				<Box mb="auto">
+				<Box mb="auto" zIndex="3">
 					<Voting post={post} />
 				</Box>
 				<Box width="100%">
