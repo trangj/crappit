@@ -40,7 +40,12 @@ const PostItem = ({ post, ...props }) => {
 					</Text>
 					<HStack mt="2">
 						{post.type === "link" ? (
-							<a href={post.content} target="_blank" rel="noopener noreferrer">
+							<a
+								href={post.content}
+								target="_blank"
+								rel="noopener noreferrer"
+								style={{ display: "inherit" }}
+							>
 								<IconButton size="xs" icon={<LinkIcon />} variant="ghost" />
 							</a>
 						) : (

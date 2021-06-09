@@ -109,7 +109,7 @@ const Home = () => {
 						<Button as={Link} to={`/submit`} mt="2" isFullWidth>
 							Create Post
 						</Button>
-						<Button as={Link} to={`/submit`} mt="2" isFullWidth>
+						<Button as={Link} to={`/t/submit`} mt="2" isFullWidth>
 							Create Topic
 						</Button>
 					</Card>
