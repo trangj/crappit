@@ -30,10 +30,10 @@ const PostCard = ({ post, topic }) => {
 					</Text>
 					{post.type === "link" ? (
 						<a href={post.content} target="_blank" rel="noopener noreferrer">
-							<Heading>{post.title}</Heading>
+							<Heading size="lg">{post.title}</Heading>
 						</a>
 					) : (
-						<Heading>{post.title}</Heading>
+						<Heading size="lg">{post.title}</Heading>
 					)}
 					{openEdit ? (
 						<UpdatePost

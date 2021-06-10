@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { IconButton, HStack, Text, useColorModeValue } from "@chakra-ui/react";
-import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import { UserContext } from "../../context/UserState";
 import { Link, useLocation } from "react-router-dom";
 import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
@@ -31,7 +31,7 @@ const CommentVoting = ({ comment }) => {
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
-					icon={<ArrowUpIcon />}
+					icon={<TriangleUpIcon />}
 					variant="ghost"
 					color="orange.400"
 				/>
@@ -39,7 +39,7 @@ const CommentVoting = ({ comment }) => {
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
-					icon={<ArrowUpIcon />}
+					icon={<TriangleUpIcon />}
 					variant="ghost"
 					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
@@ -52,6 +52,7 @@ const CommentVoting = ({ comment }) => {
 						? "blue.600"
 						: ""
 				}
+				fontWeight="500"
 			>
 				{comment.vote}
 			</Text>
@@ -59,7 +60,7 @@ const CommentVoting = ({ comment }) => {
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"
-					icon={<ArrowDownIcon />}
+					icon={<TriangleDownIcon />}
 					variant="ghost"
 					color="blue.600"
 				/>
@@ -67,7 +68,7 @@ const CommentVoting = ({ comment }) => {
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"
-					icon={<ArrowDownIcon />}
+					icon={<TriangleDownIcon />}
 					variant="ghost"
 					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
@@ -88,7 +89,7 @@ const CommentVoting = ({ comment }) => {
 					},
 				}}
 				size="xs"
-				icon={<ArrowUpIcon />}
+				icon={<TriangleUpIcon />}
 				variant="ghost"
 				_hover={{ color: "orange.400", backgroundColor: bg }}
 			/>
@@ -106,7 +107,7 @@ const CommentVoting = ({ comment }) => {
 					},
 				}}
 				size="xs"
-				icon={<ArrowDownIcon />}
+				icon={<TriangleDownIcon />}
 				variant="ghost"
 				_hover={{ color: "blue.600", backgroundColor: bg }}
 			/>

@@ -34,7 +34,7 @@ const Home = () => {
 
 	if (isError) return <AlertStatus status={error} />;
 	return (
-		<Flex mx={{ base: "0", sm: "5" }} my="5">
+		<Flex px={{ base: "0", sm: "5" }} py="5">
 			<Box width="100%">
 				<Card>
 					<HStack>

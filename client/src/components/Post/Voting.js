@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { IconButton, Text, useColorModeValue } from "@chakra-ui/react";
-import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
+import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import { UserContext } from "../../context/UserState";
 import { VStack } from "@chakra-ui/layout";
 import { Link, useLocation } from "react-router-dom";
@@ -26,7 +26,7 @@ const Voting = ({ post }) => {
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
-					icon={<ArrowUpIcon />}
+					icon={<TriangleUpIcon />}
 					variant="ghost"
 					color="orange.400"
 				/>
@@ -34,7 +34,7 @@ const Voting = ({ post }) => {
 				<IconButton
 					onClick={handleUpvote}
 					size="xs"
-					icon={<ArrowUpIcon />}
+					icon={<TriangleUpIcon />}
 					variant="ghost"
 					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
@@ -55,7 +55,7 @@ const Voting = ({ post }) => {
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"
-					icon={<ArrowDownIcon />}
+					icon={<TriangleDownIcon />}
 					variant="ghost"
 					color="blue.600"
 				/>
@@ -63,7 +63,7 @@ const Voting = ({ post }) => {
 				<IconButton
 					onClick={handleDownvote}
 					size="xs"
-					icon={<ArrowDownIcon />}
+					icon={<TriangleDownIcon />}
 					variant="ghost"
 					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
@@ -84,7 +84,7 @@ const Voting = ({ post }) => {
 					},
 				}}
 				size="xs"
-				icon={<ArrowUpIcon />}
+				icon={<TriangleUpIcon />}
 				variant="ghost"
 				_hover={{ color: "orange.400", backgroundColor: bg }}
 			/>
@@ -102,7 +102,7 @@ const Voting = ({ post }) => {
 					},
 				}}
 				size="xs"
-				icon={<ArrowDownIcon />}
+				icon={<TriangleDownIcon />}
 				variant="ghost"
 				_hover={{ color: "blue.600", backgroundColor: bg }}
 			/>
