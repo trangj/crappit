@@ -70,7 +70,7 @@ const Voting = ({ post }) => {
 			)}
 		</VStack>
 	) : (
-		<VStack mr="3">
+		<VStack mr="3" spacing="0">
 			<IconButton
 				as={Link}
 				to={{
@@ -88,7 +88,7 @@ const Voting = ({ post }) => {
 				variant="ghost"
 				_hover={{ color: "orange.400", backgroundColor: bg }}
 			/>
-			<Text>{post.vote}</Text>
+			<Text fontWeight="500">{post.vote}</Text>
 			<IconButton
 				as={Link}
 				to={{
