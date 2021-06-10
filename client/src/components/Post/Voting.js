@@ -21,7 +21,7 @@ const Voting = ({ post }) => {
 	};
 
 	return user ? (
-		<VStack mr="3">
+		<VStack mr="3" spacing="0">
 			{post.user_vote === 1 ? (
 				<IconButton
 					onClick={handleUpvote}
@@ -47,6 +47,7 @@ const Voting = ({ post }) => {
 						? "blue.600"
 						: ""
 				}
+				fontWeight="500"
 			>
 				{post.vote}
 			</Text>

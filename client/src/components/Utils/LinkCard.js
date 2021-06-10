@@ -8,7 +8,7 @@ const LinkCard = ({ children, ...props }) => {
 			{...props}
 			p="2"
 			border="1px"
-			borderColor={useColorModeValue("gray.200", "gray.600")}
+			borderColor={useColorModeValue("gray.300", "gray.600")}
 			backgroundColor={useColorModeValue("white", "gray.700")}
 			_hover={{ borderColor: useColorModeValue("black", "white"), zIndex: "1" }}
 		>

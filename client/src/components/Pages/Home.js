@@ -53,18 +53,21 @@ const Home = () => {
 						<Button
 							isActive={sortParam === ""}
 							onClick={() => setSortParam("")}
+							variant="ghost"
 						>
 							Random
 						</Button>
 						<Button
 							isActive={sortParam === "created_at"}
 							onClick={() => setSortParam("created_at")}
+							variant="ghost"
 						>
 							New
 						</Button>
 						<Button
 							isActive={sortParam === "vote"}
 							onClick={() => setSortParam("vote")}
+							variant="ghost"
 						>
 							Top
 						</Button>

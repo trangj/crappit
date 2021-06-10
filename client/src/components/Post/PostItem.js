@@ -25,13 +25,13 @@ const PostItem = ({ post, ...props }) => {
 					<Voting post={post} />
 				</Box>
 				<Box width="100%">
-					<Heading size="lg">
+					<Heading size="md">
 						<LinkOverlay as={Link} to={`/t/${post.topic}/comments/${post.id}`}>
 							{post.title}
 						</LinkOverlay>
 					</Heading>
 					<Text fontSize="sm">
-						<Link to={`/t/${post.topic}`} style={{ fontWeight: "bold" }}>
+						<Link to={`/t/${post.topic}`} style={{ fontWeight: "500" }}>
 							t/{post.topic}
 						</Link>{" "}
 						| Posted by{" "}

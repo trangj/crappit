@@ -23,7 +23,7 @@ router.get("/", optionalAuth, async (req, res) => {
 			order by 
 				(case when $2 = 'vote' then p.vote end) desc,
 				(case when $2 = 'created_at' then p.created_at end) desc
-			limit 7 offset $3
+			limit 10 offset $3
 		`, [req.user.id, req.query.sort, req.query.skip]);
 
 		if (!posts) throw Error("Could not fetch posts");
@@ -60,7 +60,7 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			order by
 				(case when $3 = 'vote' then p.vote end) desc,
 				(case when $3 = 'created_at' then p.created_at end) desc
-			limit 7 offset $4
+			limit 10 offset $4
 		`, [req.user.id, req.params.topic, req.query.sort, req.query.skip]);
 		if (!posts) throw Error("No posts found");
 		res.status(200).json({

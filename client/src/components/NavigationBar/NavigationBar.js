@@ -8,6 +8,7 @@ import {
 	HStack,
 	useColorMode,
 	useColorModeValue,
+	Flex,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserState";
@@ -19,7 +20,7 @@ const NavigationBar = () => {
 	const { logoutUser, user } = useContext(UserContext);
 	const { toggleColorMode } = useColorMode();
 	const bg = useColorModeValue("white", "gray.700");
-	const border = useColorModeValue("gray.200", "gray.600");
+	const border = useColorModeValue("gray.300", "gray.600");
 	const icon = useColorModeValue(<MoonIcon />, <SunIcon />);
 
 	return (
@@ -28,17 +29,17 @@ const NavigationBar = () => {
 			p="2"
 			position="sticky"
 			top="0"
-			zIndex="3"
+			zIndex="4"
 			borderBottom="1px"
 			borderColor={border}
 		>
 			<HStack spacing="0">
-				<Heading pr="3" display={{ base: "none", sm: "block" }}>
+				<Heading pr="3" display={{ base: "none", sm: "block" }} size="lg">
 					<Link to="/">Crappit</Link>
 				</Heading>
 				<BrowseMenu user={user} />
 				<Spacer />
-				<div>
+				<Flex>
 					<IconButton icon={icon} onClick={toggleColorMode} mr="2" />
 					{!user ? (
 						<>
@@ -52,7 +53,7 @@ const NavigationBar = () => {
 					) : (
 						<UserMenu user={user} logoutUser={logoutUser} />
 					)}
-				</div>
+				</Flex>
 			</HStack>
 		</Box>
 	);
