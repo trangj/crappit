@@ -38,27 +38,33 @@ function App() {
 				<ChakraProvider theme={theme}>
 					<BrowserRouter>
 						<NavigationBar />
-						<Switch>
-							<Route path="/" exact component={Home} />
-							<Route path="/t" exact component={AllTopics} />
-							<PrivateRoute path="/t/submit" exact component={AddTopic} />
-							<Route path="/t/:topic" exact component={Topic} />
-							<PrivateRoute
-								path="/t/:topic/moderation"
-								exact
-								component={Moderation}
-							/>
-							<PrivateRoute path="/t/:topic/submit" exact component={AddPost} />
-							<Route path="/t/:topic/comments/:id" exact component={Post} />
-							<PrivateRoute path="/submit" exact component={AddPost} />
-							<Route path="/forgot" exact component={Forgot} />
-							<PublicRoute path="/login" exact component={Login} />
-							<PublicRoute path="/register" exact component={Register} />
-							<Route path="/reset/:token" exact component={Reset} />
-							<Route path="/user/:userid" exact component={Profile} />
-							<PrivateRoute path="/settings" exact component={Settings} />
-							<Route path="/" component={NotFound} />
-						</Switch>
+						<div style={{ paddingTop: "57px" }}>
+							<Switch>
+								<Route path="/" exact component={Home} />
+								<Route path="/t" exact component={AllTopics} />
+								<PrivateRoute path="/t/submit" exact component={AddTopic} />
+								<Route path="/t/:topic" exact component={Topic} />
+								<PrivateRoute
+									path="/t/:topic/moderation"
+									exact
+									component={Moderation}
+								/>
+								<PrivateRoute
+									path="/t/:topic/submit"
+									exact
+									component={AddPost}
+								/>
+								<Route path="/t/:topic/comments/:id" exact component={Post} />
+								<PrivateRoute path="/submit" exact component={AddPost} />
+								<Route path="/forgot" exact component={Forgot} />
+								<PublicRoute path="/login" exact component={Login} />
+								<PublicRoute path="/register" exact component={Register} />
+								<Route path="/reset/:token" exact component={Reset} />
+								<Route path="/user/:userid" exact component={Profile} />
+								<PrivateRoute path="/settings" exact component={Settings} />
+								<Route path="/" component={NotFound} />
+							</Switch>
+						</div>
 					</BrowserRouter>
 				</ChakraProvider>
 			</UserProvider>

@@ -86,7 +86,7 @@ const Home = () => {
 									<PostItem
 										post={post}
 										key={post.id}
-										borderTopRadius={i === 0 && y === 0 && "lg"}
+										borderTopRadius={i === 0 && y === 0 && "md"}
 									/>
 								))}
 							</React.Fragment>

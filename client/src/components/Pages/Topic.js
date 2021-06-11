@@ -101,7 +101,7 @@ const Topic = ({ match }) => {
 										<PostItem
 											post={post}
 											key={post.id}
-											borderTopRadius={i === 0 && y === 0 && "lg"}
+											borderTopRadius={i === 0 && y === 0 && "md"}
 										/>
 									))}
 								</React.Fragment>
@@ -150,7 +150,7 @@ const Topic = ({ match }) => {
 								</Button>
 							</Card>
 						) : (
-							<Skeleton width="100%" height="300px" borderRadius="lg" />
+							<Skeleton width="100%" height="300px" borderRadius="md" />
 						)}
 					</Box>
 				</Flex>

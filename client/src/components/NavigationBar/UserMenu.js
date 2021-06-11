@@ -1,18 +1,11 @@
 import React from "react";
-import {
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
-	IconButton,
-} from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { HamburgerIcon } from "@chakra-ui/icons";
 
 const UserMenu = ({ user, logoutUser }) => {
 	return (
-		<Menu>
-			<MenuButton as={IconButton} icon={<HamburgerIcon />}></MenuButton>
+		<Menu display={{ base: "none", sm: "inherit" }}>
+			<MenuButton as={Button}>{user.username}</MenuButton>
 			<div style={{ zIndex: "2" }}>
 				<MenuList>
 					<MenuItem as={Link} to={`/user/${user.id}`}>

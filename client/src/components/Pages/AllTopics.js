@@ -19,7 +19,7 @@ const AllTopics = () => {
 			) : (
 				<>
 					{topics.map((topic) => (
-						<LinkCard key={topic.title} borderRadius="lg" mb="3">
+						<LinkCard key={topic.title} borderRadius="md" mb="3">
 							<Heading>
 								<LinkOverlay as={Link} to={`t/${topic.title}`}>
 									t/{topic.title}

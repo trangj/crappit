@@ -7,7 +7,6 @@ import {
 	MenuDivider,
 	MenuGroup,
 	Button,
-	Box,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { TriangleDownIcon } from "@chakra-ui/icons";
@@ -15,9 +14,9 @@ import { TriangleDownIcon } from "@chakra-ui/icons";
 const BrowseMenu = ({ user }) => {
 	return (
 		<Menu>
-			<MenuButton as={Button}>
-				<Box display={{ base: "none", sm: "inline" }}>Browse </Box>
-				<TriangleDownIcon />
+			<MenuButton as={Button} display={{ base: "none", sm: "inherit" }}>
+				Browse
+				<TriangleDownIcon ml="1" />
 			</MenuButton>
 			<div style={{ zIndex: "2" }}>
 				<MenuList>
@@ -34,7 +33,7 @@ const BrowseMenu = ({ user }) => {
 						Create a topic
 					</MenuItem>
 					<MenuDivider />
-					{user === null ? (
+					{!user ? (
 						<MenuItem as={Link} to="/register">
 							Sign up to follow topics!
 						</MenuItem>
