@@ -6,7 +6,4 @@ module.exports = {
 	migrations: ["dist/migrations/**/*.js"],
 	url: process.env.DATABASE_URL,
 	namingStrategy: new SnakeNamingStrategy(),
-	ssl: {
-		rejectUnauthorized: false,
-	},
 };

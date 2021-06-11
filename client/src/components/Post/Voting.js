@@ -24,6 +24,7 @@ const Voting = ({ post }) => {
 		<VStack mr="3" spacing="0">
 			{post.user_vote === 1 ? (
 				<IconButton
+					aria-label="Upvote"
 					onClick={handleUpvote}
 					size="xs"
 					icon={<TriangleUpIcon />}
@@ -32,6 +33,7 @@ const Voting = ({ post }) => {
 				/>
 			) : (
 				<IconButton
+					aria-label="Upvote"
 					onClick={handleUpvote}
 					size="xs"
 					icon={<TriangleUpIcon />}
@@ -53,6 +55,7 @@ const Voting = ({ post }) => {
 			</Text>
 			{post.user_vote === -1 ? (
 				<IconButton
+					aria-label="Downvote"
 					onClick={handleDownvote}
 					size="xs"
 					icon={<TriangleDownIcon />}
@@ -61,6 +64,7 @@ const Voting = ({ post }) => {
 				/>
 			) : (
 				<IconButton
+					aria-label="Downvote"
 					onClick={handleDownvote}
 					size="xs"
 					icon={<TriangleDownIcon />}
@@ -72,6 +76,7 @@ const Voting = ({ post }) => {
 	) : (
 		<VStack mr="3" spacing="0">
 			<IconButton
+				aria-label="Downvote"
 				as={Link}
 				to={{
 					pathname: "/login",
@@ -90,6 +95,7 @@ const Voting = ({ post }) => {
 			/>
 			<Text fontWeight="500">{post.vote}</Text>
 			<IconButton
+				aria-label="Downvote"
 				as={Link}
 				to={{
 					pathname: "/login",

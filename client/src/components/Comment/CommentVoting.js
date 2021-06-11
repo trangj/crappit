@@ -29,6 +29,7 @@ const CommentVoting = ({ comment }) => {
 		<HStack>
 			{comment.user_vote === 1 ? (
 				<IconButton
+					aria-label="Upvote"
 					onClick={handleUpvote}
 					size="xs"
 					icon={<TriangleUpIcon />}
@@ -37,6 +38,7 @@ const CommentVoting = ({ comment }) => {
 				/>
 			) : (
 				<IconButton
+					aria-label="Upvote"
 					onClick={handleUpvote}
 					size="xs"
 					icon={<TriangleUpIcon />}
@@ -58,6 +60,7 @@ const CommentVoting = ({ comment }) => {
 			</Text>
 			{comment.user_vote === -1 ? (
 				<IconButton
+					aria-label="Downvote"
 					onClick={handleDownvote}
 					size="xs"
 					icon={<TriangleDownIcon />}
@@ -66,6 +69,7 @@ const CommentVoting = ({ comment }) => {
 				/>
 			) : (
 				<IconButton
+					aria-label="Downvote"
 					onClick={handleDownvote}
 					size="xs"
 					icon={<TriangleDownIcon />}
@@ -77,6 +81,7 @@ const CommentVoting = ({ comment }) => {
 	) : (
 		<HStack>
 			<IconButton
+				aria-label="Upvote"
 				as={Link}
 				to={{
 					pathname: "/login",
@@ -95,6 +100,7 @@ const CommentVoting = ({ comment }) => {
 			/>
 			<Text>{comment.vote}</Text>
 			<IconButton
+				aria-label="Downvote"
 				as={Link}
 				to={{
 					pathname: "/login",

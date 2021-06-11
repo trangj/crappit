@@ -15,8 +15,6 @@ const TopicCard = ({ topic }) => {
 	const { user } = useContext(UserContext);
 	const { isLoading, mutate } = useTopicFollow(topic);
 
-	console.log(topic);
-
 	return (
 		<>
 			{topic.image_url ? (

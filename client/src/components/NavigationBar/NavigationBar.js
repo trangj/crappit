@@ -50,7 +50,12 @@ const NavigationBar = () => {
 					</Heading>
 					<BrowseMenu user={user} />
 					<Spacer />
-					<IconButton icon={icon} onClick={toggleColorMode} mr="2" />
+					<IconButton
+						aria-label="Toggle color mode"
+						icon={icon}
+						onClick={toggleColorMode}
+						mr="2"
+					/>
 					<Flex display={{ base: "none", sm: "inherit" }}>
 						{!user ? (
 							<>
@@ -66,6 +71,7 @@ const NavigationBar = () => {
 						)}
 					</Flex>
 					<IconButton
+						aria-label="Toggle menu"
 						display={{ base: "inherit", sm: "none" }}
 						icon={<HamburgerIcon />}
 						onClick={() => showMenu(!menu)}

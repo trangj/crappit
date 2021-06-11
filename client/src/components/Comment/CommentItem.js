@@ -13,9 +13,9 @@ import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
 import { Link, useLocation } from "react-router-dom";
-import moment from "moment";
 import { UserContext } from "../../context/UserState";
 import DeleteCommentModerator from "./DeleteCommentModerator";
+import dayjs from "dayjs";
 
 const CommentItem = ({ comment, topic }) => {
 	const { user } = useContext(UserContext);
@@ -37,11 +37,11 @@ const CommentItem = ({ comment, topic }) => {
 							<Link to={`/user/${comment.author_id}`}>{comment.author}</Link>
 						)}
 						{" | "}
-						{moment(comment.created_at).fromNow()}
+						{dayjs(comment.created_at).fromNow()}
 						{comment.is_edited && (
 							<>
 								{" | "}
-								<i>edited {moment(comment.updated_at).fromNow()}</i>
+								<i>edited {dayjs(comment.updated_at).fromNow()}</i>
 							</>
 						)}
 					</Text>

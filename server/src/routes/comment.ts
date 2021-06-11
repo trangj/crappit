@@ -60,7 +60,7 @@ router.put("/:commentid", auth, async (req, res) => {
 		await comment.save();
 
 		res.status(200).json({
-			comment: { content: comment.content },
+			comment: { content: comment.content, updated_at: comment.updated_at },
 			status: { text: "Comment successfully updated", severity: "success" },
 		});
 	} catch (err) {

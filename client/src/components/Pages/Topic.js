@@ -21,8 +21,8 @@ import useTopic from "../../hooks/topic-query/useTopic";
 import AlertStatus from "../Utils/AlertStatus";
 import Card from "../Utils/Card";
 import { Link } from "react-router-dom";
-import moment from "moment";
 import { UserContext } from "../../context/UserState";
+import dayjs from "dayjs";
 
 const Topic = ({ match }) => {
 	const { user } = useContext(UserContext);
@@ -56,7 +56,7 @@ const Topic = ({ match }) => {
 								to={user ? `/user/${user.id}` : "/login"}
 							/>
 							<Link
-								to={!topicLoading && `/t/${topicData.topic.title}/submit`}
+								to={!topicLoading ? `/t/${topicData.topic.title}/submit` : "/"}
 								style={{ width: "100%" }}
 							>
 								<Input placeholder="Create post" />
@@ -93,7 +93,7 @@ const Topic = ({ match }) => {
 							pageStart={0}
 							loadMore={fetchNextPage}
 							hasMore={!isFetching && hasNextPage}
-							loader={<Skeleton height="105px" width="100%" />}
+							loader={<Skeleton height="105px" width="100%" key="skeleton" />}
 						>
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>
@@ -138,7 +138,7 @@ const Topic = ({ match }) => {
 								<Text pt="4">{topicData.topic.description}</Text>
 								<Divider pt="2" />
 								<Text pt="2">
-									Created {moment(topicData.topic.created_at).format("LL")}
+									Created {dayjs(topicData.topic.created_at).format("LL")}
 								</Text>
 								<Button
 									as={Link}

@@ -22,6 +22,10 @@ import "./App.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Settings from "./components/User/Settings";
 import Moderation from "./components/Pages/Moderation";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const queryClient = new QueryClient({
 	defaultOptions: {

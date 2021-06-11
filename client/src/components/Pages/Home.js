@@ -78,7 +78,7 @@ const Home = () => {
 						pageStart={0}
 						loadMore={fetchNextPage}
 						hasMore={!isFetching && hasNextPage}
-						loader={<Skeleton height="105px" width="100%" />}
+						loader={<Skeleton height="105px" width="100%" key="skeleton" />}
 					>
 						{data.pages.map((group, i) => (
 							<React.Fragment key={i}>

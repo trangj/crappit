@@ -4,10 +4,10 @@ import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
 import Voting from "./Voting";
 import Card from "../Utils/Card";
-import moment from "moment";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserState";
 import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
+import dayjs from "dayjs";
 
 const PostCard = ({ post, topic }) => {
 	const { user } = useContext(UserContext);
@@ -26,7 +26,7 @@ const PostCard = ({ post, topic }) => {
 						</Link>{" "}
 						| Posted by{" "}
 						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
-						{moment(post.created_at).fromNow()}
+						{dayjs(post.created_at).fromNow()}
 					</Text>
 					{post.type === "link" ? (
 						<a href={post.content} target="_blank" rel="noopener noreferrer">

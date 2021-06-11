@@ -12,8 +12,8 @@ import {
 import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
 import { Link } from "react-router-dom";
-import moment from "moment";
 import LinkCard from "../Utils/LinkCard";
+import dayjs from "dayjs";
 
 const PostItem = ({ post, ...props }) => {
 	const [open, setOpen] = useState(false);
@@ -36,7 +36,7 @@ const PostItem = ({ post, ...props }) => {
 						</Link>{" "}
 						| Posted by{" "}
 						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
-						{moment(post.created_at).fromNow()}
+						{dayjs(post.created_at).fromNow()}
 					</Text>
 					<HStack mt="2">
 						{post.type === "link" ? (
@@ -46,10 +46,16 @@ const PostItem = ({ post, ...props }) => {
 								rel="noopener noreferrer"
 								style={{ display: "inherit" }}
 							>
-								<IconButton size="xs" icon={<LinkIcon />} variant="ghost" />
+								<IconButton
+									aria-label="Open external link"
+									size="xs"
+									icon={<LinkIcon />}
+									variant="ghost"
+								/>
 							</a>
 						) : (
 							<IconButton
+								aria-label="Toggle more content"
 								size="xs"
 								onClick={() => setOpen(!open)}
 								icon={open ? <MinusIcon /> : <AddIcon />}
