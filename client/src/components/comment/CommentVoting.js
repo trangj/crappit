@@ -25,21 +25,32 @@ const CommentVoting = ({ comment }) => {
 		});
 	};
 
-	return user ? (
+	return (
 		<HStack>
-			{comment.user_vote === 1 ? (
+			{user ? (
 				<IconButton
 					aria-label="Upvote"
 					onClick={handleUpvote}
 					size="xs"
 					icon={<TriangleUpIcon />}
 					variant="ghost"
-					color="orange.400"
+					color={comment.user_vote === 1 ? "orange.400" : ""}
+					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
 			) : (
 				<IconButton
 					aria-label="Upvote"
-					onClick={handleUpvote}
+					as={Link}
+					to={{
+						pathname: "/login",
+						state: {
+							status: {
+								text: "Login to vote on comments",
+								severity: "error",
+							},
+							from: location.pathname,
+						},
+					}}
 					size="xs"
 					icon={<TriangleUpIcon />}
 					variant="ghost"
@@ -48,75 +59,48 @@ const CommentVoting = ({ comment }) => {
 			)}
 			<Text
 				color={
-					comment.user_vote === 1
-						? "orange.400"
-						: comment.user_vote === -1
-						? "blue.600"
+					user
+						? comment.user_vote === 1
+							? "orange.400"
+							: comment.user_vote === -1
+							? "blue.600"
+							: ""
 						: ""
 				}
 				fontWeight="500"
 			>
 				{comment.vote}
 			</Text>
-			{comment.user_vote === -1 ? (
+			{user ? (
 				<IconButton
 					aria-label="Downvote"
 					onClick={handleDownvote}
 					size="xs"
 					icon={<TriangleDownIcon />}
 					variant="ghost"
-					color="blue.600"
+					color={comment.user_vote === -1 ? "blue.600" : ""}
+					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
 			) : (
 				<IconButton
 					aria-label="Downvote"
-					onClick={handleDownvote}
+					as={Link}
+					to={{
+						pathname: "/login",
+						state: {
+							status: {
+								text: "Login to vote on comments",
+								severity: "error",
+							},
+							from: location.pathname,
+						},
+					}}
 					size="xs"
 					icon={<TriangleDownIcon />}
 					variant="ghost"
 					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
 			)}
-		</HStack>
-	) : (
-		<HStack>
-			<IconButton
-				aria-label="Upvote"
-				as={Link}
-				to={{
-					pathname: "/login",
-					state: {
-						status: {
-							text: "Login to vote on comments",
-							severity: "error",
-						},
-						from: location.pathname,
-					},
-				}}
-				size="xs"
-				icon={<TriangleUpIcon />}
-				variant="ghost"
-				_hover={{ color: "orange.400", backgroundColor: bg }}
-			/>
-			<Text>{comment.vote}</Text>
-			<IconButton
-				aria-label="Downvote"
-				as={Link}
-				to={{
-					pathname: "/login",
-					state: {
-						status: {
-							text: "Login to vote on comments",
-							severity: "error",
-						},
-						from: location.pathname,
-					},
-				}}
-				size="xs"
-				icon={<TriangleDownIcon />}
-				variant="ghost"
-				_hover={{ color: "blue.600", backgroundColor: bg }}
-			/>
 		</HStack>
 	);
 };

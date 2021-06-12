@@ -10,9 +10,11 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
+import { useLocation, Link } from "react-router-dom";
 
 const TopicCard = ({ topic }) => {
 	const { user } = useContext(UserContext);
+	const location = useLocation();
 	const { isLoading, mutate } = useTopicFollow(topic);
 
 	return (
@@ -33,13 +35,30 @@ const TopicCard = ({ topic }) => {
 						<Heading size="lg">
 							{topic.headline ? topic.headline : topic.title}
 						</Heading>
-						{user && (
+						{user ? (
 							<Button
 								isLoading={isLoading}
 								onClick={() => mutate(topic.title)}
 								size="md"
 							>
 								{topic.user_followed_id ? "Unfollow" : "Follow"}
+							</Button>
+						) : (
+							<Button
+								size="md"
+								as={Link}
+								to={{
+									pathname: "/login",
+									state: {
+										status: {
+											text: "Login to follow topics",
+											severity: "error",
+										},
+										from: location.pathname,
+									},
+								}}
+							>
+								Follow
 							</Button>
 						)}
 					</HStack>
