@@ -12,12 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../Forms/TextFieldForm";
-import FileFieldForm from "../Forms/FileFieldForm";
-import SelectFieldForm from "../Forms/SelectFieldForm";
-import useTopics from "../../hooks/topic-query/useTopics";
-import useAddPost from "../../hooks/post-query/useAddPost";
-import Card from "../Utils/Card";
+import TextFieldForm from "../components/forms/TextFieldForm";
+import FileFieldForm from "../components/forms/FileFieldForm";
+import SelectFieldForm from "../components/forms/SelectFieldForm";
+import useTopics from "../hooks/topic-query/useTopics";
+import useAddPost from "../hooks/post-query/useAddPost";
+import Card from "../components/utils/Card";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 512 * 1024;

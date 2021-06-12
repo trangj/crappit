@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { Container, Divider, Heading, Image, Text } from "@chakra-ui/react";
-import useTopic from "../../hooks/topic-query/useTopic";
-import { UserContext } from "../../context/UserState";
-import Card from "../Utils/Card";
-import UpdateTopic from "../Topic/UpdateTopic";
-import AlertStatus from "../Utils/AlertStatus";
-import SkeletonCard from "../Utils/SkeletonCard";
-import AddModerator from "../Topic/AddModerator";
+import useTopic from "../hooks/topic-query/useTopic";
+import { UserContext } from "../context/UserState";
+import Card from "../components/utils/Card";
+import UpdateTopic from "../components/topic/UpdateTopic";
+import AlertStatus from "../components/utils/AlertStatus";
+import SkeletonCard from "../components/utils/SkeletonCard";
+import AddModerator from "../components/topic/AddModerator";
 
 const Moderation = ({ match }) => {
 	const { user } = useContext(UserContext);

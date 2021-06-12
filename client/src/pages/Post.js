@@ -1,10 +1,10 @@
 import React from "react";
-import PostCard from "../Post/PostCard";
-import CommentCard from "../Comment/CommentCard";
-import SkeletonCard from "../Utils/SkeletonCard";
-import AlertStatus from "../Utils/AlertStatus";
-import usePost from "../../hooks/post-query/usePost";
-import useTopic from "../../hooks/topic-query/useTopic";
+import PostCard from "../components/post/PostCard";
+import CommentCard from "../components/comment/CommentCard";
+import SkeletonCard from "../components/utils/SkeletonCard";
+import AlertStatus from "../components/utils/AlertStatus";
+import usePost from "../hooks/post-query/usePost";
+import useTopic from "../hooks/topic-query/useTopic";
 import { Container } from "@chakra-ui/layout";
 
 const Post = ({ match }) => {

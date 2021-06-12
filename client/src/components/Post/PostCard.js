@@ -3,7 +3,7 @@ import DeletePostModerator from "./DeletePostModerator";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
 import Voting from "./Voting";
-import Card from "../Utils/Card";
+import Card from "../utils/Card";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserState";
 import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";

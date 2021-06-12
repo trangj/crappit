@@ -9,10 +9,10 @@ import {
 	Input,
 	Container,
 } from "@chakra-ui/react";
-import { UserContext } from "../../context/UserState";
-import axios from "../../axiosConfig";
-import AlertStatus from "../Utils/AlertStatus";
-import Card from "../Utils/Card";
+import { UserContext } from "../context/UserState";
+import axios from "../axiosConfig";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
 
 const Settings = () => {
 	const { user, setUser } = useContext(UserContext);

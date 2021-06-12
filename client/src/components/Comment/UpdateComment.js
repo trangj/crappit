@@ -1,6 +1,6 @@
 import React from "react";
 import * as yup from "yup";
-import TextFieldForm from "../Forms/TextFieldForm";
+import TextFieldForm from "../forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button } from "@chakra-ui/react";
 import useUpdateComment from "../../hooks/comment-query/useUpdateComment";

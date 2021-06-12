@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Button, Container, Divider, Heading, HStack } from "@chakra-ui/react";
 import * as yup from "yup";
-import TextFieldForm from "../Forms/TextFieldForm";
+import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { UserContext } from "../../context/UserState";
+import { UserContext } from "../context/UserState";
 import { useHistory } from "react-router";
-import AlertStatus from "../Utils/AlertStatus";
-import Card from "../Utils/Card";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
 import { Link } from "react-router-dom";
 
 const schema = yup.object({

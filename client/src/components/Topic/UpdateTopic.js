@@ -2,8 +2,8 @@ import React from "react";
 import { Button } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../Forms/TextFieldForm";
-import FileFieldForm from "../Forms/FileFieldForm";
+import TextFieldForm from "../forms/TextFieldForm";
+import FileFieldForm from "../forms/FileFieldForm";
 import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];

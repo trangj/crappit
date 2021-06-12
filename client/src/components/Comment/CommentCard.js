@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import CommentItem from "./CommentItem";
 import * as yup from "yup";
-import TextFieldForm from "../Forms/TextFieldForm";
+import TextFieldForm from "../forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { UserContext } from "../../context/UserState";
 import { Button, Divider, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import useAddComment from "../../hooks/comment-query/useAddComment";
-import Card from "../Utils/Card";
+import Card from "../utils/Card";
 
 const schema = yup.object({
 	content: yup.string().required(""),

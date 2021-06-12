@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
-import TextFieldForm from "../Forms/TextFieldForm";
+import TextFieldForm from "../forms/TextFieldForm";
 import * as yup from "yup";
 import useAddModerator from "../../hooks/topic-query/useAddModerator";
 import { Button } from "@chakra-ui/button";

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import PostItem from "../Post/PostItem";
-import SkeletonList from "../Utils/SkeletonList";
+import PostItem from "../components/post/PostItem";
+import SkeletonList from "../components/utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
 	Button,
@@ -13,11 +13,11 @@ import {
 	Avatar,
 	Skeleton,
 } from "@chakra-ui/react";
-import usePosts from "../../hooks/post-query/usePosts";
-import AlertStatus from "../Utils/AlertStatus";
-import Card from "../Utils/Card";
+import usePosts from "../hooks/post-query/usePosts";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
 import { Link } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import { UserContext } from "../context/UserState";
 
 const Home = () => {
 	const { user } = useContext(UserContext);

@@ -12,7 +12,7 @@ import {
 import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
 import { Link } from "react-router-dom";
-import LinkCard from "../Utils/LinkCard";
+import LinkCard from "../utils/LinkCard";
 import dayjs from "dayjs";
 
 const PostItem = ({ post, ...props }) => {

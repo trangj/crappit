@@ -2,10 +2,10 @@ import React from "react";
 import { Button, Heading, Divider, Container } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../Forms/TextFieldForm";
-import FileFieldForm from "../Forms/FileFieldForm";
-import useAddTopic from "../../hooks/topic-query/useAddTopic";
-import Card from "../Utils/Card";
+import TextFieldForm from "../components/forms/TextFieldForm";
+import FileFieldForm from "../components/forms/FileFieldForm";
+import useAddTopic from "../hooks/topic-query/useAddTopic";
+import Card from "../components/utils/Card";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 512 * 1024;

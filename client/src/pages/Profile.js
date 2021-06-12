@@ -1,10 +1,10 @@
 import React from "react";
-import SkeletonCard from "../Utils/SkeletonCard";
+import SkeletonCard from "../components/utils/SkeletonCard";
 import { Link } from "react-router-dom";
 import { Heading, Text, Divider, Container } from "@chakra-ui/react";
-import useProfile from "../../hooks/user-query/useProfile";
-import AlertStatus from "../Utils/AlertStatus";
-import Card from "../Utils/Card";
+import useProfile from "../hooks/user-query/useProfile";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
 import dayjs from "dayjs";
 
 const Profile = ({ match }) => {

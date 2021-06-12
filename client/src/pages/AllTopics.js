@@ -1,10 +1,10 @@
 import React from "react";
-import SkeletonList from "../Utils/SkeletonList";
-import AlertStatus from "../Utils/AlertStatus";
+import SkeletonList from "../components/utils/SkeletonList";
+import AlertStatus from "../components/utils/AlertStatus";
 import { Container, Heading, LinkOverlay, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import useTopics from "../../hooks/topic-query/useTopics";
-import LinkCard from "../Utils/LinkCard";
+import useTopics from "../hooks/topic-query/useTopics";
+import LinkCard from "../components/utils/LinkCard";
 
 const AllTopics = () => {
 	const { isLoading, isError, data: topics, error } = useTopics();
