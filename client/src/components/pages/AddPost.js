@@ -12,15 +12,15 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
-import FileFieldForm from "../components/forms/FileFieldForm";
-import SelectFieldForm from "../components/forms/SelectFieldForm";
-import useTopics from "../hooks/topic-query/useTopics";
-import useAddPost from "../hooks/post-query/useAddPost";
-import Card from "../components/utils/Card";
+import TextFieldForm from "../forms/TextFieldForm";
+import FileFieldForm from "../forms/FileFieldForm";
+import SelectFieldForm from "../forms/SelectFieldForm";
+import Card from "../utils/Card";
+import useTopics from "../../hooks/topic-query/useTopics";
+import useAddPost from "../../hooks/post-query/useAddPost";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
-const FILE_SIZE = 512 * 1024;
+const FILE_SIZE = 10485760;
 const schema = yup.object({
 	title: yup.string().required("Enter a title for your post"),
 	topic: yup.string().required("Select a topic to post to"),

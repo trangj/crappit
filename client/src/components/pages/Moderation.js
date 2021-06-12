@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { Container, Divider, Heading, Image, Text } from "@chakra-ui/react";
-import useTopic from "../hooks/topic-query/useTopic";
-import { UserContext } from "../context/UserState";
-import Card from "../components/utils/Card";
-import UpdateTopic from "../components/topic/UpdateTopic";
-import AlertStatus from "../components/utils/AlertStatus";
-import SkeletonCard from "../components/utils/SkeletonCard";
-import AddModerator from "../components/topic/AddModerator";
+import useTopic from "../../hooks/topic-query/useTopic";
+import { UserContext } from "../../context/UserState";
+import Card from "../utils/Card";
+import UpdateTopic from "../topic/UpdateTopic";
+import AlertStatus from "../utils/AlertStatus";
+import SkeletonCard from "../utils/SkeletonCard";
+import AddModerator from "../topic/AddModerator";
 
 const Moderation = ({ match }) => {
 	const { user } = useContext(UserContext);
@@ -34,14 +34,18 @@ const Moderation = ({ match }) => {
 							maxHeight="200px"
 						/>
 					) : (
-						<div>Image is not set...</div>
+						<Text>Image is not set...</Text>
 					)}
 					<Heading size="md">Current Description</Heading>
 					<Text>{topicData.topic.description}</Text>
 					<Heading size="md">Current Headline</Heading>
-					<Text>{topicData.topic.headline}</Text>
+					{topicData.topic.headline ? (
+						<Text>{topicData.topic.headline}</Text>
+					) : (
+						<Text>Headline is not set...</Text>
+					)}
 					<Divider my="3" />
-					<Heading size="md">Description and Banner</Heading>
+					<Heading size="md">Change Settings</Heading>
 					<UpdateTopic topic={topicData.topic} />
 					<Divider my="3" />
 					<Heading size="md">Moderators</Heading>

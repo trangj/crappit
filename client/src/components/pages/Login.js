@@ -8,12 +8,12 @@ import {
 	Spacer,
 } from "@chakra-ui/react";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
+import TextFieldForm from "../forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { UserContext } from "../context/UserState";
+import { UserContext } from "../../context/UserState";
 import { Link, useHistory } from "react-router-dom";
-import AlertStatus from "../components/utils/AlertStatus";
-import Card from "../components/utils/Card";
+import AlertStatus from "../utils/AlertStatus";
+import Card from "../utils/Card";
 
 const schema = yup.object({
 	email: yup.string().required(""),

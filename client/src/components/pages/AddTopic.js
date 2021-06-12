@@ -2,13 +2,13 @@ import React from "react";
 import { Button, Heading, Divider, Container } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
-import FileFieldForm from "../components/forms/FileFieldForm";
-import useAddTopic from "../hooks/topic-query/useAddTopic";
-import Card from "../components/utils/Card";
+import TextFieldForm from "../forms/TextFieldForm";
+import FileFieldForm from "../forms/FileFieldForm";
+import useAddTopic from "../../hooks/topic-query/useAddTopic";
+import Card from "../utils/Card";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 512 * 1024;
+const FILE_SIZE = 10485760;
 const schema = yup.object({
 	title: yup
 		.string()

@@ -16,9 +16,7 @@ export const upload = multer({
 		s3,
 		bucket: "crappit-images",
 		acl: "public-read",
-		metadata: (req, file, cb) => {
-			cb(null, { fieldName: "Image" });
-		},
+		contentType: multerS3.AUTO_CONTENT_TYPE,
 		key: (req, file, cb) => {
 			cb(null, Date.now().toString() + path.extname(file.originalname));
 		},

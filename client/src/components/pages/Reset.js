@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
+import TextFieldForm from "../forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button, Container, Divider, Heading } from "@chakra-ui/react";
-import axios from "../axiosConfig";
+import axios from "../../axiosConfig";
 import { Redirect } from "react-router";
-import AlertStatus from "../components/utils/AlertStatus";
-import Card from "../components/utils/Card";
+import AlertStatus from "../utils/AlertStatus";
+import Card from "../utils/Card";
 
 const schema = yup.object({
 	password: yup

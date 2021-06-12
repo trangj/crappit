@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import PostItem from "../components/post/PostItem";
-import TopicCard from "../components/topic/TopicCard";
-import SkeletonList from "../components/utils/SkeletonList";
+import PostItem from "../post/PostItem";
+import TopicCard from "../topic/TopicCard";
+import SkeletonList from "../utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
 	Avatar,
@@ -16,12 +16,12 @@ import {
 	Spacer,
 	Text,
 } from "@chakra-ui/react";
-import usePosts from "../hooks/post-query/usePosts";
-import useTopic from "../hooks/topic-query/useTopic";
-import AlertStatus from "../components/utils/AlertStatus";
-import Card from "../components/utils/Card";
+import usePosts from "../../hooks/post-query/usePosts";
+import useTopic from "../../hooks/topic-query/useTopic";
+import AlertStatus from "../utils/AlertStatus";
+import Card from "../utils/Card";
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/UserState";
+import { UserContext } from "../../context/UserState";
 import dayjs from "dayjs";
 
 const Topic = ({ match }) => {
