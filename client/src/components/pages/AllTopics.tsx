@@ -9,8 +9,8 @@ import LinkCard from "../utils/LinkCard";
 const AllTopics = () => {
 	const { isLoading, isError, data: topics, error } = useTopics();
 
-	if (isLoading || !topics) return <SkeletonList />;
 	if (isError || error) return <AlertStatus status={error} />;
+	if (isLoading || !topics) return <SkeletonList />;
 
 	return (
 		<Container>

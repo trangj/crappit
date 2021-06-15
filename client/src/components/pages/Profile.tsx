@@ -21,8 +21,8 @@ const Profile = ({ match }: Props) => {
 		error,
 	} = useProfile(match.params.userid);
 
-	if (isLoading || !profile) return <SkeletonCard />;
 	if (isError) return <AlertStatus status={error} />;
+	if (isLoading || !profile) return <SkeletonCard />;
 
 	return (
 		<Container>

@@ -24,9 +24,9 @@ const Post = ({ match }: Props) => {
 		error: topicError,
 	} = useTopic(match.params.topic);
 
-	if (isLoading || topicLoading || !data || !topicData) return <SkeletonCard />;
 	if (isError || topicIsError)
 		return <AlertStatus status={error || topicError} />;
+	if (isLoading || topicLoading || !data || !topicData) return <SkeletonCard />;
 
 	return (
 		<Container>

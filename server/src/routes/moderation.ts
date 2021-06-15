@@ -15,7 +15,8 @@ router.post("/topic/:topic", auth, async (req, res) => {
 		if (!user) throw Error("User does not exist");
 		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
 		if (!topic) throw Error("Topic does not exist");
-		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
+		console.log(topic.moderators, user);
+		if (!topic.moderators.some(moderator => moderator.id === req.user.id)) throw Error("You are not a moderator");
 
 		user.topics_moderated.push(topic);
 		await user.save();
