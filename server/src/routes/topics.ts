@@ -1,5 +1,5 @@
 import express from "express";
-import { Topic } from '../entities'
+import { Topic } from '../entities';
 
 const router = express.Router();
 
