@@ -2,6 +2,11 @@ import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 import { createStandaloneToast } from "@chakra-ui/toast";
 import { Comment } from "src/types/entities/comment";
+import { Error } from "src/types/error";
+
+interface Response {
+	comment: Comment;
+}
 
 async function addReply({ commentId, reply }: { commentId: number, reply: Comment; }) {
 	try {
@@ -13,7 +18,7 @@ async function addReply({ commentId, reply }: { commentId: number, reply: Commen
 }
 
 export default function useAddReply(setOpenReply: (arg0: boolean) => void, comment: Comment) {
-	return useMutation<any, any, any, any>(addReply, {
+	return useMutation<Response, Error, any, any>(addReply, {
 		onSuccess: (res) => {
 			comment.children = [res.comment, ...comment.children];
 			setOpenReply(false);

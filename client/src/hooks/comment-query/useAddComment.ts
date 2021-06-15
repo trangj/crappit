@@ -3,6 +3,11 @@ import { createStandaloneToast } from "@chakra-ui/toast";
 import axios from "../../axiosConfig";
 import { Post } from "src/types/entities/post";
 import { Comment } from "src/types/entities/comment";
+import { Error } from "src/types/error";
+
+interface Response {
+	comment: Comment;
+}
 
 async function addComment({ newComment }: { newComment: Comment; }) {
 	try {
@@ -14,7 +19,7 @@ async function addComment({ newComment }: { newComment: Comment; }) {
 }
 
 export default function useAddComment(post: Post) {
-	return useMutation<any, any, any, any>(addComment, {
+	return useMutation<Response, Error, any, any>(addComment, {
 		onSuccess: (res) => {
 			post.comments = [res.comment, ...post.comments];
 		},

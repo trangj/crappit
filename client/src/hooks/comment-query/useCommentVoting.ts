@@ -2,6 +2,12 @@ import { useMutation } from "react-query";
 import { createStandaloneToast } from "@chakra-ui/toast";
 import axios from "../../axiosConfig";
 import { Comment } from "src/types/entities/comment";
+import { Error } from "src/types/error";
+
+interface Response {
+	vote: number;
+	user_vote: number;
+}
 
 async function commentVoting({ commentId, vote }: { commentId: number, vote: string; }) {
 	try {
@@ -15,7 +21,7 @@ async function commentVoting({ commentId, vote }: { commentId: number, vote: str
 }
 
 export default function useCommentVoting(comment: Comment) {
-	return useMutation<any, any, any, any>(commentVoting, {
+	return useMutation<Response, Error, any, any>(commentVoting, {
 		onSuccess: (res) => {
 			comment.vote = res.vote;
 			comment.user_vote = res.user_vote;
