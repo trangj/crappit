@@ -21,11 +21,11 @@ type Props = ChakraProps & {
 	post: Post;
 };
 
-const PostItem = ({ post }: Props) => {
+const PostItem = ({ post, ...props }: Props) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<LinkCard mb="-1px">
+		<LinkCard mb="-1px" {...props}>
 			<HStack spacing="0">
 				<Box mb="auto" zIndex="3">
 					<Voting post={post} />
