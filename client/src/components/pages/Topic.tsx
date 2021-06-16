@@ -32,7 +32,7 @@ interface Props extends RouteComponentProps<MatchParams> { }
 
 const Topic = ({ match }: Props) => {
 	const { user } = useContext(UserContext);
-	const [sortParam, setSortParam] = useState("");
+	const [sortParam, setSortParam] = useState("number_of_comments");
 	const { data, error, fetchNextPage, hasNextPage, isLoading, isFetching } =
 		usePosts(match.params.topic, sortParam);
 	const {
@@ -71,11 +71,11 @@ const Topic = ({ match }: Props) => {
 					<Card>
 						<HStack>
 							<Button
-								isActive={sortParam === ""}
+								isActive={sortParam === "number_of_comments"}
 								onClick={() => setSortParam("")}
 								variant="ghost"
 							>
-								Random
+								Hot
 							</Button>
 							<Button
 								isActive={sortParam === "created_at"}

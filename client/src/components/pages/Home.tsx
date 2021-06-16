@@ -21,7 +21,7 @@ import { UserContext } from "../../context/UserState";
 
 const Home = () => {
 	const { user } = useContext(UserContext);
-	const [sortParam, setSortParam] = useState("");
+	const [sortParam, setSortParam] = useState("number_of_comments");
 	const {
 		data,
 		error,
@@ -51,11 +51,11 @@ const Home = () => {
 				<Card>
 					<HStack>
 						<Button
-							isActive={sortParam === ""}
+							isActive={sortParam === "number_of_comments"}
 							onClick={() => setSortParam("")}
 							variant="ghost"
 						>
-							Random
+							Hot
 						</Button>
 						<Button
 							isActive={sortParam === "created_at"}
