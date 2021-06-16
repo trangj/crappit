@@ -1,7 +1,7 @@
-import { Flex, Divider, Box, ChakraProps, Link } from '@chakra-ui/react';
-import React, { ReactNode } from 'react';
-import { LinkProps } from 'react-router-dom';
+import { Flex, Divider, Box, forwardRef, BoxProps } from '@chakra-ui/react';
+import React from 'react';
 import { User } from 'src/types/entities/user';
+import { Link } from 'react-router-dom';
 
 type Props = {
     user: User;
@@ -9,21 +9,13 @@ type Props = {
     showMenu: (arg: boolean) => void;
 };
 
-type MenuProps = LinkProps & ChakraProps & {
-    children?: ReactNode;
-};
-
 const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
 
-    const MenuItem = ({ children, ...props }: MenuProps) => {
-        return (
-            <Box py="2">
-                <Link {...props} onClick={() => showMenu(false)}>
-                    {children}
-                </Link>
-            </Box>
-        );
-    };
+    const MenuItem = forwardRef<BoxProps, 'div'>(({ children, ...props }, ref) => (
+        <Box as={Link} my="2" display="block" {...props} onClick={() => showMenu(false)}>
+            {children}
+        </Box>
+    ));
 
     return (
         <Flex flexDirection="column" display={{ sm: 'none' }}>
@@ -53,7 +45,7 @@ const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
             <Divider my="1" />
             {!user ? (
                 <>
-                    <MenuItem to="/login" mr="2">
+                    <MenuItem to="/login">
                         Login
                     </MenuItem>
                     <MenuItem to="/register">
