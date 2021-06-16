@@ -23,7 +23,7 @@ router.get("/", optionalAuth, async (req, res) => {
 			order by 
 				(case when $2 = 'vote' then p.vote end) desc,
 				(case when $2 = 'created_at' then p.created_at end) desc,
-				(case when $2 = 'number_of_comments' then p.number_of_comments end) desc
+				(case when $2 = '' then p.number_of_comments end) desc
 			limit 10 offset $3
 		`, [req.user.id, req.query.sort, req.query.skip]);
 
@@ -61,7 +61,7 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			order by
 				(case when $3 = 'vote' then p.vote end) desc,
 				(case when $3 = 'created_at' then p.created_at end) desc,
-				(case when $3 = 'number_of_comments' then p.number_of_comments end) desc
+				(case when $3 = '' then p.number_of_comments end) desc
 			limit 10 offset $4
 		`, [req.user.id, req.params.topic, req.query.sort, req.query.skip]);
 		if (!posts) throw Error("No posts found");
