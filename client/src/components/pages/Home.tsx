@@ -52,7 +52,7 @@ const Home = () => {
 					<HStack>
 						<Button
 							isActive={sortParam === "number_of_comments"}
-							onClick={() => setSortParam("")}
+							onClick={() => setSortParam("number_of_comments")}
 							variant="ghost"
 						>
 							Hot
