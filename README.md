@@ -4,6 +4,9 @@ A less good version of Reddit developed using Node.js, React, PostgreSQL, and Ty
 
 You can play around with a live build of this app [here](https://crappit.netlify.app/)
 
+## Screenshot
+![s1](https://i.imgur.com/DbZrxJK.png)
+
 ## Current Features
 
 Crappit currently has these features:
@@ -14,12 +17,13 @@ Crappit currently has these features:
 - browse latest topics and posts within topics
 - add topics to your favourites, such that they can be accessed easily from the navbar
 - post and topic moderation, you can add moderators and deleted posts and comments!
+- dark mode support
 
 ## Developing Features
 
 Features currently in development:
 
-- properly obtain hot posts based on number of upvotes
+- different layouts for post lists
 
 ## Installation
 
