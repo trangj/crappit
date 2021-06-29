@@ -1,25 +1,22 @@
 import React from "react";
-import SkeletonCard from "../utils/SkeletonCard";
-import { Link, RouteComponentProps } from "react-router-dom";
+import SkeletonCard from "../../../components/utils/SkeletonCard";
+import Link from "next/link";
 import { Heading, Text, Divider, Container } from "@chakra-ui/react";
-import useProfile from "../../hooks/user-query/useProfile";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
+import useProfile from "../../../hooks/user-query/useProfile";
+import AlertStatus from "../../../components/utils/AlertStatus";
+import Card from "../../../components/utils/Card";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 
-interface MatchParams {
-	userid: string;
-}
-
-interface Props extends RouteComponentProps<MatchParams> { }
-
-const Profile = ({ match }: Props) => {
+const Profile = () => {
+	const router = useRouter();
+	const { userid } = router.query;
 	const {
 		isLoading,
 		isError,
 		data: profile,
 		error,
-	} = useProfile(match.params.userid);
+	} = useProfile(userid as string);
 
 	if (isError) return <AlertStatus status={error} />;
 	if (isLoading || !profile) return <SkeletonCard />;
@@ -32,9 +29,9 @@ const Profile = ({ match }: Props) => {
 				<Divider my="3" />
 				<Heading fontSize="sm">Followed Topics</Heading>
 				{profile.topics_followed.map((topic) => (
-					<Text key={topic.title}>
-						<Link to={`/t/${topic.title}`}>t/{topic.title}</Link>
-					</Text>
+					<Link passHref href={`/t/${topic.title}`} key={topic.title}>
+						<a style={{ display: "block" }}>t/{topic.title}</a>
+					</Link>
 				))}
 			</Card>
 		</Container>

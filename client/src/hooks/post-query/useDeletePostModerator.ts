@@ -1,6 +1,6 @@
 import { createStandaloneToast } from "@chakra-ui/toast";
+import { useRouter } from "next/router";
 import { useMutation } from "react-query";
-import { useHistory } from "react-router";
 import { Post } from "src/types/entities/post";
 import axios from "../../axiosConfig";
 
@@ -14,10 +14,10 @@ async function deletePostModerator({ postid }: { postid: number; }) {
 }
 
 export default function useDeletePostModerator(post: Post) {
-	const history = useHistory();
+	const router = useRouter();
 	return useMutation(deletePostModerator, {
 		onSuccess: (res) => {
-			history.push(`/t/${post.topic}`);
+			router.push(`/t/${post.topic}`);
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

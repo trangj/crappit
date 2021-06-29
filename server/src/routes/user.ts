@@ -2,7 +2,7 @@ import express from "express";
 import bcyrpt from "bcryptjs";
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
-import jwt from "jsonwebtoken";
+import jwt, { verify } from "jsonwebtoken";
 import { auth } from "../middleware/auth";
 import { Topic, User } from "../entities";
 import { MoreThan } from 'typeorm';
@@ -34,13 +34,20 @@ router.post("/register", async (req, res) => {
 			password: hash,
 		}).save().catch(err => { throw Error("A user already exists with that username or email"); });
 
-		const token = jwt.sign(
+		const refresh_token = jwt.sign(
 			{ id: newUser.id, username: newUser.username },
-			process.env.jwtSecret
+			process.env.REFRESH_TOKEN_SECRET,
+			{ expiresIn: '7d' }
 		);
 
-		res.status(200).json({
-			token,
+		const access_token = jwt.sign(
+			{ id: newUser.id, username: newUser.username },
+			process.env.ACCESS_TOKEN_SECRET,
+			{ expiresIn: '15m' }
+		);
+
+		res.status(200).cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }).json({
+			access_token,
 			user: { ...newUser, topics_followed: [] },
 			status: {
 				text: "Successfully registered!",
@@ -77,13 +84,20 @@ router.post("/login", async (req, res) => {
 		const isMatch = await bcyrpt.compare(password, user.password);
 		if (!isMatch) throw Error("Invalid password");
 
-		const token = jwt.sign(
+		const refresh_token = jwt.sign(
 			{ id: user.id, username: user.username },
-			process.env.jwtSecret
+			process.env.REFRESH_TOKEN_SECRET,
+			{ expiresIn: '7d' }
 		);
 
-		res.status(200).json({
-			token,
+		const access_token = jwt.sign(
+			{ id: user.id, username: user.username },
+			process.env.ACCESS_TOKEN_SECRET,
+			{ expiresIn: '15m' }
+		);
+
+		res.status(200).cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }).json({
+			access_token,
 			user: { ...user, topics_followed },
 			status: { text: "Successfully logged in!", severity: "success" },
 		});
@@ -256,6 +270,61 @@ router.post("/email", auth, async (req, res) => {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
 		});
+	}
+});
+
+// Get new access token and refresh token
+
+router.post("/refresh_token", async (req, res) => {
+	try {
+		const refresh_token = req.cookies.token;
+		if (!refresh_token) throw Error;
+
+
+		let payload = null;
+		payload = verify(refresh_token, process.env.REFRESH_TOKEN_SECRET);
+		if (!payload) throw Error;
+
+		const user = await User.findOne(refresh_token.id);
+		if (!user) throw Error("No user found");
+
+		const topics_followed = await Topic.query(`
+			select
+			t.title title
+			from follow ft
+			left join topic t on ft.topic_id = t.id
+			where ft.user_id = $1
+		`, [user.id]);
+
+		const { password, ...rest } = user;
+
+		const new_refresh_token = jwt.sign(
+			{ id: user.id, username: user.username },
+			process.env.REFRESH_TOKEN_SECRET,
+			{ expiresIn: '7d' }
+		);
+
+		const new_access_token = jwt.sign(
+			{ id: user.id, username: user.username },
+			process.env.ACCESS_TOKEN_SECRET,
+			{ expiresIn: '15m' }
+		);
+
+		res
+			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
+			.json({ ok: true, access_token: new_access_token, user: { ...rest, topics_followed } });
+	} catch (err) {
+
+		res.json({ ok: false, access_token: "" });
+	}
+});
+
+// Logout
+router.post('/logout', async (req, res) => {
+	try {
+		res.clearCookie('token').json({ access_token: '' });
+	} catch (err) {
+		//
 	}
 });
 

@@ -1,7 +1,7 @@
-import React, { useContext, useState } from "react";
-import PostItem from "../post/PostItem";
-import TopicCard from "../topic/TopicCard";
-import SkeletonList from "../utils/SkeletonList";
+import React, { useState } from "react";
+import PostItem from "../../../components/post/PostItem";
+import TopicCard from "../../../components/topic/TopicCard";
+import SkeletonList from "../../../components/utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
 	Avatar,
@@ -16,30 +16,27 @@ import {
 	Spacer,
 	Text,
 } from "@chakra-ui/react";
-import usePosts from "../../hooks/post-query/usePosts";
-import useTopic from "../../hooks/topic-query/useTopic";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
-import { Link, RouteComponentProps } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import usePosts from "../../../hooks/post-query/usePosts";
+import useTopic from "../../../hooks/topic-query/useTopic";
+import AlertStatus from "../../../components/utils/AlertStatus";
+import Card from "../../../components/utils/Card";
+import Link from "next/link";
+import { useUser } from "../../../context/UserState";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
 
-interface MatchParams {
-	topic: string;
-}
-
-interface Props extends RouteComponentProps<MatchParams> { }
-
-const Topic = ({ match }: Props) => {
-	const { user } = useContext(UserContext);
+const Topic = () => {
+	const router = useRouter();
+	const { topic } = router.query;
+	const { user } = useUser();
 	const [sortParam, setSortParam] = useState("");
 	const { data, error, fetchNextPage, hasNextPage, isLoading, isFetching } =
-		usePosts(match.params.topic, sortParam);
+		usePosts(topic as string, sortParam);
 	const {
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useTopic(match.params.topic);
+	} = useTopic(topic as string);
 
 	if (error || topicIsError)
 		return <AlertStatus status={error || topicError} />;
@@ -55,16 +52,18 @@ const Topic = ({ match }: Props) => {
 				<Box width="100%">
 					<Card>
 						<HStack>
-							<Avatar
-								size="sm"
-								as={Link}
-								to={user ? `/user/${user.id}` : "/login"}
-							/>
+							<Link passHref href={user ? `/user/${user.id}` : "/login"}>
+								<Avatar
+									size="sm"
+									as="a"
+
+								/>
+							</Link>
 							<Link
-								to={topicData ? `/t/${topicData.topic.title}/submit` : "/"}
-								style={{ width: "100%" }}
+								passHref
+								href={topicData ? `/t/${topicData.topic.title}/submit` : "/"}
 							>
-								<Input placeholder="Create post" />
+								<Input placeholder="Create post" style={{ width: "100%" }} />
 							</Link>
 						</HStack>
 					</Card>
@@ -129,15 +128,17 @@ const Topic = ({ match }: Props) => {
 									<Heading size="md">About Community</Heading>
 									<Spacer />
 									{user && topicData.topic.user_moderator_id && (
-										<>
+										<Link
+											href={`/t/${topicData.topic.title}/moderation`}
+											passHref
+										>
 											<Button
-												as={Link}
-												to={`/t/${topicData.topic.title}/moderation`}
+												as="a"
 												size="sm"
 											>
 												Settings
 											</Button>
-										</>
+										</Link>
 									)}
 								</Flex>
 								<Text pt="4">{topicData.topic.description}</Text>
@@ -145,14 +146,15 @@ const Topic = ({ match }: Props) => {
 								<Text pt="2">
 									Created {dayjs(topicData.topic.created_at).format("LL")}
 								</Text>
-								<Button
-									as={Link}
-									to={`/t/${topicData.topic.title}/submit`}
-									mt="2"
-									isFullWidth
-								>
-									Add Post
-								</Button>
+								<Link passHref href={`/t/${topicData.topic.title}/submit`}>
+									<Button
+										as="a"
+										mt="2"
+										isFullWidth
+									>
+										Add Post
+									</Button>
+								</Link>
 							</Card>
 						) : (
 							<Skeleton width="100%" height="300px" borderRadius="md" />

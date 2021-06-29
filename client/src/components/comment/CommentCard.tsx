@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import CommentItem from "./CommentItem";
 import * as yup from "yup";
 import TextFieldForm from "../forms/TextFieldForm";
 import { Formik, Form, Field, FormikHelpers } from "formik";
-import { UserContext } from "../../context/UserState";
+import { useUser } from "../../context/UserState";
 import { Button, Divider, Text } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import useAddComment from "../../hooks/comment-query/useAddComment";
 import Card from "../utils/Card";
 import { Post } from "src/types/entities/post";
@@ -25,7 +25,7 @@ interface FormValues {
 };
 
 const CommentCard = ({ post, topic }: Props) => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const { comments } = post;
 	const { isLoading, mutate } = useAddComment(post);
 
@@ -46,7 +46,7 @@ const CommentCard = ({ post, topic }: Props) => {
 			{user ? (
 				<>
 					<Text>
-						Comment as <Link to={`/user/${user.id}`}>{user.username}</Link>
+						Comment as <Link href={`/user/${user.id}`}>{user.username}</Link>
 					</Text>
 					<Formik
 						initialValues={{ content: "" }}
@@ -65,6 +65,7 @@ const CommentCard = ({ post, topic }: Props) => {
 									type="submit"
 									isLoading={isLoading}
 									isDisabled={!!!values.content}
+									mt="2"
 								>
 									Comment
 								</Button>
@@ -78,7 +79,7 @@ const CommentCard = ({ post, topic }: Props) => {
 			<Divider pt="3" />
 			{comments.length === 0 ? (
 				<Text py="3" color="gray.500">
-					It's a bit empty in here...
+					It&apos;s a bit empty in here...
 				</Text>
 			) : (
 				comments.map((comment) => (

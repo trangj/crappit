@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useContext, useState } from "react";
+import React, { FormEventHandler, useState } from "react";
 import {
 	Button,
 	Heading,
@@ -9,13 +9,13 @@ import {
 	Input,
 	Container,
 } from "@chakra-ui/react";
-import { UserContext } from "../../context/UserState";
-import axios from "../../axiosConfig";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
+import { useUser } from "../context/UserState";
+import axios from "../axiosConfig";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
 
 const Settings = () => {
-	const { user, setUser } = useContext(UserContext);
+	const { user, setUser } = useUser();
 	const [status, setStatus] = useState(null);
 	const [newEmail, setNewEmail] = useState("");
 	const [password, setPassword] = useState("");

@@ -1,13 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Button, Container, Divider, Heading, HStack } from "@chakra-ui/react";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
+import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { UserContext } from "../../context/UserState";
-import { useHistory } from "react-router";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
-import { Link } from "react-router-dom";
+import { useUser } from "../context/UserState";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 
 const schema = yup.object({
 	username: yup
@@ -33,10 +34,24 @@ interface FormValues {
 	password2: string;
 }
 
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	if (req.cookies.token) {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false
+			}
+		};
+	}
+	return {
+		props: {}
+	};
+};
+
 const Register = () => {
-	const { registerUser } = useContext(UserContext);
+	const { registerUser } = useUser();
 	const [status, setStatus] = useState(null);
-	const history = useHistory();
+	const router = useRouter();
 
 	const handleSubmit = async ({ username, email, password, password2 }: FormValues) => {
 		try {
@@ -47,7 +62,7 @@ const Register = () => {
 				password2,
 			};
 			await registerUser(user);
-			history.goBack();
+			router.back();
 		} catch (err) {
 			setStatus(err);
 		}
@@ -100,8 +115,10 @@ const Register = () => {
 					)}
 				</Formik>
 				<HStack my="2">
-					<Link to="/login">
-						<small>Already have an account?</small>
+					<Link href="/login">
+						<a>
+							<small>Already have an account?</small>
+						</a>
 					</Link>
 				</HStack>
 				{status && <AlertStatus status={status} />}

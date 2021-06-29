@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
-import PostItem from "../post/PostItem";
-import SkeletonList from "../utils/SkeletonList";
+import React, { useState } from "react";
+import PostItem from "../components/post/PostItem";
+import SkeletonList from "../components/utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
 	Button,
@@ -13,14 +13,14 @@ import {
 	Avatar,
 	Skeleton,
 } from "@chakra-ui/react";
-import usePosts from "../../hooks/post-query/usePosts";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
-import { Link } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import usePosts from "../hooks/post-query/usePosts";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
+import Link from "next/link";
+import { useUser } from "../context/UserState";
 
 const Home = () => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const [sortParam, setSortParam] = useState("");
 	const {
 		data,
@@ -38,13 +38,11 @@ const Home = () => {
 			<Box width="100%">
 				<Card>
 					<HStack>
-						<Avatar
-							size="sm"
-							as={Link}
-							to={user ? `/user/${user.id}` : "/login"}
-						/>
-						<Link to={`/submit`} style={{ width: "100%" }}>
-							<Input placeholder="Create post" />
+						<Link passHref href={user ? `/user/${user.id}` : "/login"}>
+							<Avatar as="a" size="sm" />
+						</Link>
+						<Link passHref href={`/submit`}>
+							<Input placeholder="Create post" style={{ width: "100%" }} />
 						</Link>
 					</HStack>
 				</Card>
@@ -109,12 +107,16 @@ const Home = () => {
 							Your personal Crappit frontpage. Come here to check in with your
 							favorite communities.
 						</Text>
-						<Button as={Link} to={`/submit`} mt="2" isFullWidth>
-							Create Post
-						</Button>
-						<Button as={Link} to={`/t/submit`} mt="2" isFullWidth>
-							Create Topic
-						</Button>
+						<Link passHref href={`/submit`}>
+							<Button as="a" mt="2" isFullWidth>
+								Create Post
+							</Button>
+						</Link>
+						<Link passHref href={`/t/submit`}>
+							<Button as="a" mt="2" isFullWidth>
+								Create Topic
+							</Button>
+						</Link>
 					</Card>
 				</Box>
 			</Flex>

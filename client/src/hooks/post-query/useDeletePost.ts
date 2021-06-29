@@ -1,6 +1,6 @@
 import { createStandaloneToast } from "@chakra-ui/toast";
+import { useRouter } from "next/router";
 import { useMutation } from "react-query";
-import { useHistory } from "react-router";
 import axios from "../../axiosConfig";
 
 async function deletePost({ postid }: { postid: number; }) {
@@ -13,10 +13,10 @@ async function deletePost({ postid }: { postid: number; }) {
 }
 
 export default function useDeletePost(topic: string) {
-	const history = useHistory();
+	const router = useRouter();
 	return useMutation(deletePost, {
 		onSuccess: (res) => {
-			history.push(`/t/${topic}`);
+			router.push(`/t/${topic}`);
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
+import TextFieldForm from "../../../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button, Container, Divider, Heading } from "@chakra-ui/react";
-import axios from "../../axiosConfig";
-import { Redirect } from "react-router";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
-import { RouteComponentProps } from "react-router-dom";
+import axios from "../../../axiosConfig";
+import AlertStatus from "../../../components/utils/AlertStatus";
+import Card from "../../../components/utils/Card";
+import { useRouter } from "next/router";
 
 const schema = yup.object({
 	password: yup
@@ -21,25 +20,21 @@ const schema = yup.object({
 		.required("Confirm your password"),
 });
 
-interface MatchParams {
-	token: string;
-}
-
-interface Props extends RouteComponentProps<MatchParams> { }
-
 interface FormValues {
 	password: string,
 	password2: string;
 }
 
-const Forgot = ({ match }: Props) => {
+const Forgot = () => {
 	const [redirect, setRedirect] = useState(false);
 	const [status, setStatus] = useState(null);
+	const router = useRouter();
+	const { token } = router.query;
 
 	useEffect(() => {
 		const confirmToken = async () => {
 			try {
-				const res = await axios.get(`/api/user/reset/${match.params.token}`);
+				const res = await axios.get(`/api/user/reset/${token}`);
 				setStatus(res.data);
 			} catch (err) {
 				setStatus(err.response.data);
@@ -47,15 +42,14 @@ const Forgot = ({ match }: Props) => {
 		};
 		confirmToken();
 		// eslint-disable-next-line
-	}, [match.params.token]);
+	}, [token]);
 
 	const handleSubmit = async ({ password, password2 }: FormValues) => {
 		try {
-			const res = await axios.post(`/api/user/reset/${match.params.token}`, {
+			const res = await axios.post(`/api/user/reset/${token}`, {
 				password,
 				password2,
 			});
-			console.log(res.data);
 			setStatus(res.data);
 			setRedirect(true);
 		} catch (err) {
@@ -63,17 +57,7 @@ const Forgot = ({ match }: Props) => {
 		}
 	};
 
-	if (redirect)
-		return (
-			<Redirect
-				to={{
-					pathname: "/login",
-					state: {
-						status: status,
-					},
-				}}
-			/>
-		);
+	if (redirect) router.push("/login");
 
 	return (
 		<Container>

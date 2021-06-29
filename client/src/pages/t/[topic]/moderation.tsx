@@ -1,28 +1,24 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Container, Divider, Heading, Image, Text } from "@chakra-ui/react";
-import useTopic from "../../hooks/topic-query/useTopic";
-import { UserContext } from "../../context/UserState";
-import Card from "../utils/Card";
-import UpdateTopic from "../topic/UpdateTopic";
-import AlertStatus from "../utils/AlertStatus";
-import SkeletonCard from "../utils/SkeletonCard";
-import AddModerator from "../topic/AddModerator";
-import { RouteComponentProps } from "react-router-dom";
+import useTopic from "../../../hooks/topic-query/useTopic";
+import { useUser } from "../../../context/UserState";
+import Card from "../../../components/utils/Card";
+import UpdateTopic from "../../../components/topic/UpdateTopic";
+import AlertStatus from "../../../components/utils/AlertStatus";
+import SkeletonCard from "../../../components/utils/SkeletonCard";
+import AddModerator from "../../../components/topic/AddModerator";
+import { useRouter } from "next/router";
 
-interface MatchParams {
-	topic: string;
-}
-
-interface Props extends RouteComponentProps<MatchParams> { }
-
-const Moderation = ({ match }: Props) => {
-	const { user } = useContext(UserContext);
+const Moderation = () => {
+	const router = useRouter();
+	const { topic } = router.query;
+	const { user } = useUser();
 	const {
 		isLoading: topicLoading,
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useTopic(match.params.topic);
+	} = useTopic(topic as string);
 
 	if (topicLoading || !topicData) return <SkeletonCard />;
 	if (topicIsError) return <AlertStatus status={topicError} />;

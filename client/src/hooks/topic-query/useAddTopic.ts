@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
-import { useHistory } from "react-router-dom";
 import { createStandaloneToast } from "@chakra-ui/toast";
+import { useRouter } from "next/router";
 
 async function addTopic({ formData }: { formData: FormData; }) {
 	try {
@@ -13,11 +13,11 @@ async function addTopic({ formData }: { formData: FormData; }) {
 }
 
 export default function useAddTopic() {
-	const history = useHistory();
+	const router = useRouter();
 	return useMutation(addTopic, {
 		onSuccess: (res) => {
 			const { title } = res.topic;
-			history.push(`/t/${title}`);
+			router.push(`/t/${title}`);
 		},
 		onSettled: (data, error) => {
 			const res = data || error;

@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { UserContext } from "../../context/UserState";
+import React from "react";
+import { useUser } from "../../context/UserState";
 import {
 	Heading,
 	Image,
@@ -10,7 +10,7 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
-import { useLocation, Link } from "react-router-dom";
+import Link from "next/link";
 import { Topic } from "src/types/entities/topic";
 
 type Props = {
@@ -18,8 +18,7 @@ type Props = {
 };
 
 const TopicCard = ({ topic }: Props) => {
-	const { user } = useContext(UserContext);
-	const location = useLocation();
+	const { user } = useUser();
 	const { isLoading, mutate } = useTopicFollow(topic);
 
 	return (
@@ -49,24 +48,14 @@ const TopicCard = ({ topic }: Props) => {
 								{topic.user_followed_id ? "Unfollow" : "Follow"}
 							</Button>
 						) : (
-							<Button
-								size="md"
-								as={Link}
-								to={{
-									pathname: "/login",
-									state: {
-										status: {
-											status: {
-												text: "Login to follow topics",
-												severity: "error",
-											}
-										},
-										from: location.pathname,
-									},
-								}}
-							>
-								Follow
-							</Button>
+							<Link passHref href="/login">
+								<Button
+									size="md"
+									as="a"
+								>
+									Follow
+								</Button>
+							</Link>
 						)}
 					</HStack>
 					<Text>t/{topic.title}</Text>

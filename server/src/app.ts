@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from 'cookie-parser';
 import { UserRouter, TopicsRouter, TopicRouter, PostsRouter, PostRouter, CommentRouter, ModerationRouter } from './routes';
 import { createConnection } from "typeorm";
 
@@ -10,7 +11,8 @@ import { createConnection } from "typeorm";
 
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));
-	app.use(cors());
+	app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+	app.use(cookieParser());
 	app.use("/api/comment", CommentRouter);
 	app.use("/api/post", PostRouter);
 	app.use("/api/posts", PostsRouter);

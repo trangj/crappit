@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	Container,
@@ -8,35 +8,43 @@ import {
 	Spacer,
 } from "@chakra-ui/react";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
+import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { UserContext } from "../../context/UserState";
-import { Link, RouteComponentProps, useHistory } from "react-router-dom";
-import AlertStatus from "../utils/AlertStatus";
-import Card from "../utils/Card";
-import { Error } from "src/types/error";
+import { useUser } from "../context/UserState";
+import Link from "next/link";
+import AlertStatus from "../components/utils/AlertStatus";
+import Card from "../components/utils/Card";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 
 const schema = yup.object({
 	email: yup.string().required("Enter your username"),
 	password: yup.string().required("Enter your password"),
 });
 
-interface LocationParams {
-	status: Error,
-	from: string,
-}
-
-interface Props extends RouteComponentProps<{}, any, LocationParams> { }
-
 interface FormValues {
 	email: string,
 	password: string;
 }
 
-const Login = ({ location }: Props) => {
-	const { loginUser } = useContext(UserContext);
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	if (req.cookies.token) {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false
+			}
+		};
+	}
+	return {
+		props: {}
+	};
+};
+
+const Login = () => {
+	const { loginUser } = useUser();
 	const [status, setStatus] = useState(null);
-	const history = useHistory();
+	const router = useRouter();
 
 	const handleSubmit = async ({ email, password }: FormValues) => {
 		try {
@@ -45,15 +53,7 @@ const Login = ({ location }: Props) => {
 				password,
 			};
 			await loginUser(user);
-			if (
-				location &&
-				location.state &&
-				location.state.status
-			) {
-				history.push(location.state.from);
-			} else {
-				history.goBack();
-			}
+			router.back();
 		} catch (err) {
 			setStatus(err);
 		}
@@ -90,18 +90,19 @@ const Login = ({ location }: Props) => {
 					)}
 				</Formik>
 				<HStack my="2">
-					<Link to="/forgot">
-						<small>Forgot your password?</small>
+					<Link href="/forgot" passHref>
+						<a>
+							<small>Forgot your password?</small>
+						</a>
 					</Link>
 					<Spacer />
-					<Link to="/register">
-						<small>Sign up for an account!</small>
+					<Link href="/register" passHref>
+						<a>
+							<small>Sign up for an account!</small>
+						</a>
 					</Link>
 				</HStack>
 				{status && <AlertStatus status={status} />}
-				{location.state && (
-					<AlertStatus status={location.state.status} />
-				)}
 			</Card>
 		</Container>
 	);

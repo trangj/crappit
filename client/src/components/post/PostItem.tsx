@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, LinkIcon, MinusIcon } from "@chakra-ui/icons";
 import Voting from "./Voting";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import LinkCard from "../utils/LinkCard";
 import dayjs from "dayjs";
 import { Post } from "src/types/entities/post";
@@ -32,16 +32,24 @@ const PostItem = ({ post, ...props }: Props) => {
 				</Box>
 				<Box width="100%">
 					<Heading size="md">
-						<LinkOverlay as={Link} to={`/t/${post.topic}/comments/${post.id}`}>
-							{post.title}
-						</LinkOverlay>
+						<Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
+							<LinkOverlay as="a">
+								{post.title}
+							</LinkOverlay>
+						</Link>
 					</Heading>
 					<Text fontSize="sm">
-						<Link to={`/t/${post.topic}`} style={{ fontWeight: 500 }}>
-							t/{post.topic}
+						<Link passHref href={`/t/${post.topic}`}>
+							<a style={{ fontWeight: 500 }}>
+								t/{post.topic}
+							</a>
 						</Link>{" "}
 						| Posted by{" "}
-						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
+						<Link passHref href={`/user/${post.author_id}`}>
+							<a>
+								u/{post.author}
+							</a>
+						</Link>{" "}
 						{dayjs(post.created_at).fromNow()}
 					</Text>
 					<HStack mt="2">
@@ -68,15 +76,16 @@ const PostItem = ({ post, ...props }: Props) => {
 								variant="ghost"
 							/>
 						)}
-						<Button
-							size="xs"
-							as={Link}
-							to={`/t/${post.topic}/comments/${post.id}#comments`}
-							variant="ghost"
-						>
-							{post.number_of_comments}
-							{post.number_of_comments === 1 ? " Comment" : " Comments"}
-						</Button>
+						<Link passHref href={`/t/${post.topic}/comments/${post.id}#comments`}>
+							<Button
+								as="a"
+								size="xs"
+								variant="ghost"
+							>
+								{post.number_of_comments}
+								{post.number_of_comments === 1 ? " Comment" : " Comments"}
+							</Button>
+						</Link>
 					</HStack>
 					{open && (
 						<>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	Text,
@@ -12,8 +12,8 @@ import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
-import { Link, useLocation } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import Link from "next/link";
+import { useUser } from "../../context/UserState";
 import DeleteCommentModerator from "./DeleteCommentModerator";
 import dayjs from "dayjs";
 import { Comment } from "src/types/entities/comment";
@@ -25,13 +25,12 @@ type Props = {
 };
 
 const CommentItem = ({ comment, topic }: Props) => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);
 	const color = useColorModeValue("gray.300", "gray.600");
 	const colorHover = useColorModeValue("gray.500", "gray.300");
-	const location = useLocation();
 
 	return (
 		<>
@@ -41,7 +40,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 						{comment.is_deleted ? (
 							"[deleted]"
 						) : (
-							<Link to={`/user/${comment.author_id}`}>{comment.author}</Link>
+							<Link href={`/user/${comment.author_id}`}>{comment.author}</Link>
 						)}
 						{" | "}
 						{dayjs(comment.created_at).fromNow()}
@@ -64,7 +63,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 							{comment.content ? (
 								<HStack>
 									<CommentVoting comment={comment} />
-									{user !== null ? (
+									{user ? (
 										<>
 											<Button
 												size="xs"
@@ -92,25 +91,15 @@ const CommentItem = ({ comment, topic }: Props) => {
 												)}
 										</>
 									) : (
-										<Button
-											size="xs"
-											as={Link}
-											to={{
-												pathname: "/login",
-												state: {
-													status: {
-														status: {
-															text: "Login to reply to comments",
-															severity: "error",
-														}
-													},
-													from: location.pathname,
-												},
-											}}
-											variant="ghost"
-										>
-											Reply
-										</Button>
+										<Link passHref href="/login">
+											<Button
+												size="xs"
+												as="a"
+												variant="ghost"
+											>
+												Reply
+											</Button>
+										</Link>
 									)}
 								</HStack>
 							) : null}

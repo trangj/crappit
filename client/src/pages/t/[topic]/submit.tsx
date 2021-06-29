@@ -12,13 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
-import FileFieldForm from "../forms/FileFieldForm";
-import SelectFieldForm from "../forms/SelectFieldForm";
-import Card from "../utils/Card";
-import useTopics from "../../hooks/topic-query/useTopics";
-import useAddPost from "../../hooks/post-query/useAddPost";
-import { RouteComponentProps } from "react-router-dom";
+import TextFieldForm from "../../../components/forms/TextFieldForm";
+import FileFieldForm from "../../../components/forms/FileFieldForm";
+import SelectFieldForm from "../../../components/forms/SelectFieldForm";
+import Card from "../../../components/utils/Card";
+import useTopics from "../../../hooks/topic-query/useTopics";
+import useAddPost from "../../../hooks/post-query/useAddPost";
+import { useRouter } from "next/router";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
@@ -37,12 +37,6 @@ const schema = yup.object({
 		),
 });
 
-interface MatchParams {
-	topic: string;
-}
-
-interface Props extends RouteComponentProps<MatchParams> { }
-
 interface FormValues {
 	title: string,
 	content: string,
@@ -51,7 +45,9 @@ interface FormValues {
 	topic: string;
 };
 
-const AddPost = ({ match }: Props) => {
+const AddPost = () => {
+	const router = useRouter();
+	const { topic } = router.query;
 	const {
 		isLoading: topicsIsLoading,
 		data: topicsData,
@@ -76,7 +72,7 @@ const AddPost = ({ match }: Props) => {
 		content: "",
 		file: "",
 		link: "",
-		topic: match.params.topic,
+		topic: topic as string,
 	};
 	return (
 		<Container>
