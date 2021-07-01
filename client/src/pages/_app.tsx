@@ -15,13 +15,7 @@ import { User } from "src/types/entities/user";
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-        },
-    },
-});
+const queryClient = new QueryClient();
 
 type MyAppProps = AppProps & {
     token: string,
