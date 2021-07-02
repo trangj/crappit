@@ -10,17 +10,19 @@ type UserProviderProps = {
 const UserContext = createContext<any>({});
 
 export const UserProvider: React.FC<UserProviderProps> = ({ user, token, children }) => {
+	const [current_user, setUser] = useState(user);
+	const [current_token, setToken] = useState(token);
 
-	const [current_user, set_current_user] = useState(user);
-	const [current_token, set_current_token] = useState(token);
-
-	axios.defaults.headers.authorization = current_token;
+	if (current_token && !axios.defaults.headers.authorization && axios.defaults.headers.authorization !== current_token) {
+		setToken(axios.defaults.headers.authorization);
+		axios.defaults.headers.authorization = current_token;
+	}
 
 	async function logoutUser() {
 		try {
 			await axios.post('/api/user/logout');
-			set_current_token("");
-			set_current_user(null);
+			setToken("");
+			setUser(null);
 		} catch (err) {
 			throw err.response.data;
 		}
@@ -29,8 +31,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 	async function loginUser(user: any) {
 		try {
 			const res = await axios.post(`/api/user/login`, user);
-			set_current_token(res.data.access_token);
-			set_current_user(res.data.user);
+			setToken(res.data.access_token);
+			setUser(res.data.user);
 		} catch (err) {
 			throw err.response.data;
 		}
@@ -39,15 +41,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 	async function registerUser(user: any) {
 		try {
 			const res = await axios.post(`/api/user/register`, user);
-			set_current_token(res.data.access_token);
-			set_current_user(res.data.user);
+			setToken(res.data.access_token);
+			setUser(res.data.user);
 		} catch (err) {
 			throw err.response.data;
 		}
-	}
-
-	function setUser(user: User) {
-		set_current_user(user);
 	}
 
 	return (
@@ -58,6 +56,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 				loginUser,
 				logoutUser,
 				registerUser,
+				setToken,
 				setUser,
 			}}
 		>

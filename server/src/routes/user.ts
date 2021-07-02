@@ -299,7 +299,7 @@ router.post("/refresh_token", async (req, res) => {
 		const { password, ...rest } = user;
 
 		const new_refresh_token = jwt.sign(
-			{ id: user.id, username: user.username },
+			{ id: user.id },
 			process.env.REFRESH_TOKEN_SECRET,
 			{ expiresIn: '7d' }
 		);
@@ -310,12 +310,11 @@ router.post("/refresh_token", async (req, res) => {
 			{ expiresIn: '15m' }
 		);
 
-		res
+		res.status(200)
 			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
-			.json({ ok: true, access_token: new_access_token, user: { ...rest, topics_followed } });
+			.json({ access_token: new_access_token, user: { ...rest, topics_followed } });
 	} catch (err) {
-
-		res.json({ ok: false, access_token: "" });
+		res.status(403).json({ access_token: "" });
 	}
 });
 

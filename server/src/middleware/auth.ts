@@ -10,7 +10,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 		next();
 	} catch (err) {
 		res
-			.status(400)
+			.status(403)
 			.json({ status: { text: err.message, severity: "error" } });
 	}
 };
@@ -28,7 +28,7 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction) =>
 		}
 	} catch (err) {
 		res
-			.status(400)
+			.status(403)
 			.json({ status: { text: err.message, severity: "error" } });
 	}
 };

@@ -11,7 +11,7 @@ import { createConnection } from "typeorm";
 
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));
-	app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+	app.use(cors({ credentials: true, origin: process.env.REACT_APP_CLIENT_URL || 'http://localhost:3000' }));
 	app.use(cookieParser());
 	app.use("/api/comment", CommentRouter);
 	app.use("/api/post", PostRouter);
