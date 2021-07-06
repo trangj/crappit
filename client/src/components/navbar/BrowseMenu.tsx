@@ -11,12 +11,14 @@ import {
 import Link from "next/link";
 import { TriangleDownIcon } from "@chakra-ui/icons";
 import { User } from "src/types/entities/user";
+import useTopicFollow from '../../hooks/topic-query/useTopicFollow';
 
 type Props = {
 	user: User | null;
 };
 
 const BrowseMenu = ({ user }: Props) => {
+	const { data, isLoading } = useTopicFollow();
 	return (
 		<Menu>
 			<MenuButton as={Button} display={{ base: "none", sm: "inherit" }}>
@@ -53,15 +55,15 @@ const BrowseMenu = ({ user }: Props) => {
 							</MenuItem>
 						</Link>
 					) : (
-						<MenuGroup title="Followed Topics">
-							{user.topics_followed.map((topic, i) => (
+						!isLoading && data && (<MenuGroup title="Followed Topics">
+							{data.topics_followed.map((topic, i) => (
 								<Link passHref href={`/t/${topic.title}`} key={i}>
 									<MenuItem as="a">
 										t/{topic.title}
 									</MenuItem>
 								</Link>
 							))}
-						</MenuGroup>
+						</MenuGroup>)
 					)}
 				</MenuList>
 			</div>

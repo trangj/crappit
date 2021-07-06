@@ -6,6 +6,8 @@ import TextFieldForm from "../../components/forms/TextFieldForm";
 import FileFieldForm from "../../components/forms/FileFieldForm";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
 import Card from "../../components/utils/Card";
+import Head from "next/head";
+import { GetServerSideProps } from "next";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 10485760;
@@ -31,6 +33,20 @@ interface FormValues {
 	file: File | "";
 };
 
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+	if (!req.cookies.token) {
+		return {
+			redirect: {
+				destination: '/login',
+				permanent: false
+			}
+		};
+	}
+	return {
+		props: {}
+	};
+};
+
 const AddTopic = () => {
 	const { isLoading, mutate } = useAddTopic();
 	const handleSubmit = ({ title, description, file }: FormValues) => {
@@ -43,43 +59,49 @@ const AddTopic = () => {
 	const initialValues: FormValues = { title: "", description: "", file: "" };
 
 	return (
-		<Container>
-			<Card>
-				<Heading>Create a topic</Heading>
-				<Divider my="3" />
-				<Formik
-					initialValues={initialValues}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{({ setFieldValue, values }) => (
-						<Form>
-							<Field label="Title" name="title" component={TextFieldForm} />
-							<Field
-								label="Description"
-								name="description"
-								multiline
-								component={TextFieldForm}
-							/>
-							<Field
-								label="File"
-								name="file"
-								component={FileFieldForm}
-								setFieldValue={setFieldValue}
-							/>
-							<Button
-								type="submit"
-								isLoading={isLoading}
-								mt="2"
-								isDisabled={!!!values.title || !!!values.description}
-							>
-								Post
-							</Button>
-						</Form>
-					)}
-				</Formik>
-			</Card>
-		</Container>
+		<>
+			<Head>
+				<title>Create Topic</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
+			<Container>
+				<Card>
+					<Heading>Create a topic</Heading>
+					<Divider my="3" />
+					<Formik
+						initialValues={initialValues}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{({ setFieldValue, values }) => (
+							<Form>
+								<Field label="Title" name="title" component={TextFieldForm} />
+								<Field
+									label="Description"
+									name="description"
+									multiline
+									component={TextFieldForm}
+								/>
+								<Field
+									label="File"
+									name="file"
+									component={FileFieldForm}
+									setFieldValue={setFieldValue}
+								/>
+								<Button
+									type="submit"
+									isLoading={isLoading}
+									mt="2"
+									isDisabled={!!!values.title || !!!values.description}
+								>
+									Post
+								</Button>
+							</Form>
+						)}
+					</Formik>
+				</Card>
+			</Container>
+		</>
 	);
 };
 

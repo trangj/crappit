@@ -9,6 +9,7 @@ import Card from "../components/utils/Card";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 
 const schema = yup.object({
 	username: yup
@@ -69,61 +70,67 @@ const Register = () => {
 	};
 
 	return (
-		<Container>
-			<Card>
-				<Heading mb="3">Register</Heading>
-				<Divider my="3" />
-				<Formik
-					initialValues={{
-						username: "",
-						email: "",
-						password: "",
-						password2: "",
-					}}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{() => (
-						<Form>
-							<Field
-								label="Username"
-								name="username"
-								component={TextFieldForm}
-							/>
-							<Field
-								label="Email"
-								name="email"
-								type="email"
-								component={TextFieldForm}
-							/>
-							<Field
-								label="Password"
-								name="password"
-								type="password"
-								component={TextFieldForm}
-							/>
-							<Field
-								label="Confirm Password"
-								name="password2"
-								type="password"
-								component={TextFieldForm}
-							/>
-							<Button type="submit" mt="2">
-								Register
-							</Button>
-						</Form>
-					)}
-				</Formik>
-				<HStack my="2">
-					<Link href="/login">
-						<a>
-							<small>Already have an account?</small>
-						</a>
-					</Link>
-				</HStack>
-				{status && <AlertStatus status={status} />}
-			</Card>
-		</Container>
+		<>
+			<Head>
+				<title>crappit: Join the worldwide conversation</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
+			<Container>
+				<Card>
+					<Heading mb="3">Register</Heading>
+					<Divider my="3" />
+					<Formik
+						initialValues={{
+							username: "",
+							email: "",
+							password: "",
+							password2: "",
+						}}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{() => (
+							<Form>
+								<Field
+									label="Username"
+									name="username"
+									component={TextFieldForm}
+								/>
+								<Field
+									label="Email"
+									name="email"
+									type="email"
+									component={TextFieldForm}
+								/>
+								<Field
+									label="Password"
+									name="password"
+									type="password"
+									component={TextFieldForm}
+								/>
+								<Field
+									label="Confirm Password"
+									name="password2"
+									type="password"
+									component={TextFieldForm}
+								/>
+								<Button type="submit" mt="2">
+									Register
+								</Button>
+							</Form>
+						)}
+					</Formik>
+					<HStack my="2">
+						<Link href="/login">
+							<a>
+								<small>Already have an account?</small>
+							</a>
+						</Link>
+					</HStack>
+					{status && <AlertStatus status={status} />}
+				</Card>
+			</Container>
+		</>
 	);
 };
 

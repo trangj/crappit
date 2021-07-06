@@ -2,6 +2,7 @@ import { Flex, Divider, Box, forwardRef } from '@chakra-ui/react';
 import React from 'react';
 import { User } from 'src/types/entities/user';
 import Link, { LinkProps } from 'next/link';
+import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
 
 type Props = {
     user: User;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
+    const { data, isLoading } = useTopicFollow();
 
     const MenuItem = forwardRef<LinkProps, 'div'>(({ href, children, ...props }, ref) => (
         <Link href={href} passHref>
@@ -38,11 +40,11 @@ const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
                     Sign up to follow topics!
                 </MenuItem>
             ) : (
-                user.topics_followed.map((topic, i) => (
+                !isLoading && data && (data.topics_followed.map((topic, i) => (
                     <MenuItem href={`/t/${topic.title}`} key={i}>
                         t/{topic.title}
                     </MenuItem>
-                ))
+                )))
             )}
             <Divider my="1" />
             {!user ? (

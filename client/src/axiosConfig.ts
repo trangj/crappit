@@ -1,23 +1,25 @@
 import axios from "axios";
-import jwt_decode from 'jwt-decode';
 
 const instance = axios.create({
-	baseURL: process.env.REACT_APP_SERVER_URL || 'http://localhost:5000',
+	baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 	headers: {
 		"Content-Type": "application/json",
 	},
 	withCredentials: true
 });
 
-instance.interceptors.request.use(async config => {
-	if (config.headers.authorization) {
-		const decode: any = jwt_decode(config.headers.authorization);
-		if (Date.now() >= decode.exp * 1000) {
-			const res = await axios.post('http://localhost:5000/api/user/refresh_token', {}, { withCredentials: true });
+instance.interceptors.response.use(response => response,
+	async error => {
+		const originalRequest = error.config;
+		if (error.response.status === 403 && !originalRequest._retry) {
+			originalRequest._retry = true;
+			const res = await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/user/refresh_token`, {}, { withCredentials: true });
 			instance.defaults.headers.authorization = res.data.access_token;
+			originalRequest.headers.authorization = res.data.access_token;
+			return instance(originalRequest);
 		}
+		return Promise.reject(error);
 	}
-	return config;
-});
+);
 
 export default instance;

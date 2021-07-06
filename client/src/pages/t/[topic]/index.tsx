@@ -1,50 +1,74 @@
 import React, { useState } from "react";
 import PostItem from "../../../components/post/PostItem";
-import TopicCard from "../../../components/topic/TopicCard";
+import TopicHeader from "../../../components/topic/TopicHeader";
 import SkeletonList from "../../../components/utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
 import {
 	Avatar,
 	Box,
 	Button,
-	Divider,
 	Flex,
-	Heading,
 	HStack,
 	Input,
 	Skeleton,
-	Spacer,
-	Text,
 } from "@chakra-ui/react";
-import usePosts from "../../../hooks/post-query/usePosts";
-import useTopic from "../../../hooks/topic-query/useTopic";
+import usePosts, { fetchPosts } from "../../../hooks/post-query/usePosts";
+import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
 import AlertStatus from "../../../components/utils/AlertStatus";
 import Card from "../../../components/utils/Card";
 import Link from "next/link";
 import { useUser } from "../../../context/UserState";
-import dayjs from "dayjs";
 import { useRouter } from "next/router";
+import Head from "next/head";
+import { GetServerSideProps } from "next";
+import { Post } from "src/types/entities/post";
+import { Topic } from "src/types/entities/topic";
+import TopicCard from "src/components/topic/TopicCard";
 
-const Topic = () => {
+type TopicPageProps = {
+	initialPosts: {
+		posts: Post[],
+		nextCursor: number;
+	},
+	initialTopic: Topic;
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+	const initialPosts = await fetchPosts(query.topic as string, 0, "");
+	const initialTopic = await fetchTopic(query.topic as string);
+	return {
+		props: {
+			initialPosts,
+			initialTopic
+		}
+	};
+};
+
+const TopicPage = ({ initialPosts, initialTopic }: TopicPageProps) => {
 	const router = useRouter();
 	const { topic } = router.query;
 	const { user } = useUser();
 	const [sortParam, setSortParam] = useState("");
 	const { data, error, fetchNextPage, hasNextPage, isLoading, isFetching } =
-		usePosts(topic as string, sortParam);
+		usePosts(topic as string, sortParam, initialPosts);
 	const {
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useTopic(topic as string);
+	} = useTopic(topic as string, initialTopic);
 
 	if (error || topicIsError)
 		return <AlertStatus status={error || topicError} />;
 
 	return (
 		<>
+			<Head>
+				<title>{topicData?.headline}</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.slice(0, 155)}`} />
+			</Head>
 			{topicData ? (
-				<TopicCard topic={topicData.topic} />
+				<TopicHeader topic={topicData} />
 			) : (
 				<Skeleton width="100%" height="200px" />
 			)}
@@ -61,7 +85,7 @@ const Topic = () => {
 							</Link>
 							<Link
 								passHref
-								href={topicData ? `/t/${topicData.topic.title}/submit` : "/"}
+								href={topicData ? `/t/${topicData.title}/submit` : "/"}
 							>
 								<Input placeholder="Create post" style={{ width: "100%" }} />
 							</Link>
@@ -123,39 +147,7 @@ const Topic = () => {
 				>
 					<Box width="inherit">
 						{topicData ? (
-							<Card>
-								<Flex>
-									<Heading size="md">About Community</Heading>
-									<Spacer />
-									{user && topicData.topic.user_moderator_id && (
-										<Link
-											href={`/t/${topicData.topic.title}/moderation`}
-											passHref
-										>
-											<Button
-												as="a"
-												size="sm"
-											>
-												Settings
-											</Button>
-										</Link>
-									)}
-								</Flex>
-								<Text pt="4">{topicData.topic.description}</Text>
-								<Divider pt="2" />
-								<Text pt="2">
-									Created {dayjs(topicData.topic.created_at).format("LL")}
-								</Text>
-								<Link passHref href={`/t/${topicData.topic.title}/submit`}>
-									<Button
-										as="a"
-										mt="2"
-										isFullWidth
-									>
-										Add Post
-									</Button>
-								</Link>
-							</Card>
+							<TopicCard topicData={topicData} />
 						) : (
 							<Skeleton width="100%" height="300px" borderRadius="md" />
 						)}
@@ -166,4 +158,4 @@ const Topic = () => {
 	);
 };
 
-export default Topic;
+export default TopicPage;

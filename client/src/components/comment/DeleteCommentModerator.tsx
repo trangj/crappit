@@ -23,7 +23,7 @@ const DeleteCommentModerator = ({ comment }: Props) => {
 	return (
 		<>
 			<Button size="xs" onClick={() => setOpen(true)} variant="ghost">
-				Delete as Moderator
+				Remove
 			</Button>
 			<AlertDialog
 				isOpen={open}

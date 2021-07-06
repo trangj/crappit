@@ -2,7 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { AppProps } from "next/app";
+import App, { AppProps } from "next/app";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import NavigationBar from "src/components/navbar/NavigationBar";
@@ -23,18 +23,20 @@ type MyAppProps = AppProps & {
 };
 
 MyApp.getInitialProps = async (ctx: any) => {
+    const props = await App.getInitialProps(ctx);
     try {
         if (typeof window === 'undefined') {
             const res = await axios.post('/api/user/refresh_token', {}, { headers: { cookie: 'token=' + ctx.ctx.req.cookies.token } });
+            axios.defaults.headers.authorization = res.data.access_token;
             return {
+                ...props,
                 user: res.data.user || null,
                 token: res.data.access_token || ''
             };
         }
-        return {};
+        return { ...props };
     } catch (err) {
-        console.log(err);
-        return {};
+        return { ...props };
     }
 };
 

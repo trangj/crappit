@@ -23,7 +23,7 @@ const DeletePostModerator = ({ post }: Props) => {
 	return (
 		<>
 			<Button size="sm" onClick={() => setOpen(true)} variant="ghost">
-				Delete as Moderator
+				Remove
 			</Button>
 			<AlertDialog
 				isOpen={open}

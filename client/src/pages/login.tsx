@@ -16,6 +16,7 @@ import AlertStatus from "../components/utils/AlertStatus";
 import Card from "../components/utils/Card";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 
 const schema = yup.object({
 	email: yup.string().required("Enter your username"),
@@ -60,51 +61,57 @@ const Login = () => {
 	};
 
 	return (
-		<Container>
-			<Card>
-				<Heading mb="3">Login</Heading>
-				<Divider my="3" />
-				<Formik
-					initialValues={{ email: "", password: "" }}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{() => (
-						<Form>
-							<Field
-								label="Email"
-								name="email"
-								type="email"
-								component={TextFieldForm}
-							/>
-							<Field
-								label="Password"
-								name="password"
-								type="password"
-								component={TextFieldForm}
-							/>
-							<Button type="submit" mt="2">
-								Login
-							</Button>
-						</Form>
-					)}
-				</Formik>
-				<HStack my="2">
-					<Link href="/forgot" passHref>
-						<a>
-							<small>Forgot your password?</small>
-						</a>
-					</Link>
-					<Spacer />
-					<Link href="/register" passHref>
-						<a>
-							<small>Sign up for an account!</small>
-						</a>
-					</Link>
-				</HStack>
-				{status && <AlertStatus status={status} />}
-			</Card>
-		</Container>
+		<>
+			<Head>
+				<title>crappit: Log in</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
+			<Container>
+				<Card>
+					<Heading mb="3">Login</Heading>
+					<Divider my="3" />
+					<Formik
+						initialValues={{ email: "", password: "" }}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{() => (
+							<Form>
+								<Field
+									label="Email"
+									name="email"
+									type="email"
+									component={TextFieldForm}
+								/>
+								<Field
+									label="Password"
+									name="password"
+									type="password"
+									component={TextFieldForm}
+								/>
+								<Button type="submit" mt="2">
+									Login
+								</Button>
+							</Form>
+						)}
+					</Formik>
+					<HStack my="2">
+						<Link href="/forgot" passHref>
+							<a>
+								<small>Forgot your password?</small>
+							</a>
+						</Link>
+						<Spacer />
+						<Link href="/register" passHref>
+							<a>
+								<small>Sign up for an account!</small>
+							</a>
+						</Link>
+					</HStack>
+					{status && <AlertStatus status={status} />}
+				</Card>
+			</Container>
+		</>
 	);
 };
 

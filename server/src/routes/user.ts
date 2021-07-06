@@ -4,7 +4,7 @@ import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 import jwt, { verify } from "jsonwebtoken";
 import { auth } from "../middleware/auth";
-import { Topic, User } from "../entities";
+import { User } from "../entities";
 import { MoreThan } from 'typeorm';
 
 const router = express.Router();
@@ -46,14 +46,16 @@ router.post("/register", async (req, res) => {
 			{ expiresIn: '15m' }
 		);
 
-		res.status(200).cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }).json({
-			access_token,
-			user: { ...newUser, topics_followed: [] },
-			status: {
-				text: "Successfully registered!",
-				severity: "success",
-			},
-		});
+		res.status(200)
+			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true })
+			.json({
+				access_token,
+				user: newUser,
+				status: {
+					text: "Successfully registered!",
+					severity: "success",
+				},
+			});
 	} catch (err) {
 		res
 			.status(400)
@@ -73,14 +75,6 @@ router.post("/login", async (req, res) => {
 		const user = await User.findOne({ email });
 		if (!user) throw Error("User does not exist");
 
-		const topics_followed = await Topic.query(`
-			select
-			t.title title
-			from follow ft
-			left join topic t on ft.topic_id = t.id
-			where ft.user_id = $1
-		`, [user.id]);
-
 		const isMatch = await bcyrpt.compare(password, user.password);
 		if (!isMatch) throw Error("Invalid password");
 
@@ -96,11 +90,13 @@ router.post("/login", async (req, res) => {
 			{ expiresIn: '15m' }
 		);
 
-		res.status(200).cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }).json({
-			access_token,
-			user: { ...user, topics_followed },
-			status: { text: "Successfully logged in!", severity: "success" },
-		});
+		res.status(200)
+			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true })
+			.json({
+				access_token,
+				user,
+				status: { text: "Successfully logged in!", severity: "success" },
+			});
 	} catch (err) {
 		res
 			.status(400)
@@ -227,17 +223,9 @@ router.get("/:userid", async (req, res) => {
 		const user = await User.findOne(req.params.userid);
 		if (!user) throw Error("No user found");
 
-		const topics_followed = await Topic.query(`
-			select
-			t.title title
-			from follow ft
-			left join topic t on ft.topic_id = t.id
-			where ft.user_id = $1
-		`, [req.params.userid]);
-
 		const { password, ...rest } = user;
 
-		res.status(200).json({ user: { ...rest, topics_followed } });
+		res.status(200).json({ user: { ...rest } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -273,7 +261,9 @@ router.post("/email", auth, async (req, res) => {
 	}
 });
 
-// Get new access token and refresh token
+// @route   POST /api/user/refresh_token
+// @desc    Get new refresh/access token
+// @access  Public
 
 router.post("/refresh_token", async (req, res) => {
 	try {
@@ -287,14 +277,6 @@ router.post("/refresh_token", async (req, res) => {
 
 		const user = await User.findOne(refresh_token.id);
 		if (!user) throw Error("No user found");
-
-		const topics_followed = await Topic.query(`
-			select
-			t.title title
-			from follow ft
-			left join topic t on ft.topic_id = t.id
-			where ft.user_id = $1
-		`, [user.id]);
 
 		const { password, ...rest } = user;
 
@@ -311,20 +293,19 @@ router.post("/refresh_token", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
-			.json({ access_token: new_access_token, user: { ...rest, topics_followed } });
+			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true })
+			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
 		res.status(403).json({ access_token: "" });
 	}
 });
 
-// Logout
+// @route   POST /api/user/logout
+// @desc    Logout user
+// @access  Public
+
 router.post('/logout', async (req, res) => {
-	try {
-		res.clearCookie('token').json({ access_token: '' });
-	} catch (err) {
-		//
-	}
+	res.clearCookie('token').json({ access_token: '' });
 });
 
 export const UserRouter = router;

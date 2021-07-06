@@ -19,6 +19,7 @@ import Card from "../components/utils/Card";
 import useTopics from "../hooks/topic-query/useTopics";
 import useAddPost from "../hooks/post-query/useAddPost";
 import { GetServerSideProps } from "next";
+import Head from "next/head";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
@@ -87,85 +88,91 @@ const AddPost = () => {
 		topic: "",
 	};
 	return (
-		<Container>
-			<Card>
-				<Heading>Create a post</Heading>
-				<Divider my="3" />
-				<Formik
-					initialValues={initialValues}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{({ setFieldValue, values }) => (
-						<Form>
-							<Field
-								label={"Topic"}
-								name="topic"
-								component={SelectFieldForm}
-								placeholder={
-									topicsIsLoading
-										? "Loading..."
-										: topicsError
-											? topicsError.status.text
-											: "Choose a topic"
-								}
-								mb="2"
-							>
-								{!topicsIsLoading && topicsData &&
-									topicsData.map((topic) => (
-										<option key={topic.title} value={topic.title}>
-											t/{topic.title}
-										</option>
-									))}
-							</Field>
-							<Tabs
-								variant="soft-rounded"
-								isFitted
-								index={selectedType}
-								onChange={setSelectedType}
-								mt="5"
-							>
-								<TabList mb="3">
-									<Tab>Text</Tab>
-									<Tab>Link</Tab>
-									<Tab>Photo/GIF</Tab>
-								</TabList>
-								<Field label="Title" name="title" component={TextFieldForm} />
-								<TabPanels>
-									<TabPanel p="0">
-										<Field
-											label="Content"
-											name="content"
-											multiline
-											component={TextFieldForm}
-										/>
-									</TabPanel>
-									<TabPanel p="0">
-										<Field label="Link" name="link" component={TextFieldForm} />
-									</TabPanel>
-									<TabPanel p="0">
-										<Field
-											label="File"
-											name="file"
-											component={FileFieldForm}
-											setFieldValue={setFieldValue}
-										/>
-									</TabPanel>
-								</TabPanels>
-								<Button
-									type="submit"
-									mt="2"
-									isLoading={isLoading}
-									isDisabled={!!!values.title || !!!values.topic}
+		<>
+			<Head>
+				<title>Submit to Crappit</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+			</Head>
+			<Container>
+				<Card>
+					<Heading>Create a post</Heading>
+					<Divider my="3" />
+					<Formik
+						initialValues={initialValues}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{({ setFieldValue, values }) => (
+							<Form>
+								<Field
+									label={"Topic"}
+									name="topic"
+									component={SelectFieldForm}
+									placeholder={
+										topicsIsLoading
+											? "Loading..."
+											: topicsError
+												? topicsError.status.text
+												: "Choose a topic"
+									}
+									mb="2"
 								>
-									Post
-								</Button>
-							</Tabs>
-						</Form>
-					)}
-				</Formik>
-			</Card>
-		</Container>
+									{!topicsIsLoading && topicsData &&
+										topicsData.map((topic) => (
+											<option key={topic.title} value={topic.title}>
+												t/{topic.title}
+											</option>
+										))}
+								</Field>
+								<Tabs
+									variant="soft-rounded"
+									isFitted
+									index={selectedType}
+									onChange={setSelectedType}
+									mt="5"
+								>
+									<TabList mb="3">
+										<Tab>Text</Tab>
+										<Tab>Link</Tab>
+										<Tab>Photo/GIF</Tab>
+									</TabList>
+									<Field label="Title" name="title" component={TextFieldForm} />
+									<TabPanels>
+										<TabPanel p="0">
+											<Field
+												label="Content"
+												name="content"
+												multiline
+												component={TextFieldForm}
+											/>
+										</TabPanel>
+										<TabPanel p="0">
+											<Field label="Link" name="link" component={TextFieldForm} />
+										</TabPanel>
+										<TabPanel p="0">
+											<Field
+												label="File"
+												name="file"
+												component={FileFieldForm}
+												setFieldValue={setFieldValue}
+											/>
+										</TabPanel>
+									</TabPanels>
+									<Button
+										type="submit"
+										mt="2"
+										isLoading={isLoading}
+										isDisabled={!!!values.title || !!!values.topic}
+									>
+										Post
+									</Button>
+								</Tabs>
+							</Form>
+						)}
+					</Formik>
+				</Card>
+			</Container>
+		</>
 	);
 };
 export default AddPost;

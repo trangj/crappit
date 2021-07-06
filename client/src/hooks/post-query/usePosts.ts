@@ -8,7 +8,7 @@ interface Response {
 	nextCursor: number;
 }
 
-async function fetchPosts(topic: string, pageParam: number, sortParam: string) {
+export async function fetchPosts(topic: string, pageParam: number, sortParam: string) {
 	try {
 		const res = await axios.get(
 			`/api/posts/${topic}?skip=${pageParam}&sort=${sortParam}`
@@ -19,12 +19,13 @@ async function fetchPosts(topic: string, pageParam: number, sortParam: string) {
 	}
 }
 
-export default function usePosts(topic: string, sortParam: string) {
+export default function usePosts(topic: string, sortParam: string, initialPosts: Response) {
 	return useInfiniteQuery<Response, Error>(
 		["posts", topic, sortParam],
 		({ pageParam = 0 }) => fetchPosts(topic, pageParam, sortParam),
 		{
 			getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+			initialData: { pages: [initialPosts], pageParams: [0] }
 		}
 	);
 }
