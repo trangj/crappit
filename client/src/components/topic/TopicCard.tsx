@@ -1,79 +1,52 @@
-import React, { useContext } from "react";
-import { UserContext } from "../../context/UserState";
-import {
-	Heading,
-	Image,
-	Button,
-	HStack,
-	Box,
-	useColorModeValue,
-	Text,
-} from "@chakra-ui/react";
-import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
-import { useLocation, Link } from "react-router-dom";
-import { Topic } from "src/types/entities/topic";
+import { Button, Divider, Flex, Heading, Spacer, Text } from '@chakra-ui/react';
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import React from 'react';
+import { useUser } from 'src/context/UserState';
+import { Topic } from 'src/types/entities/topic';
+import Card from '../utils/Card';
 
-type Props = {
-	topic: Topic;
+type TopicCardProps = {
+    topicData: Topic,
 };
 
-const TopicCard = ({ topic }: Props) => {
-	const { user } = useContext(UserContext);
-	const location = useLocation();
-	const { isLoading, mutate } = useTopicFollow(topic);
-
-	return (
-		<>
-			{topic.image_url ? (
-				<Image
-					alt={topic.image_name}
-					src={topic.image_url}
-					maxHeight="200px"
-					width="100%"
-				/>
-			) : (
-				<Box width="100%" height="100px" bg="blue.100" />
-			)}
-			<Box bg={useColorModeValue("white", "gray.700")} p="4">
-				<Box>
-					<HStack spacing="6">
-						<Heading size="lg">
-							{topic.headline ? topic.headline : topic.title}
-						</Heading>
-						{user ? (
-							<Button
-								isLoading={isLoading}
-								onClick={() => mutate(topic.title)}
-								size="md"
-							>
-								{topic.user_followed_id ? "Unfollow" : "Follow"}
-							</Button>
-						) : (
-							<Button
-								size="md"
-								as={Link}
-								to={{
-									pathname: "/login",
-									state: {
-										status: {
-											status: {
-												text: "Login to follow topics",
-												severity: "error",
-											}
-										},
-										from: location.pathname,
-									},
-								}}
-							>
-								Follow
-							</Button>
-						)}
-					</HStack>
-					<Text>t/{topic.title}</Text>
-				</Box>
-			</Box>
-		</>
-	);
+const TopicCard = ({ topicData }: TopicCardProps) => {
+    const { user } = useUser();
+    return (
+        <Card>
+            <Flex>
+                <Heading size="md" alignSelf="center">About Community</Heading>
+                <Spacer />
+                {user && topicData.user_moderator_id && (
+                    <Link
+                        href={`/t/${topicData.title}/moderation`}
+                        passHref
+                    >
+                        <Button
+                            as="a"
+                            size="sm"
+                        >
+                            Settings
+                        </Button>
+                    </Link>
+                )}
+            </Flex>
+            <Text pt="4">{topicData.description}</Text>
+            <Divider pt="2" />
+            <Text pt="2">
+                Created {dayjs(topicData.created_at).format("LL")}
+            </Text>
+            <Link passHref href={`/t/${topicData.title}/submit`}>
+                <Button
+                    as="a"
+                    mt="2"
+                    isFullWidth
+                >
+                    Add Post
+                </Button>
+            </Link>
+        </Card>
+    );
 };
 
 export default TopicCard;

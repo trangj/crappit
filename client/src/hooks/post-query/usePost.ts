@@ -3,7 +3,7 @@ import { Post } from "src/types/entities/post";
 import { Error } from "src/types/error";
 import axios from "../../axiosConfig";
 
-async function fetchPost(id: string) {
+export async function fetchPost(id: string) {
 	try {
 		const res = await axios.get(`/api/post/${id}`);
 		return res.data.post;
@@ -12,6 +12,6 @@ async function fetchPost(id: string) {
 	}
 }
 
-export default function usePost(id: string) {
-	return useQuery<Post, Error>(["post", id], () => fetchPost(id));
+export default function usePost(id: string, post: Post) {
+	return useQuery<Post, Error>(["post", id], () => fetchPost(id), { initialData: post });
 }

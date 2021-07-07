@@ -23,7 +23,7 @@ const DeleteCommentModerator = ({ comment }: Props) => {
 	return (
 		<>
 			<Button size="xs" onClick={() => setOpen(true)} variant="ghost">
-				Delete as Moderator
+				Remove
 			</Button>
 			<AlertDialog
 				isOpen={open}
@@ -37,7 +37,7 @@ const DeleteCommentModerator = ({ comment }: Props) => {
 						Delete comment?
 					</AlertDialogHeader>
 					<AlertDialogBody>
-						Are you sure you want to delete this post? You can't undo this.
+						Are you sure you want to delete this post? You can&apos;t undo this.
 					</AlertDialogBody>
 					<AlertDialogFooter>
 						<Button onClick={() => setOpen(false)} mr="2" ref={cancelRef}>

@@ -1,7 +1,8 @@
-import { Flex, Divider, Box, forwardRef, BoxProps } from '@chakra-ui/react';
+import { Flex, Divider, Box, forwardRef } from '@chakra-ui/react';
 import React from 'react';
 import { User } from 'src/types/entities/user';
-import { Link } from 'react-router-dom';
+import Link, { LinkProps } from 'next/link';
+import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
 
 type Props = {
     user: User;
@@ -10,59 +11,62 @@ type Props = {
 };
 
 const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
+    const { data, isLoading } = useTopicFollow();
 
-    const MenuItem = forwardRef<BoxProps, 'div'>(({ children, ...props }, ref) => (
-        <Box as={Link} my="2" display="block" {...props} onClick={() => showMenu(false)}>
-            {children}
-        </Box>
+    const MenuItem = forwardRef<LinkProps, 'div'>(({ href, children, ...props }, ref) => (
+        <Link href={href} passHref>
+            <Box as="a" my="2" display="block" ref={ref} {...props} onClick={() => showMenu(false)}>
+                {children}
+            </Box>
+        </Link>
     ));
 
     return (
         <Flex flexDirection="column" display={{ sm: 'none' }}>
-            <MenuItem to="/">
+            <MenuItem href="/">
                 Home
             </MenuItem>
-            <MenuItem to="/t">
+            <MenuItem href="/t">
                 Discover Topics
             </MenuItem>
-            <MenuItem to={`/submit`}>
+            <MenuItem href={`/submit`}>
                 Create a post
             </MenuItem>
-            <MenuItem to={`/t/submit`}>
+            <MenuItem href={`/t/submit`}>
                 Create a topic
             </MenuItem>
             {!user ? (
-                <MenuItem to="/register">
+                <MenuItem href="/register">
                     Sign up to follow topics!
                 </MenuItem>
             ) : (
-                user.topics_followed.map((topic, i) => (
-                    <MenuItem to={`/t/${topic.title}`} key={i}>
+                !isLoading && data && (data.topics_followed.map((topic, i) => (
+                    <MenuItem href={`/t/${topic.title}`} key={i}>
                         t/{topic.title}
                     </MenuItem>
-                ))
+                )))
             )}
             <Divider my="1" />
             {!user ? (
                 <>
-                    <MenuItem to="/login">
+                    <MenuItem href="/login">
                         Login
                     </MenuItem>
-                    <MenuItem to="/register">
+                    <MenuItem href="/register">
                         Register
                     </MenuItem>
                 </>
             ) : (
                 <>
-                    <MenuItem to={`/user/${user.id}`}>
+                    <MenuItem href={`/user/${user.id}`}>
                         {user.username}
                     </MenuItem>
-                    <MenuItem to={"/settings"}>
+                    <MenuItem href={"/settings"}>
                         Settings
                     </MenuItem>
                     <Box
-                        onClick={() => {
-                            logoutUser();
+                        onClick={async () => {
+                            await logoutUser();
                         }}
                     >
                         Logout

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	Text,
@@ -7,13 +7,16 @@ import {
 	Button,
 	Flex,
 	useColorModeValue,
+	Avatar,
+	IconButton
 } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
-import { Link, useLocation } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import Link from "next/link";
+import { useUser } from "../../context/UserState";
 import DeleteCommentModerator from "./DeleteCommentModerator";
 import dayjs from "dayjs";
 import { Comment } from "src/types/entities/comment";
@@ -25,23 +28,43 @@ type Props = {
 };
 
 const CommentItem = ({ comment, topic }: Props) => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);
 	const color = useColorModeValue("gray.300", "gray.600");
 	const colorHover = useColorModeValue("gray.500", "gray.300");
-	const location = useLocation();
 
-	return (
-		<>
-			<Box mt="5">
-				<VStack align="left">
-					<Text fontSize="xs">
+	return !hideComments ? (
+		<Flex mt="2">
+			<Flex flexDirection="column">
+				<Link passHref href={`/user/${comment.author_id}`}>
+					<Avatar as="a" size="xs" />
+				</Link>
+				<Box
+					alignSelf='center'
+					width="0.8rem"
+					cursor="pointer"
+					onClick={() => setHideComments(true)}
+					borderRightColor={color}
+					_hover={{ borderRightColor: colorHover }}
+					height="100%"
+				>
+					<Box
+						borderRight="2px"
+						width="7px"
+						height="100%"
+						borderRightColor="inherit"
+					></Box>
+				</Box>
+			</Flex>
+			<VStack align="left" width="100%">
+				<Box ml="2">
+					<Text fontSize="xs" mt="0.5">
 						{comment.is_deleted ? (
 							"[deleted]"
 						) : (
-							<Link to={`/user/${comment.author_id}`}>{comment.author}</Link>
+							<Link href={`/user/${comment.author_id}`}>{comment.author}</Link>
 						)}
 						{" | "}
 						{dayjs(comment.created_at).fromNow()}
@@ -60,11 +83,11 @@ const CommentItem = ({ comment, topic }: Props) => {
 						/>
 					) : (
 						<>
-							<Text>{comment.is_deleted ? "[deleted]" : comment.content}</Text>
+							<Text my="1">{comment.is_deleted ? "[deleted]" : comment.content}</Text>
 							{comment.content ? (
 								<HStack>
 									<CommentVoting comment={comment} />
-									{user !== null ? (
+									{user ? (
 										<>
 											<Button
 												size="xs"
@@ -92,85 +115,60 @@ const CommentItem = ({ comment, topic }: Props) => {
 												)}
 										</>
 									) : (
-										<Button
-											size="xs"
-											as={Link}
-											to={{
-												pathname: "/login",
-												state: {
-													status: {
-														status: {
-															text: "Login to reply to comments",
-															severity: "error",
-														}
-													},
-													from: location.pathname,
-												},
-											}}
-											variant="ghost"
-										>
-											Reply
-										</Button>
+										<Link passHref href="/login">
+											<Button
+												size="xs"
+												as="a"
+												variant="ghost"
+											>
+												Reply
+											</Button>
+										</Link>
 									)}
 								</HStack>
 							) : null}
 						</>
 					)}
-				</VStack>
-			</Box>
-			{openReply && (
-				<Flex>
-					<Box width="0.8rem">
-						<Box
-							borderRight="2px"
-							width="0.4rem"
-							height="100%"
-							borderRightColor={color}
-						></Box>
-					</Box>
-					<Box marginLeft="0.8rem" width="100%">
-						<AddReply
-							comment={comment}
-							openReply={openReply}
-							setOpenReply={setOpenReply}
-						/>
-					</Box>
-				</Flex>
-			)}
-			{!hideComments ? (
-				<Flex>
-					<Box
-						width="0.8rem"
-						cursor="pointer"
-						onClick={() => setHideComments(true)}
-						borderRightColor={color}
-						_hover={{ borderRightColor: colorHover }}
-					>
-						<Box
-							borderRight="2px"
-							width="0.4rem"
-							height="100%"
-							borderRightColor="inherit"
-						></Box>
-					</Box>
-					<Box marginLeft="0.8rem" width="100%">
-						{comment.children
-							? comment.children.map((comment) => (
-								<CommentItem
-									comment={comment}
-									topic={topic}
-									key={comment.id}
-								/>
-							))
-							: null}
-					</Box>
-				</Flex>
-			) : (
-				<Button onClick={() => setHideComments(false)} size="xs" variant="link">
-					Show Comments({comment.children.length})
-				</Button>
-			)}
-		</>
+				</Box>
+				{openReply && (
+					<Flex>
+						<Box width="24px">
+							<Box
+								borderRight="2px"
+								width="12px"
+								height="100%"
+								borderRightColor={color}
+							></Box>
+						</Box>
+						<Box ml="3" width="100%">
+							<AddReply
+								comment={comment}
+								openReply={openReply}
+								setOpenReply={setOpenReply}
+							/>
+						</Box>
+					</Flex>
+				)}
+				<Box width="100%">
+					{comment.children
+						? comment.children.map((comment) => (
+							<CommentItem
+								comment={comment}
+								topic={topic}
+								key={comment.id}
+							/>
+						))
+						: null}
+				</Box>
+			</VStack>
+		</Flex>
+	) : (
+		<Flex my="3">
+			<IconButton aria-label="expand comments" icon={<AddIcon />} onClick={() => setHideComments(false)} size="xs" variant="ghost" />
+			<Text fontSize="xs" mt="0.5" ml="1">
+				{comment.is_deleted ? '[deleted]' : comment.author}{" | "}{dayjs(comment.created_at).fromNow()}
+			</Text>
+		</Flex>
 	);
 };
 

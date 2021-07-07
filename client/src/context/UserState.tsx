@@ -1,44 +1,38 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useContext, useState } from "react";
 import axios from "../axiosConfig";
-import UserReducer from "./UserReducer";
-import { loadState, saveState } from "../localStorage";
 import { User } from "src/types/entities/user";
 
-type InitialState = {
-	user: User;
-	logoutUser?: any,
-	loginUser?: any,
-	registerUser?: any,
-	setUser?: any,
+type UserProviderProps = {
+	user: User | null;
+	token: string;
 };
 
-const initialState: InitialState = {
-	user: loadState("user")
-};
+const UserContext = createContext<any>({});
 
-export const UserContext = createContext(initialState);
+export const UserProvider: React.FC<UserProviderProps> = ({ user, token, children }) => {
+	const [current_user, setUser] = useState(user);
+	const [current_token, setToken] = useState(token);
 
-export const UserProvider: React.FC = ({ children }) => {
-	const [state, dispatch] = useReducer(UserReducer, initialState);
+	if (current_token && !axios.defaults.headers.authorization && axios.defaults.headers.authorization !== current_token) {
+		setToken(axios.defaults.headers.authorization);
+		axios.defaults.headers.authorization = current_token;
+	}
 
-	function logoutUser() {
-		localStorage.removeItem("token");
-		localStorage.removeItem("user");
-		dispatch({
-			type: "LOGOUT_USER",
-			payload: null,
-		});
+	async function logoutUser() {
+		try {
+			await axios.post('/api/user/logout');
+			setToken("");
+			setUser(null);
+		} catch (err) {
+			throw err.response.data;
+		}
 	}
 
 	async function loginUser(user: any) {
 		try {
 			const res = await axios.post(`/api/user/login`, user);
-			saveState(res.data.token, "token");
-			saveState(res.data.user, "user");
-			dispatch({
-				type: "LOGIN_USER",
-				payload: res.data,
-			});
+			setToken(res.data.access_token);
+			setUser(res.data.user);
 		} catch (err) {
 			throw err.response.data;
 		}
@@ -47,32 +41,22 @@ export const UserProvider: React.FC = ({ children }) => {
 	async function registerUser(user: any) {
 		try {
 			const res = await axios.post(`/api/user/register`, user);
-			saveState(res.data.token, "token");
-			saveState(res.data.user, "user");
-			dispatch({
-				type: "LOGIN_USER",
-				payload: res.data,
-			});
+			setToken(res.data.access_token);
+			setUser(res.data.user);
 		} catch (err) {
 			throw err.response.data;
 		}
 	}
 
-	function setUser(user: User) {
-		saveState(user, "user");
-		dispatch({
-			type: "SET_USER",
-			payload: user,
-		});
-	}
-
 	return (
 		<UserContext.Provider
 			value={{
-				user: state.user,
+				user: current_user,
+				token: current_token,
 				loginUser,
 				logoutUser,
 				registerUser,
+				setToken,
 				setUser,
 			}}
 		>
@@ -80,3 +64,5 @@ export const UserProvider: React.FC = ({ children }) => {
 		</UserContext.Provider>
 	);
 };
+
+export const useUser = () => useContext(UserContext);

@@ -3,19 +3,15 @@ import { Topic } from "src/types/entities/topic";
 import { Error } from "src/types/error";
 import axios from "../../axiosConfig";
 
-interface Response {
-	topic: Topic;
-}
-
-async function fetchTopic(topic: string) {
+export async function fetchTopic(topic: string) {
 	try {
 		const res = await axios.get(`/api/topic/${topic}`);
-		return res.data;
+		return res.data.topic;
 	} catch (err) {
 		throw err.response.data;
 	}
 }
 
-export default function useTopic(topic: string) {
-	return useQuery<Response, Error>(["topic", topic], () => fetchTopic(topic));
+export default function useTopic(topic: string, initialTopic: Topic) {
+	return useQuery<Topic, Error>(["topic", topic], () => fetchTopic(topic), { initialData: initialTopic });
 }

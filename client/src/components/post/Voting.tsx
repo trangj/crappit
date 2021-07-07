@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { IconButton, Text, useColorModeValue } from "@chakra-ui/react";
 import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
-import { UserContext } from "../../context/UserState";
+import { useUser } from "../../context/UserState";
 import { VStack } from "@chakra-ui/layout";
-import { Link, useLocation } from "react-router-dom";
+import Link from "next/link";
 import useVoting from "../../hooks/post-query/useVoting";
 import { Post } from "src/types/entities/post";
 
@@ -12,10 +12,9 @@ type Props = {
 };
 
 const Voting = ({ post }: Props) => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const { mutate } = useVoting(post);
 	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
-	const location = useLocation();
 
 	const handleUpvote = () => {
 		mutate({ id: post.id, vote: "like" });
@@ -38,26 +37,16 @@ const Voting = ({ post }: Props) => {
 					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
 			) : (
-				<IconButton
-					aria-label="Downvote"
-					as={Link}
-					to={{
-						pathname: "/login",
-						state: {
-							status: {
-								status: {
-									text: "Login to vote on posts",
-									severity: "error",
-								}
-							},
-							from: location.pathname,
-						},
-					}}
-					size="xs"
-					icon={<TriangleUpIcon />}
-					variant="ghost"
-					_hover={{ color: "orange.400", backgroundColor: bg }}
-				/>
+				<Link passHref href="/login">
+					<IconButton
+						as="a"
+						aria-label="Downvote"
+						size="xs"
+						icon={<TriangleUpIcon />}
+						variant="ghost"
+						_hover={{ color: "orange.400", backgroundColor: bg }}
+					/>
+				</Link>
 			)}
 			<Text
 				color={
@@ -84,26 +73,16 @@ const Voting = ({ post }: Props) => {
 					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
 			) : (
-				<IconButton
-					aria-label="Downvote"
-					as={Link}
-					to={{
-						pathname: "/login",
-						state: {
-							status: {
-								status: {
-									text: "Login to vote on posts",
-									severity: "error",
-								}
-							},
-							from: location.pathname,
-						},
-					}}
-					size="xs"
-					icon={<TriangleDownIcon />}
-					variant="ghost"
-					_hover={{ color: "blue.600", backgroundColor: bg }}
-				/>
+				<Link passHref href="/login">
+					<IconButton
+						as="a"
+						aria-label="Downvote"
+						size="xs"
+						icon={<TriangleDownIcon />}
+						variant="ghost"
+						_hover={{ color: "blue.600", backgroundColor: bg }}
+					/>
+				</Link>
 			)}
 		</VStack>
 	);

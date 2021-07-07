@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import DeletePostModerator from "./DeletePostModerator";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
 import Voting from "./Voting";
 import Card from "../utils/Card";
-import { Link } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import Link from "next/link";
+import { useUser } from "../../context/UserState";
 import { Box, Image, Heading, Text, HStack, Button } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { Post } from "src/types/entities/post";
@@ -17,7 +17,7 @@ type Props = {
 };
 
 const PostCard = ({ post, topic }: Props) => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const [openEdit, setOpenEdit] = useState(false);
 
 	return (
@@ -28,11 +28,13 @@ const PostCard = ({ post, topic }: Props) => {
 				</Box>
 				<Box width="100%">
 					<Text fontSize="xs">
-						<Link to={`/t/${post.topic}`} style={{ fontWeight: "bold" }}>
-							t/{post.topic}
+						<Link passHref href={`/t/${post.topic}`}>
+							<a style={{ fontWeight: "bold" }}>
+								t/{post.topic}
+							</a>
 						</Link>{" "}
 						| Posted by{" "}
-						<Link to={`/user/${post.author_id}`}>u/{post.author}</Link>{" "}
+						<Link href={`/user/${post.author_id}`} passHref><a>u/{post.author}</a></Link>{" "}
 						{dayjs(post.created_at).fromNow()}
 					</Text>
 					{post.type === "link" ? (

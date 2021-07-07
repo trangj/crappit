@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { User } from "src/types/entities/user";
 
 type Props = {
@@ -14,15 +14,19 @@ const UserMenu = ({ user, logoutUser }: Props) => {
 			<MenuButton as={Button} display={{ base: "none", sm: "inherit" }}>{user.username}</MenuButton>
 			<div style={{ zIndex: 2 }}>
 				<MenuList>
-					<MenuItem as={Link} to={`/user/${user.id}`}>
-						Profile
-					</MenuItem>
-					<MenuItem as={Link} to={"/settings"}>
-						Settings
-					</MenuItem>
+					<Link passHref href={`/user/${user.id}`}>
+						<MenuItem as="a">
+							Profile
+						</MenuItem>
+					</Link>
+					<Link passHref href={"/settings"}>
+						<MenuItem as="a">
+							Settings
+						</MenuItem>
+					</Link>
 					<MenuItem
-						onClick={() => {
-							logoutUser();
+						onClick={async () => {
+							await logoutUser();
 						}}
 						color="inherit"
 					>

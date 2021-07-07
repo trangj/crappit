@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	IconButton,
@@ -9,15 +9,15 @@ import {
 	useColorModeValue,
 	Flex,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { UserContext } from "../../context/UserState";
+import Link from "next/link";
+import { useUser } from "../../context/UserState";
 import { MoonIcon, SunIcon, HamburgerIcon } from "@chakra-ui/icons";
 import UserMenu from "./UserMenu";
 import BrowseMenu from "./BrowseMenu";
 import MobileMenu from "./MobileMenu";
 
 const NavigationBar = () => {
-	const { logoutUser, user } = useContext(UserContext);
+	const { logoutUser, user } = useUser();
 	const { toggleColorMode } = useColorMode();
 	const bg = useColorModeValue("white", "gray.700");
 	const border = useColorModeValue("gray.300", "gray.600");
@@ -37,9 +37,11 @@ const NavigationBar = () => {
 		>
 			<Flex flexDirection="column">
 				<Flex alignItems="center" width="100%">
-					<Heading px="3" size="lg">
-						<Link to="/">Crappit</Link>
-					</Heading>
+					<Link passHref href="/">
+						<Heading as="a" px="3" size="lg">
+							Crappit
+						</Heading>
+					</Link>
 					<BrowseMenu user={user} />
 					<Spacer />
 					<IconButton
@@ -51,12 +53,16 @@ const NavigationBar = () => {
 					<Flex display={{ base: "none", sm: "inherit" }}>
 						{!user ? (
 							<>
-								<Button as={Link} to="/login" mr="2">
-									Login
-								</Button>
-								<Button as={Link} to="/register">
-									Register
-								</Button>
+								<Link passHref href="/login">
+									<Button as="a" mr="2">
+										Login
+									</Button>
+								</Link>
+								<Link passHref href="/register">
+									<Button as="a">
+										Register
+									</Button>
+								</Link>
 							</>
 						) : (
 							<UserMenu user={user} logoutUser={logoutUser} />

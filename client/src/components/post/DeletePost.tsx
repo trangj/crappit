@@ -37,7 +37,7 @@ const DeletePost = ({ post }: Props) => {
 						Delete post?
 					</AlertDialogHeader>
 					<AlertDialogBody>
-						Are you sure you want to delete your post? You can't undo this.
+						Are you sure you want to delete your post? You can&apos;t undo this.
 					</AlertDialogBody>
 					<AlertDialogFooter>
 						<Button onClick={() => setOpen(false)} mr="2" ref={cancelRef}>

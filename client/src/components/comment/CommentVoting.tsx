@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { IconButton, HStack, Text, useColorModeValue } from "@chakra-ui/react";
 import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
-import { UserContext } from "../../context/UserState";
-import { Link, useLocation } from "react-router-dom";
+import { useUser } from "../../context/UserState";
+import Link from "next/link";
 import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
 import { Comment } from "src/types/entities/comment";
 
@@ -11,10 +11,9 @@ type Props = {
 };
 
 const CommentVoting = ({ comment }: Props) => {
-	const { user } = useContext(UserContext);
+	const { user } = useUser();
 	const { mutate } = useCommentVoting(comment);
 	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
-	const location = useLocation();
 
 	const handleUpvote = () => {
 		mutate({
@@ -43,26 +42,15 @@ const CommentVoting = ({ comment }: Props) => {
 					_hover={{ color: "orange.400", backgroundColor: bg }}
 				/>
 			) : (
-				<IconButton
-					aria-label="Upvote"
-					as={Link}
-					to={{
-						pathname: "/login",
-						state: {
-							status: {
-								status: {
-									text: "Login to vote on comments",
-									severity: "error",
-								}
-							},
-							from: location.pathname,
-						},
-					}}
-					size="xs"
-					icon={<TriangleUpIcon />}
-					variant="ghost"
-					_hover={{ color: "orange.400", backgroundColor: bg }}
-				/>
+				<Link href="/login" passHref>
+					<IconButton
+						aria-label="Upvote"
+						size="xs"
+						icon={<TriangleUpIcon />}
+						variant="ghost"
+						_hover={{ color: "orange.400", backgroundColor: bg }}
+					/>
+				</Link>
 			)}
 			<Text
 				color={
@@ -89,26 +77,16 @@ const CommentVoting = ({ comment }: Props) => {
 					_hover={{ color: "blue.600", backgroundColor: bg }}
 				/>
 			) : (
-				<IconButton
-					aria-label="Downvote"
-					as={Link}
-					to={{
-						pathname: "/login",
-						state: {
-							status: {
-								status: {
-									text: "Login to vote on comments",
-									severity: "error",
-								}
-							},
-							from: location.pathname,
-						},
-					}}
-					size="xs"
-					icon={<TriangleDownIcon />}
-					variant="ghost"
-					_hover={{ color: "blue.600", backgroundColor: bg }}
-				/>
+				<Link passHref href="/login">
+					<IconButton
+						aria-label="Downvote"
+						as="a"
+						size="xs"
+						icon={<TriangleDownIcon />}
+						variant="ghost"
+						_hover={{ color: "blue.600", backgroundColor: bg }}
+					/>
+				</Link>
 			)}
 		</HStack>
 	);
