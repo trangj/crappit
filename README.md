@@ -2,7 +2,7 @@
 
 A less good version of Reddit developed using Node.js, React, PostgreSQL, and Typescript. Users are able to sign up, login and create posts and comment on others. Posts, like in Reddit fashion, can be upvoted or downvoted.
 
-You can play around with a live build of this app [here](https://crappit.netlify.app/)
+You can play around with a live build of this app [here](https://crappit.vercel.app/)
 
 ## Screenshot
 ![s1](https://i.imgur.com/DbZrxJK.png)
@@ -45,10 +45,12 @@ npm i
 
 ```
   DATABASE_URL: "<your postgres database url>"
-  jwtSecret: "<your secret>"
+  REFRESH_TOKEN_SECRET: "<your refresh token secret>"
+  ACCESS_TOKEN_SECRET: "<your access token secret>"
   AWS_ACCESS_KEY_ID: "<your aws access id>"
   AWS_SECRET_ACCESS_KEY: "<your aws access key>"
   sendgrid: "<your sendgrid api key>"
+  CLIENT_URL: "http://localhost:3000"
 ```
 
 5. To run the server, enter the command:
