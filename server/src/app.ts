@@ -9,7 +9,6 @@ import { createConnection } from "typeorm";
 
 	await createConnection();
 
-	app.set('trust proxy', 1);
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
