@@ -143,7 +143,7 @@ const TopicPage = ({ initialPosts, initialTopic }: TopicPageProps) => {
 					flexDirection="column"
 					width="312px"
 					ml="5"
-					display={{ base: "none", md: "block" }}
+					display={{ base: "none", lg: "block" }}
 				>
 					<Box width="inherit">
 						{topicData ? (

@@ -57,8 +57,8 @@ const PostPage = ({ initialPost, initialTopic }: PostPageProps) => {
 					<Flex
 						flexDirection="column"
 						width="312px"
-						ml="3"
-						display={{ base: "none", md: "block" }}
+						ml="5"
+						display={{ base: "none", lg: "block" }}
 					>
 						<Box width="inherit">
 							<TopicPostCard topicData={topicData} />

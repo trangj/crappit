@@ -3,7 +3,6 @@ import {
 	Box,
 	Text,
 	HStack,
-	VStack,
 	Button,
 	Flex,
 	useColorModeValue,
@@ -39,7 +38,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 		<Flex mt="2">
 			<Flex flexDirection="column">
 				<Link passHref href={`/user/${comment.author_id}`}>
-					<Avatar as="a" size="xs" />
+					<Avatar as="a" size="xs" mb="2" />
 				</Link>
 				<Box
 					alignSelf='center'
@@ -58,7 +57,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 					></Box>
 				</Box>
 			</Flex>
-			<VStack align="left" width="100%">
+			<Flex align="left" width="100%" flexDirection="column">
 				<Box ml="2">
 					<Text fontSize="xs" mt="0.5">
 						{comment.is_deleted ? (
@@ -160,13 +159,18 @@ const CommentItem = ({ comment, topic }: Props) => {
 						))
 						: null}
 				</Box>
-			</VStack>
+			</Flex>
 		</Flex>
 	) : (
 		<Flex my="3">
 			<IconButton aria-label="expand comments" icon={<AddIcon />} onClick={() => setHideComments(false)} size="xs" variant="ghost" />
 			<Text fontSize="xs" mt="0.5" ml="1">
-				{comment.is_deleted ? '[deleted]' : comment.author}{" | "}{dayjs(comment.created_at).fromNow()}
+				{comment.is_deleted ? '[deleted]' :
+					<Link href={`/user/${comment.author_id}`}>
+						{comment.author}
+					</Link>
+				}
+				{" | "}{dayjs(comment.created_at).fromNow()}
 			</Text>
 		</Flex>
 	);
