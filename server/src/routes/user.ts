@@ -47,7 +47,7 @@ router.post("/register", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, sameSite: 'none' })
+			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true })
 			.json({
 				access_token,
 				user: newUser,
@@ -91,7 +91,7 @@ router.post("/login", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, sameSite: 'none' })
+			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true })
 			.json({
 				access_token,
 				user,
@@ -293,7 +293,7 @@ router.post("/refresh_token", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, sameSite: 'none' })
+			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true })
 			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
 		res.status(403).json({ access_token: "" });
