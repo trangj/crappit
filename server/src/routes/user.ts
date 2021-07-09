@@ -305,7 +305,7 @@ router.post("/refresh_token", async (req, res) => {
 // @access  Public
 
 router.post('/logout', async (req, res) => {
-	res.clearCookie('token').json({ access_token: '' });
+	res.clearCookie('token', { httpOnly: true, secure: true, domain: process.env.DOMAIN }).json({ access_token: '' });
 });
 
 export const UserRouter = router;
