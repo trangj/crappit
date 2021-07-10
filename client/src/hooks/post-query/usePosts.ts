@@ -1,3 +1,4 @@
+import { createStandaloneToast } from "@chakra-ui/react";
 import { useInfiniteQuery } from "react-query";
 import { Post } from "src/types/entities/post";
 import { Error } from "src/types/error";
@@ -25,6 +26,13 @@ export default function usePosts(topic: string, sortParam: string) {
 		({ pageParam = 0 }) => fetchPosts(topic, pageParam, sortParam),
 		{
 			getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+			onError: (err) => {
+				const toast = createStandaloneToast();
+				toast({
+					description: err.status.text,
+					status: err.status.severity
+				});
+			}
 		}
 	);
 }

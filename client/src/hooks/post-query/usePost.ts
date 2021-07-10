@@ -1,3 +1,4 @@
+import { createStandaloneToast } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { Post } from "src/types/entities/post";
 import { Error } from "src/types/error";
@@ -13,5 +14,13 @@ export async function fetchPost(id: string) {
 }
 
 export default function usePost(id: string) {
-	return useQuery<Post, Error>(["post", id], () => fetchPost(id));
+	return useQuery<Post, Error>(["post", id], () => fetchPost(id), {
+		onError: (err) => {
+			const toast = createStandaloneToast();
+			toast({
+				description: err.status.text,
+				status: err.status.severity
+			});
+		}
+	});
 }

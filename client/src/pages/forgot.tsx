@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import * as yup from "yup";
 import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button, Container, Divider, Heading } from "@chakra-ui/react";
+import { Button, Container, Divider, Heading, useToast } from "@chakra-ui/react";
 import axios from "../axiosConfig";
-import AlertStatus from "../components/utils/AlertStatus";
 import Card from "../components/utils/Card";
 import Head from "next/head";
 
@@ -17,13 +16,20 @@ interface FormValues {
 }
 
 const Forgot = () => {
-	const [status, setStatus] = useState(null);
+	const toast = useToast();
+
 	const handleSubmit = async ({ email }: FormValues) => {
 		try {
 			const res = await axios.post(`/api/user/forgot`, { email });
-			setStatus(res.data);
+			toast({
+				description: res.data.status.text,
+				status: res.data.status.severity
+			});
 		} catch (err) {
-			setStatus(err.response.data);
+			toast({
+				description: err.response.data.status.text,
+				status: err.response.data.status.severity
+			});
 		}
 	};
 
@@ -56,7 +62,6 @@ const Forgot = () => {
 								<Button type="submit" mt="2">
 									Request Password Change
 								</Button>
-								{status && <AlertStatus status={status} />}
 							</Form>
 						)}
 					</Formik>

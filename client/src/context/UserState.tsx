@@ -33,6 +33,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 			const res = await axios.post(`/api/user/login`, user);
 			setToken(res.data.access_token);
 			setUser(res.data.user);
+			return res;
 		} catch (err) {
 			throw err.response.data;
 		}
@@ -43,6 +44,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 			const res = await axios.post(`/api/user/register`, user);
 			setToken(res.data.access_token);
 			setUser(res.data.user);
+			return res;
 		} catch (err) {
 			throw err.response.data;
 		}

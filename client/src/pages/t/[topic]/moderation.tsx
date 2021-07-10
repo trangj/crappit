@@ -4,7 +4,6 @@ import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
 import { useUser } from "../../../context/UserState";
 import Card from "../../../components/utils/Card";
 import UpdateTopic from "../../../components/topic/UpdateTopic";
-import AlertStatus from "../../../components/utils/AlertStatus";
 import SkeletonCard from "../../../components/utils/SkeletonCard";
 import AddModerator from "../../../components/topic/AddModerator";
 import { useRouter } from "next/router";
@@ -28,13 +27,10 @@ const Moderation = () => {
 	const { user } = useUser();
 	const {
 		isLoading: topicLoading,
-		isError: topicIsError,
 		data: topicData,
-		error: topicError,
 	} = useTopic(topic as string);
 
 	if (topicLoading || !topicData) return <SkeletonCard />;
-	if (topicIsError) return <AlertStatus status={topicError} />;
 
 	return (
 		<Container>

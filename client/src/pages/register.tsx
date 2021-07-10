@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Button, Container, Divider, Heading, HStack } from "@chakra-ui/react";
+import React from "react";
+import { Button, Container, Divider, Heading, HStack, useToast } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
-import AlertStatus from "../components/utils/AlertStatus";
 import Card from "../components/utils/Card";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -51,7 +50,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Register = () => {
 	const { registerUser } = useUser();
-	const [status, setStatus] = useState(null);
+	const toast = useToast();
 	const router = useRouter();
 
 	const handleSubmit = async ({ username, email, password, password2 }: FormValues) => {
@@ -62,10 +61,17 @@ const Register = () => {
 				password,
 				password2,
 			};
-			await registerUser(user);
+			const res = await registerUser(user);
+			toast({
+				description: res.data.status.text,
+				status: res.data.status.severity
+			});
 			router.back();
 		} catch (err) {
-			setStatus(err);
+			toast({
+				description: err.response.data.status.text,
+				status: err.response.data.status.severity
+			});
 		}
 	};
 
@@ -127,7 +133,6 @@ const Register = () => {
 							</a>
 						</Link>
 					</HStack>
-					{status && <AlertStatus status={status} />}
 				</Card>
 			</Container>
 		</>

@@ -8,10 +8,10 @@ import {
 	FormLabel,
 	Input,
 	Container,
+	useToast
 } from "@chakra-ui/react";
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
-import AlertStatus from "../components/utils/AlertStatus";
 import Card from "../components/utils/Card";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -32,16 +32,22 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Settings = () => {
 	const { user, setUser } = useUser();
-	const [status, setStatus] = useState(null);
+	const toast = useToast();
 	const [newEmail, setNewEmail] = useState("");
 	const [password, setPassword] = useState("");
 
 	const handlePassword = async (email: string) => {
 		try {
 			const res = await axios.post(`/api/user/forgot`, { email });
-			setStatus(res.data);
+			toast({
+				status: res.data.status.severity,
+				description: res.data.status.text
+			});
 		} catch (err) {
-			setStatus(err.response.data);
+			toast({
+				status: err.response.data.status.severity,
+				description: err.response.data.status.text
+			});
 		}
 	};
 
@@ -50,9 +56,15 @@ const Settings = () => {
 		try {
 			const res = await axios.post("/api/user/email", { newEmail, password });
 			setUser({ ...user, email: res.data.user.email });
-			setStatus(res.data);
+			toast({
+				status: res.data.status.severity,
+				description: res.data.status.text
+			});
 		} catch (err) {
-			setStatus(err.response.data);
+			toast({
+				status: err.response.data.status.severity,
+				description: err.response.data.status.text
+			});
 		}
 	};
 
@@ -66,7 +78,6 @@ const Settings = () => {
 				<Card>
 					<Heading>Settings</Heading>
 					<Divider my="3" />
-					{status && <AlertStatus status={status} />}
 					<Heading mb="3" size="md">
 						Change password
 					</Heading>

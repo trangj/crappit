@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import usePosts, { fetchPosts } from "../../../hooks/post-query/usePosts";
 import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
-import AlertStatus from "../../../components/utils/AlertStatus";
 import Card from "../../../components/utils/Card";
 import Link from "next/link";
 import { useUser } from "../../../context/UserState";
@@ -41,16 +40,11 @@ const TopicPage = () => {
 	const { topic } = router.query;
 	const { user } = useUser();
 	const [sortParam, setSortParam] = useState("");
-	const { data, error, fetchNextPage, hasNextPage, isLoading, isFetching } =
+	const { data, fetchNextPage, hasNextPage, isLoading, isFetching } =
 		usePosts(topic as string, sortParam);
 	const {
-		isError: topicIsError,
 		data: topicData,
-		error: topicError,
 	} = useTopic(topic as string);
-
-	if (error || topicIsError)
-		return <AlertStatus status={error || topicError} />;
 
 	return (
 		<>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	Button,
 	Container,
@@ -6,13 +6,13 @@ import {
 	Heading,
 	HStack,
 	Spacer,
+	useToast,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
 import Link from "next/link";
-import AlertStatus from "../components/utils/AlertStatus";
 import Card from "../components/utils/Card";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Login = () => {
 	const { loginUser } = useUser();
-	const [status, setStatus] = useState(null);
+	const toast = useToast();
 	const router = useRouter();
 
 	const handleSubmit = async ({ email, password }: FormValues) => {
@@ -53,10 +53,17 @@ const Login = () => {
 				email,
 				password,
 			};
-			await loginUser(user);
+			const res = await loginUser(user);
+			toast({
+				description: res.data.status.text,
+				status: res.data.status.severity
+			});
 			router.back();
 		} catch (err) {
-			setStatus(err);
+			toast({
+				description: err.response.data.status.text,
+				status: err.response.data.status.severity
+			});
 		}
 	};
 
@@ -108,7 +115,6 @@ const Login = () => {
 							</a>
 						</Link>
 					</HStack>
-					{status && <AlertStatus status={status} />}
 				</Card>
 			</Container>
 		</>

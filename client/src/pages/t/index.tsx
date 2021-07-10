@@ -1,6 +1,5 @@
 import React from "react";
 import SkeletonList from "../../components/utils/SkeletonList";
-import AlertStatus from "../../components/utils/AlertStatus";
 import { Container, Heading, LinkOverlay, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import useTopics from "../../hooks/topic-query/useTopics";
@@ -8,9 +7,8 @@ import LinkCard from "../../components/utils/LinkCard";
 import Head from "next/head";
 
 const AllTopics = () => {
-	const { isLoading, isError, data: topics, error } = useTopics();
+	const { isLoading, data: topics } = useTopics();
 
-	if (isError || error) return <AlertStatus status={error} />;
 	if (isLoading || !topics) return <SkeletonList />;
 
 	return (

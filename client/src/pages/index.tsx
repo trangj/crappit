@@ -14,7 +14,6 @@ import {
 	Skeleton,
 } from "@chakra-ui/react";
 import usePosts, { fetchPosts } from "../hooks/post-query/usePosts";
-import AlertStatus from "../components/utils/AlertStatus";
 import Card from "../components/utils/Card";
 import Link from "next/link";
 import Head from 'next/head';
@@ -38,15 +37,11 @@ const HomePage = () => {
 	const [sortParam, setSortParam] = useState("");
 	const {
 		data,
-		error,
 		fetchNextPage,
 		hasNextPage,
 		isLoading,
-		isError,
 		isFetching,
 	} = usePosts("", sortParam);
-
-	if (isError) return <AlertStatus status={error} />;
 
 	return (
 		<>

@@ -2,7 +2,6 @@ import React from "react";
 import PostCard from "../../../../../components/post/PostCard";
 import CommentCard from "../../../../../components/comment/CommentCard";
 import SkeletonCard from "../../../../../components/utils/SkeletonCard";
-import AlertStatus from "../../../../../components/utils/AlertStatus";
 import TopicPostCard from "../../../../../components/topic/TopicPostCard";
 import usePost, { fetchPost } from "../../../../../hooks/post-query/usePost";
 import useTopic, { fetchTopic } from "../../../../../hooks/topic-query/useTopic";
@@ -29,15 +28,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const PostPage = () => {
 	const router = useRouter();
 	const { id, topic } = router.query;
-	const { isError, data, error } = usePost(id as string);
+	const { data } = usePost(id as string);
 	const {
-		isError: topicIsError,
 		data: topicData,
-		error: topicError,
 	} = useTopic(topic as string);
 
-	if (isError || topicIsError)
-		return <AlertStatus status={error || topicError} />;
 	if (!data || !topicData) return <SkeletonCard />;
 
 	return (

@@ -126,7 +126,7 @@ router.post("/forgot", async (req, res) => {
 			text:
 				"You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
 				"Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-				"https://crappit.netlify.com/reset/" +
+				`${process.env.CLIENT_URL}/reset/` +
 				token +
 				"\n\n" +
 				"If you did not request this, please ignore this email and your password will remain unchanged.\n",
@@ -156,11 +156,11 @@ router.get("/reset/:token", async (req, res) => {
 			reset_password_expires: MoreThan(Date.now())
 		});
 		if (!user) throw Error("Token is invalid or has expired");
-		res.json({
+		res.status(200).json({
 			status: { text: "Token is validated", severity: "success" },
 		});
 	} catch (err) {
-		res.json({
+		res.status(400).json({
 			status: { text: err.message, severity: "error" },
 		});
 	}
@@ -270,12 +270,11 @@ router.post("/refresh_token", async (req, res) => {
 		const refresh_token = req.cookies.token;
 		if (!refresh_token) throw Error;
 
-
 		let payload = null;
 		payload = verify(refresh_token, process.env.REFRESH_TOKEN_SECRET);
 		if (!payload) throw Error;
 
-		const user = await User.findOne(refresh_token.id);
+		const user = await User.findOne((payload as any).id);
 		if (!user) throw Error("No user found");
 
 		const { password, ...rest } = user;
