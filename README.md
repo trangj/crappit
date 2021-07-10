@@ -2,7 +2,7 @@
 
 A less good version of Reddit developed using Node.js, React, PostgreSQL, and Typescript. Users are able to sign up, login and create posts and comment on others. Posts, like in Reddit fashion, can be upvoted or downvoted.
 
-You can play around with a live build of this app [here](https://crappit.vercel.app/)
+You can play around with a live build of this app [here](https://crappit.me/)
 
 ## Screenshot
 ![s1](https://i.imgur.com/DbZrxJK.png)
