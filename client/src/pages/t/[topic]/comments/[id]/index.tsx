@@ -10,32 +10,31 @@ import { Container } from "@chakra-ui/layout";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { Post, PostType } from "src/types/entities/post";
-import { Topic } from "src/types/entities/topic";
+import { PostType } from "src/types/entities/post";
 import { Box, Flex } from "@chakra-ui/react";
-
-type PostPageProps = {
-	initialPost: Post,
-	initialTopic: Topic;
-};
+import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-	const initialPost = await fetchPost(query.id as string);
-	const initialTopic = await fetchTopic(query.topic as string);
+	const queryClient = new QueryClient();
+	await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
+	await queryClient.prefetchQuery(['post', query.id], () => fetchPost(query.id as string));
 	return {
-		props: { initialPost, initialTopic }
+		props: {
+			dehydratedState: dehydrate(queryClient)
+		}
 	};
 };
 
-const PostPage = ({ initialPost, initialTopic }: PostPageProps) => {
+const PostPage = () => {
 	const router = useRouter();
 	const { id, topic } = router.query;
-	const { isError, data, error } = usePost(id as string, initialPost);
+	const { isError, data, error } = usePost(id as string);
 	const {
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useTopic(topic as string, initialTopic);
+	} = useTopic(topic as string);
 
 	if (isError || topicIsError)
 		return <AlertStatus status={error || topicError} />;

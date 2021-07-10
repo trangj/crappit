@@ -12,6 +12,6 @@ export async function fetchPost(id: string) {
 	}
 }
 
-export default function usePost(id: string, post: Post) {
-	return useQuery<Post, Error>(["post", id], () => fetchPost(id), { initialData: post });
+export default function usePost(id: string) {
+	return useQuery<Post, Error>(["post", id], () => fetchPost(id));
 }

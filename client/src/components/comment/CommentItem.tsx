@@ -35,7 +35,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 	const colorHover = useColorModeValue("gray.500", "gray.300");
 
 	return !hideComments ? (
-		<Flex mt="2">
+		<Flex mt="4">
 			<Flex flexDirection="column">
 				<Link passHref href={`/user/${comment.author_id}`}>
 					<Avatar as="a" size="xs" mb="2" />

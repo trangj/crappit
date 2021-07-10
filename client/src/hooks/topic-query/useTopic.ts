@@ -12,6 +12,6 @@ export async function fetchTopic(topic: string) {
 	}
 }
 
-export default function useTopic(topic: string, initialTopic: Topic) {
-	return useQuery<Topic, Error>(["topic", topic], () => fetchTopic(topic), { initialData: initialTopic });
+export default function useTopic(topic: string) {
+	return useQuery<Topic, Error>(["topic", topic], () => fetchTopic(topic));
 }

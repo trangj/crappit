@@ -8,23 +8,21 @@ import AlertStatus from "../../../components/utils/AlertStatus";
 import SkeletonCard from "../../../components/utils/SkeletonCard";
 import AddModerator from "../../../components/topic/AddModerator";
 import { useRouter } from "next/router";
-import { Topic } from "src/types/entities/topic";
 import { GetServerSideProps } from "next";
-
-type ModerationProps = {
-	initialTopic: Topic;
-};
+import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-	const initialTopic = await fetchTopic(query.topic as string);
+	const queryClient = new QueryClient();
+	await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
 	return {
 		props: {
-			initialTopic
+			dehydratedState: dehydrate(queryClient)
 		}
 	};
 };
 
-const Moderation = ({ initialTopic }: ModerationProps) => {
+const Moderation = () => {
 	const router = useRouter();
 	const { topic } = router.query;
 	const { user } = useUser();
@@ -33,7 +31,7 @@ const Moderation = ({ initialTopic }: ModerationProps) => {
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useTopic(topic as string, initialTopic);
+	} = useTopic(topic as string);
 
 	if (topicLoading || !topicData) return <SkeletonCard />;
 	if (topicIsError) return <AlertStatus status={topicError} />;

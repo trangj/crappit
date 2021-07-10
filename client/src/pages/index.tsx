@@ -20,25 +20,20 @@ import Link from "next/link";
 import Head from 'next/head';
 import { useUser } from "../context/UserState";
 import { GetServerSideProps } from "next";
-import { Post } from "src/types/entities/post";
-
-type HomePageProps = {
-	initialPosts: {
-		posts: Post[],
-		nextCursor: number;
-	};
-};
+import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	const initialPosts = await fetchPosts("", 0, "");
+	const queryClient = new QueryClient();
+	await queryClient.prefetchInfiniteQuery(['posts', '', ''], () => fetchPosts('', 0, ''));
 	return {
 		props: {
-			initialPosts
+			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
 		}
 	};
 };
 
-const HomePage = ({ initialPosts }: HomePageProps) => {
+const HomePage = () => {
 	const { user } = useUser();
 	const [sortParam, setSortParam] = useState("");
 	const {
@@ -49,7 +44,7 @@ const HomePage = ({ initialPosts }: HomePageProps) => {
 		isLoading,
 		isError,
 		isFetching,
-	} = usePosts("", sortParam, initialPosts);
+	} = usePosts("", sortParam);
 
 	if (isError) return <AlertStatus status={error} />;
 

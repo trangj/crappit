@@ -21,41 +21,33 @@ import { useUser } from "../../../context/UserState";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { Post } from "src/types/entities/post";
-import { Topic } from "src/types/entities/topic";
 import TopicCard from "src/components/topic/TopicCard";
-
-type TopicPageProps = {
-	initialPosts: {
-		posts: Post[],
-		nextCursor: number;
-	},
-	initialTopic: Topic;
-};
+import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-	const initialPosts = await fetchPosts(query.topic as string, 0, "");
-	const initialTopic = await fetchTopic(query.topic as string);
+	const queryClient = new QueryClient();
+	await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
+	await queryClient.prefetchInfiniteQuery(['posts', query.topic, ''], () => fetchPosts(query.topic as string, 0, ''));
 	return {
 		props: {
-			initialPosts,
-			initialTopic
+			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
 		}
 	};
 };
 
-const TopicPage = ({ initialPosts, initialTopic }: TopicPageProps) => {
+const TopicPage = () => {
 	const router = useRouter();
 	const { topic } = router.query;
 	const { user } = useUser();
 	const [sortParam, setSortParam] = useState("");
 	const { data, error, fetchNextPage, hasNextPage, isLoading, isFetching } =
-		usePosts(topic as string, sortParam, initialPosts);
+		usePosts(topic as string, sortParam);
 	const {
 		isError: topicIsError,
 		data: topicData,
 		error: topicError,
-	} = useTopic(topic as string, initialTopic);
+	} = useTopic(topic as string);
 
 	if (error || topicIsError)
 		return <AlertStatus status={error || topicError} />;
