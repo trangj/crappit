@@ -40,7 +40,7 @@ const CommentCard = ({ post, topic }: Props) => {
 	const {
 		isLoading,
 		mutate
-	} = useAddComment(post);
+	} = useAddComment(String(post.id), sortParam);
 
 	const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
 		const { content } = values;

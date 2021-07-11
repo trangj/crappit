@@ -3,7 +3,6 @@ import { createStandaloneToast } from "@chakra-ui/toast";
 import axios from "../../axiosConfig";
 import { Comment } from "src/types/entities/comment";
 import { Error } from "src/types/error";
-import { Post } from "src/types/entities/post";
 
 interface Response {
 	comment: Comment;
@@ -18,11 +17,11 @@ async function addComment({ newComment }: { newComment: Comment; }) {
 	}
 }
 
-export default function useAddComment(post: Post) {
+export default function useAddComment(id: string, sortParam: string) {
 	const queryClient = useQueryClient();
 	return useMutation<Response, Error, any, any>(addComment, {
 		onSuccess: (res) => {
-			queryClient.setQueryData(["comments", String(post.id)], (initialData: any) => [res.comment, ...initialData]);
+			queryClient.setQueryData(["comments", id, sortParam], (initialData: any) => [res.comment, ...initialData]);
 		},
 		onError: (err) => {
 			const toast = createStandaloneToast();
