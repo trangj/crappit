@@ -21,8 +21,11 @@ const Profile = () => {
 		<>
 			<Head>
 				<title>u/{profile.username} - Crappit</title>
-				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<meta name="description" content={`u/${profile.username}`} />
+				<meta property="og:title" content={`u/${profile.username} - Crappit`} />
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content={`https://crappit.me/user${profile.id}`} />
+				<meta property="twitter:title" content={`u/${profile.username} - Crappit`} />
 			</Head>
 			<Container>
 				<Card>

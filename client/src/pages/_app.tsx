@@ -12,6 +12,7 @@ import '../styles/globals.css';
 import axios from '../axiosConfig';
 import { User } from "src/types/entities/user";
 import { Hydrate } from 'react-query/hydration';
+import Head from "next/head";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -40,21 +41,29 @@ MyApp.getInitialProps = async (ctx: any) => {
 };
 
 function MyApp({ Component, pageProps, token, user }: MyAppProps) {
-    const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 5000 } } }));
+    const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 10000 } } }));
 
     return (
-        <UserProvider user={user} token={token}>
-            <QueryClientProvider client={queryClient}>
-                <ChakraProvider theme={theme}>
-                    <NavigationBar />
-                    <div style={{ paddingTop: "57px" }}>
-                        <Hydrate state={pageProps.dehydratedState}>
-                            <Component {...pageProps} />
-                        </Hydrate>
-                    </div>
-                </ChakraProvider>
-            </ QueryClientProvider>
-        </UserProvider>
+        <>
+            <Head>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <meta property="og:site_name" content="crappit" />
+                <meta property="twitter:site" content="@crappit" />
+                <meta property="twitter:card" content="summary" />
+            </Head>
+            <UserProvider user={user} token={token}>
+                <QueryClientProvider client={queryClient}>
+                    <ChakraProvider theme={theme}>
+                        <NavigationBar />
+                        <div style={{ paddingTop: "57px" }}>
+                            <Hydrate state={pageProps.dehydratedState}>
+                                <Component {...pageProps} />
+                            </Hydrate>
+                        </div>
+                    </ChakraProvider>
+                </ QueryClientProvider>
+            </UserProvider>
+        </>
     );
 }
 export default MyApp;

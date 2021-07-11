@@ -21,10 +21,12 @@ import { useUser } from "../context/UserState";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
+import { useRouter } from "next/router";
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+	const sort = query.sort ? query.sort as string : "";
 	const queryClient = new QueryClient();
-	await queryClient.prefetchInfiniteQuery(['posts', '', ''], () => fetchPosts('', 0, ''));
+	await queryClient.prefetchInfiniteQuery(['posts', '', sort], () => fetchPosts('', 0, sort));
 	return {
 		props: {
 			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
@@ -34,7 +36,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const HomePage = () => {
 	const { user } = useUser();
-	const [sortParam, setSortParam] = useState("");
+	const router = useRouter();
+
+	const sort = router.query.sort ? router.query.sort as string : "";
+
+	const [sortParam, setSortParam] = useState(sort);
 	const {
 		data,
 		fetchNextPage,
@@ -47,8 +53,11 @@ const HomePage = () => {
 		<>
 			<Head>
 				<title>crappit: the front page of the internet</title>
-				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<meta name="description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
+				<meta property="og:title" content="crappit" />
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content="https://crappit.me/" />
+				<meta property="twitter:title" content="reddit" />
 			</Head>
 			<Flex px={{ base: "0", sm: "5" }} py="5">
 				<Box width="100%">
@@ -66,21 +75,30 @@ const HomePage = () => {
 						<HStack>
 							<Button
 								isActive={sortParam === ""}
-								onClick={() => setSortParam("")}
+								onClick={() => {
+									router.push('/?sort=', undefined, { shallow: true });
+									setSortParam("");
+								}}
 								variant="ghost"
 							>
 								Hot
 							</Button>
 							<Button
 								isActive={sortParam === "created_at"}
-								onClick={() => setSortParam("created_at")}
+								onClick={() => {
+									router.push('/?sort=created_at', undefined, { shallow: true });
+									setSortParam("created_at");
+								}}
 								variant="ghost"
 							>
 								New
 							</Button>
 							<Button
 								isActive={sortParam === "vote"}
-								onClick={() => setSortParam("vote")}
+								onClick={() => {
+									router.push('/?sort=vote', undefined, { shallow: true });
+									setSortParam("vote");
+								}}
 								variant="ghost"
 							>
 								Top

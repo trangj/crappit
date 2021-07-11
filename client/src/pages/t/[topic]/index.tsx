@@ -25,9 +25,10 @@ import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+	const sort = query.sort ? query.sort as string : "";
 	const queryClient = new QueryClient();
 	await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
-	await queryClient.prefetchInfiniteQuery(['posts', query.topic, ''], () => fetchPosts(query.topic as string, 0, ''));
+	await queryClient.prefetchInfiniteQuery(['posts', query.topic, sort], () => fetchPosts(query.topic as string, 0, sort));
 	return {
 		props: {
 			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
@@ -36,22 +37,33 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const TopicPage = () => {
-	const router = useRouter();
-	const { topic } = router.query;
 	const { user } = useUser();
-	const [sortParam, setSortParam] = useState("");
-	const { data, fetchNextPage, hasNextPage, isLoading, isFetching } =
-		usePosts(topic as string, sortParam);
+	const router = useRouter();
+
+	const topic = router.query.topic;
+	const sort = router.query.sort ? router.query.sort as string : "";
+
+	const [sortParam, setSortParam] = useState(sort);
 	const {
-		data: topicData,
+		data,
+		fetchNextPage,
+		hasNextPage,
+		isLoading,
+		isFetching
+	} = usePosts(topic as string, sortParam);
+	const {
+		data: topicData
 	} = useTopic(topic as string);
 
 	return (
 		<>
 			<Head>
 				<title>{topicData?.headline}</title>
-				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.slice(0, 155)}`} />
+				<meta property="og:title" content={`t/${topicData?.title}`} />
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}`} />
+				<meta property="twitter:title" content={`t/${topicData?.title}`} />
 			</Head>
 			{topicData ? (
 				<TopicHeader topic={topicData} />
@@ -81,21 +93,30 @@ const TopicPage = () => {
 						<HStack>
 							<Button
 								isActive={sortParam === ""}
-								onClick={() => setSortParam("")}
+								onClick={() => {
+									setSortParam("");
+									router.push(`/t/${topicData?.title}/?sort=`, undefined, { shallow: true });
+								}}
 								variant="ghost"
 							>
 								Hot
 							</Button>
 							<Button
 								isActive={sortParam === "created_at"}
-								onClick={() => setSortParam("created_at")}
+								onClick={() => {
+									setSortParam("created_at");
+									router.push(`/t/${topicData?.title}/?sort=created_at`, undefined, { shallow: true });
+								}}
 								variant="ghost"
 							>
 								New
 							</Button>
 							<Button
 								isActive={sortParam === "vote"}
-								onClick={() => setSortParam("vote")}
+								onClick={() => {
+									setSortParam("vote");
+									router.push(`/t/${topicData?.title}/?sort=vote`, undefined, { shallow: true });
+								}}
 								variant="ghost"
 							>
 								Top

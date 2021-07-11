@@ -91,7 +91,6 @@ const AddPost = () => {
 		<>
 			<Head>
 				<title>Submit to Crappit</title>
-				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
 			</Head>
 			<Container>
 				<Card>

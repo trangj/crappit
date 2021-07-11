@@ -1,7 +1,7 @@
 import express from "express";
 import { upload, deleteFile } from "../middleware/upload";
 import { auth, optionalAuth } from "../middleware/auth";
-import { Comment, Post, Topic, User, Vote } from "../entities";
+import { Post, Topic, User, Vote } from "../entities";
 
 const router = express.Router();
 
@@ -25,23 +25,7 @@ router.get("/:id", optionalAuth, async (req, res) => {
 		`, [req.user.id, req.params.id]);
 		if (!post[0]) throw Error("Post does not exist");
 
-		const comments = await Comment.query(`
-			select
-			c.*,
-			u.username author,
-			cv.value user_vote
-			from comment c
-			left join "user" u on c.author_id = u.id
-			left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
-			where c.post_id = $2
-		`, [req.user.id, req.params.id]);
-
-		const createCommentThread = (id: any, comments: Comment[]): any => {
-			return comments.filter(({ parent_comment_id }) => parent_comment_id == id)
-				.map(({ id, parent_comment_id, ...rest }) => ({ id, ...rest, children: createCommentThread(id, comments) }));
-		};
-
-		res.status(200).json({ post: { ...post[0], comments: createCommentThread(null, comments) } });
+		res.status(200).json({ post: { ...post[0] } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },

@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { Error } from "src/types/error";
 import axios from "../../axiosConfig";
+import { useUser } from '../../context/UserState';
 
 type FollowedTopics = {
     topics_followed: [{
@@ -18,5 +19,6 @@ async function fetchTopicFollow() {
 }
 
 export default function useTopicFollow() {
-    return useQuery<FollowedTopics, Error>(["followed_topics"], fetchTopicFollow);
+    const { user } = useUser();
+    return useQuery<FollowedTopics, Error>(["followed_topics"], fetchTopicFollow, { enabled: !!user });
 }

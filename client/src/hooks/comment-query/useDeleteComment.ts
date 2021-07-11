@@ -16,7 +16,7 @@ export default function useDeleteComment(comment: Comment, setOpen: (arg0: boole
 	const queryClient = useQueryClient();
 	return useMutation(deleteComment, {
 		onSuccess: (res) => {
-			queryClient.invalidateQueries(["post", String(comment.post_id)]);
+			queryClient.invalidateQueries(["comments", String(comment.post_id)]);
 			setOpen(false);
 		},
 		onSettled: (data, error) => {

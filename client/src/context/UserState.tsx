@@ -21,6 +21,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 	async function logoutUser() {
 		try {
 			await axios.post('/api/user/logout');
+			delete axios.defaults.headers.authorization;
 			setToken("");
 			setUser(null);
 		} catch (err) {
