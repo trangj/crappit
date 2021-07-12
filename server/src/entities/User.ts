@@ -26,4 +26,7 @@ export class User extends Template {
 
     @Column({ type: 'bigint', nullable: true })
     reset_password_expires?: number;
+
+    @Column({ type: 'int', default: 0 })
+    token_version: number;
 }

@@ -35,13 +35,13 @@ router.post("/register", async (req, res) => {
 		}).save().catch(err => { throw Error("A user already exists with that username or email"); });
 
 		const refresh_token = jwt.sign(
-			{ id: newUser.id, username: newUser.username },
+			{ id: newUser.id, token_version: newUser.token_version },
 			process.env.REFRESH_TOKEN_SECRET,
 			{ expiresIn: '7d' }
 		);
 
 		const access_token = jwt.sign(
-			{ id: newUser.id, username: newUser.username },
+			{ id: newUser.id },
 			process.env.ACCESS_TOKEN_SECRET,
 			{ expiresIn: '15m' }
 		);
@@ -79,13 +79,13 @@ router.post("/login", async (req, res) => {
 		if (!isMatch) throw Error("Invalid password");
 
 		const refresh_token = jwt.sign(
-			{ id: user.id, username: user.username },
+			{ id: user.id, token_version: user.token_version },
 			process.env.REFRESH_TOKEN_SECRET,
 			{ expiresIn: '7d' }
 		);
 
 		const access_token = jwt.sign(
-			{ id: user.id, username: user.username },
+			{ id: user.id },
 			process.env.ACCESS_TOKEN_SECRET,
 			{ expiresIn: '15m' }
 		);
@@ -126,7 +126,7 @@ router.post("/forgot", async (req, res) => {
 			text:
 				"You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
 				"Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-				`${process.env.CLIENT_URL}/reset/` +
+				`${process.env.CLIENT_URL}/reset?token=` +
 				token +
 				"\n\n" +
 				"If you did not request this, please ignore this email and your password will remain unchanged.\n",
@@ -191,6 +191,7 @@ router.post("/reset/:token", async (req, res) => {
 		user.password = hash;
 		user.reset_password_token = null;
 		user.reset_password_expires = null;
+		user.token_version += 1;
 		await user.save();
 
 		const msg = {
@@ -204,8 +205,8 @@ router.post("/reset/:token", async (req, res) => {
 				" has just been changed.\n",
 		};
 		await sgMail.send(msg);
-		res.status(200).json({
-			status: { text: "Your password has been changed", severity: "success" },
+		res.status(200).clearCookie('token', { httpOnly: true, secure: true, domain: process.env.DOMAIN }).json({
+			status: { text: "Your password has been changed. Please login again.", severity: "success" },
 		});
 	} catch (err) {
 		res.status(400).json({
@@ -275,18 +276,19 @@ router.post("/refresh_token", async (req, res) => {
 		if (!payload) throw Error;
 
 		const user = await User.findOne((payload as any).id);
-		if (!user) throw Error("No user found");
+		if (!user) throw Error;
+		if (user.token_version !== (payload as any).token_version) throw Error;
 
 		const { password, ...rest } = user;
 
 		const new_refresh_token = jwt.sign(
-			{ id: user.id },
+			{ id: user.id, token_version: user.token_version },
 			process.env.REFRESH_TOKEN_SECRET,
 			{ expiresIn: '7d' }
 		);
 
 		const new_access_token = jwt.sign(
-			{ id: user.id, username: user.username },
+			{ id: user.id },
 			process.env.ACCESS_TOKEN_SECRET,
 			{ expiresIn: '15m' }
 		);
@@ -295,7 +297,7 @@ router.post("/refresh_token", async (req, res) => {
 			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
 			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
-		res.status(403).json({ access_token: "" });
+		res.status(403).clearCookie('token', { httpOnly: true, secure: true, domain: process.env.DOMAIN }).json({ access_token: "" });
 	}
 });
 

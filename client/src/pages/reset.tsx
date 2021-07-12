@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import * as yup from "yup";
-import TextFieldForm from "../../../components/forms/TextFieldForm";
+import TextFieldForm from "../components/forms/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { Button, Container, Divider, Heading, useToast } from "@chakra-ui/react";
-import axios from "../../../axiosConfig";
-import Card from "../../../components/utils/Card";
+import axios from "../axiosConfig";
+import Card from "../components/utils/Card";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+import { useUser } from "../context/UserState";
 
 const schema = yup.object({
 	password: yup
@@ -45,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 const Forgot = ({ status }: any) => {
 	const router = useRouter();
 	const toast = useToast();
+	const { setUser, setToken } = useUser();
 	const { token } = router.query;
 
 	useEffect(() => {
@@ -69,6 +71,8 @@ const Forgot = ({ status }: any) => {
 				status: res.data.status.severity,
 				description: res.data.status.text
 			});
+			setUser(null);
+			setToken("");
 			router.push("/login");
 		} catch (err) {
 			toast({
@@ -103,7 +107,7 @@ const Forgot = ({ status }: any) => {
 								component={TextFieldForm}
 							/>
 							<Button type="submit" mt="2">
-								Post
+								Change Password
 							</Button>
 						</Form>
 					)}
