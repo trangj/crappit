@@ -56,79 +56,77 @@ const CommentCard = ({ post, topic }: Props) => {
 
 	return (
 		<Card id="comments">
-			<Box mx="4">
-				{user ? (
-					<>
-						<Text>
-							Comment as <Link href={`/user/${user.id}`}>{user.username}</Link>
-						</Text>
-						<Formik
-							initialValues={{ content: "" }}
-							onSubmit={handleSubmit}
-							validationSchema={schema}
-						>
-							{({ values }) => (
-								<Form>
-									<Field
-										name="content"
-										multiline
-										component={TextFieldForm}
-										placeholder="What are your thoughts?"
-									/>
-									<Button
-										type="submit"
-										isLoading={isLoading}
-										isDisabled={!!!values.content}
-										mt="2"
-									>
-										Comment
-									</Button>
-								</Form>
-							)}
-						</Formik>
-					</>
-				) : (
-					<Flex border="1px" borderRadius="md" p="3" my="2" borderColor="gray.600" alignItems="center">
-						<Text color="gray.400" fontWeight="semibold">
-							Log in or sign up to leave a comment
-						</Text>
-						<Flex ml="auto">
-							<Link href="/login" passHref>
-								<Button as="a">
-									Login
+			{user ? (
+				<>
+					<Text>
+						Comment as <Link href={`/user/${user.id}`}>{user.username}</Link>
+					</Text>
+					<Formik
+						initialValues={{ content: "" }}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{({ values }) => (
+							<Form>
+								<Field
+									name="content"
+									multiline
+									component={TextFieldForm}
+									placeholder="What are your thoughts?"
+								/>
+								<Button
+									type="submit"
+									isLoading={isLoading}
+									isDisabled={!!!values.content}
+									mt="2"
+								>
+									Comment
 								</Button>
-							</Link>
-							<Link href="/register" passHref>
-								<Button as="a" ml="2">
-									Register
-								</Button>
-							</Link>
-						</Flex>
+							</Form>
+						)}
+					</Formik>
+				</>
+			) : (
+				<Flex border="1px" borderRadius="md" p="3" my="2" borderColor="gray.600" alignItems="center">
+					<Text color="gray.400" fontWeight="semibold">
+						Log in or sign up to leave a comment
+					</Text>
+					<Flex ml="auto">
+						<Link href="/login" passHref>
+							<Button as="a">
+								Login
+							</Button>
+						</Link>
+						<Link href="/register" passHref>
+							<Button as="a" ml="2">
+								Register
+							</Button>
+						</Link>
 					</Flex>
-				)}
-				<Menu>
-					<MenuButton mt="2" color="gray.400">
-						<small>
-							Sort by {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}
-						</small>
-					</MenuButton>
-					<MenuList>
-						<MenuOptionGroup
-							defaultValue=""
-							type="radio"
-							onChange={val => {
-								setSortParam(val as string);
-								router.push(`/t/${topic.title}/comments/${post.id}?sort=${val}`, undefined, { shallow: true });
-							}}
-							value={sortParam}
-						>
-							<MenuItemOption value="">Hot</MenuItemOption>
-							<MenuItemOption value="created_at">New</MenuItemOption>
-							<MenuItemOption value="vote">Top</MenuItemOption>
-						</MenuOptionGroup>
-					</MenuList>
-				</Menu>
-			</Box>
+				</Flex>
+			)}
+			<Menu>
+				<MenuButton mt="2" color="gray.400">
+					<Text fontSize="small" fontWeight="medium">
+						Sort by {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}
+					</Text>
+				</MenuButton>
+				<MenuList>
+					<MenuOptionGroup
+						defaultValue=""
+						type="radio"
+						onChange={val => {
+							setSortParam(val as string);
+							router.push(`/t/${topic.title}/comments/${post.id}?sort=${val}`, undefined, { shallow: true });
+						}}
+						value={sortParam}
+					>
+						<MenuItemOption value="">Hot</MenuItemOption>
+						<MenuItemOption value="created_at">New</MenuItemOption>
+						<MenuItemOption value="vote">Top</MenuItemOption>
+					</MenuOptionGroup>
+				</MenuList>
+			</Menu>
 			<Divider pt="3" />
 			{comments && (comments.length === 0 ? (
 				<Flex height={250} alignItems="center" justifyContent="center">

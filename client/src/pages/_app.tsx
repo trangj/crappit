@@ -36,6 +36,7 @@ MyApp.getInitialProps = async (ctx: any) => {
         }
         return { ...props };
     } catch (err) {
+        ctx.ctx.res.setHeader('Set-Cookie', 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
         return { ...props };
     }
 };
