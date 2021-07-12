@@ -25,7 +25,7 @@ type MyAppProps = AppProps & {
 MyApp.getInitialProps = async (ctx: any) => {
     const props = await App.getInitialProps(ctx);
     try {
-        if (typeof window === 'undefined') {
+        if (typeof window === 'undefined' && ctx.ctx.req.cookies.token) {
             const res = await axios.post('/api/user/refresh_token', {}, { headers: { cookie: 'token=' + ctx.ctx.req.cookies.token } });
             axios.defaults.headers.authorization = res.data.access_token;
             return {
