@@ -18,12 +18,14 @@ const TopicHeader = ({ topic }: Props) => {
 	return (
 		<div className="mt-12">
 			{topic.image_url ? (
-				<Image
-					alt={topic.image_name}
-					src={topic.image_url}
-					height="200px"
-					width="100%"
-				/>
+				<div style={{ position: 'relative', height: 96, zIndex: -10 }}>
+					<Image
+						alt="Topic banner"
+						src={topic.image_name}
+						layout="fill"
+						objectFit="cover"
+					/>
+				</div>
 			) : (
 				<div className="w-full h-24 bg-blue-300" />
 			)}

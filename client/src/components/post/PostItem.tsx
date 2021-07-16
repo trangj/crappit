@@ -17,42 +17,51 @@ const PostItem = ({ post, ...props }: Props) => {
 			<div className="pb-auto p-1 dark:bg-gray-900">
 				<Voting post={post} />
 			</div>
-			<div className="w-full px-2 pt-2">
-				<small>
-					<Link passHref href={`/t/${post.topic}`}>
-						<a className="font-medium">
-							t/{post.topic}
-						</a>
-					</Link>{" "}
-					<div className="text-gray-400 dark:text-gray-400 inline">
-						&bull; Posted by{" "}
-						<Link passHref href={`/user/${post.author_id}`}>
-							<a>
-								u/{post.author}
+			<div className="flex flex-col w-full">
+				<div className="w-full p-2">
+					<small>
+						<Link passHref href={`/t/${post.topic}`}>
+							<a className="font-medium">
+								t/{post.topic}
 							</a>
 						</Link>{" "}
-						{dayjs(post.created_at).fromNow()}
-					</div>
-				</small>
-				<h6 className="font-medium">
-					<Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
-						<LinkCardOverlay>
-							{post.title}
-						</LinkCardOverlay>
-					</Link>
-				</h6>
+						<div className="text-gray-400 dark:text-gray-400 inline">
+							&bull; Posted by{" "}
+							<Link passHref href={`/user/${post.author_id}`}>
+								<a>
+									u/{post.author}
+								</a>
+							</Link>{" "}
+							{dayjs(post.created_at).fromNow()}
+						</div>
+					</small>
+					<h6 className="font-medium">
+						<Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
+							<LinkCardOverlay>
+								{post.title}
+							</LinkCardOverlay>
+						</Link>
+					</h6>
+					{post.type === "text" && (
+						post.content
+					)}
+				</div>
 				{post.type === "photo" && (
-					<Image
-						alt={post.image_name}
-						src={post.image_url}
-						height="600px"
-						width="600px"
-					/>
+					<Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
+						<a>
+							<div style={{ maxHeight: 512, position: 'relative' }}>
+								<div style={{ paddingBottom: '100%' }} />
+								<Image
+									alt={post.title}
+									src={post.image_name}
+									layout="fill"
+									objectFit="contain"
+								/>
+							</div>
+						</a>
+					</Link>
 				)}
-				{post.type === "text" && (
-					post.content
-				)}
-				<div className="flex mt-2 z-10">
+				<div className="flex px-2">
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}#comments`}>
 						<Button variant="ghost" border="rounded" className="text-xs p-2" as="a">
 							{post.number_of_comments}
