@@ -12,7 +12,7 @@ import { dehydrate } from "react-query/hydration";
 import { useRouter } from "next/router";
 import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
 import { Button } from "src/ui";
-import Avatar from "src/ui/Avatar";
+import { Avatar } from "src/ui";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -54,13 +54,13 @@ const HomePage = () => {
 				<div className="w-full">
 					<Card className="flex p-2 gap-2">
 						<Link passHref href={user ? `/user/${user.id}` : "/login"}>
-							<a className="h-10 w-10 self-center">
-								<Avatar />
+							<a>
+								<Avatar className="h-10 w-10 self-center" />
 							</a>
 						</Link>
 						<Link passHref href={`/submit`}>
 							<a className="w-full">
-								<input placeholder="Create post" className="w-full py-2 px-4 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
+								<input placeholder="Create post" className="w-full py-2 px-4 bg-gray-100 hover:bg-white hover:border-blue-500 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
 							</a>
 						</Link>
 					</Card>
@@ -123,7 +123,7 @@ const HomePage = () => {
 				</div>
 				<div className="flex-col w-80 hidden lg:flex">
 					<div style={{ width: 'inherit' }}>
-						<Card className="flex flex-col gap-2 p-3">
+						<Card className="flex flex-col gap-3 p-3">
 							<h6>Home</h6>
 							<p>
 								Your personal Crappit frontpage. Come here to check in with your

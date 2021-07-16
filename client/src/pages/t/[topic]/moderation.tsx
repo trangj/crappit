@@ -1,7 +1,7 @@
 import React from "react";
 import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
 import { useUser } from "../../../context/UserState";
-import { Card } from "../../../ui";
+import { Card, Divider } from "../../../ui";
 import UpdateTopic from "../../../components/topic/UpdateTopic";
 import AddModerator from "../../../components/topic/AddModerator";
 import { useRouter } from "next/router";
@@ -34,11 +34,11 @@ const Moderation = () => {
 		<div className="mt-16 container mx-auto max-w-5xl">
 
 			{topicData.user_moderator_id === user.id ? (
-				<Card className="p-3" >
+				<Card className="p-3 flex flex-col gap-3" >
 					<h5 >Change Settings</h5>
-					<hr className="my-3 border-gray-500" />
+					<Divider />
 					<UpdateTopic topic={topicData} />
-					<hr className="my-3 border-gray-500" />
+					<Divider />
 					<h5 >Moderators</h5>
 					<AddModerator topic={topicData} />
 				</Card>

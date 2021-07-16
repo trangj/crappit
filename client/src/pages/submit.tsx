@@ -4,7 +4,7 @@ import * as yup from "yup";
 import TextFieldForm from "../ui/TextFieldForm";
 import FileFieldForm from "../ui/FileFieldForm";
 import SelectFieldForm from "../ui/SelectFieldForm";
-import { Button, Card } from "../ui";
+import { Button, Card, Divider } from "../ui";
 import useTopics from "../hooks/topic-query/useTopics";
 import useAddPost from "../hooks/post-query/useAddPost";
 import { GetServerSideProps } from "next";
@@ -83,7 +83,7 @@ const AddPost = () => {
 			</Head>
 			<Card className="p-3 flex flex-col gap-2">
 				<h5>Create a post</h5>
-				<hr className="border-gray-500" />
+				<Divider />
 				<Formik
 					initialValues={initialValues}
 					onSubmit={handleSubmit}
@@ -105,7 +105,7 @@ const AddPost = () => {
 							>
 								{!topicsIsLoading && topicsData &&
 									topicsData.map((topic) => (
-										<option key={topic.title} value={topic.title} className="bg-gray-200 dark:bg-gray-700">
+										<option key={topic.title} value={topic.title} className="bg-white dark:bg-gray-700">
 											t/{topic.title}
 										</option>
 									))}

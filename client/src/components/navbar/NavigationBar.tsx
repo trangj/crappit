@@ -6,9 +6,11 @@ import BrowseMenu from "./BrowseMenu";
 import MobileMenu from "./MobileMenu";
 import { Button } from "src/ui";
 import { MenuIcon } from '@heroicons/react/outline';
+import { useTheme } from "src/hooks/useTheme";
 
 const NavigationBar = () => {
 	const { logoutUser, user } = useUser();
+	const { theme, setTheme } = useTheme();
 	const [menu, showMenu] = useState(false);
 
 	return (
@@ -40,7 +42,7 @@ const NavigationBar = () => {
 								</Link>
 							</div>
 						) : (
-							<UserMenu user={user} logoutUser={logoutUser} />
+							<UserMenu user={user} logoutUser={logoutUser} theme={theme} setTheme={setTheme} />
 						)}
 					</div>
 					<Button
@@ -52,7 +54,7 @@ const NavigationBar = () => {
 					/>
 				</div>
 				{menu && (
-					<MobileMenu user={user} logoutUser={logoutUser} showMenu={showMenu} />
+					<MobileMenu user={user} logoutUser={logoutUser} showMenu={showMenu} theme={theme} setTheme={setTheme} />
 				)}
 			</div>
 		</div>

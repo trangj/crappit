@@ -18,10 +18,10 @@ export default function useUpdateTopic(topic: Topic) {
 			topic.description = res.topic.description;
 			topic.image_url = res.topic.image_url;
 			topic.image_name = res.topic.image_name;
+			toast.success(res.status.text);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

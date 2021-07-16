@@ -17,11 +17,11 @@ export default function useAddTopicFollow(topic: Topic) {
 	return useMutation<any, any, any, any>(followTopic, {
 		onSuccess: (res) => {
 			topic.user_followed_id = res.user_followed_id;
+			toast.success(res.status.text);
 			queryClient.invalidateQueries(["followed_topics"]);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

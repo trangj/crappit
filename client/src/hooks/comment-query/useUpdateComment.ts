@@ -18,11 +18,11 @@ export default function useUpdateComment(setOpenEdit: (arg0: boolean) => void, c
 			comment.content = res.comment.content;
 			comment.updated_at = res.comment.updated_at;
 			comment.is_edited = true;
+			toast.success(res.status.text);
 			setOpenEdit(false);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

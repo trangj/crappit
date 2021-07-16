@@ -8,7 +8,7 @@ import { Listbox } from '@headlessui/react';
 import Link from "next/link";
 import useAddComment from "../../hooks/comment-query/useAddComment";
 import useComments from "../../hooks/comment-query/useComments";
-import { Card, Button } from "../../ui";
+import { Card, Button, Divider } from "../../ui";
 import { Post } from "src/types/entities/post";
 import { Topic } from "src/types/entities/topic";
 import { useRouter } from "next/router";
@@ -59,7 +59,7 @@ const CommentCard = ({ post, topic }: Props) => {
 			{user ? (
 				<>
 					<p>
-						Comment as <Link href={`/user/${user.id}`}>{user.username}</Link>
+						Comment as <Link href={`/user/${user.id}`}><a className="hover:underline text-blue-500 dark:text-blue-400">{user.username}</a></Link>
 					</p>
 					<Formik
 						initialValues={{ content: "" }}
@@ -79,7 +79,7 @@ const CommentCard = ({ post, topic }: Props) => {
 									loading={isLoading}
 									disabled={!!!values.content}
 									variant="filled"
-									className="w-24 my-1"
+									className="w-24 ml-auto"
 								>
 									Comment
 								</Button>
@@ -88,7 +88,7 @@ const CommentCard = ({ post, topic }: Props) => {
 					</Formik>
 				</>
 			) : (
-				<div className="flex border rounded p-3 mb-3 border-gray-600 items-center">
+				<div className="flex border rounded p-3 mb-3 border-gray-400 dark:border-gray-600 items-center">
 					<p className="font-medium text-gray-500">
 						Log in or sign up to leave a comment
 					</p>
@@ -107,11 +107,11 @@ const CommentCard = ({ post, topic }: Props) => {
 				</div>
 			)}
 			<Listbox value={sortParam} onChange={setSortParam} as="div" className="relative">
-				<Listbox.Button className="font-medium text-blue-500 text-xs" >Sort by: {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}</Listbox.Button>
+				<Listbox.Button className="font-medium text-blue-600 dark:text-blue-400 text-xs" >Sort by: {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}</Listbox.Button>
 				<Listbox.Options className="cursor-pointer z-10 w-16 font-medium absolute left-0 origin-top-right border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded flex flex-col">
 					<Listbox.Option
 						value=""
-						className="p-2 hover:bg-blue-500 hover:bg-opacity-5"
+						className="p-2 hover:bg-blue-400 hover:bg-opacity-5"
 					>
 						{({ selected }) => (
 							<span className={!selected ? 'opacity-50' : ''}>
@@ -121,7 +121,7 @@ const CommentCard = ({ post, topic }: Props) => {
 					</Listbox.Option>
 					<Listbox.Option
 						value="created_at"
-						className="p-2 hover:bg-blue-500 hover:bg-opacity-5"
+						className="p-2 hover:bg-blue-400 hover:bg-opacity-5"
 					>
 						{({ selected }) => (
 							<span className={!selected ? 'opacity-50' : ''}>
@@ -131,7 +131,7 @@ const CommentCard = ({ post, topic }: Props) => {
 					</Listbox.Option>
 					<Listbox.Option
 						value="vote"
-						className="p-2 hover:bg-blue-500 hover:bg-opacity-5"
+						className="p-2 hover:bg-blue-400 hover:bg-opacity-5"
 					>
 						{({ selected }) => (
 							<span className={!selected ? 'opacity-50' : ''}>
@@ -141,7 +141,7 @@ const CommentCard = ({ post, topic }: Props) => {
 					</Listbox.Option>
 				</Listbox.Options>
 			</Listbox>
-			<hr className="my-3 border-gray-500" />
+			<Divider className="my-3" />
 			{comments && (comments.length === 0 ? (
 				<div className="flex h-64 items-center justify-center">
 					<div className="text-gray-400 text-center">

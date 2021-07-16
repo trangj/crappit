@@ -17,11 +17,11 @@ export default function useAddPost() {
 	return useMutation(addPost, {
 		onSuccess: (res) => {
 			const { topic, id } = res.post;
+			toast.success(res.status.text);
 			router.push(`/t/${topic}/comments/${id}`);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

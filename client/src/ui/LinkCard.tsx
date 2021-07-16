@@ -14,7 +14,7 @@ export const LinkCard = ({ children, className = "", ...props }: LinkCardProps) 
 	return (
 		<div
 			{...props}
-			className={`link_card relative overflow-hidden my-2 border bg-white border-gray-200 dark:bg-gray-850 dark:border-gray-700 rounded hover:border-gray-500 dark:hover:border-gray-500 ${className}`}
+			className={`link_card relative overflow-hidden my-2 border bg-white border-gray-300 dark:bg-gray-850 dark:border-gray-700 rounded hover:border-gray-500 dark:hover:border-gray-500 ${className}`}
 		>
 			{children}
 		</div>

@@ -31,7 +31,7 @@ const Voting = ({ post }: Props) => {
 					icon={<ArrowUpIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
-					className={post.user_vote === 1 ? "bg-white bg-opacity-5 text-upvote" : ""}
+					className={post.user_vote === 1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-upvote dark:text-upvote" : ""}
 				/>
 			) : (
 				<Link passHref href="/login">
@@ -52,7 +52,7 @@ const Voting = ({ post }: Props) => {
 						: post.user_vote === -1
 							? "text-downvote"
 							: ""
-					: "text-gray-200"}`
+					: ""}`
 			}
 			>
 				{post.vote}
@@ -64,7 +64,7 @@ const Voting = ({ post }: Props) => {
 					icon={<ArrowDownIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
-					className={post.user_vote === -1 ? "bg-white bg-opacity-5 text-downvote" : ""}
+					className={post.user_vote === -1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-downvote dark:text-downvote" : ""}
 				/>
 			) : (
 				<Link passHref href="/login">

@@ -15,9 +15,9 @@ const TextFieldForm = ({ field, form, multiline, label, ...props }: Props) => {
 		<>
 			<h6>{label}</h6>
 			{!!multiline ? (
-				<textarea {...field} {...props} className={`w-full py-2 px-4 mt-2 bg-transparent border rounded ${!!error ? 'border-red-500' : 'border-gray-700'}`} />
+				<textarea {...field} {...props} className={`w-full py-2 px-4 mt-2 bg-transparent border rounded ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'}`} />
 			) : (
-				<input {...field} {...props} className={`w-full py-2 px-4 mt-2 bg-transparent border rounded ${!!error ? 'border-red-500' : 'border-gray-700'}`} />
+				<input {...field} {...props} className={`w-full py-2 px-4 mt-2 bg-transparent border rounded ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'}`} />
 			)}
 			<small className="text-red-500">{error}</small>
 		</>

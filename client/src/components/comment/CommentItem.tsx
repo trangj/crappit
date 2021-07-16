@@ -11,7 +11,7 @@ import { Comment } from "src/types/entities/comment";
 import { Topic } from "src/types/entities/topic";
 import { Button } from '../../ui';
 import { ArrowsExpandIcon, ChatAltIcon } from "@heroicons/react/outline";
-import Avatar from "src/ui/Avatar";
+import { Avatar } from "src/ui";
 
 type Props = {
 	comment: Comment,
@@ -28,8 +28,8 @@ const CommentItem = ({ comment, topic }: Props) => {
 		<div className="flex mt-4">
 			<div className="flex flex-col">
 				<Link passHref href={`/user/${comment.author_id}`}>
-					<a className="h-7 w-7 mb-2">
-						<Avatar />
+					<a>
+						<Avatar className="h-7 w-7 mb-2" />
 					</a>
 				</Link>
 				<div
@@ -47,7 +47,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 						) : (
 							<Link href={`/user/${comment.author_id}`} passHref><a className="font-medium">{comment.author}</a></Link>
 						)}
-						<div className="text-gray-400 dark:text-gray-400 inline">
+						<div className="text-gray-500 dark:text-gray-400 inline">
 							{" "}&bull;{" "}
 							{dayjs(comment.created_at).fromNow()}
 							{comment.is_edited && (
@@ -147,7 +147,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 		</div>
 	) : (
 		<div className="mt-4 flex gap-3">
-			<Button aria-label="Expand comments" icon={<ArrowsExpandIcon className="h-4 w-4 text-blue-500" />} onClick={() => setHideComments(false)} border="rounded" variant="ghost" />
+			<Button aria-label="Expand comments" icon={<ArrowsExpandIcon className="h-4 w-4 dark:text-blue-400 text-blue-600" />} onClick={() => setHideComments(false)} border="rounded" variant="ghost" />
 			<small className="self-center">
 				{comment.is_deleted ? '[deleted]' :
 					<Link href={`/user/${comment.author_id}`} passHref>

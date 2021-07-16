@@ -16,7 +16,7 @@ async function fetchProfile(userid: string) {
 export default function useProfile(userid: string) {
 	return useQuery<User, Error>(["profile", userid], () => fetchProfile(userid), {
 		onError: (err) => {
-			toast(err.status.text);
+			toast.error(err.status.text);
 		}
 	});
 }

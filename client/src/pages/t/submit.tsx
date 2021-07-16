@@ -4,7 +4,7 @@ import * as yup from "yup";
 import TextFieldForm from "../../ui/TextFieldForm";
 import FileFieldForm from "../../ui/FileFieldForm";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
-import { Button, Card } from "../../ui";
+import { Button, Card, Divider } from "../../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 
@@ -64,7 +64,7 @@ const AddTopic = () => {
 			</Head>
 			<Card className="p-3 flex flex-col gap-2">
 				<h5>Create a topic</h5>
-				<hr className="border-gray-500" />
+				<Divider />
 				<Formik
 					initialValues={initialValues}
 					onSubmit={handleSubmit}

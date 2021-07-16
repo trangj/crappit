@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useUser } from 'src/context/UserState';
 import { Topic } from 'src/types/entities/topic';
-import { Button, Card } from '../../ui';
+import { Button, Card, Divider } from '../../ui';
 
 type TopicCardProps = {
     topicData: Topic,
@@ -12,7 +12,7 @@ type TopicCardProps = {
 const TopicCard = ({ topicData }: TopicCardProps) => {
     const { user } = useUser();
     return (
-        <Card className="p-3 flex flex-col gap-2">
+        <Card className="p-3 flex flex-col gap-3">
             <div className="flex items-center">
                 <h6 >About Community</h6>
                 {user && topicData.user_moderator_id && (
@@ -22,7 +22,7 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                     >
                         <Button
                             as="a"
-                            className="ml-auto"
+                            className="ml-auto text-xs"
                             variant="ghost"
                             border="rounded"
                         >
@@ -32,10 +32,8 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                 )}
             </div>
             <p>{topicData.description}</p>
-            <hr className="border-gray-500" />
-            <p>
-                Created {dayjs(topicData.created_at).format("LL")}
-            </p>
+            <Divider />
+            <p>Created {dayjs(topicData.created_at).format("LL")}</p>
             <Link passHref href={`/t/${topicData.title}/submit`}>
                 <Button
                     as="a"

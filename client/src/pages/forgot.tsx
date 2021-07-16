@@ -4,7 +4,7 @@ import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import toast from "react-hot-toast";
 import axios from "../axiosConfig";
-import { Button, Card } from "../ui";
+import { Button, Card, Divider } from "../ui";
 import Head from "next/head";
 
 const schema = yup.object({
@@ -32,7 +32,7 @@ const Forgot = () => {
 			</Head>
 			<Card className="flex flex-col gap-2 p-3">
 				<h5>Forgot</h5>
-				<hr className="border-gray-500" />
+				<Divider />
 				<Formik
 					initialValues={{ email: "" }}
 					onSubmit={handleSubmit}

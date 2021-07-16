@@ -14,7 +14,7 @@ type Props = {
 const PostItem = ({ post, ...props }: Props) => {
 	return (
 		<LinkCard {...props} className="flex">
-			<div className="pb-auto p-1 dark:bg-gray-900">
+			<div className="pb-auto p-1 dark:bg-gray-900 bg-gray-100">
 				<Voting post={post} />
 			</div>
 			<div className="flex flex-col w-full">
@@ -25,7 +25,7 @@ const PostItem = ({ post, ...props }: Props) => {
 								t/{post.topic}
 							</a>
 						</Link>{" "}
-						<div className="text-gray-400 dark:text-gray-400 inline">
+						<div className="text-gray-500 dark:text-gray-400 inline">
 							&bull; Posted by{" "}
 							<Link passHref href={`/user/${post.author_id}`}>
 								<a>
@@ -43,7 +43,14 @@ const PostItem = ({ post, ...props }: Props) => {
 						</Link>
 					</h6>
 					{post.type === "text" && (
-						post.content
+						<p>
+							{post.content}
+						</p>
+					)}
+					{post.type === "link" && (
+						<a href={post.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs">
+							{post.content}
+						</a>
 					)}
 				</div>
 				{post.type === "photo" && (

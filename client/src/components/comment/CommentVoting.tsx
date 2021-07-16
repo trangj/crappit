@@ -37,7 +37,7 @@ const CommentVoting = ({ comment }: Props) => {
 					icon={<ArrowUpIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
-					className={comment.user_vote === 1 ? "bg-white bg-opacity-5 text-upvote" : ""}
+					className={comment.user_vote === 1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-upvote dark:text-upvote" : ""}
 				/>
 			) : (
 				<Link href="/login" passHref>
@@ -70,7 +70,7 @@ const CommentVoting = ({ comment }: Props) => {
 					icon={<ArrowDownIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
-					className={comment.user_vote === -1 ? "bg-white bg-opacity-5 text-downvote" : ""}
+					className={comment.user_vote === -1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-downvote dark:text-downvote" : ""}
 				/>
 			) : (
 				<Link passHref href="/login">

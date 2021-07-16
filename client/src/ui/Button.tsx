@@ -16,7 +16,7 @@ const variantOptions = {
     filled:
         "bg-blue-500 hover:bg-blue-400 dark:bg-gray-200 dark:hover:bg-gray-300 text-white dark:text-black",
     ghost:
-        "text-gray-400 dark:hover:bg-white dark:hover:bg-opacity-5 hover:bg-black hover:bg-opacity-5"
+        "text-gray-500 dark:text-gray-400 dark:hover:bg-white dark:hover:bg-opacity-5 hover:bg-black hover:bg-opacity-5"
 };
 
 const sizeOptions = {
@@ -56,7 +56,7 @@ export const Button = React.forwardRef(({
     return (
         <Component
             disabled={disabled || loading}
-            className={`flex font-medium items-center justify-center ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${active ? 'bg-white bg-opacity-5' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${fullWidth ? 'w-full block' : ''} ${className}`}
+            className={`flex font-medium items-center justify-center ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${active ? 'dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${fullWidth ? 'w-full block' : ''} ${className}`}
             {...props}
             ref={ref}
         >

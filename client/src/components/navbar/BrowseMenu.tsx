@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Menu } from '@headlessui/react';
 import Link from "next/link";
 import { User } from "src/types/entities/user";
@@ -9,6 +9,21 @@ type Props = {
 	user: User | null;
 };
 
+type NextLinkProps = {
+	href: string,
+	children: ReactNode,
+};
+
+const NextLink = ({ href, children, ...props }: NextLinkProps) => {
+	return (
+		<Link href={href} passHref>
+			<a {...props} className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2">
+				{children}
+			</a>
+		</Link>
+	);
+};
+
 const BrowseMenu = ({ user }: Props) => {
 	const { data, isLoading } = useTopicFollow();
 	return (
@@ -17,56 +32,32 @@ const BrowseMenu = ({ user }: Props) => {
 				<>
 					<Menu.Button className={`flex text-sm gap-2 items-center border-transparent hover:border-gray-200 dark:hover:border-gray-700 text-left px-3 rounded border w-64 h-10 font-medium ${open ? 'border-gray-200 dark:border-gray-700 rounded-b-none' : ''}`}>
 						Browse
-						<div className="h-6 w-6 ml-auto">
+						<div className="h-4 w-4 ml-auto">
 							<ChevronDownIcon />
 						</div>
 					</Menu.Button>
 					<Menu.Items className="absolute w-64 left-0 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
-						<Menu.Item>
-							<Link passHref href="/">
-								<a className="hover:bg-gray-300 dark:hover:bg-gray-800 p-2">
-									Home
-								</a>
-							</Link>
+						<Menu.Item as={NextLink} href="/">
+							Home
 						</Menu.Item>
-						<Menu.Item >
-							<Link passHref href="/t">
-								<a className="hover:bg-gray-300 dark:hover:bg-gray-800 p-2">
-									Discover Topics
-								</a>
-							</Link>
+						<Menu.Item as={NextLink} href="/t" >
+							Discover Topics
 						</Menu.Item>
-						<Menu.Item>
-							<Link passHref href="/submit">
-								<a className="hover:bg-gray-300 dark:hover:bg-gray-800 p-2">
-									Create a post
-								</a>
-							</Link>
+						<Menu.Item as={NextLink} href="/submit">
+							Create a post
 						</Menu.Item>
-						<Menu.Item>
-							<Link passHref href="/t/submit">
-								<a className="hover:bg-gray-300 dark:hover:bg-gray-800 p-2">
-									Create a topic
-								</a>
-							</Link>
+						<Menu.Item as={NextLink} href="/t/submit">
+							Create a topic
 						</Menu.Item>
 						{!user ? (
-							<Menu.Item>
-								<Link passHref href="/register">
-									<a className="hover:bg-gray-300 dark:hover:bg-gray-800 p-2">
-										Sign up to follow topics!
-									</a>
-								</Link>
+							<Menu.Item as={NextLink} href="/register">
+								Sign up to follow topics!
 							</Menu.Item>
 						) : (
 							!isLoading && data && (<>
 								{data.topics_followed.map((topic, i) => (
-									<Menu.Item key={i}>
-										<Link passHref href={`/t/${topic.title}`}>
-											<a className="hover:bg-gray-300 dark:hover:bg-gray-800 p-2">
-												t/{topic.title}
-											</a>
-										</Link>
+									<Menu.Item as={NextLink} key={i} href={`/t/${topic.title}`}>
+										t/{topic.title}
 									</Menu.Item>
 								))}
 							</>)

@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
                     </Hydrate>
                 </ QueryClientProvider>
             </UserProvider>
-            <Toaster position="bottom-center" />
+            <Toaster position="bottom-center" toastOptions={{ className: "bg-white border-gray-500 dark:bg-gray-850 dark:border-gray-500 dark:text-gray-200 border" }} />
         </>
     );
 }

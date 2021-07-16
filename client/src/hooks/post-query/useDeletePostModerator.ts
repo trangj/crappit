@@ -17,11 +17,11 @@ export default function useDeletePostModerator(post: Post) {
 	const router = useRouter();
 	return useMutation(deletePostModerator, {
 		onSuccess: (res) => {
+			toast.success(res.status.text);
 			router.push(`/t/${post.topic}`);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

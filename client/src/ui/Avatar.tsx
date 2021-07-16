@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { HTMLAttributes } from 'react';
 
-const Avatar = () => {
+export const Avatar = ({ className = "" }: HTMLAttributes<SVGAElement>) => {
     return (
-        <svg style={{ fill: 'gray' }} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg className={`fill-current ${className} text-gray-400 dark:text-gray-500`} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <circle cx="50" cy="50" r="50" />
         </svg>
     );
 };
 
-export default Avatar;

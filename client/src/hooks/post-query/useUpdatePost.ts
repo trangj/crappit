@@ -16,11 +16,11 @@ export default function useUpdatePost(setOpenEdit: (arg0: boolean) => void, post
 	return useMutation(updatePost, {
 		onSuccess: (res) => {
 			post.content = res.post.content;
+			toast.success(res.status.text);
 			setOpenEdit(false);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

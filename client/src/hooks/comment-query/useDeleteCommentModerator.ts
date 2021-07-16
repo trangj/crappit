@@ -18,11 +18,11 @@ export default function useDeleteCommentModerator(comment: Comment, setOpen: (ar
 	return useMutation(deleteCommentModerator, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["post", String(comment.post_id)]);
+			toast.success(res.status.text);
 			setOpen(false);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

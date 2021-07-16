@@ -24,7 +24,7 @@ export default function useVoting(post: Post) {
 			post.user_vote = res.user_vote;
 		},
 		onError: (err) => {
-			toast(err.status.text);
+			toast.error(err.status.text);
 		},
 	});
 }

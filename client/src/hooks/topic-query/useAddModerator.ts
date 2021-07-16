@@ -15,9 +15,11 @@ async function addModerator({ topic, username }: { topic: string, username: stri
 
 export default function useAddModerator() {
 	return useMutation(addModerator, {
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onSuccess: (res) => {
+			toast.success(res.status.text);
+		},
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

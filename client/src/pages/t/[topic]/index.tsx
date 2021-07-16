@@ -15,7 +15,7 @@ import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
 import { Button } from "src/ui";
-import Avatar from "src/ui/Avatar";
+import { Avatar } from "src/ui";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -64,8 +64,8 @@ const TopicPage = () => {
 					<div className="w-full">
 						<Card className="flex p-2 gap-2">
 							<Link passHref href={user ? `/user/${user.id}` : "/login"}>
-								<a className="h-10 w-10 self-center">
-									<Avatar />
+								<a>
+									<Avatar className="h-10 w-10 self-center" />
 								</a>
 							</Link>
 							<Link passHref href={`/t/${topicData?.title}/submit`}>

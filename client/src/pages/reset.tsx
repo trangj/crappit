@@ -4,7 +4,7 @@ import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import toast from "react-hot-toast";
 import axios from "../axiosConfig";
-import { Button, Card } from "../ui";
+import { Button, Card, Divider } from "../ui";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { useUser } from "../context/UserState";
@@ -76,7 +76,7 @@ const Forgot = ({ status }: any) => {
 		<div className="mt-16 container mx-auto max-w-5xl">
 			<Card className="p-3 flex flex-col gap-2">
 				<h5>Forgot</h5>
-				<hr className="border-gray-500" />
+				<Divider />
 				<Formik
 					initialValues={{ password: "", password2: "" }}
 					onSubmit={handleSubmit}

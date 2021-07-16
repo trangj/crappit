@@ -17,11 +17,11 @@ export default function useDeleteComment(comment: Comment, setOpen: (arg0: boole
 	return useMutation(deleteComment, {
 		onSuccess: (res) => {
 			queryClient.invalidateQueries(["comments", String(comment.post_id)]);
+			toast.success(res.status.text);
 			setOpen(false);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }

@@ -33,20 +33,14 @@ const PostCard = ({ post, topic }: Props) => {
 							t/{post.topic}
 						</a>
 					</Link>
-					<div className="text-gray-400 dark:text-gray-400 inline">
+					<div className="text-gray-500 dark:text-gray-400 inline">
 						{" "}&bull; Posted by{" "}
 						<Link href={`/user/${post.author_id}`} passHref><a>u/{post.author}</a></Link>{" "}
 						{dayjs(post.created_at).fromNow()}
 					</div>
 				</small>
 				<h6 className="font-medium">
-					{post.type === "link" ? (
-						<a href={post.content} target="_blank" rel="noopener noreferrer">
-							{post.title}
-						</a>
-					) : (
-						post.title
-					)}
+					{post.title}
 				</h6>
 				{openEdit ? (
 					<UpdatePost
@@ -56,6 +50,11 @@ const PostCard = ({ post, topic }: Props) => {
 					/>
 				) : (
 					<>
+						{post.type === "link" && (
+							<a href={post.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs">
+								{post.content}
+							</a>
+						)}
 						{post.type === "text" && <p>{post.content}</p>}
 						{post.type === "photo" && (
 							<a href={`https://crappit.imgix.net/${post.image_name}`} target="_blank" rel="noopener noreferrer">
@@ -71,7 +70,7 @@ const PostCard = ({ post, topic }: Props) => {
 							</a>
 						)}
 						<div className="flex gap-2">
-							<div className="p-2 font-medium text-gray-400 text-xs">
+							<div className="p-2 font-medium text-gray-500 dark:text-gray-400 text-xs">
 								{post.number_of_comments}
 								{post.number_of_comments === 1 ? " Comment" : " Comments"}
 							</div>

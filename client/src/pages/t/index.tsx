@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import useTopics from "../../hooks/topic-query/useTopics";
-import { LinkCard } from "../../ui";
+import { LinkCard, LinkCardOverlay } from "../../ui";
 import Head from "next/head";
 
 const AllTopics = () => {
@@ -18,9 +18,9 @@ const AllTopics = () => {
 				<LinkCard key={topic.title} className="p-2">
 					<h6>
 						<Link passHref href={`t/${topic.title}`}>
-							<a>
+							<LinkCardOverlay>
 								t/{topic.title}
-							</a>
+							</LinkCardOverlay>
 						</Link>
 					</h6>
 					<p>{topic.description}</p>

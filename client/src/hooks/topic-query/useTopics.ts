@@ -16,7 +16,7 @@ async function fetchTopics() {
 export default function useTopics() {
 	return useQuery<Topic[], Error>(["topics"], fetchTopics, {
 		onError: (err) => {
-			toast(err.status.text);
+			toast.error(err.status.text);
 		}
 	});
 }

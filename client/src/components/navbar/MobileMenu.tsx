@@ -2,11 +2,14 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 import { User } from 'src/types/entities/user';
 import Link from 'next/link';
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
+import { Divider } from 'src/ui';
 
 type Props = {
     user: User;
     logoutUser: () => void;
     showMenu: (arg: boolean) => void;
+    theme: string;
+    setTheme: (arg: string) => void;
 };
 
 const MenuItem = forwardRef<HTMLAnchorElement, HTMLAttributes<HTMLAnchorElement>>(({ children, ...props }, ref) => (
@@ -16,7 +19,7 @@ const MenuItem = forwardRef<HTMLAnchorElement, HTMLAttributes<HTMLAnchorElement>
 ));
 MenuItem.displayName = "MenuItem";
 
-const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
+const MobileMenu = ({ user, logoutUser, showMenu, theme, setTheme }: Props) => {
     const { data, isLoading } = useTopicFollow();
 
 
@@ -42,7 +45,7 @@ const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
                     Create a topic
                 </MenuItem>
             </Link>
-            <hr className="mx-4 my-2 border-gray-500" />
+            <Divider className="mx-4 my-2" />
             {!user ? (
                 <Link href="/register" passHref>
                     <MenuItem onClick={() => showMenu(false)}>
@@ -58,7 +61,10 @@ const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
                     </Link>
                 )))
             )}
-            <hr className="mx-4 my-2 border-gray-500" />
+            <Divider className="mx-4 my-2" />
+            <MenuItem onClick={() => () => setTheme(theme === "dark" ? "light" : "dark")}>
+                Dark Mode
+            </MenuItem>
             {!user ? (
                 <>
                     <Link href="/login" passHref>

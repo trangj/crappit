@@ -17,11 +17,11 @@ export default function useAddTopic() {
 	return useMutation(addTopic, {
 		onSuccess: (res) => {
 			const { title } = res.topic;
+			toast.success(res.status.text);
 			router.push(`/t/${title}`);
 		},
-		onSettled: (data, error) => {
-			const res = data || error;
-			toast(res.status.text);
+		onError: (err: any) => {
+			toast.error(err.status.text);
 		},
 	});
 }
