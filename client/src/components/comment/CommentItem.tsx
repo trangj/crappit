@@ -27,11 +27,17 @@ const CommentItem = ({ comment, topic }: Props) => {
 	return !hideComments ? (
 		<div className="flex mt-4">
 			<div className="flex flex-col">
-				<Link passHref href={`/user/${comment.author_id}`}>
-					<a>
+				{comment.is_deleted ? (
+					<div>
 						<Avatar className="h-7 w-7 mb-2" />
-					</a>
-				</Link>
+					</div>
+				) : (
+					<Link passHref href={`/user/${comment.author_id}`}>
+						<a>
+							<Avatar className="h-7 w-7 mb-2" />
+						</a>
+					</Link>
+				)}
 				<div
 					className="self-center w-3.5 cursor-pointer border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-300 h-full"
 					onClick={() => setHideComments(true)}
