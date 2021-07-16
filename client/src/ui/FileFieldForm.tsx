@@ -1,5 +1,4 @@
 import React from "react";
-import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { getIn } from "formik";
 
 type Props = {
@@ -12,15 +11,16 @@ type Props = {
 const FileFieldForm = ({ field, form, setFieldValue, label, ...props }: Props) => {
 	const error = getIn(form.errors, field.name);
 	return (
-		<FormControl isInvalid={!!error}>
-			<FormLabel>{label}</FormLabel>
+		<>
+			<h6>{label}</h6>
 			<input
 				{...props}
 				type="file"
 				onChange={(e) => setFieldValue("file", e.currentTarget.files ? e.currentTarget.files[0] : null)}
+				className="mt-2"
 			/>
-			<FormErrorMessage>{error}</FormErrorMessage>
-		</FormControl>
+			<small className="text-red-500">{error}</small>
+		</>
 	);
 };
 

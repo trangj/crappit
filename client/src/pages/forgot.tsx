@@ -1,10 +1,10 @@
 import React from "react";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
+import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button, Container, Divider, Heading, useToast } from "@chakra-ui/react";
+import toast from "react-hot-toast";
 import axios from "../axiosConfig";
-import Card from "../components/utils/Card";
+import { Button, Card } from "../ui";
 import Head from "next/head";
 
 const schema = yup.object({
@@ -16,57 +16,47 @@ interface FormValues {
 }
 
 const Forgot = () => {
-	const toast = useToast();
-
 	const handleSubmit = async ({ email }: FormValues) => {
 		try {
 			const res = await axios.post(`/api/user/forgot`, { email });
-			toast({
-				description: res.data.status.text,
-				status: res.data.status.severity
-			});
+			toast.success(res.data.status.text);
 		} catch (err) {
-			toast({
-				description: err.response.data.status.text,
-				status: err.response.data.status.severity
-			});
+			toast.error(err.response.data.status.text);
 		}
 	};
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>crappit: Reset your password</title>
 			</Head>
-			<Container>
-				<Card>
-					<Heading mb="3">Forgot</Heading>
-					<Divider my="3" />
-					<Formik
-						initialValues={{ email: "" }}
-						onSubmit={handleSubmit}
-						validationSchema={schema}
-					>
-						{() => (
-							<Form>
-								<h3>
-									Forgot your password? Enter your email to change your password.
-								</h3>
-								<Field
-									label="Email"
-									name="email"
-									type="email"
-									component={TextFieldForm}
-								/>
-								<Button type="submit" mt="2">
-									Request Password Change
-								</Button>
-							</Form>
-						)}
-					</Formik>
-				</Card>
-			</Container>
-		</>
+			<Card className="flex flex-col gap-2 p-3">
+				<h5>Forgot</h5>
+				<hr className="border-gray-500" />
+				<Formik
+					initialValues={{ email: "" }}
+					onSubmit={handleSubmit}
+					validationSchema={schema}
+				>
+					{() => (
+						<Form>
+							<h6>
+								Forgot your password? Enter your email to change your password.
+							</h6>
+							<Field
+								label="Email"
+								name="email"
+								type="email"
+								component={TextFieldForm}
+							/>
+							<Button type="submit" variant="filled" className="px-5 mt-3">
+								Request Password Change
+							</Button>
+						</Form>
+					)}
+				</Formik>
+			</Card>
+		</div>
 	);
 };
 

@@ -1,4 +1,4 @@
-import { createStandaloneToast } from "@chakra-ui/toast";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
@@ -20,11 +20,7 @@ export default function useDeletePost(topic: string) {
 		},
 		onSettled: (data, error) => {
 			const res = data || error;
-			const toast = createStandaloneToast();
-			toast({
-				description: res.status.text,
-				status: res.status.severity,
-			});
+			toast(res.status.text);
 		},
 	});
 }

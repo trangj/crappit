@@ -1,20 +1,11 @@
 import React, { FormEventHandler, useState } from "react";
-import {
-	Button,
-	Heading,
-	Text,
-	Divider,
-	FormControl,
-	FormLabel,
-	Input,
-	Container,
-	useToast
-} from "@chakra-ui/react";
+import toast from 'react-hot-toast';
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
-import Card from "../components/utils/Card";
+import { Button, Card } from "../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 	if (!req.cookies.token) {
@@ -32,22 +23,18 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Settings = () => {
 	const { user, setUser } = useUser();
-	const toast = useToast();
+	const router = useRouter();
 	const [newEmail, setNewEmail] = useState("");
 	const [password, setPassword] = useState("");
+
+	if (!user) return router.push('/login');
 
 	const handlePassword = async (email: string) => {
 		try {
 			const res = await axios.post(`/api/user/forgot`, { email });
-			toast({
-				status: res.data.status.severity,
-				description: res.data.status.text
-			});
+			toast.success(res.data.status.text);
 		} catch (err) {
-			toast({
-				status: err.response.data.status.severity,
-				description: err.response.data.status.text
-			});
+			toast.error(err.response.data.status.text);
 		}
 	};
 
@@ -56,60 +43,52 @@ const Settings = () => {
 		try {
 			const res = await axios.post("/api/user/email", { newEmail, password });
 			setUser({ ...user, email: res.data.user.email });
-			toast({
-				status: res.data.status.severity,
-				description: res.data.status.text
-			});
+			toast.success(res.data.status.text);
 		} catch (err) {
-			toast({
-				status: err.response.data.status.severity,
-				description: err.response.data.status.text
-			});
+			toast.error(err.response.data.status.text);
 		}
 	};
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>Crappit Settings</title>
 			</Head>
-			<Container>
-				<Card>
-					<Heading>Settings</Heading>
-					<Divider my="3" />
-					<Heading mb="3" size="md">
-						Change password
-					</Heading>
-					<Button onClick={() => handlePassword(user.email)}>
-						Request Password Change
+			<Card className="flex flex-col gap-2 p-3">
+				<h5>Settings</h5>
+				<hr className="border-gray-500" />
+				<h6>
+					Change password
+				</h6>
+				<Button onClick={() => handlePassword(user.email)}>
+					Request Password Change
+				</Button>
+				<hr className="border-gray-500 my-3" />
+				<form onSubmit={handleEmail}>
+					<h6>Email address</h6>
+					<p>Your current email: {user.email}</p>
+					<h6>New Email</h6>
+					<input
+						type="email"
+						value={newEmail}
+						onChange={(e) => setNewEmail(e.target.value)}
+						required
+						className="w-full p-2 mt-2 bg-transparent border rounded border-gray-700"
+					/>
+					<h6>Current Password</h6>
+					<input
+						type="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+						className="w-full p-2 mt-2 bg-transparent border rounded border-gray-700"
+					/>
+					<Button type="submit" fullWidth className="mt-2">
+						Change Email
 					</Button>
-					<Divider my="3" />
-					<form onSubmit={handleEmail}>
-						<FormControl>
-							<Heading size="md">Email address</Heading>
-							<Text mb="3">Your current email: {user.email}</Text>
-							<FormLabel>New Email</FormLabel>
-							<Input
-								type="email"
-								value={newEmail}
-								isRequired={true}
-								onChange={(e) => setNewEmail(e.target.value)}
-							/>
-							<FormLabel>Current Password</FormLabel>
-							<Input
-								type="password"
-								value={password}
-								isRequired={true}
-								onChange={(e) => setPassword(e.target.value)}
-							/>
-							<Button type="submit" mt="3">
-								Change Email
-							</Button>
-						</FormControl>
-					</form>
-				</Card>
-			</Container>
-		</>
+				</form>
+			</Card>
+		</div>
 	);
 };
 

@@ -1,4 +1,4 @@
-import { createStandaloneToast } from "@chakra-ui/react";
+import toast from "react-hot-toast";
 import { useQuery } from "react-query";
 import { Comment } from "src/types/entities/comment";
 import { Error } from "src/types/error";
@@ -16,11 +16,7 @@ export async function fetchComments(id: string, sortParam: string) {
 export default function useComments(id: string, sortParam: string) {
     return useQuery<Comment[], Error>(["comments", id, sortParam], () => fetchComments(id, sortParam), {
         onError: (err) => {
-            const toast = createStandaloneToast();
-            toast({
-                description: err.status.text,
-                status: err.status.severity
-            });
+            toast.error(err.status.text);
         }
     });
 }

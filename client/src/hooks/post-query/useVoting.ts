@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
-import { createStandaloneToast } from "@chakra-ui/toast";
+import toast from "react-hot-toast";
 import { Post } from "src/types/entities/post";
 import { Error } from "src/types/error";
 
@@ -24,11 +24,7 @@ export default function useVoting(post: Post) {
 			post.user_vote = res.user_vote;
 		},
 		onError: (err) => {
-			const toast = createStandaloneToast();
-			toast({
-				description: err.status.text,
-				status: err.status.severity,
-			});
+			toast(err.status.text);
 		},
 	});
 }

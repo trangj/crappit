@@ -1,22 +1,15 @@
 import React from "react";
-import {
-	Button,
-	Container,
-	Divider,
-	Heading,
-	HStack,
-	Spacer,
-	useToast,
-} from "@chakra-ui/react";
+import toast from "react-hot-toast";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
+import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
 import Link from "next/link";
-import Card from "../components/utils/Card";
+import { Card } from "../ui";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { Button } from '../ui';
 
 const schema = yup.object({
 	email: yup.string().required("Enter your username"),
@@ -44,7 +37,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Login = () => {
 	const { loginUser } = useUser();
-	const toast = useToast();
 	const router = useRouter();
 
 	const handleSubmit = async ({ email, password }: FormValues) => {
@@ -54,35 +46,30 @@ const Login = () => {
 				password,
 			};
 			const res = await loginUser(user);
-			toast({
-				description: res.data.status.text,
-				status: res.data.status.severity
-			});
+			toast.success(res.data.status.text);
 			router.back();
 		} catch (err) {
-			toast({
-				description: err.response.data.status.text,
-				status: err.response.data.status.severity
-			});
+			toast.error(err.response.data.status.text);
 		}
 	};
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>crappit: Log in</title>
 			</Head>
-			<Container>
-				<Card>
-					<Heading mb="3">Login</Heading>
-					<Divider my="3" />
+			<Card className="flex">
+				<div className="bg-blue-300 w-32" />
+				<div className="flex flex-col p-6 gap-2">
+					<h4>Login</h4>
+					<small>By continuing, you agree to our User Agreement and Privacy Policy.</small>
 					<Formik
 						initialValues={{ email: "", password: "" }}
 						onSubmit={handleSubmit}
 						validationSchema={schema}
 					>
 						{() => (
-							<Form>
+							<Form className="w-72 flex flex-col">
 								<Field
 									label="Email"
 									name="email"
@@ -95,28 +82,23 @@ const Login = () => {
 									type="password"
 									component={TextFieldForm}
 								/>
-								<Button type="submit" mt="2">
+								<Button type="submit" className="mt-3" variant="filled">
 									Login
 								</Button>
 							</Form>
 						)}
 					</Formik>
-					<HStack my="2">
+					<small className="flex gap-3 mt-3">
 						<Link href="/forgot" passHref>
-							<a>
-								<small>Forgot your password?</small>
-							</a>
+							<a>Forgot your password?</a>
 						</Link>
-						<Spacer />
 						<Link href="/register" passHref>
-							<a>
-								<small>Sign up for an account!</small>
-							</a>
+							<a className="ml-auto">Sign up for an account!</a>
 						</Link>
-					</HStack>
-				</Card>
-			</Container>
-		</>
+					</small>
+				</div>
+			</Card>
+		</div>
 	);
 };
 

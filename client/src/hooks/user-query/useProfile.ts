@@ -1,4 +1,4 @@
-import { createStandaloneToast } from "@chakra-ui/react";
+import toast from 'react-hot-toast';
 import { useQuery } from "react-query";
 import { User } from "src/types/entities/user";
 import { Error } from "src/types/error";
@@ -16,11 +16,7 @@ async function fetchProfile(userid: string) {
 export default function useProfile(userid: string) {
 	return useQuery<User, Error>(["profile", userid], () => fetchProfile(userid), {
 		onError: (err) => {
-			const toast = createStandaloneToast();
-			toast({
-				description: err.status.text,
-				status: err.status.severity
-			});
+			toast(err.status.text);
 		}
 	});
 }

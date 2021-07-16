@@ -1,20 +1,10 @@
 import React, { useState } from "react";
 import PostItem from "../../../components/post/PostItem";
 import TopicHeader from "../../../components/topic/TopicHeader";
-import SkeletonList from "../../../components/utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
-import {
-	Avatar,
-	Box,
-	Button,
-	Flex,
-	HStack,
-	Input,
-	Skeleton,
-} from "@chakra-ui/react";
 import usePosts, { fetchPosts } from "../../../hooks/post-query/usePosts";
 import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
-import Card from "../../../components/utils/Card";
+import { Card } from "../../../ui";
 import Link from "next/link";
 import { useUser } from "../../../context/UserState";
 import { useRouter } from "next/router";
@@ -23,6 +13,9 @@ import { GetServerSideProps } from "next";
 import TopicCard from "src/components/topic/TopicCard";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
+import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
+import { Button } from "src/ui";
+import Avatar from "src/ui/Avatar";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -65,102 +58,90 @@ const TopicPage = () => {
 				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}`} />
 				<meta property="twitter:title" content={`t/${topicData?.title}`} />
 			</Head>
-			{topicData ? (
-				<TopicHeader topic={topicData} />
-			) : (
-				<Skeleton width="100%" height="200px" />
-			)}
-			<Flex px={{ base: "0", sm: "5" }} py="5">
-				<Box width="100%">
-					<Card>
-						<HStack>
+			<TopicHeader topic={topicData!} />
+			<div className="mt-4 container mx-auto max-w-5xl">
+				<div className="flex gap-5">
+					<div className="w-full">
+						<Card className="flex p-2 gap-2">
 							<Link passHref href={user ? `/user/${user.id}` : "/login"}>
-								<Avatar
-									size="sm"
-									as="a"
-
-								/>
+								<a className="h-10 w-10 self-center">
+									<Avatar />
+								</a>
 							</Link>
-							<Link
-								passHref
-								href={topicData ? `/t/${topicData.title}/submit` : "/"}
-							>
-								<Input placeholder="Create post" style={{ width: "100%" }} />
+							<Link passHref href={`/t/${topicData?.title}/submit`}>
+								<a className="w-full">
+									<input placeholder="Create post" className="w-full py-2 px-4 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
+								</a>
 							</Link>
-						</HStack>
-					</Card>
-					<Card>
-						<HStack>
+						</Card>
+						<Card className="flex gap-2 p-3">
 							<Button
-								isActive={sortParam === ""}
+								active={sortParam === ""}
 								onClick={() => {
 									setSortParam("");
 									router.push(`/t/${topicData?.title}/?sort=`, undefined, { shallow: true });
 								}}
 								variant="ghost"
 							>
+								<FireIcon className="h-6 w-6" />
 								Hot
 							</Button>
 							<Button
-								isActive={sortParam === "created_at"}
+								active={sortParam === "created_at"}
 								onClick={() => {
 									setSortParam("created_at");
 									router.push(`/t/${topicData?.title}/?sort=created_at`, undefined, { shallow: true });
 								}}
 								variant="ghost"
 							>
+								<SparklesIcon className="h-6 w-6" />
 								New
 							</Button>
 							<Button
-								isActive={sortParam === "vote"}
+								active={sortParam === "vote"}
 								onClick={() => {
 									setSortParam("vote");
 									router.push(`/t/${topicData?.title}/?sort=vote`, undefined, { shallow: true });
 								}}
 								variant="ghost"
 							>
+								<ChartBarIcon className="h-6 w-6" />
 								Top
 							</Button>
-						</HStack>
-					</Card>
-					{!isLoading && data ? (
-						<InfiniteScroll
-							pageStart={0}
-							loadMore={fetchNextPage as (page: number) => void}
-							hasMore={!isFetching && hasNextPage}
-							loader={<Skeleton height="105px" width="100%" key="skeleton" />}
-						>
-							{data.pages.map((group, i) => (
-								<React.Fragment key={i}>
-									{group.posts.map((post, y) => (
-										<PostItem
-											post={post}
-											key={post.id}
-											borderTopRadius={i === 0 && y === 0 ? "md" : "none"}
-										/>
-									))}
-								</React.Fragment>
-							))}
-						</InfiniteScroll>
-					) : (
-						<SkeletonList />
-					)}
-				</Box>
-				<Flex
-					flexDirection="column"
-					width="312px"
-					ml="5"
-					display={{ base: "none", lg: "block" }}
-				>
-					<Box width="inherit">
-						{topicData ? (
-							<TopicCard topicData={topicData} />
+						</Card>
+						{!isLoading && data ? (
+							<InfiniteScroll
+								pageStart={0}
+								loadMore={fetchNextPage as (page: number) => void}
+								hasMore={!isFetching && hasNextPage}
+								loader={<div>Loading...</div>}
+							>
+								{data.pages.map((group, i) => (
+									<React.Fragment key={i}>
+										{group.posts.map((post, y) => (
+											<PostItem
+												post={post}
+												key={post.id}
+											/>
+										))}
+									</React.Fragment>
+								))}
+							</InfiniteScroll>
 						) : (
-							<Skeleton width="100%" height="300px" borderRadius="md" />
+							<div>Loading...</div>
 						)}
-					</Box>
-				</Flex>
-			</Flex>
+					</div>
+					<div className="flex-col w-80 hidden lg:flex">
+						<div style={{ width: 'inherit' }}>
+							{topicData ? (
+								<TopicCard topicData={topicData} />
+							) : (
+								<div>Loading...</div>
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
 		</>
 	);
 };

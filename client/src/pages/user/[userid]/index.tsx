@@ -1,8 +1,6 @@
 import React from "react";
-import SkeletonCard from "../../../components/utils/SkeletonCard";
-import { Heading, Text, Container } from "@chakra-ui/react";
 import useProfile from "../../../hooks/user-query/useProfile";
-import Card from "../../../components/utils/Card";
+import { Card } from "../../../ui";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -15,10 +13,10 @@ const Profile = () => {
 		data: profile,
 	} = useProfile(userid as string);
 
-	if (isLoading || !profile) return <SkeletonCard />;
+	if (isLoading || !profile) return <div>Loading...</div>;
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>u/{profile.username} - Crappit</title>
 				<meta name="description" content={`u/${profile.username}`} />
@@ -27,13 +25,11 @@ const Profile = () => {
 				<meta property="og:url" content={`https://crappit.me/user${profile.id}`} />
 				<meta property="twitter:title" content={`u/${profile.username} - Crappit`} />
 			</Head>
-			<Container>
-				<Card>
-					<Heading>u/{profile.username}</Heading>
-					<Text>User since {dayjs(profile.created_at).fromNow()}</Text>
-				</Card>
-			</Container>
-		</>
+			<Card className="p-3">
+				<h6>u/{profile.username}</h6>
+				<p>User since {dayjs(profile.created_at).fromNow()}</p>
+			</Card>
+		</div>
 	);
 };
 

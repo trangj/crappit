@@ -1,10 +1,8 @@
 import React from "react";
-import { Container, Divider, Heading } from "@chakra-ui/react";
 import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
 import { useUser } from "../../../context/UserState";
-import Card from "../../../components/utils/Card";
+import { Card } from "../../../ui";
 import UpdateTopic from "../../../components/topic/UpdateTopic";
-import SkeletonCard from "../../../components/utils/SkeletonCard";
 import AddModerator from "../../../components/topic/AddModerator";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
@@ -30,22 +28,24 @@ const Moderation = () => {
 		data: topicData,
 	} = useTopic(topic as string);
 
-	if (topicLoading || !topicData) return <SkeletonCard />;
+	if (topicLoading || !topicData) return <div>Loading...</div>;
 
 	return (
-		<Container>
+		<div className="mt-16 container mx-auto max-w-5xl">
+
 			{topicData.user_moderator_id === user.id ? (
-				<Card>
-					<Heading size="md">Change Settings</Heading>
+				<Card className="p-3" >
+					<h5 >Change Settings</h5>
+					<hr className="my-3 border-gray-500" />
 					<UpdateTopic topic={topicData} />
-					<Divider my="3" />
-					<Heading size="md">Moderators</Heading>
+					<hr className="my-3 border-gray-500" />
+					<h5 >Moderators</h5>
 					<AddModerator topic={topicData} />
 				</Card>
 			) : (
 				<div>You are not a moderator of this topic</div>
 			)}
-		</Container>
+		</div>
 	);
 };
 

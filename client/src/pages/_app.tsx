@@ -1,4 +1,3 @@
-import { ChakraProvider } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -7,12 +6,12 @@ import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import NavigationBar from "src/components/navbar/NavigationBar";
 import { UserProvider } from "src/context/UserState";
-import theme from "../theme";
 import '../styles/globals.css';
 import axios from '../axiosConfig';
 import { User } from "src/types/entities/user";
 import { Hydrate } from 'react-query/hydration';
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -54,16 +53,13 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
             </Head>
             <UserProvider user={user} token={token}>
                 <QueryClientProvider client={queryClient}>
-                    <ChakraProvider theme={theme}>
-                        <NavigationBar />
-                        <div style={{ paddingTop: "57px" }}>
-                            <Hydrate state={pageProps.dehydratedState}>
-                                <Component {...pageProps} />
-                            </Hydrate>
-                        </div>
-                    </ChakraProvider>
+                    <NavigationBar />
+                    <Hydrate state={pageProps.dehydratedState}>
+                        <Component {...pageProps} />
+                    </Hydrate>
                 </ QueryClientProvider>
             </UserProvider>
+            <Toaster position="bottom-center" />
         </>
     );
 }

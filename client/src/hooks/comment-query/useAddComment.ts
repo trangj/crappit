@@ -1,5 +1,5 @@
 import { useQueryClient, useMutation } from "react-query";
-import { createStandaloneToast } from "@chakra-ui/toast";
+import toast from "react-hot-toast";
 import axios from "../../axiosConfig";
 import { Comment } from "src/types/entities/comment";
 import { Error } from "src/types/error";
@@ -24,11 +24,7 @@ export default function useAddComment(id: string, sortParam: string) {
 			queryClient.setQueryData(["comments", id, sortParam], (initialData: any) => [res.comment, ...initialData]);
 		},
 		onError: (err) => {
-			const toast = createStandaloneToast();
-			toast({
-				description: err.status.text,
-				status: err.status.severity,
-			});
+			toast.error(err.status.text);
 		},
 	});
 }

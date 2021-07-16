@@ -1,4 +1,4 @@
-import { createStandaloneToast } from "@chakra-ui/toast";
+import toast from "react-hot-toast";
 import { useMutation } from "react-query";
 import { Comment } from "src/types/entities/comment";
 import axios from "../../axiosConfig";
@@ -22,11 +22,7 @@ export default function useUpdateComment(setOpenEdit: (arg0: boolean) => void, c
 		},
 		onSettled: (data, error) => {
 			const res = data || error;
-			const toast = createStandaloneToast();
-			toast({
-				description: res.status.text,
-				status: res.status.severity,
-			});
+			toast(res.status.text);
 		},
 	});
 }

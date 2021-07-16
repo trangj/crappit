@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
-import FileFieldForm from "../forms/FileFieldForm";
+import TextFieldForm from "../../ui/TextFieldForm";
+import FileFieldForm from "../../ui/FileFieldForm";
 import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 import { Topic } from "src/types/entities/topic";
+import { Button } from "src/ui";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 10485760;
@@ -70,10 +70,11 @@ const UpdateTopic = ({ topic }: Props) => {
 						setFieldValue={setFieldValue}
 					/>
 					<Button
-						mt="2"
 						type="submit"
-						isLoading={isLoading}
-						isDisabled={!!!values.description}
+						loading={isLoading}
+						disabled={!!!values.description}
+						className="mt-3"
+						fullWidth
 					>
 						Update
 					</Button>

@@ -1,15 +1,4 @@
 import React, { useState } from "react";
-import {
-	Box,
-	Text,
-	HStack,
-	Button,
-	Flex,
-	useColorModeValue,
-	Avatar,
-	IconButton
-} from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
@@ -20,6 +9,9 @@ import DeleteCommentModerator from "./DeleteCommentModerator";
 import dayjs from "dayjs";
 import { Comment } from "src/types/entities/comment";
 import { Topic } from "src/types/entities/topic";
+import { Button } from '../../ui';
+import { ArrowsExpandIcon, ChatAltIcon } from "@heroicons/react/outline";
+import Avatar from "src/ui/Avatar";
 
 type Props = {
 	comment: Comment,
@@ -31,49 +23,41 @@ const CommentItem = ({ comment, topic }: Props) => {
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);
-	const color = useColorModeValue("gray.300", "gray.600");
-	const colorHover = useColorModeValue("gray.500", "gray.300");
 
 	return !hideComments ? (
-		<Flex mt="4">
-			<Flex flexDirection="column">
+		<div className="flex mt-4">
+			<div className="flex flex-col">
 				<Link passHref href={`/user/${comment.author_id}`}>
-					<Avatar as="a" size="xs" mb="2" />
+					<a className="h-7 w-7 mb-2">
+						<Avatar />
+					</a>
 				</Link>
-				<Box
-					alignSelf='center'
-					width="0.8rem"
-					cursor="pointer"
+				<div
+					className="self-center w-3.5 cursor-pointer border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-300 h-full"
 					onClick={() => setHideComments(true)}
-					borderRightColor={color}
-					_hover={{ borderRightColor: colorHover }}
-					height="100%"
 				>
-					<Box
-						borderRight="2px"
-						width="7px"
-						height="100%"
-						borderRightColor="inherit"
-					></Box>
-				</Box>
-			</Flex>
-			<Flex align="left" width="100%" flexDirection="column">
-				<Box ml="2">
-					<Text fontSize="xs" mt="0.5">
+					<div className="border-r-2 w-2 h-full" style={{ borderRightColor: 'inherit' }}></div>
+				</div>
+			</div>
+			<div className="flex flex-col w-full">
+				<div className="ml-2">
+					<small>
 						{comment.is_deleted ? (
 							"[deleted]"
 						) : (
-							<Link href={`/user/${comment.author_id}`}>{comment.author}</Link>
+							<Link href={`/user/${comment.author_id}`} passHref><a className="font-medium">{comment.author}</a></Link>
 						)}
-						{" | "}
-						{dayjs(comment.created_at).fromNow()}
-						{comment.is_edited && (
-							<>
-								{" | "}
-								<i>edited {dayjs(comment.updated_at).fromNow()}</i>
-							</>
-						)}
-					</Text>
+						<div className="text-gray-400 dark:text-gray-400 inline">
+							{" "}&bull;{" "}
+							{dayjs(comment.created_at).fromNow()}
+							{comment.is_edited && (
+								<>
+									{" "}&bull;{" "}
+									<i>edited {dayjs(comment.updated_at).fromNow()}</i>
+								</>
+							)}
+						</div>
+					</small>
 					{openEdit ? (
 						<UpdateComment
 							comment={comment}
@@ -82,26 +66,29 @@ const CommentItem = ({ comment, topic }: Props) => {
 						/>
 					) : (
 						<>
-							<Text my="1">{comment.is_deleted ? "[deleted]" : comment.content}</Text>
+							<p>{comment.is_deleted ? "[deleted]" : comment.content}</p>
 							{comment.content ? (
-								<HStack>
+								<div className="flex gap-2 mt-1">
 									<CommentVoting comment={comment} />
 									{user ? (
 										<>
 											<Button
-												size="xs"
 												onClick={() => setOpenReply(!openReply)}
 												variant="ghost"
+												border="rounded"
+												className="text-xs"
 											>
+												<ChatAltIcon className="h-5 w-5 mr-1" />
 												Reply
 											</Button>
 											{user.id === comment.author_id && (
 												<>
 													<DeleteComment comment={comment} />
 													<Button
-														size="xs"
 														onClick={() => setOpenEdit(!openEdit)}
 														variant="ghost"
+														border="rounded"
+														className="text-xs"
 													>
 														Edit
 													</Button>
@@ -116,39 +103,36 @@ const CommentItem = ({ comment, topic }: Props) => {
 									) : (
 										<Link passHref href="/login">
 											<Button
-												size="xs"
-												as="a"
 												variant="ghost"
+												border="rounded"
+												className="text-xs"
+												as="a"
 											>
+												<ChatAltIcon className="h-5 w-5 mr-1" />
 												Reply
 											</Button>
 										</Link>
 									)}
-								</HStack>
+								</div>
 							) : null}
 						</>
 					)}
-				</Box>
+				</div>
 				{openReply && (
-					<Flex>
-						<Box width="24px">
-							<Box
-								borderRight="2px"
-								width="12px"
-								height="100%"
-								borderRightColor={color}
-							></Box>
-						</Box>
-						<Box ml="3" width="100%">
+					<div className="flex">
+						<div className="w-8">
+							<div className="border-r-2 w-3.5 border-gray-300 dark:border-gray-600 h-full"></div>
+						</div>
+						<div className="ml-2 w-full">
 							<AddReply
 								comment={comment}
 								openReply={openReply}
 								setOpenReply={setOpenReply}
 							/>
-						</Box>
-					</Flex>
+						</div>
+					</div>
 				)}
-				<Box width="100%">
+				<div className="w-full">
 					{comment.children
 						? comment.children.map((comment) => (
 							<CommentItem
@@ -158,21 +142,25 @@ const CommentItem = ({ comment, topic }: Props) => {
 							/>
 						))
 						: null}
-				</Box>
-			</Flex>
-		</Flex>
+				</div>
+			</div>
+		</div>
 	) : (
-		<Flex my="3">
-			<IconButton aria-label="expand comments" icon={<AddIcon />} onClick={() => setHideComments(false)} size="xs" variant="ghost" />
-			<Text fontSize="xs" mt="0.5" ml="1">
+		<div className="mt-4 flex gap-3">
+			<Button aria-label="Expand comments" icon={<ArrowsExpandIcon className="h-4 w-4 text-blue-500" />} onClick={() => setHideComments(false)} border="rounded" variant="ghost" />
+			<small className="self-center">
 				{comment.is_deleted ? '[deleted]' :
-					<Link href={`/user/${comment.author_id}`}>
-						{comment.author}
+					<Link href={`/user/${comment.author_id}`} passHref>
+						<a className="font-medium">
+							{comment.author}
+						</a>
 					</Link>
 				}
-				{" | "}{dayjs(comment.created_at).fromNow()}
-			</Text>
-		</Flex>
+				<div className="text-gray-400 dark:text-gray-400 inline">
+					{" "}&bull;{" "}{dayjs(comment.created_at).fromNow()}
+				</div>
+			</small>
+		</div>
 	);
 };
 

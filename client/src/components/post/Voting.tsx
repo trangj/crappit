@@ -1,11 +1,10 @@
 import React from "react";
-import { IconButton, Text, useColorModeValue } from "@chakra-ui/react";
-import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import { useUser } from "../../context/UserState";
-import { VStack } from "@chakra-ui/layout";
 import Link from "next/link";
 import useVoting from "../../hooks/post-query/useVoting";
 import { Post } from "src/types/entities/post";
+import { Button } from "src/ui";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/solid";
 
 type Props = {
 	post: Post;
@@ -14,7 +13,6 @@ type Props = {
 const Voting = ({ post }: Props) => {
 	const { user } = useUser();
 	const { mutate } = useVoting(post);
-	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 
 	const handleUpvote = () => {
 		mutate({ id: post.id, vote: "like" });
@@ -25,66 +23,62 @@ const Voting = ({ post }: Props) => {
 	};
 
 	return (
-		<VStack mr="3" spacing="0">
+		<div className="flex flex-col">
 			{user ? (
-				<IconButton
+				<Button
 					aria-label="Upvote"
 					onClick={handleUpvote}
-					size="xs"
-					icon={<TriangleUpIcon />}
+					icon={<ArrowUpIcon className="w-5 h-5" />}
 					variant="ghost"
-					color={post.user_vote === 1 ? "orange.400" : ""}
-					_hover={{ color: "orange.400", backgroundColor: bg }}
+					border="rounded"
+					className={post.user_vote === 1 ? "bg-white bg-opacity-5 text-upvote" : ""}
 				/>
 			) : (
 				<Link passHref href="/login">
-					<IconButton
-						as="a"
-						aria-label="Downvote"
-						size="xs"
-						icon={<TriangleUpIcon />}
+					<Button
+						aria-label="Upvote"
+						onClick={handleUpvote}
+						icon={<ArrowUpIcon className="w-5 h-5" />}
 						variant="ghost"
-						_hover={{ color: "orange.400", backgroundColor: bg }}
+						border="rounded"
+						as="a"
 					/>
 				</Link>
 			)}
-			<Text
-				color={
-					user
-						? post.user_vote === 1
-							? "orange.400"
-							: post.user_vote === -1
-								? "blue.600"
-								: ""
-						: ""
-				}
-				fontWeight="500"
+			<p className={
+				`mx-0.5 text-xs font-bold self-center ${user
+					? post.user_vote === 1
+						? "text-upvote"
+						: post.user_vote === -1
+							? "text-downvote"
+							: ""
+					: "text-gray-200"}`
+			}
 			>
 				{post.vote}
-			</Text>
+			</p>
 			{user ? (
-				<IconButton
-					aria-label="Downvote"
+				<Button
+					aria-label="Upvote"
 					onClick={handleDownvote}
-					size="xs"
-					icon={<TriangleDownIcon />}
+					icon={<ArrowDownIcon className="w-5 h-5" />}
 					variant="ghost"
-					color={post.user_vote === -1 ? "blue.600" : ""}
-					_hover={{ color: "blue.600", backgroundColor: bg }}
+					border="rounded"
+					className={post.user_vote === -1 ? "bg-white bg-opacity-5 text-downvote" : ""}
 				/>
 			) : (
 				<Link passHref href="/login">
-					<IconButton
-						as="a"
-						aria-label="Downvote"
-						size="xs"
-						icon={<TriangleDownIcon />}
+					<Button
+						aria-label="Upvote"
+						onClick={handleDownvote}
+						icon={<ArrowDownIcon className="w-5 h-5" />}
 						variant="ghost"
-						_hover={{ color: "blue.600", backgroundColor: bg }}
+						border="rounded"
+						as="a"
 					/>
 				</Link>
 			)}
-		</VStack>
+		</div>
 	);
 };
 

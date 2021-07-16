@@ -1,11 +1,10 @@
 import React from "react";
-import { Button, Heading, Divider, Container } from "@chakra-ui/react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../../components/forms/TextFieldForm";
-import FileFieldForm from "../../components/forms/FileFieldForm";
+import TextFieldForm from "../../ui/TextFieldForm";
+import FileFieldForm from "../../ui/FileFieldForm";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
-import Card from "../../components/utils/Card";
+import { Button, Card } from "../../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 
@@ -59,48 +58,47 @@ const AddTopic = () => {
 	const initialValues: FormValues = { title: "", description: "", file: "" };
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>Create Topic</title>
 			</Head>
-			<Container>
-				<Card>
-					<Heading>Create a topic</Heading>
-					<Divider my="3" />
-					<Formik
-						initialValues={initialValues}
-						onSubmit={handleSubmit}
-						validationSchema={schema}
-					>
-						{({ setFieldValue, values }) => (
-							<Form>
-								<Field label="Title" name="title" component={TextFieldForm} />
-								<Field
-									label="Description"
-									name="description"
-									multiline
-									component={TextFieldForm}
-								/>
-								<Field
-									label="File"
-									name="file"
-									component={FileFieldForm}
-									setFieldValue={setFieldValue}
-								/>
-								<Button
-									type="submit"
-									isLoading={isLoading}
-									mt="2"
-									isDisabled={!!!values.title || !!!values.description}
-								>
-									Post
-								</Button>
-							</Form>
-						)}
-					</Formik>
-				</Card>
-			</Container>
-		</>
+			<Card className="p-3 flex flex-col gap-2">
+				<h5>Create a topic</h5>
+				<hr className="border-gray-500" />
+				<Formik
+					initialValues={initialValues}
+					onSubmit={handleSubmit}
+					validationSchema={schema}
+				>
+					{({ setFieldValue, values }) => (
+						<Form>
+							<Field label="Title" name="title" component={TextFieldForm} />
+							<Field
+								label="Description"
+								name="description"
+								multiline
+								component={TextFieldForm}
+							/>
+							<Field
+								label="File"
+								name="file"
+								component={FileFieldForm}
+								setFieldValue={setFieldValue}
+							/>
+							<Button
+								type="submit"
+								loading={isLoading}
+								className="mt-2 w-20 ml-auto"
+								variant="filled"
+								disabled={!!!values.title || !!!values.description}
+							>
+								Post
+							</Button>
+						</Form>
+					)}
+				</Formik>
+			</Card>
+		</div>
 	);
 };
 

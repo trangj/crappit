@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
-import { createStandaloneToast } from "@chakra-ui/toast";
+import toast from "react-hot-toast";
 import { Comment } from "src/types/entities/comment";
 import { Error } from "src/types/error";
 
@@ -24,11 +24,7 @@ export default function useAddReply(setOpenReply: (arg0: boolean) => void, comme
 			setOpenReply(false);
 		},
 		onError: (err) => {
-			const toast = createStandaloneToast();
-			toast({
-				description: err.status.text,
-				status: err.status.severity,
-			});
+			toast.error(err.status.text);
 		},
 	});
 }

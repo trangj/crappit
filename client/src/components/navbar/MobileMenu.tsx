@@ -1,7 +1,6 @@
-import { Flex, Divider, Box, forwardRef } from '@chakra-ui/react';
-import React from 'react';
+import React, { forwardRef, HTMLAttributes } from 'react';
 import { User } from 'src/types/entities/user';
-import Link, { LinkProps } from 'next/link';
+import Link from 'next/link';
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
 
 type Props = {
@@ -10,70 +9,87 @@ type Props = {
     showMenu: (arg: boolean) => void;
 };
 
+const MenuItem = forwardRef<HTMLAnchorElement, HTMLAttributes<HTMLAnchorElement>>(({ children, ...props }, ref) => (
+    <a className="block py-2 px-4 hover:bg-opacity-5 hover:bg-white" ref={ref} {...props}>
+        {children}
+    </a>
+));
+MenuItem.displayName = "MenuItem";
+
 const MobileMenu = ({ user, logoutUser, showMenu }: Props) => {
     const { data, isLoading } = useTopicFollow();
 
-    const MenuItem = forwardRef<LinkProps, 'div'>(({ href, children, ...props }, ref) => (
-        <Link href={href} passHref>
-            <Box as="a" my="2" display="block" ref={ref} {...props} onClick={() => showMenu(false)}>
-                {children}
-            </Box>
-        </Link>
-    ));
 
     return (
-        <Flex flexDirection="column" display={{ sm: 'none' }}>
-            <MenuItem href="/">
-                Home
-            </MenuItem>
-            <MenuItem href="/t">
-                Discover Topics
-            </MenuItem>
-            <MenuItem href={`/submit`}>
-                Create a post
-            </MenuItem>
-            <MenuItem href={`/t/submit`}>
-                Create a topic
-            </MenuItem>
-            {!user ? (
-                <MenuItem href="/register">
-                    Sign up to follow topics!
+        <div className="flex sm:hidden flex-col mt-3 ">
+            <Link href="/" passHref>
+                <MenuItem onClick={() => showMenu(false)}>
+                    Home
                 </MenuItem>
+            </Link>
+            <Link href="/t" passHref>
+                <MenuItem onClick={() => showMenu(false)}>
+                    Discover Topics
+                </MenuItem>
+            </Link>
+            <Link href="/submit" passHref>
+                <MenuItem onClick={() => showMenu(false)}>
+                    Create a post
+                </MenuItem>
+            </Link>
+            <Link href="/t/submit" passHref>
+                <MenuItem onClick={() => showMenu(false)}>
+                    Create a topic
+                </MenuItem>
+            </Link>
+            <hr className="mx-4 my-2 border-gray-500" />
+            {!user ? (
+                <Link href="/register" passHref>
+                    <MenuItem onClick={() => showMenu(false)}>
+                        Sign up to follow topics!
+                    </MenuItem>
+                </Link>
             ) : (
                 !isLoading && data && (data.topics_followed.map((topic, i) => (
-                    <MenuItem href={`/t/${topic.title}`} key={i}>
-                        t/{topic.title}
-                    </MenuItem>
+                    <Link href={`/t/${topic.title}`} passHref key={i}>
+                        <MenuItem onClick={() => showMenu(false)}>
+                            t/{topic.title}
+                        </MenuItem>
+                    </Link>
                 )))
             )}
-            <Divider my="1" />
+            <hr className="mx-4 my-2 border-gray-500" />
             {!user ? (
                 <>
-                    <MenuItem href="/login">
-                        Login
-                    </MenuItem>
-                    <MenuItem href="/register">
-                        Register
-                    </MenuItem>
+                    <Link href="/login" passHref>
+                        <MenuItem onClick={() => showMenu(false)} >
+                            Login
+                        </MenuItem>
+                    </Link>
+                    <Link href="/register" passHref>
+                        <MenuItem onClick={() => showMenu(false)} >
+                            Register
+                        </MenuItem>
+                    </Link>
                 </>
             ) : (
                 <>
-                    <MenuItem href={`/user/${user.id}`}>
-                        {user.username}
-                    </MenuItem>
-                    <MenuItem href={"/settings"}>
-                        Settings
-                    </MenuItem>
-                    <Box
-                        onClick={async () => {
-                            await logoutUser();
-                        }}
-                    >
+                    <Link href={`/user/${user.id}`} passHref>
+                        <MenuItem onClick={() => showMenu(false)} >
+                            {user.username}
+                        </MenuItem>
+                    </Link>
+                    <Link href={"/settings"} passHref>
+                        <MenuItem onClick={() => showMenu(false)} >
+                            Settings
+                        </MenuItem>
+                    </Link>
+                    <MenuItem onClick={async () => await logoutUser()}>
                         Logout
-                    </Box>
+                    </MenuItem>
                 </>
             )}
-        </Flex>
+        </div>
     );
 };
 

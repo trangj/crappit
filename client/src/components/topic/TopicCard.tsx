@@ -1,10 +1,9 @@
-import { Button, Divider, Flex, Heading, Spacer, Text } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import React from 'react';
 import { useUser } from 'src/context/UserState';
 import { Topic } from 'src/types/entities/topic';
-import Card from '../utils/Card';
+import { Button, Card } from '../../ui';
 
 type TopicCardProps = {
     topicData: Topic,
@@ -13,10 +12,9 @@ type TopicCardProps = {
 const TopicCard = ({ topicData }: TopicCardProps) => {
     const { user } = useUser();
     return (
-        <Card>
-            <Flex>
-                <Heading size="md" alignSelf="center">About Community</Heading>
-                <Spacer />
+        <Card className="p-3 flex flex-col gap-2">
+            <div className="flex items-center">
+                <h6 >About Community</h6>
                 {user && topicData.user_moderator_id && (
                     <Link
                         href={`/t/${topicData.title}/moderation`}
@@ -24,23 +22,25 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                     >
                         <Button
                             as="a"
-                            size="sm"
+                            className="ml-auto"
+                            variant="ghost"
+                            border="rounded"
                         >
                             Settings
                         </Button>
                     </Link>
                 )}
-            </Flex>
-            <Text pt="4">{topicData.description}</Text>
-            <Divider pt="2" />
-            <Text pt="2">
+            </div>
+            <p>{topicData.description}</p>
+            <hr className="border-gray-500" />
+            <p>
                 Created {dayjs(topicData.created_at).format("LL")}
-            </Text>
+            </p>
             <Link passHref href={`/t/${topicData.title}/submit`}>
                 <Button
                     as="a"
-                    mt="2"
-                    isFullWidth
+                    variant="filled"
+                    fullWidth
                 >
                     Add Post
                 </Button>

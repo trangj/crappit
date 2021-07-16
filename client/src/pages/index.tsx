@@ -1,20 +1,8 @@
 import React, { useState } from "react";
 import PostItem from "../components/post/PostItem";
-import SkeletonList from "../components/utils/SkeletonList";
 import InfiniteScroll from "react-infinite-scroller";
-import {
-	Button,
-	Flex,
-	Box,
-	Input,
-	HStack,
-	Text,
-	Heading,
-	Avatar,
-	Skeleton,
-} from "@chakra-ui/react";
 import usePosts, { fetchPosts } from "../hooks/post-query/usePosts";
-import Card from "../components/utils/Card";
+import { Card } from "../ui";
 import Link from "next/link";
 import Head from 'next/head';
 import { useUser } from "../context/UserState";
@@ -22,6 +10,9 @@ import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { useRouter } from "next/router";
+import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
+import { Button } from "src/ui";
+import Avatar from "src/ui/Avatar";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -50,7 +41,7 @@ const HomePage = () => {
 	} = usePosts("", sortParam);
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>crappit: the front page of the internet</title>
 				<meta name="description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
@@ -59,103 +50,100 @@ const HomePage = () => {
 				<meta property="og:url" content="https://crappit.me/" />
 				<meta property="twitter:title" content="reddit" />
 			</Head>
-			<Flex px={{ base: "0", sm: "5" }} py="5">
-				<Box width="100%">
-					<Card>
-						<HStack>
-							<Link passHref href={user ? `/user/${user.id}` : "/login"}>
-								<Avatar as="a" size="sm" />
-							</Link>
-							<Link passHref href={`/submit`}>
-								<Input placeholder="Create post" style={{ width: "100%" }} />
-							</Link>
-						</HStack>
+			<div className="flex gap-5">
+				<div className="w-full">
+					<Card className="flex p-2 gap-2">
+						<Link passHref href={user ? `/user/${user.id}` : "/login"}>
+							<a className="h-10 w-10 self-center">
+								<Avatar />
+							</a>
+						</Link>
+						<Link passHref href={`/submit`}>
+							<a className="w-full">
+								<input placeholder="Create post" className="w-full py-2 px-4 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
+							</a>
+						</Link>
 					</Card>
-					<Card>
-						<HStack>
-							<Button
-								isActive={sortParam === ""}
-								onClick={() => {
-									router.push('/?sort=', undefined, { shallow: true });
-									setSortParam("");
-								}}
-								variant="ghost"
-							>
-								Hot
-							</Button>
-							<Button
-								isActive={sortParam === "created_at"}
-								onClick={() => {
-									router.push('/?sort=created_at', undefined, { shallow: true });
-									setSortParam("created_at");
-								}}
-								variant="ghost"
-							>
-								New
-							</Button>
-							<Button
-								isActive={sortParam === "vote"}
-								onClick={() => {
-									router.push('/?sort=vote', undefined, { shallow: true });
-									setSortParam("vote");
-								}}
-								variant="ghost"
-							>
-								Top
-							</Button>
-						</HStack>
+					<Card className="flex gap-2 p-3">
+						<Button
+							onClick={() => {
+								router.push('/?sort=', undefined, { shallow: true });
+								setSortParam("");
+							}}
+							variant="ghost"
+							active={sortParam === ""}
+						>
+							<FireIcon className="h-6 w-6" />
+							Hot
+						</Button>
+						<Button
+							onClick={() => {
+								router.push('/?sort=created_at', undefined, { shallow: true });
+								setSortParam("created_at");
+							}}
+							variant="ghost"
+							active={sortParam === "created_at"}
+						>
+							<SparklesIcon className="h-6 w-6" />
+							New
+						</Button>
+						<Button
+							onClick={() => {
+								router.push('/?sort=vote', undefined, { shallow: true });
+								setSortParam("vote");
+							}}
+							variant="ghost"
+							active={sortParam === "vote"}
+						>
+							<ChartBarIcon className="h-6 w-6" />
+							Top
+						</Button>
 					</Card>
 					{!isLoading && data ? (
 						<InfiniteScroll
 							pageStart={0}
 							loadMore={fetchNextPage as (page: number) => void}
 							hasMore={!isFetching && hasNextPage}
-							loader={<Skeleton height="105px" width="100%" key="skeleton" />}
+							loader={<div>Loading...</div>}
 						>
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>
-									{group.posts.map((post, y) => (
+									{group.posts.map((post) => (
 										<PostItem
 											post={post}
 											key={post.id}
-											borderTopRadius={i === 0 && y === 0 ? "md" : ""}
 										/>
 									))}
 								</React.Fragment>
 							))}
 						</InfiniteScroll>
 					) : (
-						<SkeletonList />
+						<div>Loading...</div>
 					)}
-				</Box>
-				<Flex
-					flexDirection="column"
-					width="312px"
-					ml="5"
-					display={{ base: "none", lg: "block" }}
-				>
-					<Box width="inherit">
-						<Card>
-							<Heading size="md">Home</Heading>
-							<Text>
+				</div>
+				<div className="flex-col w-80 hidden lg:flex">
+					<div style={{ width: 'inherit' }}>
+						<Card className="flex flex-col gap-2 p-3">
+							<h6>Home</h6>
+							<p>
 								Your personal Crappit frontpage. Come here to check in with your
 								favorite topics.
-							</Text>
+							</p>
 							<Link passHref href={`/submit`}>
-								<Button as="a" mt="2" isFullWidth>
+								<Button variant="filled" fullWidth as="a">
 									Create Post
 								</Button>
 							</Link>
 							<Link passHref href={`/t/submit`}>
-								<Button as="a" mt="2" isFullWidth>
+								<Button fullWidth as="a">
 									Create Topic
 								</Button>
 							</Link>
 						</Card>
-					</Box>
-				</Flex>
-			</Flex>
-		</>
+					</div>
+				</div>
+			</div>
+		</div>
 	);
 };
 

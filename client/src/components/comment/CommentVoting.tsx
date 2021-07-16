@@ -1,10 +1,10 @@
 import React from "react";
-import { IconButton, HStack, Text, useColorModeValue } from "@chakra-ui/react";
-import { TriangleUpIcon, TriangleDownIcon } from "@chakra-ui/icons";
 import { useUser } from "../../context/UserState";
 import Link from "next/link";
 import useCommentVoting from "../../hooks/comment-query/useCommentVoting";
 import { Comment } from "src/types/entities/comment";
+import { Button } from "src/ui";
+import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/solid';
 
 type Props = {
 	comment: Comment;
@@ -13,7 +13,6 @@ type Props = {
 const CommentVoting = ({ comment }: Props) => {
 	const { user } = useUser();
 	const { mutate } = useCommentVoting(comment);
-	const bg = useColorModeValue(`gray.100`, `whiteAlpha.200`);
 
 	const handleUpvote = () => {
 		mutate({
@@ -30,65 +29,62 @@ const CommentVoting = ({ comment }: Props) => {
 	};
 
 	return (
-		<HStack>
+		<div className="flex">
 			{user ? (
-				<IconButton
+				<Button
 					aria-label="Upvote"
 					onClick={handleUpvote}
-					size="xs"
-					icon={<TriangleUpIcon />}
+					icon={<ArrowUpIcon className="w-5 h-5" />}
 					variant="ghost"
-					color={comment.user_vote === 1 ? "orange.400" : ""}
-					_hover={{ color: "orange.400", backgroundColor: bg }}
+					border="rounded"
+					className={comment.user_vote === 1 ? "bg-white bg-opacity-5 text-upvote" : ""}
 				/>
 			) : (
 				<Link href="/login" passHref>
-					<IconButton
+					<Button
 						aria-label="Upvote"
-						size="xs"
-						icon={<TriangleUpIcon />}
+						onClick={handleUpvote}
+						icon={<ArrowUpIcon className="w-5 h-5" />}
 						variant="ghost"
-						_hover={{ color: "orange.400", backgroundColor: bg }}
+						border="rounded"
+						as="a"
 					/>
 				</Link>
 			)}
-			<Text
-				color={
-					user
-						? comment.user_vote === 1
-							? "orange.400"
-							: comment.user_vote === -1
-								? "blue.600"
-								: ""
-						: ""
-				}
-				fontWeight="500"
+			<p className={
+				`mx-0.5 text-xs font-bold self-center ${user
+					? comment.user_vote === 1
+						? "text-upvote"
+						: comment.user_vote === -1
+							? "text-downvote"
+							: ""
+					: "text-gray-200"}`
+			}
 			>
 				{comment.vote}
-			</Text>
+			</p>
 			{user ? (
-				<IconButton
-					aria-label="Downvote"
+				<Button
+					aria-label="Upvote"
 					onClick={handleDownvote}
-					size="xs"
-					icon={<TriangleDownIcon />}
+					icon={<ArrowDownIcon className="w-5 h-5" />}
 					variant="ghost"
-					color={comment.user_vote === -1 ? "blue.600" : ""}
-					_hover={{ color: "blue.600", backgroundColor: bg }}
+					border="rounded"
+					className={comment.user_vote === -1 ? "bg-white bg-opacity-5 text-downvote" : ""}
 				/>
 			) : (
 				<Link passHref href="/login">
-					<IconButton
-						aria-label="Downvote"
-						as="a"
-						size="xs"
-						icon={<TriangleDownIcon />}
+					<Button
+						aria-label="Upvote"
+						onClick={handleDownvote}
+						icon={<ArrowDownIcon className="w-5 h-5" />}
 						variant="ghost"
-						_hover={{ color: "blue.600", backgroundColor: bg }}
+						border="rounded"
+						as="a"
 					/>
 				</Link>
 			)}
-		</HStack>
+		</div>
 	);
 };
 

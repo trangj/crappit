@@ -1,4 +1,4 @@
-import { createStandaloneToast } from "@chakra-ui/react";
+import toast from 'react-hot-toast';
 import { useQuery } from "react-query";
 import { Topic } from "src/types/entities/topic";
 import { Error } from "src/types/error";
@@ -16,11 +16,7 @@ async function fetchTopics() {
 export default function useTopics() {
 	return useQuery<Topic[], Error>(["topics"], fetchTopics, {
 		onError: (err) => {
-			const toast = createStandaloneToast();
-			toast({
-				description: err.status.text,
-				status: err.status.severity
-			});
+			toast(err.status.text);
 		}
 	});
 }

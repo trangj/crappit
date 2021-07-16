@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import CommentItem from "./CommentItem";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
+import TextFieldForm from "../../ui/TextFieldForm";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { useUser } from "../../context/UserState";
-import { Box, Button, Divider, Flex, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup, Text } from "@chakra-ui/react";
+import { Listbox } from '@headlessui/react';
 import Link from "next/link";
 import useAddComment from "../../hooks/comment-query/useAddComment";
 import useComments from "../../hooks/comment-query/useComments";
-import Card from "../utils/Card";
+import { Card, Button } from "../../ui";
 import { Post } from "src/types/entities/post";
 import { Topic } from "src/types/entities/topic";
 import { useRouter } from "next/router";
-import { ChatIcon } from "@chakra-ui/icons";
+import { ChatAlt2Icon } from "@heroicons/react/solid";
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -55,12 +55,12 @@ const CommentCard = ({ post, topic }: Props) => {
 	};
 
 	return (
-		<Card id="comments">
+		<Card id="comments" className="p-3">
 			{user ? (
 				<>
-					<Text>
+					<p>
 						Comment as <Link href={`/user/${user.id}`}>{user.username}</Link>
-					</Text>
+					</p>
 					<Formik
 						initialValues={{ content: "" }}
 						onSubmit={handleSubmit}
@@ -76,9 +76,10 @@ const CommentCard = ({ post, topic }: Props) => {
 								/>
 								<Button
 									type="submit"
-									isLoading={isLoading}
-									isDisabled={!!!values.content}
-									mt="2"
+									loading={isLoading}
+									disabled={!!!values.content}
+									variant="filled"
+									className="w-24 my-1"
 								>
 									Comment
 								</Button>
@@ -87,59 +88,72 @@ const CommentCard = ({ post, topic }: Props) => {
 					</Formik>
 				</>
 			) : (
-				<Flex border="1px" borderRadius="md" p="3" my="2" borderColor="gray.600" alignItems="center">
-					<Text color="gray.400" fontWeight="semibold">
+				<div className="flex border rounded p-3 mb-3 border-gray-600 items-center">
+					<p className="font-medium text-gray-500">
 						Log in or sign up to leave a comment
-					</Text>
-					<Flex ml="auto">
-						<Link href="/login" passHref>
-							<Button as="a">
+					</p>
+					<div className="flex gap-2 ml-auto">
+						<Link passHref href="/login">
+							<Button as="a" className="w-24">
 								Login
 							</Button>
 						</Link>
-						<Link href="/register" passHref>
-							<Button as="a" ml="2">
+						<Link passHref href="/register">
+							<Button as="a" variant="filled" className="w-24">
 								Register
 							</Button>
 						</Link>
-					</Flex>
-				</Flex>
+					</div>
+				</div>
 			)}
-			<Menu>
-				<MenuButton mt="2" color="gray.400">
-					<Text fontSize="small" fontWeight="medium">
-						Sort by {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}
-					</Text>
-				</MenuButton>
-				<MenuList>
-					<MenuOptionGroup
-						defaultValue=""
-						type="radio"
-						onChange={val => {
-							setSortParam(val as string);
-							router.push(`/t/${topic.title}/comments/${post.id}?sort=${val}`, undefined, { shallow: true });
-						}}
-						value={sortParam}
+			<Listbox value={sortParam} onChange={setSortParam} as="div" className="relative">
+				<Listbox.Button className="font-medium text-blue-500 text-xs" >Sort by: {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}</Listbox.Button>
+				<Listbox.Options className="cursor-pointer z-10 w-16 font-medium absolute left-0 origin-top-right border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded flex flex-col">
+					<Listbox.Option
+						value=""
+						className="p-2 hover:bg-blue-500 hover:bg-opacity-5"
 					>
-						<MenuItemOption value="">Hot</MenuItemOption>
-						<MenuItemOption value="created_at">New</MenuItemOption>
-						<MenuItemOption value="vote">Top</MenuItemOption>
-					</MenuOptionGroup>
-				</MenuList>
-			</Menu>
-			<Divider pt="3" />
+						{({ selected }) => (
+							<span className={!selected ? 'opacity-50' : ''}>
+								Hot
+							</span>
+						)}
+					</Listbox.Option>
+					<Listbox.Option
+						value="created_at"
+						className="p-2 hover:bg-blue-500 hover:bg-opacity-5"
+					>
+						{({ selected }) => (
+							<span className={!selected ? 'opacity-50' : ''}>
+								New
+							</span>
+						)}
+					</Listbox.Option>
+					<Listbox.Option
+						value="vote"
+						className="p-2 hover:bg-blue-500 hover:bg-opacity-5"
+					>
+						{({ selected }) => (
+							<span className={!selected ? 'opacity-50' : ''}>
+								Top
+							</span>
+						)}
+					</Listbox.Option>
+				</Listbox.Options>
+			</Listbox>
+			<hr className="my-3 border-gray-500" />
 			{comments && (comments.length === 0 ? (
-				<Flex height={250} alignItems="center" justifyContent="center">
-					<Box color="gray.400" textAlign="center">
-						<ChatIcon mb="2" w={6} h={6} />
-						<Text fontWeight="semibold">
+				<div className="flex h-64 items-center justify-center">
+					<div className="text-gray-400 text-center">
+						<ChatAlt2Icon className="w-6 h-6 inline" />
+						<p className="font-semibold">
 							No Comments Yet
-						</Text>
+						</p>
 						<small>
 							Be the first to share what you think!
 						</small>
-					</Box>
-				</Flex>
+					</div>
+				</div>
 			) : (
 				comments.map((comment) => (
 					<CommentItem comment={comment} key={comment.id} topic={topic} />

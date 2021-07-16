@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, Container, Divider, Heading, HStack, useToast } from "@chakra-ui/react";
+import toast from "react-hot-toast";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
+import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
-import Card from "../components/utils/Card";
+import { Button, Card } from "../ui";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
@@ -50,7 +50,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const Register = () => {
 	const { registerUser } = useUser();
-	const toast = useToast();
 	const router = useRouter();
 
 	const handleSubmit = async ({ username, email, password, password2 }: FormValues) => {
@@ -62,28 +61,23 @@ const Register = () => {
 				password2,
 			};
 			const res = await registerUser(user);
-			toast({
-				description: res.data.status.text,
-				status: res.data.status.severity
-			});
+			toast.success(res.data.status.text);
 			router.back();
 		} catch (err) {
-			toast({
-				description: err.response.data.status.text,
-				status: err.response.data.status.severity
-			});
+			toast.error(err.response.data.status.text);
 		}
 	};
 
 	return (
-		<>
+		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>crappit: Join the worldwide conversation</title>
 			</Head>
-			<Container>
-				<Card>
-					<Heading mb="3">Register</Heading>
-					<Divider my="3" />
+			<Card className="flex">
+				<div className="bg-blue-300 w-32" />
+				<div className="flex flex-col p-6 gap-2">
+					<h5>Register</h5>
+					<small>By continuing, you agree to our User Agreement and Privacy Policy.</small>
 					<Formik
 						initialValues={{
 							username: "",
@@ -95,7 +89,7 @@ const Register = () => {
 						validationSchema={schema}
 					>
 						{() => (
-							<Form>
+							<Form className="w-72 flex flex-col">
 								<Field
 									label="Username"
 									name="username"
@@ -119,22 +113,20 @@ const Register = () => {
 									type="password"
 									component={TextFieldForm}
 								/>
-								<Button type="submit" mt="2">
+								<Button type="submit" variant="filled" className="mt-3">
 									Register
 								</Button>
 							</Form>
 						)}
 					</Formik>
-					<HStack my="2">
+					<small className="mt-3">
 						<Link href="/login">
-							<a>
-								<small>Already have an account?</small>
-							</a>
+							<a>Already have an account?</a>
 						</Link>
-					</HStack>
-				</Card>
-			</Container>
-		</>
+					</small>
+				</div>
+			</Card>
+		</div>
 	);
 };
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
-import { Button } from "@chakra-ui/react";
+import TextFieldForm from "../../ui/TextFieldForm";
 import useUpdatePost from "../../hooks/post-query/useUpdatePost";
 import { Post } from "src/types/entities/post";
+import { Button } from "src/ui";
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -44,15 +44,13 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }: Props) => {
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
 						<Button
-							size="sm"
-							mr="2"
 							type="submit"
-							isLoading={isLoading}
-							isDisabled={!!!values.content}
+							loading={isLoading}
+							disabled={!!!values.content}
 						>
 							Update
 						</Button>
-						<Button size="sm" onClick={() => setOpenEdit(false)}>
+						<Button onClick={() => setOpenEdit(false)}>
 							Cancel
 						</Button>
 					</Form>

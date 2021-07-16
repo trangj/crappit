@@ -1,10 +1,10 @@
 import React from "react";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
+import TextFieldForm from "../../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button } from "@chakra-ui/react";
 import useUpdateComment from "../../hooks/comment-query/useUpdateComment";
 import { Comment } from "src/types/entities/comment";
+import { Button } from '../../ui';
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -43,18 +43,20 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }: Props) => {
 				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button
-							type="submit"
-							mr="2"
-							size="sm"
-							isLoading={isLoading}
-							isDisabled={!!!values.content}
-						>
-							Update
-						</Button>
-						<Button size="sm" onClick={() => setOpenEdit(false)}>
-							Cancel
-						</Button>
+						<div className="flex flex-row-reverse gap-2">
+							<Button
+								type="submit"
+								loading={isLoading}
+								disabled={!!!values.content}
+								variant="filled"
+								className="w-24"
+							>
+								Update
+							</Button>
+							<Button className="w-24" onClick={() => setOpenEdit(false)}>
+								Cancel
+							</Button>
+						</div>
 					</Form>
 				)}
 			</Formik>

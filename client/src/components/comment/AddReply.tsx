@@ -1,10 +1,10 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../forms/TextFieldForm";
-import { Button } from "@chakra-ui/react";
+import TextFieldForm from "../../ui/TextFieldForm";
 import useAddReply from "../../hooks/comment-query/useAddReply";
 import { Comment } from "src/types/entities/comment";
+import { Button } from '../../ui';
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -44,18 +44,20 @@ const AddReply = ({ comment, openReply, setOpenReply }: Props) => {
 				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button
-							type="submit"
-							mr="2"
-							size="sm"
-							isLoading={isLoading}
-							isDisabled={!!!values.content}
-						>
-							Reply
-						</Button>
-						<Button size="sm" onClick={() => setOpenReply(false)}>
-							Cancel
-						</Button>
+						<div className="flex flex-row-reverse gap-2">
+							<Button
+								type="submit"
+								loading={isLoading}
+								disabled={!!!values.content}
+								variant="filled"
+								className="w-24"
+							>
+								Reply
+							</Button>
+							<Button className="w-24" onClick={() => setOpenReply(false)}>
+								Cancel
+							</Button>
+						</div>
 					</Form>
 				)}
 			</Formik>

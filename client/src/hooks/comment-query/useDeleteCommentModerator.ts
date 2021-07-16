@@ -1,7 +1,7 @@
 import { useMutation } from "react-query";
 import axios from "../../axiosConfig";
 import { useQueryClient } from "react-query";
-import { createStandaloneToast } from "@chakra-ui/toast";
+import toast from "react-hot-toast";
 import { Comment } from "src/types/entities/comment";
 
 async function deleteCommentModerator({ commentId }: { commentId: number; }) {
@@ -22,11 +22,7 @@ export default function useDeleteCommentModerator(comment: Comment, setOpen: (ar
 		},
 		onSettled: (data, error) => {
 			const res = data || error;
-			const toast = createStandaloneToast();
-			toast({
-				description: res.status.text,
-				status: res.status.severity,
-			});
+			toast(res.status.text);
 		},
 	});
 }

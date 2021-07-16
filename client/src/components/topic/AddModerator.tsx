@@ -1,10 +1,10 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
-import TextFieldForm from "../forms/TextFieldForm";
+import TextFieldForm from "../../ui/TextFieldForm";
 import * as yup from "yup";
 import useAddModerator from "../../hooks/topic-query/useAddModerator";
-import { Button } from "@chakra-ui/button";
 import { Topic } from "src/types/entities/topic";
+import { Button } from "src/ui";
 
 const schema = yup.object({
 	username: yup.string().required(""),
@@ -44,9 +44,10 @@ const AddModerator = ({ topic }: Props) => {
 
 					<Button
 						type="submit"
-						isLoading={isLoading}
-						mt="2"
-						isDisabled={!!!values.username}
+						loading={isLoading}
+						disabled={!!!values.username}
+						className="mt-3"
+						fullWidth
 					>
 						Add Moderator
 					</Button>

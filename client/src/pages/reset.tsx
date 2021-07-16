@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import * as yup from "yup";
-import TextFieldForm from "../components/forms/TextFieldForm";
+import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
-import { Button, Container, Divider, Heading, useToast } from "@chakra-ui/react";
+import toast from "react-hot-toast";
 import axios from "../axiosConfig";
-import Card from "../components/utils/Card";
+import { Button, Card } from "../ui";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { useUser } from "../context/UserState";
@@ -45,21 +45,17 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const Forgot = ({ status }: any) => {
 	const router = useRouter();
-	const toast = useToast();
 	const { setUser, setToken } = useUser();
 	const { token } = router.query;
 
 	useEffect(() => {
 		if (status) {
-			toast({
-				status: status.status.severity,
-				description: status.status.text
-			});
+			toast.success(status.status.text);
 			if (status.status.severity === 'error') {
 				router.push('/');
 			}
 		}
-	}, [status]);
+	}, [status, router]);
 
 	const handleSubmit = async ({ password, password2 }: FormValues) => {
 		try {
@@ -67,26 +63,20 @@ const Forgot = ({ status }: any) => {
 				password,
 				password2,
 			});
-			toast({
-				status: res.data.status.severity,
-				description: res.data.status.text
-			});
+			toast.success(res.data.status.text);
 			setUser(null);
 			setToken("");
 			router.push("/login");
 		} catch (err) {
-			toast({
-				status: err.response.data.status.severity,
-				description: err.response.data.status.text
-			});
+			toast.error(err.response.data.status.text);
 		}
 	};
 
 	return (
-		<Container>
-			<Card>
-				<Heading mb="3">Forgot</Heading>
-				<Divider my="3" />
+		<div className="mt-16 container mx-auto max-w-5xl">
+			<Card className="p-3 flex flex-col gap-2">
+				<h5>Forgot</h5>
+				<hr className="border-gray-500" />
 				<Formik
 					initialValues={{ password: "", password2: "" }}
 					onSubmit={handleSubmit}
@@ -106,14 +96,14 @@ const Forgot = ({ status }: any) => {
 								type="password"
 								component={TextFieldForm}
 							/>
-							<Button type="submit" mt="2">
+							<Button type="submit" variant="filled" className="ml-auto mt-3 px-3">
 								Change Password
 							</Button>
 						</Form>
 					)}
 				</Formik>
 			</Card>
-		</Container>
+		</div>
 	);
 };
 
