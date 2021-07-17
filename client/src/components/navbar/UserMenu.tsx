@@ -20,7 +20,7 @@ type NextLinkProps = {
 const NextLink = ({ href, children, ...props }: NextLinkProps) => {
 	return (
 		<Link href={href} passHref>
-			<a {...props} className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2">
+			<a {...props} className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6">
 				{children}
 			</a>
 		</Link>
@@ -49,14 +49,14 @@ const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 						<Menu.Item
 							as="div"
 							onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-							className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 cursor-pointer"
+							className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6 cursor-pointer"
 						>
 							Dark Mode
 						</Menu.Item>
 						<Menu.Item
 							onClick={async () => await logoutUser()}
 							as="div"
-							className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 cursor-pointer"
+							className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6 cursor-pointer"
 						>
 							Logout
 						</Menu.Item>

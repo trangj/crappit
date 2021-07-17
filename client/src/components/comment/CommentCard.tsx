@@ -59,9 +59,9 @@ const CommentCard = ({ post, topic }: Props) => {
 			<div className="mx-6">
 				{user ? (
 					<>
-						<p>
+						<small>
 							Comment as <Link href={`/user/${user.id}`}><a className="hover:underline text-blue-500 dark:text-blue-400">{user.username}</a></Link>
-						</p>
+						</small>
 						<Formik
 							initialValues={{ content: "" }}
 							onSubmit={handleSubmit}

@@ -51,6 +51,7 @@ const NavigationBar = () => {
 						variant="ghost"
 						border="rounded"
 						icon={<MenuIcon className="w-8 h-8" />}
+						active={menu}
 					/>
 				</div>
 				{menu && (

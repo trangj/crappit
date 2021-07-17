@@ -4,6 +4,7 @@ import Link from "next/link";
 import { User } from "src/types/entities/user";
 import useTopicFollow from '../../hooks/topic-query/useTopicFollow';
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import { Divider } from "src/ui";
 
 type Props = {
 	user: User | null;
@@ -17,7 +18,7 @@ type NextLinkProps = {
 const NextLink = ({ href, children, ...props }: NextLinkProps) => {
 	return (
 		<Link href={href} passHref>
-			<a {...props} className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2">
+			<a {...props} className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6">
 				{children}
 			</a>
 		</Link>
@@ -49,6 +50,7 @@ const BrowseMenu = ({ user }: Props) => {
 						<Menu.Item as={NextLink} href="/t/submit">
 							Create a topic
 						</Menu.Item>
+						<Divider className="my-2" />
 						{!user ? (
 							<Menu.Item as={NextLink} href="/register">
 								Sign up to follow topics!

@@ -74,6 +74,7 @@ const UpdateTopic = ({ topic }: Props) => {
 						loading={isLoading}
 						disabled={!!!values.description}
 						className="mt-3"
+						variant='filled'
 						fullWidth
 					>
 						Update

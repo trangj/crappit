@@ -47,6 +47,7 @@ const AddModerator = ({ topic }: Props) => {
 						loading={isLoading}
 						disabled={!!!values.username}
 						className="mt-3"
+						variant="filled"
 						fullWidth
 					>
 						Add Moderator

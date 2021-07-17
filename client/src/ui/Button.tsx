@@ -41,11 +41,11 @@ export const Button = React.forwardRef(({
 
     const variantOptions = {
         outline:
-            `border border-blue-500 text-blue-500 dark:border-gray-200 dark:text-gray-200 active:bg-opacity-20 dark:active:bg-opacity-20 ${active ? 'dark:bg-white bg-blue-500 bg-opacity-5 dark:bg-opacity-5' : 'hover:bg-blue-500 hover:bg-opacity-10 dark:hover:bg-white dark:hover:bg-opacity-10'}`,
+            `button-outline ${active ? 'dark:bg-white bg-blue-500 bg-opacity-5 dark:bg-opacity-5' : ''}`,
         filled:
-            `bg-blue-500 dark:bg-gray-200 text-white dark:text-black active:bg-opacity-80 dark:active:bg-opacity-80 ${active ? 'bg-opacity-95 dark:bg-opacity-95' : 'hover:bg-opacity-90 dark:hover:bg-opacity-90'}`,
+            `button-filled ${active ? 'bg-opacity-95 dark:bg-opacity-95' : ''}`,
         ghost:
-            `dark:hover:bg-white dark:hover:bg-opacity-10 hover:bg-black hover:bg-opacity-10 active:bg-opacity-20 dark:active:bg-opacity-20 ${active ? 'dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5 text-blue-500 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400'}`
+            `button-ghost ${active ? 'dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5 text-blue-500 dark:text-gray-200' : ''}`
     };
 
     const sizeOptions = {
@@ -57,7 +57,7 @@ export const Button = React.forwardRef(({
     return (
         <Component
             disabled={disabled || loading}
-            className={`flex font-medium items-center justify-center ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${fullWidth ? 'w-full block' : ''} ${className}`}
+            className={`button ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${fullWidth ? 'w-full' : ''} ${className}`}
             {...props}
             ref={ref}
         >
