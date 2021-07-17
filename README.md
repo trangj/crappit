@@ -5,7 +5,8 @@ A less good version of Reddit developed using Node.js, React, PostgreSQL, and Ty
 You can play around with a live build of this app [here](https://crappit.me/)
 
 ## Screenshot
-![s1](https://i.imgur.com/DbZrxJK.png)
+![light theme](https://i.imgur.com/E6L34Ij.png)
+![dark theme](https://i.imgur.com/dUlCwMn.png)
 
 ## Current Features
 
