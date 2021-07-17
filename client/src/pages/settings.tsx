@@ -60,7 +60,7 @@ const Settings = () => {
 				<h6>
 					Change password
 				</h6>
-				<Button onClick={() => handlePassword(user.email)}>
+				<Button onClick={() => handlePassword(user.email)} variant="filled">
 					Request Password Change
 				</Button>
 				<Divider className="my-3" />
@@ -83,7 +83,7 @@ const Settings = () => {
 						required
 						className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
 					/>
-					<Button type="submit" fullWidth className="mt-2">
+					<Button type="submit" fullWidth className="mt-2" variant="filled">
 						Change Email
 					</Button>
 				</form>

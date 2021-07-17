@@ -5,33 +5,13 @@ import React, {
 } from "react";
 import { Spinner } from "./Spinner";
 
-const borderOptions = {
-    "rounded-full": "rounded-full",
-    "rounded": "rounded"
-};
-
-const variantOptions = {
-    outline:
-        "border border-blue-500 text-blue-500 hover:bg-blue-500 hover:bg-opacity-5 dark:border-gray-200 dark:text-gray-200 dark:hover:bg-white dark:hover:bg-opacity-5",
-    filled:
-        "bg-blue-500 hover:bg-blue-400 dark:bg-gray-200 dark:hover:bg-gray-300 text-white dark:text-black",
-    ghost:
-        "text-gray-500 dark:text-gray-400 dark:hover:bg-white dark:hover:bg-opacity-5 hover:bg-black hover:bg-opacity-5"
-};
-
-const sizeOptions = {
-    sm: "p-0",
-    md: 'p-1',
-    lg: 'p-2'
-};
-
 export type ButtonProps = DetailedHTMLProps<
     ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
 > & {
-    variant?: keyof typeof variantOptions;
-    border?: keyof typeof borderOptions;
-    size?: keyof typeof sizeOptions;
+    variant?: "outline" | "filled" | "ghost";
+    border?: "rounded" | "rounded-full";
+    size?: "sm" | "md" | "lg";
     loading?: boolean;
     active?: boolean;
     icon?: ReactNode;
@@ -53,10 +33,31 @@ export const Button = React.forwardRef(({
     fullWidth,
     ...props
 }: ButtonProps, ref) => {
+
+    const borderOptions = {
+        "rounded-full": "rounded-full px-2",
+        "rounded": "rounded"
+    };
+
+    const variantOptions = {
+        outline:
+            `border border-blue-500 text-blue-500 dark:border-gray-200 dark:text-gray-200 active:bg-opacity-20 dark:active:bg-opacity-20 ${active ? 'dark:bg-white bg-blue-500 bg-opacity-5 dark:bg-opacity-5' : 'hover:bg-blue-500 hover:bg-opacity-10 dark:hover:bg-white dark:hover:bg-opacity-10'}`,
+        filled:
+            `bg-blue-500 dark:bg-gray-200 text-white dark:text-black active:bg-opacity-80 dark:active:bg-opacity-80 ${active ? 'bg-opacity-95 dark:bg-opacity-95' : 'hover:bg-opacity-90 dark:hover:bg-opacity-90'}`,
+        ghost:
+            `dark:hover:bg-white dark:hover:bg-opacity-10 hover:bg-black hover:bg-opacity-10 active:bg-opacity-20 dark:active:bg-opacity-20 ${active ? 'dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5 text-blue-500 dark:text-gray-200' : 'text-gray-500 dark:text-gray-400'}`
+    };
+
+    const sizeOptions = {
+        sm: "p-0",
+        md: 'p-1',
+        lg: 'p-2'
+    };
+
     return (
         <Component
             disabled={disabled || loading}
-            className={`flex font-medium items-center justify-center ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${active ? 'dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : ''} ${fullWidth ? 'w-full block' : ''} ${className}`}
+            className={`flex font-medium items-center justify-center ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${fullWidth ? 'w-full block' : ''} ${className}`}
             {...props}
             ref={ref}
         >

@@ -72,8 +72,8 @@ const HomePage = () => {
 							}}
 							variant="ghost"
 							active={sortParam === ""}
+							icon={<FireIcon className="h-6 w-6 mr-1" />}
 						>
-							<FireIcon className="h-6 w-6" />
 							Hot
 						</Button>
 						<Button
@@ -83,8 +83,8 @@ const HomePage = () => {
 							}}
 							variant="ghost"
 							active={sortParam === "created_at"}
+							icon={<SparklesIcon className="h-6 w-6 mr-1" />}
 						>
-							<SparklesIcon className="h-6 w-6" />
 							New
 						</Button>
 						<Button
@@ -94,8 +94,8 @@ const HomePage = () => {
 							}}
 							variant="ghost"
 							active={sortParam === "vote"}
+							icon={<ChartBarIcon className="h-6 w-6 mr-1" />}
 						>
-							<ChartBarIcon className="h-6 w-6" />
 							Top
 						</Button>
 					</Card>

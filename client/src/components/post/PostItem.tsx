@@ -14,7 +14,7 @@ type Props = {
 const PostItem = ({ post, ...props }: Props) => {
 	return (
 		<LinkCard {...props} className="flex">
-			<div className="pb-auto p-1 dark:bg-gray-900 bg-gray-100">
+			<div className="pb-auto p-1 dark:bg-gray-900 bg-gray-50">
 				<Voting post={post} />
 			</div>
 			<div className="flex flex-col w-full">

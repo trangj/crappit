@@ -43,16 +43,18 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }: Props) => {
 				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<Button
-							type="submit"
-							loading={isLoading}
-							disabled={!!!values.content}
-						>
-							Update
-						</Button>
-						<Button onClick={() => setOpenEdit(false)}>
-							Cancel
-						</Button>
+						<div className="flex justify-end gap-2">
+							<Button onClick={() => setOpenEdit(false)}>
+								Cancel
+							</Button>
+							<Button
+								type="submit"
+								loading={isLoading}
+								disabled={!!!values.content}
+							>
+								Update
+							</Button>
+						</div>
 					</Form>
 				)}
 			</Formik>

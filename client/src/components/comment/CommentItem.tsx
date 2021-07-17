@@ -39,7 +39,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 					</Link>
 				)}
 				<div
-					className="self-center w-3.5 cursor-pointer border-gray-300 dark:border-gray-600 hover:border-gray-500 dark:hover:border-gray-300 h-full"
+					className="self-center w-3.5 cursor-pointer border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-300 h-full"
 					onClick={() => setHideComments(true)}
 				>
 					<div className="border-r-2 w-2 h-full" style={{ borderRightColor: 'inherit' }}></div>
@@ -127,7 +127,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 				{openReply && (
 					<div className="flex">
 						<div className="w-8">
-							<div className="border-r-2 w-3.5 border-gray-300 dark:border-gray-600 h-full"></div>
+							<div className="border-r-2 w-3.5 border-gray-200 dark:border-gray-700 h-full"></div>
 						</div>
 						<div className="ml-2 w-full">
 							<AddReply

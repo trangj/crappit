@@ -70,7 +70,7 @@ const TopicPage = () => {
 							</Link>
 							<Link passHref href={`/t/${topicData?.title}/submit`}>
 								<a className="w-full">
-									<input placeholder="Create post" className="w-full py-2 px-4 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
+									<input placeholder="Create post" className="w-full py-2 px-4 bg-gray-100 hover:bg-white hover:border-blue-500 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
 								</a>
 							</Link>
 						</Card>
@@ -82,8 +82,8 @@ const TopicPage = () => {
 									router.push(`/t/${topicData?.title}/?sort=`, undefined, { shallow: true });
 								}}
 								variant="ghost"
+								icon={<FireIcon className="h-6 w-6 mr-1" />}
 							>
-								<FireIcon className="h-6 w-6" />
 								Hot
 							</Button>
 							<Button
@@ -93,8 +93,8 @@ const TopicPage = () => {
 									router.push(`/t/${topicData?.title}/?sort=created_at`, undefined, { shallow: true });
 								}}
 								variant="ghost"
+								icon={<SparklesIcon className="h-6 w-6 mr-1" />}
 							>
-								<SparklesIcon className="h-6 w-6" />
 								New
 							</Button>
 							<Button
@@ -104,8 +104,8 @@ const TopicPage = () => {
 									router.push(`/t/${topicData?.title}/?sort=vote`, undefined, { shallow: true });
 								}}
 								variant="ghost"
+								icon={<ChartBarIcon className="h-6 w-6 mr-1" />}
 							>
-								<ChartBarIcon className="h-6 w-6" />
 								Top
 							</Button>
 						</Card>

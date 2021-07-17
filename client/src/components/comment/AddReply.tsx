@@ -44,7 +44,10 @@ const AddReply = ({ comment, openReply, setOpenReply }: Props) => {
 				{({ values }) => (
 					<Form>
 						<Field name="content" multiline component={TextFieldForm} />
-						<div className="flex flex-row-reverse gap-2">
+						<div className="flex justify-end gap-2">
+							<Button className="w-24" onClick={() => setOpenReply(false)}>
+								Cancel
+							</Button>
 							<Button
 								type="submit"
 								loading={isLoading}
@@ -53,9 +56,6 @@ const AddReply = ({ comment, openReply, setOpenReply }: Props) => {
 								className="w-24"
 							>
 								Reply
-							</Button>
-							<Button className="w-24" onClick={() => setOpenReply(false)}>
-								Cancel
 							</Button>
 						</div>
 					</Form>

@@ -58,7 +58,7 @@ const CommentVoting = ({ comment }: Props) => {
 						: comment.user_vote === -1
 							? "text-downvote"
 							: ""
-					: "text-gray-200"}`
+					: ""}`
 			}
 			>
 				{comment.vote}
