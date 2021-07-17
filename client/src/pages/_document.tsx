@@ -4,7 +4,10 @@ export default class Document extends NextDocument {
         return (
             <Html lang="en">
                 <Head>
-                    <script type="text/javascript" src="/theme.js" />
+                    <script dangerouslySetInnerHTML={{
+                        __html:
+                            `!function(){var e=window.localStorage.getItem("theme"),t=window.document.documentElement;e?t.classList.add(e):(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")&&t.classList.add(e)}();`
+                    }} />
                 </Head>
                 <body>
                     <Main />
