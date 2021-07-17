@@ -34,7 +34,7 @@ const DeleteComment = ({ comment }: Props) => {
 						<Dialog.Description>
 							Are you sure you want to delete your comment? You can&apos;t undo this.
 						</Dialog.Description>
-						<div className="flex float-right gap-2">
+						<div className="flex justify-end gap-2">
 							<Button onClick={() => setOpen(false)} ref={cancelRef}>
 								Cancel
 							</Button>

@@ -34,7 +34,7 @@ const DeletePost = ({ post }: Props) => {
 						<Dialog.Description>
 							Are you sure you want to delete your post? You can&apos;t undo this.
 						</Dialog.Description>
-						<div className="flex float-right gap-2">
+						<div className="flex justify-end gap-2">
 							<Button onClick={() => setOpen(false)} className="w-20" ref={cancelRef}>
 								Cancel
 							</Button>

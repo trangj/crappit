@@ -66,7 +66,7 @@ export const Button = React.forwardRef(({
             </span>
             {loading ? (
                 <span className="absolute">
-                    <Spinner size={"4"} />
+                    <Spinner />
                 </span>
             ) : null}
         </Component>
