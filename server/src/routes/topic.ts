@@ -34,7 +34,7 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 // @desc    Create a topic
 // @access  Private
 
-router.post("/", auth, upload.single("file"), async (req, res) => {
+router.post("/", auth, upload, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user was found with that id");
@@ -96,7 +96,7 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 // @desc    Update a topic
 // @access  Private
 
-router.put("/:topic", auth, upload.single("file"), async (req, res) => {
+router.put("/:topic", auth, upload, async (req, res) => {
 	try {
 		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
 		if (!topic) throw Error("Could not update topic");

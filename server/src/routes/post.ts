@@ -37,7 +37,7 @@ router.get("/:id", optionalAuth, async (req, res) => {
 // @desc    Create post
 // @access  Private
 
-router.post("/", auth, upload.single("file"), async (req, res) => {
+router.post("/", auth, upload, async (req, res) => {
 	try {
 		const topic = await Topic.findOne({ title: req.body.topic });
 		if (!topic) throw Error("No topic exists");
