@@ -8,6 +8,15 @@ export default class Document extends NextDocument {
                         __html:
                             `!function(){var e=window.localStorage.getItem("theme"),t=window.document.documentElement;e?t.classList.add(e):(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")&&t.classList.add(e)}();`
                     }} />
+                    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+                    <link rel="apple-touch-icon" href="/img/logo.png" />
+                    <link rel="apple-touch-startup-image" href="/img/logo512.png" />
+                    <meta name="theme-color" content="#ffffff" />
+                    <meta property="og:site_name" content="crappit" />
+                    <meta property="og:image" content="https://crappit.me/img/logo.png" />
+                    <meta property="twitter:site" content="@crappit" />
+                    <meta property="twitter:card" content="summary" />
+                    <meta property="twitter:image" content="https://crappit.me/img/logo.png" />
                 </Head>
                 <body>
                     <Main />

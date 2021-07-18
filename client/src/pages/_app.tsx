@@ -10,7 +10,6 @@ import '../styles/globals.css';
 import axios from '../axiosConfig';
 import { User } from "src/types/entities/user";
 import { Hydrate } from 'react-query/hydration';
-import Head from "next/head";
 import { Toaster } from "react-hot-toast";
 
 dayjs.extend(relativeTime);
@@ -45,12 +44,6 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
 
     return (
         <>
-            <Head>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                <meta property="og:site_name" content="crappit" />
-                <meta property="twitter:site" content="@crappit" />
-                <meta property="twitter:card" content="summary" />
-            </Head>
             <UserProvider user={user} token={token}>
                 <QueryClientProvider client={queryClient}>
                     <NavigationBar />
