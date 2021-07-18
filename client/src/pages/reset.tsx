@@ -8,6 +8,7 @@ import { Button, Card, Divider } from "../ui";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { useUser } from "../context/UserState";
+import Head from "next/head";
 
 const schema = yup.object({
 	password: yup
@@ -74,6 +75,9 @@ const Forgot = ({ status }: any) => {
 
 	return (
 		<div className="mt-16 container mx-auto max-w-5xl">
+			<Head>
+				<title>crappit: Reset password</title>
+			</Head>
 			<Card className="p-3 flex flex-col gap-2">
 				<h5>Forgot</h5>
 				<Divider />

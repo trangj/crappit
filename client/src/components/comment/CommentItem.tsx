@@ -83,8 +83,8 @@ const CommentItem = ({ comment, topic }: Props) => {
 												variant="ghost"
 												border="rounded"
 												className="text-xs"
+												icon={<ChatAltIcon className="h-5 w-5 mr-1" />}
 											>
-												<ChatAltIcon className="h-5 w-5 mr-1" />
 												Reply
 											</Button>
 											{user.id === comment.author_id && (

@@ -12,7 +12,8 @@ const AllTopics = () => {
 	return (
 		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
-				<title>All Topics</title>
+				<title>Discover Topics</title>
+				<meta name="description" content="View today's top growing Reddit communities. Filter by category to view top communities in sports, gaming, television and more." />
 			</Head>
 			{topics.map((topic) => (
 				<LinkCard key={topic.title} className="p-2">

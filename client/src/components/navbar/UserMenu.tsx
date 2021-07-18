@@ -35,11 +35,9 @@ const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 					<Menu.Button className={`flex text-xs gap-2 items-center border-transparent hover:border-gray-200 dark:hover:border-gray-700 text-left px-3 rounded border w-56 h-10 font-medium ${open ? 'border-gray-200 dark:border-gray-700 rounded-b-none' : ''}`}>
 						<Avatar className="h-6 w-6" />
 						{user.username}
-						<div className="h-4 w-4 ml-auto">
-							<ChevronDownIcon />
-						</div>
+						<ChevronDownIcon className="h-4 w-4 ml-auto" />
 					</Menu.Button>
-					<Menu.Items className="absolute left-0 w-56 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
+					<Menu.Items className="absolute left-0 w-56 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 pb-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
 						<Menu.Item as={NextLink} href={`/user/${user.id}`}>
 							Profile
 						</Menu.Item>

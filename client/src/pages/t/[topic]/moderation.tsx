@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
+import Head from "next/head";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const queryClient = new QueryClient();
@@ -32,7 +33,9 @@ const Moderation = () => {
 
 	return (
 		<div className="mt-16 container mx-auto max-w-5xl">
-
+			<Head>
+				<title>{topicData.title}</title>
+			</Head>
 			{topicData.user_moderator_id === user.id ? (
 				<Card className="p-3 flex flex-col gap-3" >
 					<h5 >Change Settings</h5>

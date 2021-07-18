@@ -23,7 +23,6 @@ const Profile = () => {
 				<meta property="og:title" content={`u/${profile.username} - Crappit`} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content={`https://crappit.me/user${profile.id}`} />
-				<meta property="twitter:title" content={`u/${profile.username} - Crappit`} />
 			</Head>
 			<Card className="p-3">
 				<h6>u/{profile.username}</h6>

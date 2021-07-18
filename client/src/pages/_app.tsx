@@ -10,7 +10,8 @@ import '../styles/globals.css';
 import axios from '../axiosConfig';
 import { User } from "src/types/entities/user";
 import { Hydrate } from 'react-query/hydration';
-import { Toaster } from "react-hot-toast";
+import { ToastBar, Toaster } from "react-hot-toast";
+import Head from "next/head";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -44,6 +45,9 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
 
     return (
         <>
+            <Head>
+                <meta property="og:image" content="https://crappit.me/img/logo.png" key="default" />
+            </Head>
             <UserProvider user={user} token={token}>
                 <QueryClientProvider client={queryClient}>
                     <NavigationBar />
@@ -52,7 +56,18 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
                     </Hydrate>
                 </ QueryClientProvider>
             </UserProvider>
-            <Toaster position="bottom-center" toastOptions={{ className: "bg-white border-gray-500 dark:bg-gray-850 dark:border-gray-500 dark:text-gray-200 border w-80" }} />
+            <Toaster position="bottom-center" toastOptions={{ className: "bg-white border-gray-500 dark:bg-gray-850 dark:border-gray-500 dark:text-gray-200 border w-80 justify-start", duration: 5000 }}>
+                {(t) => (
+                    <ToastBar toast={t}>
+                        {({ icon, message }) => (
+                            <>
+                                {icon}
+                                <div>{message}</div>
+                            </>
+                        )}
+                    </ToastBar>
+                )}
+            </Toaster>
         </>
     );
 }

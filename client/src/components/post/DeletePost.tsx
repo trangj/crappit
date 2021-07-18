@@ -3,6 +3,7 @@ import { Dialog } from '@headlessui/react';
 import useDeletePost from "../../hooks/post-query/useDeletePost";
 import { Post } from "src/types/entities/post";
 import { Button } from "src/ui";
+import { TrashIcon } from "@heroicons/react/outline";
 
 type Props = {
 	post: Post;
@@ -15,7 +16,7 @@ const DeletePost = ({ post }: Props) => {
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)} variant="ghost" border="rounded" className="text-xs">
+			<Button onClick={() => setOpen(true)} variant="ghost" border="rounded" className="text-xs" icon={<TrashIcon className="h-5 w-5 mr-1" />}>
 				Delete
 			</Button>
 			<Dialog

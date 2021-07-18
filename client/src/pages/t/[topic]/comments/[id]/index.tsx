@@ -37,15 +37,21 @@ const PostPage = () => {
 
 	if (!data || !topicData) return <div>Loading...</div>;
 
+	const description = `${data.vote} votes, ${data.number_of_comments} comments. ${data.type === PostType.TEXT ? data.content.slice(0, 155) + ' ...' : topicData.description.slice(0, 155)}`;
+	const title = `${data.title} : ${data.topic}`;
+	const url = `https://crappit.me/t/${topicData?.title}/comments/${data.id}`;
+	const image = `https://crappit.imgix.net/${data.image_name}`;
+
 	return (
 		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
-				<title>{data.title} : {data.topic}</title>
-				<meta name="description" content={`${data.vote} votes, ${data.number_of_comments} comments. ${data.type === PostType.TEXT ? data.content.slice(0, 155) + ' ...' : topicData.description.slice(0, 155)}`} />
-				<meta property="og:title" content={`${data.title} : ${data.topic}`} />
+				<title>{title}</title>
+				<meta name="description" content={description} />
+				<meta property="og:title" content={title} />
 				<meta property="og:type" content={data.type === PostType.PHOTO ? 'image' : 'website'} />
-				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}/comments/${data.id}`} />
-				<meta property="twitter:title" content={`${data.title} : ${data.topic}`} />
+				{data.type === PostType.PHOTO ? (<meta property="og:image" content={image} key="default" />) : null}
+				<meta property="og:url" content={url} />
+				<meta property="og:description" content={description} />
 			</Head>
 			<div className="flex gap-5">
 				<div className="flex flex-col w-full">

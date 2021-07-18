@@ -48,7 +48,7 @@ const HomePage = () => {
 				<meta property="og:title" content="crappit" />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://crappit.me/" />
-				<meta property="twitter:title" content="crappit" />
+				<meta property="og:description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
 			</Head>
 			<div className="flex gap-5">
 				<div className="w-full">

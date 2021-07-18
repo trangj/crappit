@@ -6,6 +6,8 @@ import { LinkCard, LinkCardOverlay } from "../../ui";
 import dayjs from "dayjs";
 import { Post } from "src/types/entities/post";
 import { Button } from "src/ui";
+import { ChatAltIcon, ReplyIcon } from "@heroicons/react/outline";
+import toast from "react-hot-toast";
 
 type Props = {
 	post: Post;
@@ -70,11 +72,19 @@ const PostItem = ({ post, ...props }: Props) => {
 				)}
 				<div className="flex px-2">
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}#comments`}>
-						<Button variant="ghost" border="rounded" className="text-xs p-2" as="a">
+						<Button variant="ghost" border="rounded" className="text-xs p-2" as="a" icon={<ChatAltIcon className="h-5 w-5 mr-1" />}>
 							{post.number_of_comments}
 							{post.number_of_comments === 1 ? " Comment" : " Comments"}
 						</Button>
 					</Link>
+					<Button variant="ghost" border="rounded" className="text-xs p-2" icon={<ReplyIcon className="h-5 w-5 mr-1" />}
+						onClick={() => {
+							navigator.clipboard.writeText(`https://crappit.me/t/${post.topic}/comments/${post.id}`);
+							toast.success("Copied link!");
+						}}
+					>
+						Share
+					</Button>
 				</div>
 			</div>
 		</LinkCard>

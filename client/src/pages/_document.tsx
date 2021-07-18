@@ -13,10 +13,8 @@ export default class Document extends NextDocument {
                     <link rel="apple-touch-startup-image" href="/img/logo512.png" />
                     <meta name="theme-color" content="#ffffff" />
                     <meta property="og:site_name" content="crappit" />
-                    <meta property="og:image" content="https://crappit.me/img/logo.png" />
                     <meta property="twitter:site" content="@crappit" />
                     <meta property="twitter:card" content="summary" />
-                    <meta property="twitter:image" content="https://crappit.me/img/logo.png" />
                 </Head>
                 <body>
                     <Main />
