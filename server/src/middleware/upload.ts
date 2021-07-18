@@ -29,16 +29,21 @@ const uploadFile = multer({
 	fileFilter: (req, file, cb) => {
 		if (SUPPORTED_FORMATS.includes(file.mimetype)) {
 			cb(null, true);
+		} else {
+			cb(new Error("Unaccepted file format"));
 		}
-		cb(new Error("Unaccepted file format"));
 	}
 }).single('file');
 
 export const upload = (req: Request, res: Response, next: NextFunction) => {
 	uploadFile(req, res, (err) => {
-		if (err) {
+		if (err instanceof multer.MulterError) {
 			return res
-				.status(403)
+				.status(400)
+				.json({ status: { text: err.message, severity: "error" } });
+		} else if (err) {
+			return res
+				.status(400)
 				.json({ status: { text: err.message, severity: "error" } });
 		}
 		return next();
