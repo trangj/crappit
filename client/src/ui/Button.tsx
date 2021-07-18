@@ -41,11 +41,11 @@ export const Button = React.forwardRef(({
 
     const variantOptions = {
         outline:
-            `button-outline ${active ? 'dark:bg-white bg-blue-500 bg-opacity-5 dark:bg-opacity-5' : ''}`,
+            `button-outline ${active ? 'button-outline-active' : ''}`,
         filled:
-            `button-filled ${active ? 'bg-opacity-95 dark:bg-opacity-95' : ''}`,
+            `button-filled ${active ? 'button-filled-active' : ''}`,
         ghost:
-            `button-ghost ${active ? 'dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5 text-blue-500 dark:text-gray-200' : ''}`
+            `button-ghost ${active ? 'button-ghost-active' : ''}`
     };
 
     const sizeOptions = {

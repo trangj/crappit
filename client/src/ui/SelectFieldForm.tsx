@@ -15,8 +15,8 @@ const SelectFieldForm = ({ field, form, children, label, placeholder, ...props }
 	return (
 		<>
 			<h6>{label}</h6>
-			<select {...field} {...props} className={`w-full p-2 mt-2 bg-transparent border rounded ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'}`}>
-				<option value="" selected className="bg-white dark:bg-gray-700">{placeholder}</option>
+			<select {...field} {...props} className={`select-input ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'}`}>
+				<option value="" selected className="select-option">{placeholder}</option>
 				{children}
 			</select>
 			<small className="text-red-500">{error}</small>

@@ -108,7 +108,7 @@ const AddPost = () => {
 							>
 								{!topicsIsLoading && topicsData &&
 									topicsData.map((topic) => (
-										<option key={topic.title} value={topic.title} className="bg-gray-200 dark:bg-gray-700">
+										<option key={topic.title} value={topic.title} className="select-option">
 											t/{topic.title}
 										</option>
 									))}

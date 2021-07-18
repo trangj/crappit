@@ -34,6 +34,7 @@
 }
 
 @layer components {
+	/* Button */
 	.button {
 		@apply flex font-medium items-center justify-center;
 	}
@@ -46,11 +47,45 @@
 	.button-ghost {
 		@apply dark:hover:bg-white dark:hover:bg-opacity-10 hover:bg-black hover:bg-opacity-10 active:bg-opacity-20 dark:active:bg-opacity-20 text-gray-500 dark:text-gray-400;
 	}
+	.button-outline-active {
+		@apply dark:bg-white bg-blue-500 bg-opacity-5 dark:bg-opacity-5;
+	}
+	.button-filled-active {
+		@apply bg-opacity-95 dark:bg-opacity-95;
+	}
+	.button-ghost-active {
+		@apply dark:bg-white bg-black bg-opacity-5 dark:bg-opacity-5 text-blue-500 dark:text-gray-200;
+	}
+
+	/* Card */
 	.link_card {
 		@apply relative overflow-hidden my-2 border bg-white border-gray-300 dark:bg-gray-850 dark:border-gray-700 rounded hover:border-gray-500 dark:hover:border-gray-500;
 	}
 	.card {
 		@apply mb-3 border rounded overflow-hidden bg-white dark:bg-gray-850 border-gray-300 dark:border-gray-700;
+	}
+
+	/* Divider */
+	.divider {
+		@apply border-gray-300 dark:border-gray-700;
+	}
+
+	/* Avatar */
+	.avatar {
+		@apply text-gray-300 dark:text-gray-500 fill-current;
+	}
+	
+	/* Text Input */
+	.text-input {
+		@apply w-full py-2 px-4 mt-2 bg-transparent border rounded;
+	}
+
+	/* Select Input */
+	.select-input {
+		@apply w-full p-2 mt-2 bg-transparent border rounded;
+	}
+	.select-option {
+		@apply bg-white dark:bg-gray-800;
 	}
 }
 
