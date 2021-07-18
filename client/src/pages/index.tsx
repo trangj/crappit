@@ -48,7 +48,7 @@ const HomePage = () => {
 				<meta property="og:title" content="crappit" />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://crappit.me/" />
-				<meta property="twitter:title" content="reddit" />
+				<meta property="twitter:title" content="crappit" />
 			</Head>
 			<div className="flex gap-5">
 				<div className="w-full">
