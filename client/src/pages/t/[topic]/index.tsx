@@ -48,19 +48,15 @@ const TopicPage = () => {
 		data: topicData
 	} = useTopic(topic as string);
 
-	const description = `t/${topicData?.title}: ${topicData?.description.slice(0, 155)}`;
-	const title = `t/${topicData?.title}`;
-	const url = `https://crappit.me/t/${topicData?.title}`;
-
 	return (
 		<>
 			<Head>
 				<title>{topicData?.headline}</title>
-				<meta name="description" content={description} />
-				<meta property="og:title" content={title} />
+				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.slice(0, 155)}`} />
+				<meta property="og:title" content={`t/${topicData?.title}`} />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content={url} />
-				<meta property="og:description" content={description} />
+				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}`} />
+				<meta property="og:description" content={`${topicData?.description.slice(0, 155)}`} />
 			</Head>
 			<TopicHeader topic={topicData!} />
 			<div className="mt-4 container mx-auto max-w-5xl">
