@@ -52,11 +52,11 @@ const TopicPage = () => {
 		<>
 			<Head>
 				<title>{topicData?.headline}</title>
-				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.slice(0, 155)}`} />
+				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.split(" ").splice(0, 20).join(" ")} ...`} />
 				<meta property="og:title" content={`t/${topicData?.title}`} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}`} />
-				<meta property="og:description" content={`${topicData?.description.slice(0, 155)}`} />
+				<meta property="og:description" content={`${topicData?.description.split(" ").splice(0, 20).join(" ")} ...`} />
 			</Head>
 			<TopicHeader topic={topicData!} />
 			<div className="mt-4 container mx-auto max-w-5xl">

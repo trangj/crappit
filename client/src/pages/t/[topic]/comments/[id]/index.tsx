@@ -41,7 +41,7 @@ const PostPage = () => {
 		<div className="mt-16 container mx-auto max-w-5xl">
 			<Head>
 				<title>{`${data.title} : ${data.topic}`}</title>
-				<meta name="description" content={`${data.vote} votes, ${data.number_of_comments} comments. ${data.type === PostType.TEXT ? data.content.slice(0, 130) : topicData.description.slice(0, 130)}`} />
+				<meta name="description" content={`${data.vote} votes, ${data.number_of_comments} comments. ${data.type === PostType.TEXT ? data.content.split(" ").splice(0, 20).join(" ") : topicData.description.split(" ").splice(0, 20).join(" ")} ...`} />
 				<meta property="og:title" content={`t/${data.topic} - ${data.title}`} />
 				<meta property="og:type" content={data.type === PostType.PHOTO ? 'image' : 'website'} />
 				{data.type === PostType.PHOTO ? (<meta property="og:image" content={`https://crappit.imgix.net/${data.image_name}`} key="default" />) : null}
