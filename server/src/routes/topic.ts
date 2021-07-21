@@ -49,12 +49,14 @@ router.post("/", auth, upload, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user was found with that id");
+
 		const newTopic = await Topic.create({
 			title: req.body.title,
 			description: req.body.description,
 			image_url: req.file ? req.file.location : "",
 			image_name: req.file ? req.file.key : "",
-			moderators: [user]
+			moderators: [user],
+			followers: [user]
 		}).save().catch(err => { throw Error('A topic with that title already exists'); });
 
 		res.status(200).json({

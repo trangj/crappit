@@ -19,7 +19,7 @@ interface FormData {
 }
 
 const AddModerator = ({ topic }: Props) => {
-	const { isLoading, mutate } = useAddModerator();
+	const { isLoading, mutate } = useAddModerator(topic);
 
 	const handleSubmit = ({ username }: FormData) => {
 		mutate({

@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "../../axiosConfig";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -14,11 +14,15 @@ async function addTopic({ formData }: { formData: FormData; }) {
 
 export default function useAddTopic() {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	return useMutation(addTopic, {
 		onSuccess: (res) => {
-			const { title } = res.topic;
+			queryClient.setQueryData(["followed_topics"], (initialData: any) => {
+				initialData.topics_followed.push(res.topic);
+				return initialData;
+			});
 			toast.success(res.status.text);
-			router.push(`/t/${title}`);
+			router.push(`/t/${res.topic.title}`);
 		},
 		onError: (err: any) => {
 			toast.error(err.status.text);

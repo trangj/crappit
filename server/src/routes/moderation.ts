@@ -20,6 +20,7 @@ router.post("/topic/:topic", auth, async (req, res) => {
 		user.topics_moderated.push(topic);
 		await user.save();
 		res.status(200).json({
+			user: { user_id: user.id, username: user.username, topic_id: topic.id },
 			status: { text: "Moderator successfully added", severity: "success" },
 		});
 	} catch (err) {
