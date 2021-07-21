@@ -12,8 +12,8 @@ const TopicModeratorCard = ({ topicData }: TopicModeratorCardProps) => {
         <Card className="p-3 flex flex-col">
             <p className="text-gray-500 dark:text-gray-400 font-semibold text-sm mb-3">Moderators</p>
             {
-                topicData?.moderators.map((user) => (
-                    <Link passHref href={`/user/${user.user_id}`}>
+                topicData?.moderators.map((user, i) => (
+                    <Link passHref href={`/user/${user.user_id}`} key={i}>
                         <a className="text-sm text-blue-600 dark:text-blue-400 mb-1">u/{user.username}</a>
                     </Link>
                 ))

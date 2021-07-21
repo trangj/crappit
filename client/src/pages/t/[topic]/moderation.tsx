@@ -85,8 +85,8 @@ const Moderation = () => {
 					<h5 >Moderators</h5>
 					<p>Current Moderators</p>
 					<div className="flex flex-col">
-						{topicData.moderators.map(user => (
-							<Link passHref href={`/user/${user.user_id}`}>
+						{topicData.moderators.map((user, i) => (
+							<Link passHref href={`/user/${user.user_id}`} key={i}>
 								<a>
 									u/{user.username}
 								</a>
