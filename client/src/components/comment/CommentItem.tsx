@@ -33,8 +33,8 @@ const CommentItem = ({ comment, topic }: Props) => {
 					</div>
 				) : (
 					<Link passHref href={`/user/${comment.author_id}`}>
-						<a>
-							{!comment.avatar_image_name ? <Avatar className="h-7 w-7" /> : <Image alt="user avatar" src={comment.avatar_image_name} width={28} height={28} className="rounded-full" />}
+						<a className="h-7 w-7 mb-2">
+							{!comment.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={comment.avatar_image_name} width={28} height={28} className="rounded-full" />}
 						</a>
 					</Link>
 				)}

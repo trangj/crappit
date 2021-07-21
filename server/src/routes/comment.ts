@@ -31,6 +31,8 @@ router.post("/", auth, async (req, res) => {
 				...rest,
 				author: user.username,
 				author_id: user.id,
+				avatar_image_url: user.avatar_image_url,
+				avatar_image_name: user.avatar_image_name,
 				post_id: post.id,
 				user_vote: null,
 				children: []
