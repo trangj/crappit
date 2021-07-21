@@ -16,9 +16,9 @@ const TopicHeader = ({ topic }: Props) => {
 	const { isLoading, mutate } = useAddTopicFollow(topic);
 
 	return (
-		<div className="mt-12">
+		<div className="mt-12 bg-white dark:bg-gray-850">
 			{topic.image_url ? (
-				<div style={{ position: 'relative', height: 164, zIndex: -10 }}>
+				<div style={{ position: 'relative', height: 164 }}>
 					<Image
 						alt="Topic banner"
 						src={topic.image_name}
@@ -30,12 +30,12 @@ const TopicHeader = ({ topic }: Props) => {
 			) : (
 				<div className="w-full h-24 bg-blue-300" />
 			)}
-			<div className="bg-white dark:bg-gray-850 pt-4 px-4 pb-3">
-				<div className="flex gap-6 -mt-8 container mx-auto max-w-5xl sm:px-5">
-					<div className="h-20 w-20 sm:inline-block hidden rounded-full border-4 ">
+			<div className="container mx-auto max-w-5xl sm:px-5">
+				<div className="flex pb-3 -mt-4">
+					<div className="h-20 w-20 sm:inline-block hidden rounded-full border-4 border-white" style={{ zIndex: 1 }}>
 						{!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={80} height={80} className="rounded-full" />}
 					</div>
-					<div className="flex flex-col mt-5">
+					<div className="flex flex-col mt-5 pl-4">
 						<div className="flex gap-3">
 							<h4>
 								{topic.headline ? topic.headline : topic.title}

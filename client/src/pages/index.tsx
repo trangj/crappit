@@ -56,8 +56,8 @@ const HomePage = () => {
 				<div className="w-full">
 					<Card className="flex p-2 gap-2">
 						<Link passHref href={user ? `/user/${user.id}` : "/login"}>
-							<a>
-								{!user || !user.avatar_image_name ? <Avatar className="h-10 w-10" /> : <Image alt="user avatar" src={user.avatar_image_name} width={40} height={40} className="rounded-full" />}
+							<a className='h-10 w-10 flex-none'>
+								{!user || !user.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={user.avatar_image_name} width={40} height={40} className="rounded-full" />}
 							</a>
 						</Link>
 						<Link passHref href={`/submit`}>
