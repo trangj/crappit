@@ -4,7 +4,7 @@ import * as yup from "yup";
 import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
-import { Button, Card } from "../ui";
+import { Button, Card, Container } from "../ui";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
@@ -64,12 +64,12 @@ const Register = () => {
 			toast.success(res.data.status.text);
 			router.back();
 		} catch (err) {
-			toast.error(err.response.data.status.text);
+			toast.error(err.status.text);
 		}
 	};
 
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>crappit: Join the worldwide conversation</title>
 			</Head>
@@ -126,7 +126,7 @@ const Register = () => {
 					</small>
 				</div>
 			</Card>
-		</div>
+		</Container>
 	);
 };
 

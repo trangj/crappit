@@ -4,7 +4,7 @@ import { Topic } from "src/types/entities/topic";
 import { Error } from "src/types/error";
 import axios from "../../axiosConfig";
 
-async function fetchTopics() {
+export async function fetchTopics() {
 	try {
 		const res = await axios.get(`/api/topics`);
 		return res.data;

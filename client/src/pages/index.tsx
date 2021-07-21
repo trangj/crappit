@@ -11,8 +11,10 @@ import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import { useRouter } from "next/router";
 import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
-import { Button } from "src/ui";
-import { Avatar } from "src/ui";
+import { Button, Avatar, Container } from "src/ui";
+import PostSkeleton from "src/components/util/PostSkeleton";
+import PostLoaderSkeleton from "src/components/util/PostLoaderSkeleton";
+import Image from 'next/image';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -41,7 +43,7 @@ const HomePage = () => {
 	} = usePosts("", sortParam);
 
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>crappit: the front page of the internet</title>
 				<meta name="description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
@@ -55,7 +57,7 @@ const HomePage = () => {
 					<Card className="flex p-2 gap-2">
 						<Link passHref href={user ? `/user/${user.id}` : "/login"}>
 							<a>
-								<Avatar className="h-10 w-10 self-center" />
+								{!user.avatar_image_name ? <Avatar className="h-10 w-10" /> : <Image alt="user avatar" src={user.avatar_image_name} width={40} height={40} className="rounded-full" />}
 							</a>
 						</Link>
 						<Link passHref href={`/submit`}>
@@ -67,33 +69,33 @@ const HomePage = () => {
 					<Card className="flex gap-2 p-3">
 						<Button
 							onClick={() => {
-								router.push('/?sort=', undefined, { shallow: true });
-								setSortParam("");
+								router.push('/?sort=hot', undefined, { shallow: true });
+								setSortParam("hot");
 							}}
 							variant="ghost"
-							active={sortParam === ""}
+							active={sortParam === "hot" || sortParam === ""}
 							icon={<FireIcon className="h-6 w-6 mr-1" />}
 						>
 							Hot
 						</Button>
 						<Button
 							onClick={() => {
-								router.push('/?sort=created_at', undefined, { shallow: true });
-								setSortParam("created_at");
+								router.push('/?sort=new', undefined, { shallow: true });
+								setSortParam("new");
 							}}
 							variant="ghost"
-							active={sortParam === "created_at"}
+							active={sortParam === "new"}
 							icon={<SparklesIcon className="h-6 w-6 mr-1" />}
 						>
 							New
 						</Button>
 						<Button
 							onClick={() => {
-								router.push('/?sort=vote', undefined, { shallow: true });
-								setSortParam("vote");
+								router.push('/?sort=top', undefined, { shallow: true });
+								setSortParam("top");
 							}}
 							variant="ghost"
-							active={sortParam === "vote"}
+							active={sortParam === "top"}
 							icon={<ChartBarIcon className="h-6 w-6 mr-1" />}
 						>
 							Top
@@ -104,7 +106,7 @@ const HomePage = () => {
 							pageStart={0}
 							loadMore={fetchNextPage as (page: number) => void}
 							hasMore={!isFetching && hasNextPage}
-							loader={<div>Loading...</div>}
+							loader={<PostLoaderSkeleton />}
 						>
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>
@@ -118,13 +120,16 @@ const HomePage = () => {
 							))}
 						</InfiniteScroll>
 					) : (
-						<div>Loading...</div>
+						<>
+							<PostSkeleton />
+							<PostSkeleton />
+						</>
 					)}
 				</div>
 				<div className="flex-col w-80 hidden lg:flex">
 					<div style={{ width: 'inherit' }}>
 						<Card className="flex flex-col gap-3 p-3">
-							<h6>Home</h6>
+							<p className="font-semibold">Home</p>
 							<p>
 								Your personal Crappit frontpage. Come here to check in with your
 								favorite topics.
@@ -141,9 +146,14 @@ const HomePage = () => {
 							</Link>
 						</Card>
 					</div>
+					<div className="sticky mt-12 flex justify-center" style={{ top: 'calc(100vh - 8px)', transform: 'translateY(-100%)' }}>
+						<Button variant="filled" onClick={() => document.documentElement.scrollTop = 0}>
+							Back to Top
+						</Button>
+					</div>
 				</div>
 			</div>
-		</div>
+		</Container>
 	);
 };
 

@@ -4,6 +4,7 @@ import { User } from "src/types/entities/user";
 import { Menu } from '@headlessui/react';
 import { Avatar } from "src/ui";
 import { ChevronDownIcon } from "@heroicons/react/outline";
+import Image from 'next/image';
 
 type Props = {
 	user: User,
@@ -33,7 +34,7 @@ const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 			{({ open }) => (
 				<>
 					<Menu.Button className={`flex text-xs gap-2 items-center border-transparent hover:border-gray-200 dark:hover:border-gray-700 text-left px-3 rounded border w-56 h-10 font-medium ${open ? 'border-gray-200 dark:border-gray-700 rounded-b-none' : ''}`}>
-						<Avatar className="h-6 w-6" />
+						{!user.avatar_image_name ? <Avatar className="h-6 w-6" /> : <Image alt="user avatar" src={user.avatar_image_name} width={24} height={24} className="rounded-full" />}
 						{user.username}
 						<ChevronDownIcon className="h-4 w-4 ml-auto" />
 					</Menu.Button>

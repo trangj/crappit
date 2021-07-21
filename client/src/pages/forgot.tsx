@@ -4,7 +4,7 @@ import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import toast from "react-hot-toast";
 import axios from "../axiosConfig";
-import { Button, Card, Divider } from "../ui";
+import { Button, Card, Container, Divider } from "../ui";
 import Head from "next/head";
 
 const schema = yup.object({
@@ -26,7 +26,7 @@ const Forgot = () => {
 	};
 
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>crappit: Reset your password</title>
 			</Head>
@@ -56,7 +56,7 @@ const Forgot = () => {
 					)}
 				</Formik>
 			</Card>
-		</div>
+		</Container>
 	);
 };
 

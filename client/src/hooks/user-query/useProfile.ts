@@ -4,7 +4,7 @@ import { User } from "src/types/entities/user";
 import { Error } from "src/types/error";
 import axios from "../../axiosConfig";
 
-async function fetchProfile(userid: string) {
+export async function fetchProfile(userid: string) {
 	try {
 		const res = await axios.get(`/api/user/${userid}`);
 		return res.data.user;

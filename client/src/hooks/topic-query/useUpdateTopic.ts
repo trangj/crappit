@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Topic } from "src/types/entities/topic";
 import axios from "../../axiosConfig";
 
-async function updateTopic({ topic, formData }: { topic: string, formData: FormData; }) {
+async function updateTopic({ topic, newTopic }: { topic: string, newTopic: { description: string, headline: string; }; }) {
 	try {
-		const res = await axios.put(`/api/topic/${topic}`, formData);
+		const res = await axios.put(`/api/topic/${topic}`, newTopic);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;
@@ -13,11 +13,14 @@ async function updateTopic({ topic, formData }: { topic: string, formData: FormD
 }
 
 export default function useUpdateTopic(topic: Topic) {
+	const queryClient = useQueryClient();
 	return useMutation(updateTopic, {
 		onSuccess: (res) => {
-			topic.description = res.topic.description;
-			topic.image_url = res.topic.image_url;
-			topic.image_name = res.topic.image_name;
+			queryClient.setQueryData(["topic", topic.title], (initalData: any) => {
+				initalData.description = res.topic.description;
+				initalData.headline = res.topic.headline;
+				return initalData;
+			});
 			toast.success(res.status.text);
 		},
 		onError: (err: any) => {

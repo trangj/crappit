@@ -5,7 +5,7 @@ import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
 import Link from "next/link";
-import { Card } from "../ui";
+import { Card, Container } from "../ui";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -49,12 +49,12 @@ const Login = () => {
 			toast.success(res.data.status.text);
 			router.back();
 		} catch (err) {
-			toast.error(err.response.data.status.text);
+			toast.error(err.status.text);
 		}
 	};
 
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>crappit: Log in</title>
 			</Head>
@@ -98,7 +98,7 @@ const Login = () => {
 					</small>
 				</div>
 			</Card>
-		</div>
+		</Container>
 	);
 };
 

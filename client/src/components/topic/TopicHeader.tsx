@@ -18,21 +18,24 @@ const TopicHeader = ({ topic }: Props) => {
 	return (
 		<div className="mt-12">
 			{topic.image_url ? (
-				<div style={{ position: 'relative', height: 96, zIndex: -10 }}>
+				<div style={{ position: 'relative', height: 164, zIndex: -10 }}>
 					<Image
 						alt="Topic banner"
 						src={topic.image_name}
 						layout="fill"
 						objectFit="cover"
+						objectPosition="center"
 					/>
 				</div>
 			) : (
 				<div className="w-full h-24 bg-blue-300" />
 			)}
-			<div className="bg-white dark:bg-gray-850 pt-4 px-4 pb-2">
-				<div className="flex gap-6 -mt-6 container mx-auto max-w-5xl">
-					<Avatar className="h-16 w-16 sm:inline-block hidden" />
-					<div className="flex flex-col mt-4">
+			<div className="bg-white dark:bg-gray-850 pt-4 px-4 pb-3">
+				<div className="flex gap-6 -mt-8 container mx-auto max-w-5xl sm:px-5">
+					<div className="h-20 w-20 sm:inline-block hidden rounded-full border-4 ">
+						{!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={80} height={80} className="rounded-full" />}
+					</div>
+					<div className="flex flex-col mt-5">
 						<div className="flex gap-3">
 							<h4>
 								{topic.headline ? topic.headline : topic.title}

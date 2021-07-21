@@ -9,9 +9,9 @@ import DeleteCommentModerator from "./DeleteCommentModerator";
 import dayjs from "dayjs";
 import { Comment } from "src/types/entities/comment";
 import { Topic } from "src/types/entities/topic";
-import { Button } from '../../ui';
+import { Button, Avatar } from '../../ui';
 import { ArrowsExpandIcon, ChatAltIcon } from "@heroicons/react/outline";
-import { Avatar } from "src/ui";
+import Image from 'next/image';
 
 type Props = {
 	comment: Comment,
@@ -34,7 +34,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 				) : (
 					<Link passHref href={`/user/${comment.author_id}`}>
 						<a>
-							<Avatar className="h-7 w-7 mb-2" />
+							{!comment.avatar_image_name ? <Avatar className="h-7 w-7" /> : <Image alt="user avatar" src={comment.avatar_image_name} width={28} height={28} className="rounded-full" />}
 						</a>
 					</Link>
 				)}

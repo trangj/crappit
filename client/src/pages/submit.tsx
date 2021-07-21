@@ -4,7 +4,7 @@ import * as yup from "yup";
 import TextFieldForm from "../ui/TextFieldForm";
 import FileFieldForm from "../ui/FileFieldForm";
 import SelectFieldForm from "../ui/SelectFieldForm";
-import { Button, Card, Divider } from "../ui";
+import { Button, Card, Container, Divider } from "../ui";
 import useTopics from "../hooks/topic-query/useTopics";
 import useAddPost from "../hooks/post-query/useAddPost";
 import { GetServerSideProps } from "next";
@@ -77,7 +77,7 @@ const AddPost = () => {
 		type: "text"
 	};
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>Submit to Crappit</title>
 			</Head>
@@ -158,7 +158,7 @@ const AddPost = () => {
 					)}
 				</Formik>
 			</Card>
-		</div>
+		</Container>
 	);
 };
 export default AddPost;

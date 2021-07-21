@@ -13,6 +13,7 @@ import { Post } from "src/types/entities/post";
 import { Topic } from "src/types/entities/topic";
 import { useRouter } from "next/router";
 import { ChatAlt2Icon } from "@heroicons/react/solid";
+import CommentSkeleton from "../util/CommentSkeleton";
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -36,11 +37,17 @@ const CommentCard = ({ post, topic }: Props) => {
 	const [sortParam, setSortParam] = useState(sort);
 	const {
 		data: comments,
+		isLoading: isCommentsLoading
 	} = useComments(String(post.id), sortParam);
 	const {
 		isLoading,
 		mutate
 	} = useAddComment(String(post.id), sortParam);
+
+	const handleSortChange = (sort: string) => {
+		setSortParam(sort);
+		router.push(`/t/${topic.title}/comments/${post.id}?sort=${sort}`, undefined, { shallow: true });
+	};
 
 	const handleSubmit = (values: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
 		const { content } = values;
@@ -107,12 +114,12 @@ const CommentCard = ({ post, topic }: Props) => {
 						</div>
 					</div>
 				)}
-				<Listbox value={sortParam} onChange={setSortParam} as="div" className="relative">
-					<Listbox.Button className="font-medium text-blue-600 dark:text-blue-400 text-xs" >Sort by: {sortParam === "created_at" ? "New" : sortParam === "vote" ? "Top" : "Hot"}</Listbox.Button>
+				<Listbox value={sortParam} onChange={handleSortChange} as="div" className="relative">
+					<Listbox.Button className="font-medium text-blue-600 dark:text-blue-400 text-xs capitalize" >Sort by: {sortParam === '' ? 'Hot' : sortParam}</Listbox.Button>
 					<Listbox.Options className="cursor-pointer z-10 w-16 font-medium absolute left-0 origin-top-right border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded flex flex-col">
 						<Listbox.Option
-							value=""
-							className="p-2 hover:bg-blue-400 hover:bg-opacity-5"
+							value="hot"
+							className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
 						>
 							{({ selected }) => (
 								<span className={!selected ? 'opacity-50' : ''}>
@@ -121,8 +128,8 @@ const CommentCard = ({ post, topic }: Props) => {
 							)}
 						</Listbox.Option>
 						<Listbox.Option
-							value="created_at"
-							className="p-2 hover:bg-blue-400 hover:bg-opacity-5"
+							value="new"
+							className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
 						>
 							{({ selected }) => (
 								<span className={!selected ? 'opacity-50' : ''}>
@@ -131,8 +138,8 @@ const CommentCard = ({ post, topic }: Props) => {
 							)}
 						</Listbox.Option>
 						<Listbox.Option
-							value="vote"
-							className="p-2 hover:bg-blue-400 hover:bg-opacity-5"
+							value="top"
+							className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
 						>
 							{({ selected }) => (
 								<span className={!selected ? 'opacity-50' : ''}>
@@ -144,23 +151,31 @@ const CommentCard = ({ post, topic }: Props) => {
 				</Listbox>
 				<Divider className="mb-8 mt-1" />
 			</div>
-			{comments && (comments.length === 0 ? (
-				<div className="flex h-64 items-center justify-center">
-					<div className="text-gray-400 text-center">
-						<ChatAlt2Icon className="w-6 h-6 inline" />
-						<p className="font-semibold">
-							No Comments Yet
-						</p>
-						<small>
-							Be the first to share what you think!
-						</small>
-					</div>
-				</div>
+			{isCommentsLoading ? (
+				<>
+					<CommentSkeleton />
+					<CommentSkeleton />
+					<CommentSkeleton />
+				</>
 			) : (
-				comments.map((comment) => (
-					<CommentItem comment={comment} key={comment.id} topic={topic} />
-				))
-			))}
+				comments?.length === 0 ? (
+					<div className="flex h-64 items-center justify-center">
+						<div className="text-gray-400 text-center">
+							<ChatAlt2Icon className="w-6 h-6 inline" />
+							<p className="font-semibold">
+								No Comments Yet
+							</p>
+							<small>
+								Be the first to share what you think!
+							</small>
+						</div>
+					</div>
+				) : (
+					comments?.map((comment) => (
+						<CommentItem comment={comment} key={comment.id} topic={topic} />
+					))
+				)
+			)}
 		</Card>
 	);
 };

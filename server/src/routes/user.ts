@@ -6,6 +6,7 @@ import jwt, { verify } from "jsonwebtoken";
 import { auth } from "../middleware/auth";
 import { User } from "../entities";
 import { MoreThan } from 'typeorm';
+import { deleteFile, upload } from "../middleware/upload";
 
 const router = express.Router();
 
@@ -259,6 +260,37 @@ router.post("/email", auth, async (req, res) => {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
 		});
+	}
+});
+
+// @route   POST /api/user/:userid/avatar
+// @desc    Change user email
+// @access  Private
+
+router.post('/:userid/avatar', auth, upload, async (req, res) => {
+	try {
+		const user = await User.findOne(req.user.id);
+		if (!user) throw Error("No user found");
+
+		if (user.avatar_image_name && req.file) {
+			// if user already has an avatar and a photo has been uploaded
+			deleteFile(user.avatar_image_name);
+			user.avatar_image_url = req.file.location;
+			user.avatar_image_name = req.file.key;
+		} else if (req.file) {
+			// if topic doesnt has an avatar and a photo has been uploaded
+			user.avatar_image_url = req.file.location;
+			user.avatar_image_name = req.file.key;
+		}
+
+		await user.save();
+
+		res.status(200).json({
+			user: { avatar_image_url: user.avatar_image_url, avatar_image_name: user.avatar_image_name },
+			status: { text: "Successfully updated avatar", severity: "success" },
+		});
+	} catch (err) {
+		res.status(400).json({ status: { text: err.message, severity: "error" } });
 	}
 });
 

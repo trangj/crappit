@@ -21,9 +21,9 @@ router.get("/", optionalAuth, async (req, res) => {
 			inner join "user" u on p.author_id = u.id
 			left join vote v on p.id = v.post_id and v.user_id = $1
 			order by 
-				(case when $2 = 'vote' then p.vote end) desc,
-				(case when $2 = 'created_at' then p.created_at end) desc,
-				(case when $2 = '' then p.number_of_comments end) desc
+				(case when $2 = 'top' then p.vote end) desc,
+				(case when $2 = 'new' then p.created_at end) desc,
+				(case when $2 = 'hot' or $2 = '' then p.number_of_comments end) desc
 			limit 10 offset $3
 		`, [req.user.id, req.query.sort, req.query.skip]);
 
@@ -59,9 +59,9 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			left join vote v on p.id = v.post_id and v.user_id = $1
 			where t.title = $2
 			order by
-				(case when $3 = 'vote' then p.vote end) desc,
-				(case when $3 = 'created_at' then p.created_at end) desc,
-				(case when $3 = '' then p.number_of_comments end) desc
+				(case when $3 = 'top' then p.vote end) desc,
+				(case when $3 = 'new' then p.created_at end) desc,
+				(case when $3 = 'hot' or $3 = '' then p.number_of_comments end) desc
 			limit 10 offset $4
 		`, [req.user.id, req.params.topic, req.query.sort, req.query.skip]);
 		if (!posts) throw Error("No posts found");

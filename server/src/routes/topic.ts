@@ -15,15 +15,26 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			select
 			t.*,
 			f.user_id user_followed_id,
-			m.user_id user_moderator_id
+			m.user_id user_moderator_id,
+			(select cast(count(*) as int) from follow nf where nf.topic_id = t.id) number_of_followers
 			from topic t
 			left join follow f on f.topic_id = t.id and f.user_id = $1
 			left join moderator m on m.topic_id = t.id and m.user_id = $2
 			where t.title = $3
 		`, [req.user.id, req.user.id, req.params.topic]);
 		if (!topic[0]) throw Error("Topic does not exist");
+
+		const moderators = await User.query(`
+			select
+			m.*,
+			u.username
+			from moderator m
+			left join "user" u on u.id = m.user_id
+			where m.topic_id = $1
+		`, [topic[0].id]);
+
 		res.status(200).json({
-			topic: topic[0],
+			topic: { ...topic[0], moderators },
 		});
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message, severity: "error" } });
@@ -96,7 +107,7 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 // @desc    Update a topic
 // @access  Private
 
-router.put("/:topic", auth, upload, async (req, res) => {
+router.put("/:topic", auth, async (req, res) => {
 	try {
 		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
 		if (!topic) throw Error("Could not update topic");
@@ -106,6 +117,64 @@ router.put("/:topic", auth, upload, async (req, res) => {
 
 		topic.description = req.body.description;
 		topic.headline = req.body.headline;
+
+		await topic.save();
+
+		res.status(200).json({
+			topic: { description: topic.description, headline: topic.headline },
+			status: { text: "Successfully updated topic", severity: "success" },
+		});
+	} catch (err) {
+		res.status(400).json({ status: { text: err.message, severity: "error" } });
+	}
+});
+
+// @route   POST /api/topic/:topic/icon
+// @desc    Change topic icon
+// @access  Private
+
+router.post('/:topic/icon', auth, upload, async (req, res) => {
+	try {
+		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
+		if (!topic) throw Error("Could not update topic");
+
+		const user = await User.findOne(req.user.id);
+		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
+
+		if (topic.icon_image_name && req.file) {
+			// if topic already has banner and a photo has been uploaded
+			deleteFile(topic.icon_image_name);
+			topic.icon_image_url = req.file.location;
+			topic.icon_image_name = req.file.key;
+		} else if (req.file) {
+			// if topic doesnt have a banner and a photo has been uploaded
+			topic.icon_image_url = req.file.location;
+			topic.icon_image_name = req.file.key;
+		}
+
+		await topic.save();
+
+		res.status(200).json({
+			topic: { icon_image_url: topic.icon_image_url, icon_image_name: topic.icon_image_name },
+			status: { text: "Successfully updated icon", severity: "success" },
+		});
+	} catch (err) {
+		res.status(400).json({ status: { text: err.message, severity: "error" } });
+	}
+});
+
+// @route   POST /api/topic/:topic/icon
+// @desc    Change topic icon
+// @access  Private
+
+router.post('/:topic/banner', auth, upload, async (req, res) => {
+	try {
+		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
+		if (!topic) throw Error("Could not update topic");
+
+		const user = await User.findOne(req.user.id);
+		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
+
 		if (topic.image_name && req.file) {
 			// if topic already has banner and a photo has been uploaded
 			deleteFile(topic.image_name);
@@ -120,8 +189,8 @@ router.put("/:topic", auth, upload, async (req, res) => {
 		await topic.save();
 
 		res.status(200).json({
-			topic: { description: topic.description, image_url: topic.image_url, image_name: topic.image_name, headline: topic.headline },
-			status: { text: "Successfully updated topic", severity: "success" },
+			topic: { image_url: topic.image_url, image_name: topic.image_name, },
+			status: { text: "Successfully updated banner", severity: "success" },
 		});
 	} catch (err) {
 		res.status(400).json({ status: { text: err.message, severity: "error" } });

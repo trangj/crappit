@@ -16,9 +16,16 @@ export default function useAddTopicFollow(topic: Topic) {
 	const queryClient = useQueryClient();
 	return useMutation<any, any, any, any>(followTopic, {
 		onSuccess: (res) => {
-			topic.user_followed_id = res.user_followed_id;
+			queryClient.setQueryData(["topic", topic.title], (initialData: any) => {
+				initialData.user_followed_id = res.user_followed_id;
+				initialData.number_of_followers += res.user_followed_id ? 1 : -1;
+				return initialData;
+			});
+			queryClient.setQueryData(["followed_topics"], (initialData: any) => {
+				initialData.topics_followed.push({ title: topic.title });
+				return initialData;
+			});
 			toast.success(res.status.text);
-			queryClient.invalidateQueries(["followed_topics"]);
 		},
 		onError: (err: any) => {
 			toast.error(err.status.text);

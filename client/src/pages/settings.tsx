@@ -2,7 +2,7 @@ import React, { FormEventHandler, useState } from "react";
 import toast from 'react-hot-toast';
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
-import { Button, Card, Divider } from "../ui";
+import { Button, Card, Container, Divider } from "../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -49,17 +49,29 @@ const Settings = () => {
 		}
 	};
 
+	const handleAvatar = async (e: any) => {
+		try {
+			const file = e.target.files[0];
+			if (file.type !== 'image/png' && file.type !== 'image/jpg' && file.type !== 'image/jpeg') throw Error("Invalid file type");
+			const formData = new FormData();
+			formData.append('file', file);
+			const res = await axios.post(`/api/user/${user.id}/avatar`, formData);
+			setUser({ ...user, ...res.data.user });
+			toast.success(res.data.status.text);
+		} catch (err) {
+			toast.error(err.message);
+		}
+	};
+
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>Crappit Settings</title>
 			</Head>
 			<Card className="flex flex-col gap-2 p-3">
 				<h5>Settings</h5>
 				<Divider />
-				<h6>
-					Change password
-				</h6>
+				<h6>Change password</h6>
 				<Button onClick={() => handlePassword(user.email)} variant="filled">
 					Request Password Change
 				</Button>
@@ -87,8 +99,12 @@ const Settings = () => {
 						Change Email
 					</Button>
 				</form>
+				<Divider className="my-3" />
+				<h5>Change Avatar</h5>
+				<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
+				<small>Images must be in .png or .jpg format</small>
 			</Card>
-		</div>
+		</Container>
 	);
 };
 

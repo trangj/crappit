@@ -16,6 +16,10 @@ import { dehydrate } from "react-query/hydration";
 import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
 import { Button } from "src/ui";
 import { Avatar } from "src/ui";
+import PostSkeleton from "src/components/util/PostSkeleton";
+import PostLoaderSkeleton from "src/components/util/PostLoaderSkeleton";
+import TopicModeratorCard from "src/components/topic/TopicModeratorCard";
+import Image from 'next/image';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -51,7 +55,7 @@ const TopicPage = () => {
 	return (
 		<>
 			<Head>
-				<title>{topicData?.headline}</title>
+				<title>{topicData?.headline || topicData?.title}</title>
 				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.split(" ").splice(0, 20).join(" ")} ...`} />
 				<meta property="og:title" content={`t/${topicData?.title}`} />
 				<meta property="og:type" content="website" />
@@ -59,13 +63,13 @@ const TopicPage = () => {
 				<meta property="og:description" content={`${topicData?.description.split(" ").splice(0, 20).join(" ")} ...`} />
 			</Head>
 			<TopicHeader topic={topicData!} />
-			<div className="mt-4 container mx-auto max-w-5xl">
+			<div className="mt-4 container mx-auto max-w-5xl sm:px-5">
 				<div className="flex gap-5">
 					<div className="w-full">
 						<Card className="flex p-2 gap-2">
 							<Link passHref href={user ? `/user/${user.id}` : "/login"}>
 								<a>
-									<Avatar className="h-10 w-10 self-center" />
+									{!user.avatar_image_name ? <Avatar className="h-10 w-6" /> : <Image alt="user avatar" src={user.avatar_image_name} width={40} height={40} className="rounded-full" />}
 								</a>
 							</Link>
 							<Link passHref href={`/t/${topicData?.title}/submit`}>
@@ -76,10 +80,10 @@ const TopicPage = () => {
 						</Card>
 						<Card className="flex gap-2 p-3">
 							<Button
-								active={sortParam === ""}
+								active={sortParam === "hot" || sortParam === ""}
 								onClick={() => {
-									setSortParam("");
-									router.push(`/t/${topicData?.title}/?sort=`, undefined, { shallow: true });
+									setSortParam("hot");
+									router.push(`/t/${topicData?.title}/?sort=hot`, undefined, { shallow: true });
 								}}
 								variant="ghost"
 								icon={<FireIcon className="h-6 w-6 mr-1" />}
@@ -87,10 +91,10 @@ const TopicPage = () => {
 								Hot
 							</Button>
 							<Button
-								active={sortParam === "created_at"}
+								active={sortParam === "new"}
 								onClick={() => {
-									setSortParam("created_at");
-									router.push(`/t/${topicData?.title}/?sort=created_at`, undefined, { shallow: true });
+									setSortParam("new");
+									router.push(`/t/${topicData?.title}/?sort=new`, undefined, { shallow: true });
 								}}
 								variant="ghost"
 								icon={<SparklesIcon className="h-6 w-6 mr-1" />}
@@ -98,10 +102,10 @@ const TopicPage = () => {
 								New
 							</Button>
 							<Button
-								active={sortParam === "vote"}
+								active={sortParam === "top"}
 								onClick={() => {
-									setSortParam("vote");
-									router.push(`/t/${topicData?.title}/?sort=vote`, undefined, { shallow: true });
+									setSortParam("top");
+									router.push(`/t/${topicData?.title}/?sort=top`, undefined, { shallow: true });
 								}}
 								variant="ghost"
 								icon={<ChartBarIcon className="h-6 w-6 mr-1" />}
@@ -114,7 +118,7 @@ const TopicPage = () => {
 								pageStart={0}
 								loadMore={fetchNextPage as (page: number) => void}
 								hasMore={!isFetching && hasNextPage}
-								loader={<div>Loading...</div>}
+								loader={<PostLoaderSkeleton />}
 							>
 								{data.pages.map((group, i) => (
 									<React.Fragment key={i}>
@@ -128,16 +132,21 @@ const TopicPage = () => {
 								))}
 							</InfiniteScroll>
 						) : (
-							<div>Loading...</div>
+							<>
+								<PostSkeleton />
+								<PostSkeleton />
+							</>
 						)}
 					</div>
 					<div className="flex-col w-80 hidden lg:flex">
 						<div style={{ width: 'inherit' }}>
-							{topicData ? (
-								<TopicCard topicData={topicData} />
-							) : (
-								<div>Loading...</div>
-							)}
+							<TopicCard topicData={topicData!} />
+							<TopicModeratorCard topicData={topicData!} />
+						</div>
+						<div className="sticky mt-12 flex justify-center" style={{ top: 'calc(100vh - 8px)', transform: 'translateY(-100%)' }}>
+							<Button variant="filled" onClick={() => document.documentElement.scrollTop = 0}>
+								Back to Top
+							</Button>
 						</div>
 					</div>
 				</div>

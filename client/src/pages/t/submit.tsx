@@ -4,7 +4,7 @@ import * as yup from "yup";
 import TextFieldForm from "../../ui/TextFieldForm";
 import FileFieldForm from "../../ui/FileFieldForm";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
-import { Button, Card, Divider } from "../../ui";
+import { Button, Card, Container, Divider } from "../../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 
@@ -58,7 +58,7 @@ const AddTopic = () => {
 	const initialValues: FormValues = { title: "", description: "", file: "" };
 
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>Create Topic</title>
 			</Head>
@@ -98,7 +98,7 @@ const AddTopic = () => {
 					)}
 				</Formik>
 			</Card>
-		</div>
+		</Container>
 	);
 };
 

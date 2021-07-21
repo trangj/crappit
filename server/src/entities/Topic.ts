@@ -19,6 +19,12 @@ export class Topic extends Template {
     @Column()
     image_name?: string;
 
+    @Column({ default: '' })
+    icon_image_url?: string;
+
+    @Column({ default: '' })
+    icon_image_name?: string;
+
     @ManyToMany(() => User, user => user.topics_followed)
     followers: User[];
 

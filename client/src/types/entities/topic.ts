@@ -8,4 +8,8 @@ export interface Topic extends Template {
     description: string,
     image_url: string,
     image_name: string,
+    icon_image_url: string,
+    icon_image_name: string,
+    number_of_followers: number;
+    moderators: [{ username: string, user_id: number; }];
 }

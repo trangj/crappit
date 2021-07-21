@@ -27,9 +27,9 @@ const NavigationBar = () => {
 					</Link>
 					<BrowseMenu user={user} />
 					<div className="w-full" />
-					<div className="hidden sm:flex">
+					<div className="hidden sm:flex gap-2">
 						{!user ? (
-							<div className="flex gap-2">
+							<>
 								<Link passHref href="/login">
 									<Button className="w-32" as="a">
 										Login
@@ -40,7 +40,7 @@ const NavigationBar = () => {
 										Register
 									</Button>
 								</Link>
-							</div>
+							</>
 						) : (
 							<UserMenu user={user} logoutUser={logoutUser} theme={theme} setTheme={setTheme} />
 						)}

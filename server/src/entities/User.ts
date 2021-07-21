@@ -13,6 +13,12 @@ export class User extends Template {
     @Column({ unique: true })
     email!: string;
 
+    @Column({ default: '' })
+    avatar_image_url?: string;
+
+    @Column({ default: '' })
+    avatar_image_name?: string;
+
     @ManyToMany(() => Topic, topic => topic.followers)
     @JoinTable({ name: 'follow' })
     topics_followed: Topic[];

@@ -2,6 +2,8 @@ import { Template } from "./template";
 
 export interface Comment extends Template {
     author: string,
+    avatar_image_name: string,
+    avatar_image_url: string,
     user_vote: number,
     content: string,
     vote: number,

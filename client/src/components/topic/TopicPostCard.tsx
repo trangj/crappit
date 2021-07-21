@@ -33,7 +33,14 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
             <div className="p-3 flex flex-col gap-3">
                 <div className="flex items-center">
                     <Link href={`/t/${topicData.title}`} passHref>
-                        <a><h6>r/{topicData.title}</h6></a>
+                        <a className="flex gap-3">
+                            <div className="h-14 w-14">
+                                <Image alt="topic icon" src={topicData.icon_image_name} width={56} height={56} className="rounded-full" />
+                            </div>
+                            <p className="text-lg self-center">
+                                r/{topicData.title}
+                            </p>
+                        </a>
                     </Link>
                     <div className="w-full" />
                     {user && topicData.user_moderator_id && (
@@ -48,6 +55,10 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                     )}
                 </div>
                 <p>{topicData.description}</p>
+                <div>
+                    <p className="font-medium -mb-1">{topicData.number_of_followers}</p>
+                    <small>Follower{topicData.number_of_followers === 1 ? "" : "s"}</small>
+                </div>
                 <Divider />
                 <p>
                     Created {dayjs(topicData.created_at).format("LL")}
@@ -66,11 +77,6 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                         </Button>
                     </Link>
                 )}
-                <Link passHref href={`/t/${topicData.title}/submit`}>
-                    <Button as="a" variant="filled">
-                        Add Post
-                    </Button>
-                </Link>
             </div>
         </Card>
     );

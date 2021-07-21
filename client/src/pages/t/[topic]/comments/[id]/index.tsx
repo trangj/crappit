@@ -11,6 +11,8 @@ import { GetServerSideProps } from "next";
 import { PostType } from "src/types/entities/post";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
+import { Button, Container } from "src/ui";
+import TopicModeratorCard from "src/components/topic/TopicModeratorCard";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -38,7 +40,7 @@ const PostPage = () => {
 	if (!data || !topicData) return <div>Loading...</div>;
 
 	return (
-		<div className="mt-16 container mx-auto max-w-5xl">
+		<Container>
 			<Head>
 				<title>{`${data.title} : ${data.topic}`}</title>
 				<meta name="description" content={`${data.vote} votes, ${data.number_of_comments} comments. ${data.type === PostType.TEXT ? data.content.split(" ").splice(0, 20).join(" ") : topicData.description.split(" ").splice(0, 20).join(" ")} ...`} />
@@ -56,10 +58,16 @@ const PostPage = () => {
 				<div className="flex-col w-80 hidden lg:flex">
 					<div style={{ width: 'inherit' }}>
 						<TopicPostCard topicData={topicData} />
+						<TopicModeratorCard topicData={topicData} />
+					</div>
+					<div className="sticky mt-12 flex justify-center" style={{ top: 'calc(100vh - 8px)', transform: 'translateY(-100%)' }}>
+						<Button variant="filled" onClick={() => document.documentElement.scrollTop = 0}>
+							Back to Top
+						</Button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</Container>
 	);
 };
 
