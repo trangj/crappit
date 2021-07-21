@@ -4,7 +4,7 @@ import React from 'react';
 import { useUser } from 'src/context/UserState';
 import useAddTopicFollow from 'src/hooks/topic-query/useAddTopicFollow';
 import { Topic } from 'src/types/entities/topic';
-import { Card, Divider } from '../../ui';
+import { Avatar, Card, Divider } from '../../ui';
 import { Button } from '../../ui';
 import Image from 'next/image';
 
@@ -34,8 +34,8 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                 <div className="flex items-center">
                     <Link href={`/t/${topicData.title}`} passHref>
                         <a className="flex gap-3">
-                            <div className="h-14 w-14">
-                                <Image alt="topic icon" src={topicData.icon_image_name} width={56} height={56} className="rounded-full" />
+                            <div className="h-14 w-14 rounded-full">
+                                {!topicData.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topicData.icon_image_name} width={56} height={56} className="rounded-full" />}
                             </div>
                             <p className="text-lg self-center">
                                 r/{topicData.title}
