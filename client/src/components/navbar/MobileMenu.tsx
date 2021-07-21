@@ -62,7 +62,7 @@ const MobileMenu = ({ user, logoutUser, showMenu, theme, setTheme }: Props) => {
                 )))
             )}
             <Divider className="mx-4 my-2" />
-            <MenuItem onClick={() => () => setTheme(theme === "dark" ? "light" : "dark")}>
+            <MenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
                 Dark Mode
             </MenuItem>
             {!user ? (
