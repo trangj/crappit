@@ -10,6 +10,7 @@ import useAddPost from "../../../hooks/post-query/useAddPost";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
+import { useUser } from "src/context/UserState";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
@@ -53,6 +54,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const AddPost = () => {
 	const router = useRouter();
+	const { user } = useUser();
 	const { topic } = router.query;
 	const {
 		isLoading: topicsIsLoading,
@@ -60,6 +62,11 @@ const AddPost = () => {
 		error: topicsError,
 	} = useTopics();
 	const { isLoading, mutate } = useAddPost();
+
+	if (!user) {
+		router.push('/login');
+		return null;
+	};
 
 	const handleSubmit = ({ title, content, link, type, file, topic }: FormValues) => {
 		const formData = new FormData();

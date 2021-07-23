@@ -7,7 +7,7 @@ export class User extends Template {
     @Column({ unique: true })
     username!: string;
 
-    @Column()
+    @Column({ nullable: true })
     password!: string;
 
     @Column({ unique: true })
@@ -32,6 +32,12 @@ export class User extends Template {
 
     @Column({ type: 'bigint', nullable: true })
     reset_password_expires?: number;
+
+    @Column({ nullable: true })
+    google_id: string;
+
+    @Column({ nullable: true })
+    google_access_token: string;
 
     @Column({ type: 'int', default: 0 })
     token_version: number;

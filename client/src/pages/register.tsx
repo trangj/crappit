@@ -90,6 +90,14 @@ const Register = () => {
 					>
 						{() => (
 							<Form className="w-72 flex flex-col">
+								<a className="mt-4 text-sm border rounded font-semibold p-4 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white dark:border-gray-200 dark:text-gray-200 dark:hover:bg-gray-200 dark:hover:text-black" href={process.env.NEXT_PUBLIC_SERVER_URL + '/api/user/google'}>
+									CONTINUE WITH GOOGLE
+								</a>
+								<div className="flex justify-between items-center my-4">
+									<span className="border-b border-gray-300 dark:border-gray-700 w-2/5"></span>
+									<span className="text-gray-500 dark:text-gray-400">OR</span>
+									<span className="border-b border-gray-300 dark:border-gray-700 w-2/5"></span>
+								</div>
 								<Field
 									label="Username"
 									name="username"

@@ -9,6 +9,8 @@ import useTopics from "../hooks/topic-query/useTopics";
 import useAddPost from "../hooks/post-query/useAddPost";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { useUser } from "../context/UserState";
+import { useRouter } from "next/router";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
@@ -57,6 +59,13 @@ const AddPost = () => {
 		error: topicsError,
 	} = useTopics();
 	const { isLoading, mutate } = useAddPost();
+	const { user } = useUser();
+	const router = useRouter();
+
+	if (!user) {
+		router.push('/login');
+		return null;
+	};
 
 	const handleSubmit = ({ title, content, link, file, type, topic }: FormValues) => {
 		const formData = new FormData();

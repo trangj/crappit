@@ -22,12 +22,15 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 };
 
 const Settings = () => {
-	const { user, setUser } = useUser();
 	const router = useRouter();
+	const { user, setUser } = useUser();
 	const [newEmail, setNewEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	if (!user) return router.push('/login');
+	if (!user) {
+		router.push('/login');
+		return null;
+	};
 
 	const handlePassword = async (email: string) => {
 		try {

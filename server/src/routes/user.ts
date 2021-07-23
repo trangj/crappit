@@ -7,11 +7,28 @@ import { auth } from "../middleware/auth";
 import { User } from "../entities";
 import { MoreThan } from 'typeorm';
 import { deleteFile, upload } from "../middleware/upload";
+import passport from '../middleware/passport';
 
 const router = express.Router();
 
 // init sgMail
-sgMail.setApiKey(process.env.sendgrid);
+sgMail.setApiKey(process.env.SENDGRID_KEY);
+
+// @route   GET /api/user/google
+// @desc    Redirect user to google sign in
+// @acess   Public
+
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' }));
+
+// @route   POST /api/user/google/callback
+// @desc    Redirect user to client after google sign in
+// @acess   Public
+
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL }), async (req, res) => {
+	res
+		.cookie('token', req.user, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
+		.redirect(process.env.CLIENT_URL);
+});
 
 // @route   POST /api/user/register
 // @desc    Register user
@@ -76,8 +93,8 @@ router.post("/login", async (req, res) => {
 		const user = await User.findOne({ email });
 		if (!user) throw Error("User does not exist");
 
-		const isMatch = await bcyrpt.compare(password, user.password);
-		if (!isMatch) throw Error("Invalid password");
+		const isMatch = await bcyrpt.compare(password, user.password).catch((err) => { throw new Error('Invalid email or password'); });
+		if (!isMatch) throw Error("Invalid email or password");
 
 		const refresh_token = jwt.sign(
 			{ id: user.id, token_version: user.token_version },

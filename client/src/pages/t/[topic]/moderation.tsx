@@ -33,6 +33,10 @@ const Moderation = () => {
 		data: topicData,
 	} = useTopic(topic as string);
 
+	if (!user) {
+		router.push('/login');
+		return null;
+	}
 	if (topicLoading || !topicData) return <div>Loading...</div>;
 
 	const handleIcon = async (e: any) => {

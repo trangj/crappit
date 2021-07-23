@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from 'cookie-parser';
 import { UserRouter, TopicsRouter, TopicRouter, PostsRouter, PostRouter, CommentRouter, ModerationRouter, CommentsRouter } from './routes';
 import { createConnection } from "typeorm";
+import passport from './middleware/passport';
 
 (async () => {
 	const app = express();
@@ -13,6 +14,7 @@ import { createConnection } from "typeorm";
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 	app.use(cookieParser());
+	app.use(passport.initialize());
 	app.use("/api/comment", CommentRouter);
 	app.use("/api/comments", CommentsRouter);
 	app.use("/api/post", PostRouter);

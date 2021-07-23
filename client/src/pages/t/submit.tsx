@@ -7,6 +7,8 @@ import useAddTopic from "../../hooks/topic-query/useAddTopic";
 import { Button, Card, Container, Divider } from "../../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
+import { useUser } from "src/context/UserState";
+import { useRouter } from "next/router";
 
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 const FILE_SIZE = 10485760;
@@ -48,6 +50,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
 const AddTopic = () => {
 	const { isLoading, mutate } = useAddTopic();
+	const { user } = useUser();
+	const router = useRouter();
+
+	if (!user) {
+		router.push('/login');
+		return null;
+	};
+
 	const handleSubmit = ({ title, description, file }: FormValues) => {
 		const formData = new FormData();
 		formData.append("title", title);
@@ -55,6 +65,7 @@ const AddTopic = () => {
 		formData.append("file", file);
 		mutate({ formData });
 	};
+
 	const initialValues: FormValues = { title: "", description: "", file: "" };
 
 	return (

@@ -37,8 +37,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 		};
 	} catch (err) {
 		return {
-			props: {
-				status: err.response.data
+			redirect: {
+				destination: '/',
+				permanent: true
 			}
 		};
 	}
@@ -52,11 +53,8 @@ const Forgot = ({ status }: any) => {
 	useEffect(() => {
 		if (status) {
 			toast.success(status.status.text);
-			if (status.status.severity === 'error') {
-				router.push('/');
-			}
 		}
-	}, [status, router]);
+	}, [status]);
 
 	const handleSubmit = async ({ password, password2 }: FormValues) => {
 		try {

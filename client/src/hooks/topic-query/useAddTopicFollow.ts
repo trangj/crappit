@@ -22,7 +22,11 @@ export default function useAddTopicFollow(topic: Topic) {
 				return initialData;
 			});
 			queryClient.setQueryData(["followed_topics"], (initialData: any) => {
-				initialData.topics_followed.push({ title: topic.title });
+				if (res.user_followed_id) {
+					initialData.topics_followed.push({ title: topic.title });
+				} else {
+					initialData.topics_followed = initialData.topics_followed.filter((i: any) => i.title !== topic.title);
+				}
 				return initialData;
 			});
 			toast.success(res.status.text);
