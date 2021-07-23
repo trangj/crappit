@@ -18,13 +18,13 @@ sgMail.setApiKey(process.env.SENDGRID_KEY);
 // @desc    Redirect user to google sign in
 // @acess   Public
 
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account' }));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], prompt: 'select_account', session: false }));
 
 // @route   POST /api/user/google/callback
 // @desc    Redirect user to client after google sign in
 // @acess   Public
 
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL }), async (req, res) => {
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL, session: false }), async (req, res) => {
 	res
 		.cookie('token', req.user, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
 		.redirect(process.env.CLIENT_URL);

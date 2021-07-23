@@ -36,8 +36,4 @@ passport.use(new Strategy({
     }
 }));
 
-passport.serializeUser((user: any, done) => {
-    done(undefined, user);
-});
-
 export default passport;
