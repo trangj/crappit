@@ -37,7 +37,6 @@ const Voting = ({ post }: Props) => {
 				<Link passHref href="/login">
 					<Button
 						aria-label="Upvote"
-						onClick={handleUpvote}
 						icon={<ArrowUpIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
@@ -70,7 +69,6 @@ const Voting = ({ post }: Props) => {
 				<Link passHref href="/login">
 					<Button
 						aria-label="Upvote"
-						onClick={handleDownvote}
 						icon={<ArrowDownIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"

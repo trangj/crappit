@@ -43,7 +43,6 @@ const CommentVoting = ({ comment }: Props) => {
 				<Link href="/login" passHref>
 					<Button
 						aria-label="Upvote"
-						onClick={handleUpvote}
 						icon={<ArrowUpIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
@@ -76,7 +75,6 @@ const CommentVoting = ({ comment }: Props) => {
 				<Link passHref href="/login">
 					<Button
 						aria-label="Upvote"
-						onClick={handleDownvote}
 						icon={<ArrowDownIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
