@@ -35,7 +35,7 @@ MyApp.getInitialProps = async (ctx: any) => {
         }
         return { ...props };
     } catch (err) {
-        ctx.ctx.res.setHeader('Set-Cookie', `token=; Path=/; Max-Age=0; Domain=${process.env.DOMAIN}; Secure; HttpOnly`);
+        ctx.ctx.res.setHeader('set-cookie', err.response.headers['set-cookie']);
         return { ...props };
     }
 };
