@@ -26,7 +26,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL, session: false }), async (req, res) => {
 	res
-		.cookie('token', req.user, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
+		.cookie('token', req.user, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
 		.redirect(process.env.CLIENT_URL);
 });
 
@@ -65,7 +65,7 @@ router.post("/register", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
+			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
 			.json({
 				access_token,
 				user: newUser,
@@ -109,7 +109,7 @@ router.post("/login", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
+			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
 			.json({
 				access_token,
 				user,
@@ -223,7 +223,7 @@ router.post("/reset/:token", async (req, res) => {
 				" has just been changed.\n",
 		};
 		await sgMail.send(msg);
-		res.status(200).clearCookie('token', { httpOnly: true, secure: true, domain: process.env.DOMAIN }).json({
+		res.status(200).clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({
 			status: { text: "Your password has been changed. Please login again.", severity: "success" },
 		});
 	} catch (err) {
@@ -343,10 +343,10 @@ router.post("/refresh_token", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: true, domain: process.env.DOMAIN })
+			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
 			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
-		res.status(403).clearCookie('token', { httpOnly: true, secure: true, domain: process.env.DOMAIN }).json({ access_token: "" });
+		res.status(403).clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({ access_token: "" });
 	}
 });
 
@@ -355,7 +355,7 @@ router.post("/refresh_token", async (req, res) => {
 // @access  Public
 
 router.post('/logout', async (req, res) => {
-	res.clearCookie('token', { httpOnly: true, secure: true, domain: process.env.DOMAIN }).json({ access_token: '' });
+	res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({ access_token: '' });
 });
 
 export const UserRouter = router;

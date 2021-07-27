@@ -41,6 +41,7 @@ MyApp.getInitialProps = async (ctx: any) => {
 };
 
 function MyApp({ Component, pageProps, token, user }: MyAppProps) {
+    axios.defaults.headers.authorization = token;
     const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 10000 } } }));
 
     return (

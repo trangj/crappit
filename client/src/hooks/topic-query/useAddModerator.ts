@@ -18,7 +18,6 @@ export default function useAddModerator(topic: Topic) {
 	const queryClient = useQueryClient();
 	return useMutation(addModerator, {
 		onSuccess: (res) => {
-			console.log(res);
 			queryClient.setQueryData(["topic", topic.title], (initialData: any) => {
 				initialData.moderators.push(res.user);
 				return initialData;
