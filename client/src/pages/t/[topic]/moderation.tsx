@@ -82,12 +82,19 @@ const Moderation = () => {
 			</Head>
 			{topicData.user_moderator_id === user.id ? (
 				<Card className="p-3 flex flex-col gap-3" >
-					<h5 >Change Settings</h5>
-					<Divider />
+					<h6 >Topic Settings</h6>
+					<Divider className="my-1" />
 					<UpdateTopic topic={topicData} />
-					<Divider />
-					<h5 >Moderators</h5>
-					<p>Current Moderators</p>
+					<h6>Topic Appearance</h6>
+					<Divider className="my-1" />
+					<p className="font-medium">Topic Icon</p>
+					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleIcon} />
+					<small className="text-gray-500 dark:text-gray-400">Required Size: 256x256px</small>
+					<p className="font-medium">Topic Banner</p>
+					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleBanner} />
+					<small className="text-gray-500 dark:text-gray-400">Recommended upload size: 4,000x128px</small>
+					<h6 >Moderators</h6>
+					<Divider className="my-1" />
 					<div className="flex flex-col">
 						{topicData.moderators.map((user, i) => (
 							<Link passHref href={`/user/${user.user_id}`} key={i}>
@@ -98,13 +105,6 @@ const Moderation = () => {
 						))}
 					</div>
 					<AddModerator topic={topicData} />
-					<Divider />
-					<h5>Change Icon</h5>
-					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleIcon} />
-					<small>Required Size: 256x256px</small>
-					<h5>Change Banner</h5>
-					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleBanner} />
-					<small>Recommended upload size: 4,000x128px</small>
 				</Card>
 			) : (
 				<div>You are not a moderator of this topic</div>

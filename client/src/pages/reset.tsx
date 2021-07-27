@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
 const Forgot = ({ status }: any) => {
 	const router = useRouter();
-	const { setUser, setToken } = useUser();
+	const { setUser } = useUser();
 	const { token } = router.query;
 
 	useEffect(() => {
@@ -62,10 +62,9 @@ const Forgot = ({ status }: any) => {
 				password,
 				password2,
 			});
+			router.push("/login");
 			toast.success(res.data.status.text);
 			setUser(null);
-			setToken("");
-			router.push("/login");
 		} catch (err) {
 			toast.error(err.response.data.status.text);
 		}

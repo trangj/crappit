@@ -44,21 +44,20 @@ const UpdateTopic = ({ topic }: Props) => {
 			{({ values }) => (
 				<Form>
 					<Field
-						label="Description"
+						label="Topic Description"
 						name="description"
 						multiline
 						component={TextFieldForm}
 					/>
-					<Field label="Headline" name="headline" component={TextFieldForm} />
+					<Field label="Topic Headline" name="headline" component={TextFieldForm} />
 					<Button
 						type="submit"
 						loading={isLoading}
 						disabled={!!!values.description}
-						className="mt-3"
+						className="mt-3 ml-auto"
 						variant='filled'
-						fullWidth
 					>
-						Update
+						Save changes
 					</Button>
 				</Form>
 			)}

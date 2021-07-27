@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useState } from "react";
+import React, { FormEventHandler, useRef, useState } from "react";
 import toast from 'react-hot-toast';
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
@@ -6,6 +6,7 @@ import { Button, Card, Container, Divider } from "../ui";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { Dialog } from "@headlessui/react";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 	if (!req.cookies.token) {
@@ -26,6 +27,8 @@ const Settings = () => {
 	const { user, setUser } = useUser();
 	const [newEmail, setNewEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [open, setOpen] = useState(false);
+	const cancelRef = useRef(null);
 
 	if (!user) {
 		router.push('/login');
@@ -46,6 +49,7 @@ const Settings = () => {
 		try {
 			const res = await axios.post("/api/user/email", { newEmail, password });
 			setUser({ ...user, email: res.data.user.email });
+			setOpen(false);
 			toast.success(res.data.status.text);
 		} catch (err) {
 			toast.error(err.response.data.status.text);
@@ -71,41 +75,75 @@ const Settings = () => {
 			<Head>
 				<title>Crappit Settings</title>
 			</Head>
-			<Card className="flex flex-col gap-2 p-3">
-				<h5>Settings</h5>
-				<Divider />
-				<h6>Change password</h6>
-				<Button onClick={() => handlePassword(user.email)} variant="filled">
-					Request Password Change
-				</Button>
-				<Divider className="my-3" />
-				<form onSubmit={handleEmail}>
-					<h5>Email address</h5>
-					<p>Your current email: {user.email}</p>
-					<h6>New Email</h6>
-					<input
-						type="email"
-						value={newEmail}
-						onChange={(e) => setNewEmail(e.target.value)}
-						required
-						className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
-					/>
-					<h6>Current Password</h6>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						required
-						className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
-					/>
-					<Button type="submit" fullWidth className="mt-2" variant="filled">
-						Change Email
-					</Button>
-				</form>
-				<Divider className="my-3" />
-				<h5>Change Avatar</h5>
-				<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
-				<small>Images must be in .png or .jpg format</small>
+			<Card className="p-3">
+				<div className="w-1/2 flex flex-col gap-3">
+					<h6>Account Settings</h6>
+					<Divider className="my-1" />
+					<div className="flex items-center">
+						<div>
+							<p className="font-medium">Change password</p>
+							<small className="text-gray-500 dark:text-gray-400">Password must be 6 characters long</small>
+						</div>
+						<Button onClick={() => handlePassword(user.email)} className="ml-auto">
+							Change
+						</Button>
+					</div>
+					<div className="flex items-center">
+						<div>
+							<p className="font-medium">Email address</p>
+							<small className="text-gray-500 dark:text-gray-400">{user.email}</small>
+						</div>
+						<Button onClick={() => setOpen(true)} className="ml-auto">
+							Change
+						</Button>
+						<Dialog
+							as="div"
+							className="fixed inset-0 z-10 overflow-y-auto"
+							open={open}
+							onClose={() => setOpen(false)}
+							initialFocus={cancelRef}
+						>
+							<Dialog.Overlay className="fixed inset-0 bg-black opacity-30 z-50" />
+							<div className="flex items-center justify-center min-h-screen">
+								<div className="bg-white dark:bg-gray-850 rounded border border-gray-200 dark:border-gray-700 max-w-sm mx-auto z-50 p-6 gap-3 flex flex-col">
+									<Dialog.Title as="h6">
+										Update your email
+									</Dialog.Title>
+									<Dialog.Description>
+										Update your email below. There will be a new verification email sent that you will need to use to verify this new email.
+									</Dialog.Description>
+									<form onSubmit={handleEmail}>
+										<p>Current Password</p>
+										<input
+											type="password"
+											value={password}
+											onChange={(e) => setPassword(e.target.value)}
+											required
+											className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
+										/>
+										<p>New Email</p>
+										<input
+											type="email"
+											value={newEmail}
+											onChange={(e) => setNewEmail(e.target.value)}
+											required
+											className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
+										/>
+										<Button type="submit" className="mt-3 ml-auto" variant="filled">
+											Save Email
+										</Button>
+									</form>
+								</div>
+							</div>
+						</Dialog>
+					</div>
+					<h6>Customize Profile</h6>
+					<Divider className="my-1" />
+					<div className="flex flex-col">
+						<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
+						<small className="text-gray-500 dark:text-gray-400">Images must be in .png or .jpg format</small>
+					</div>
+				</div>
 			</Card>
 		</Container>
 	);

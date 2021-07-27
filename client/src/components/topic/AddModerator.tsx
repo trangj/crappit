@@ -46,11 +46,10 @@ const AddModerator = ({ topic }: Props) => {
 						type="submit"
 						loading={isLoading}
 						disabled={!!!values.username}
-						className="mt-3"
+						className="mt-3 ml-auto"
 						variant="filled"
-						fullWidth
 					>
-						Add Moderator
+						Invite user as mod
 					</Button>
 				</Form>
 			)}

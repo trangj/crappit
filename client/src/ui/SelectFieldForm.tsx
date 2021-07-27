@@ -14,7 +14,7 @@ const SelectFieldForm = ({ field, form, children, label, placeholder, ...props }
 		getIn(form.touched, field.name) && getIn(form.errors, field.name);
 	return (
 		<>
-			<h6>{label}</h6>
+			<p className="font-medium">{label}</p>
 			<select {...field} {...props} className={`select-input ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'}`}>
 				<option value="" selected className="select-option">{placeholder}</option>
 				{children}

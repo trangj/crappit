@@ -119,7 +119,6 @@ const AddPost = () => {
 										</option>
 									))}
 							</Field>
-							<h6>Post Type</h6>
 							<div role="group" aria-labelledby="type-group" className="flex justify-evenly mt-2">
 								<label>
 									Text

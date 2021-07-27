@@ -3,8 +3,8 @@ import bcyrpt from "bcryptjs";
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 import jwt, { verify } from "jsonwebtoken";
-import { auth } from "../middleware/auth";
-import { User } from "../entities";
+import { auth, optionalAuth } from "../middleware/auth";
+import { Post, User } from "../entities";
 import { MoreThan } from 'typeorm';
 import { deleteFile, upload } from "../middleware/upload";
 import passport from '../middleware/passport';
@@ -81,7 +81,7 @@ router.post("/register", async (req, res) => {
 	}
 });
 
-// @route   GET /api/user/login
+// @route   POST /api/user/login
 // @desc    Login user
 // @acess   Public
 
@@ -356,6 +356,41 @@ router.post("/refresh_token", async (req, res) => {
 
 router.post('/logout', async (req, res) => {
 	res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({ access_token: '' });
+});
+
+// @route   POST /api/user/logout
+// @desc    Logout user
+// @access  Public
+
+router.get('/:userid/posts', optionalAuth, async (req, res) => {
+	try {
+		const posts = await Post.query(`
+			select
+			p.*,
+			t.title topic,
+			u.username author,
+			v.value user_vote
+			from post p
+			inner join topic t on p.topic_id = t.id
+			inner join "user" u on p.author_id = u.id
+			left join vote v on p.id = v.post_id and v.user_id = $1
+			where p.author_id = $2
+			order by
+				(case when $3 = 'top' then p.vote end) desc,
+				(case when $3 = 'new' then p.created_at end) desc,
+				(case when $3 = 'hot' or $3 = '' then p.number_of_comments end) desc
+			limit 10 offset $4
+		`, [req.user.id, req.params.userid, req.query.sort, req.query.skip]);
+		if (!posts) throw Error("No posts found");
+		res.status(200).json({
+			posts,
+			nextCursor: posts.length
+				? parseInt(req.query.skip as string) + posts.length
+				: undefined,
+		});
+	} catch (err) {
+		res.status(400).json({ status: { text: err.message, severity: "error" } });
+	}
 });
 
 export const UserRouter = router;

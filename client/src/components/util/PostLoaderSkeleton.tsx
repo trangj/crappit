@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'src/ui';
 
-const PostSkeleton = () => {
+const PostLoaderSkeleton = () => {
     return (
         <Card className="p-3 pb-0 rounded-b-none border-b-0 mb-0">
             <div className="animate-pulse flex flex-col w-full gap-2 pl-8">
@@ -13,4 +13,4 @@ const PostSkeleton = () => {
     );
 };
 
-export default PostSkeleton;
+export default PostLoaderSkeleton;
