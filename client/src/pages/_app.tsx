@@ -23,21 +23,23 @@ type MyAppProps = AppProps & {
 
 MyApp.getInitialProps = async (ctx: any) => {
     const props = await App.getInitialProps(ctx);
+    let user = null;
+    let token = '';
     try {
         if (typeof window === 'undefined' && ctx.ctx.req.cookies.token) {
             const res = await axios.post('/api/user/refresh_token', {}, { headers: { cookie: 'token=' + ctx.ctx.req.cookies.token } });
             axios.defaults.headers.authorization = res.data.access_token;
-            return {
-                ...props,
-                user: res.data.user || null,
-                token: res.data.access_token || ''
-            };
+            user = res.data.user;
+            token = res.data.access_token;
         }
-        return { ...props };
     } catch (err) {
-        ctx.ctx.res.setHeader('set-cookie', err.response.headers['set-cookie']);
-        return { ...props };
+        ctx.ctx.res.setHeader('Set-Cookie', `token=; Domain=${process.env.DOMAIN}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure`);
     }
+    return {
+        ...props,
+        user,
+        token
+    };
 };
 
 function MyApp({ Component, pageProps, token, user }: MyAppProps) {

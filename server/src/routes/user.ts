@@ -346,7 +346,7 @@ router.post("/refresh_token", async (req, res) => {
 			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
 			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
-		res.status(403).clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({ access_token: "" });
+		res.status(403).json({ status: { text: "Refresh token expired", severity: "error" } });;
 	}
 });
 
