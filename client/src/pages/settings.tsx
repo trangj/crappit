@@ -139,10 +139,9 @@ const Settings = () => {
 					</div>
 					<h6>Customize Profile</h6>
 					<Divider className="my-1" />
-					<div className="flex flex-col">
-						<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
-						<small className="text-gray-500 dark:text-gray-400">Images must be in .png or .jpg format</small>
-					</div>
+					<p className="font-medium">Avatar image</p>
+					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
+					<small className="text-gray-500 dark:text-gray-400">Images must be in .png or .jpg format</small>
 				</div>
 			</Card>
 		</Container>
