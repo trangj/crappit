@@ -26,7 +26,12 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL, session: false }), async (req, res) => {
 	res
-		.cookie('token', req.user, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
+		.cookie('token', req.user, {
+			httpOnly: true,
+			maxAge: 1000 * 60 * 60 * 24 * 7,
+			secure: process.env.NODE_ENV === 'production',
+			domain: process.env.DOMAIN
+		})
 		.redirect(process.env.CLIENT_URL);
 });
 
@@ -65,7 +70,12 @@ router.post("/register", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
+			.cookie('token', refresh_token, {
+				httpOnly: true,
+				maxAge: 1000 * 60 * 60 * 24 * 7,
+				secure: process.env.NODE_ENV === 'production',
+				domain: process.env.DOMAIN
+			})
 			.json({
 				access_token,
 				user: newUser,
@@ -109,7 +119,12 @@ router.post("/login", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie('token', refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
+			.cookie('token', refresh_token, {
+				httpOnly: true,
+				maxAge: 1000 * 60 * 60 * 24 * 7,
+				secure: process.env.NODE_ENV === 'production',
+				domain: process.env.DOMAIN
+			})
 			.json({
 				access_token,
 				user,
@@ -139,15 +154,14 @@ router.post("/forgot", async (req, res) => {
 
 		const msg = {
 			to: user.email,
-			from: "passwordreset@crappit.com",
-			subject: "Crappit Password Reset",
+			from: "Crappit <noreply@crappit.com>",
+			subject: "[crappit] password reset request",
 			text:
-				"You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
-				"Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-				`${process.env.CLIENT_URL}/reset?token=` +
-				token +
-				"\n\n" +
-				"If you did not request this, please ignore this email and your password will remain unchanged.\n",
+				`You or someone else has requested a password change for /u/${user.username}.\n\n` +
+				"Please click on the following link, or paste this into your browser to complete the process:\n" +
+				`${process.env.CLIENT_URL}/reset?token=${token}\n\n` +
+				"If you did not request this, please ignore this email and your password will remain unchanged.\n\n" +
+				"This inbox is not monitored and responses will not be seen.",
 		};
 		await sgMail.send(msg);
 		res.status(200).json({
@@ -214,18 +228,24 @@ router.post("/reset/:token", async (req, res) => {
 
 		const msg = {
 			to: user.email,
-			from: "passwordreset@crappit.com",
-			subject: "Your password has been changed",
+			from: "Crappit <noreply@crappit.com>",
+			subject: "[crappit] your password has been changed",
 			text:
-				"Hello,\n\n" +
-				"This is a confirmation that the password for your account " +
-				user.email +
-				" has just been changed.\n",
+				`The password for /u/${user.username} has been changed. ` +
+				"If you did not make this change, please immediately update your password by clicking here:\n" +
+				`${process.env.CLIENT_URL}/forgot\n\n` +
+				"This inbox is not monitored and responses will not be seen.",
 		};
 		await sgMail.send(msg);
-		res.status(200).clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({
-			status: { text: "Your password has been changed. Please login again.", severity: "success" },
-		});
+		res.status(200)
+			.clearCookie('token', {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				domain: process.env.DOMAIN
+			})
+			.json({
+				status: { text: "Your password has been changed. Please login again.", severity: "success" },
+			});
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -268,6 +288,17 @@ router.post("/email", auth, async (req, res) => {
 
 		user.email = req.body.newEmail;
 		await user.save().catch(err => { throw Error("A user already exists with that email"); });
+
+		const msg = {
+			to: user.email,
+			from: "Crappit <noreply@crappit.com>",
+			subject: "[crappit] your email address has been changed",
+			text:
+				`The e-mail address for /u/${user.username}} has been changed to ${user.email}.\n` +
+				"If you did not request this, please contact us.\n" +
+				"This message is being sent to your old e-mail address only.",
+		};
+		await sgMail.send(msg);
 
 		res.status(200).json({
 			user: { email: user.email },
@@ -343,10 +374,15 @@ router.post("/refresh_token", async (req, res) => {
 		);
 
 		res.status(200)
-			.cookie("token", new_refresh_token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN })
+			.cookie("token", new_refresh_token, {
+				httpOnly: true,
+				maxAge: 1000 * 60 * 60 * 24 * 7,
+				secure: process.env.NODE_ENV === 'production',
+				domain: process.env.DOMAIN
+			})
 			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
-		res.status(403).json({ status: { text: "Refresh token expired", severity: "error" } });;
+		res.status(401).json({ status: { text: "Refresh token expired", severity: "error" } });;
 	}
 });
 
@@ -355,7 +391,13 @@ router.post("/refresh_token", async (req, res) => {
 // @access  Public
 
 router.post('/logout', async (req, res) => {
-	res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', domain: process.env.DOMAIN }).json({ access_token: '' });
+	res
+		.clearCookie('token', {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			domain: process.env.DOMAIN
+		})
+		.json({ access_token: '' });
 });
 
 // @route   POST /api/user/logout
