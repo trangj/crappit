@@ -28,7 +28,7 @@ const SortComment = ({ sortParam, setSortParam, topic, post }: Props) => {
                     className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
                 >
                     {({ selected }) => (
-                        <span className={!selected ? 'opacity-50' : ''}>
+                        <span className={selected || sortParam === "" ? '' : 'opacity-50'}>
                             Hot
                         </span>
                     )}
@@ -38,7 +38,7 @@ const SortComment = ({ sortParam, setSortParam, topic, post }: Props) => {
                     className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
                 >
                     {({ selected }) => (
-                        <span className={!selected ? 'opacity-50' : ''}>
+                        <span className={selected ? '' : 'opacity-50'}>
                             New
                         </span>
                     )}
@@ -48,7 +48,7 @@ const SortComment = ({ sortParam, setSortParam, topic, post }: Props) => {
                     className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
                 >
                     {({ selected }) => (
-                        <span className={!selected ? 'opacity-50' : ''}>
+                        <span className={selected ? '' : 'opacity-50'}>
                             Top
                         </span>
                     )}
