@@ -59,9 +59,9 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
                     </Hydrate>
                 </ QueryClientProvider>
             </UserProvider>
-            <Toaster position="bottom-center" toastOptions={{ className: "bg-white border-gray-500 dark:bg-gray-850 dark:border-gray-500 dark:text-gray-200 border w-80 justify-start", duration: 5000 }}>
+            <Toaster position="bottom-center" toastOptions={{ className: "bg-white border-gray-500 dark:bg-gray-850 dark:border-gray-500 dark:text-gray-200 w-full border justify-start", duration: 5000 }}>
                 {(t) => (
-                    <ToastBar toast={t}>
+                    <ToastBar toast={t} style={{ maxWidth: '476px', padding: '0.7rem' }}>
                         {({ icon, message }) => (
                             <>
                                 {icon}

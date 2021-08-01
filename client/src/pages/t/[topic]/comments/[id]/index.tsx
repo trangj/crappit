@@ -11,8 +11,9 @@ import { GetServerSideProps } from "next";
 import { PostType } from "src/types/entities/post";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
-import { Button, Container } from "src/ui";
+import { Container } from "src/ui";
 import TopicModeratorCard from "src/components/topic/TopicModeratorCard";
+import SideBar from "src/components/post/SideBar";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -55,17 +56,10 @@ const PostPage = () => {
 					<PostCard post={data} topic={topicData} />
 					<CommentCard post={data} topic={topicData} />
 				</div>
-				<div className="flex-col w-80 hidden lg:flex">
-					<div style={{ width: 'inherit' }}>
-						<TopicPostCard topicData={topicData} />
-						<TopicModeratorCard topicData={topicData} />
-					</div>
-					<div className="sticky mt-12 flex justify-center" style={{ top: 'calc(100vh - 8px)', transform: 'translateY(-100%)' }}>
-						<Button variant="filled" onClick={() => document.documentElement.scrollTop = 0}>
-							Back to Top
-						</Button>
-					</div>
-				</div>
+				<SideBar>
+					<TopicPostCard topicData={topicData} />
+					<TopicModeratorCard topicData={topicData} />
+				</SideBar>
 			</div>
 		</Container>
 	);
