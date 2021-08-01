@@ -4,8 +4,9 @@ import Link from "next/link";
 import { User } from "src/types/entities/user";
 import useTopicFollow from '../../hooks/topic-query/useTopicFollow';
 import { ChevronDownIcon, PlusIcon, SearchIcon } from "@heroicons/react/outline";
-import { Divider } from "src/ui";
+import { Avatar, Divider } from "src/ui";
 import { HomeIcon } from "@heroicons/react/solid";
+import Image from "next/image";
 
 type Props = {
 	user: User | null;
@@ -38,7 +39,7 @@ const BrowseMenu = ({ user }: Props) => {
 						Browse
 						<ChevronDownIcon className="h-4 w-4 ml-auto" />
 					</Menu.Button>
-					<Menu.Items className="absolute w-64 left-0 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 pb-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
+					<Menu.Items className="absolute w-64 left-0 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 py-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
 						<Menu.Item as={NextLink} href="/" icon={<HomeIcon className="h-5 w-5" />}>
 							Home
 						</Menu.Item>
@@ -57,13 +58,11 @@ const BrowseMenu = ({ user }: Props) => {
 								Sign up to follow topics!
 							</Menu.Item>
 						) : (
-							!isLoading && data && (<>
-								{data.topics_followed.map((topic, i) => (
-									<Menu.Item as={NextLink} key={i} href={`/t/${topic.title}`}>
-										t/{topic.title}
-									</Menu.Item>
-								))}
-							</>)
+							!isLoading && data && data.topics_followed.map((topic, i) => (
+								<Menu.Item as={NextLink} key={i} href={`/t/${topic.title}`} icon={topic.icon_image_name ? <Image src={topic.icon_image_name} width={20} height={20} className="rounded-full" /> : <Avatar className="h-5 w-5 flex-none" />}>
+									t/{topic.title}
+								</Menu.Item>
+							))
 						)}
 					</Menu.Items>
 				</>

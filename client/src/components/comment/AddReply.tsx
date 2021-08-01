@@ -34,34 +34,34 @@ const AddReply = ({ comment, openReply, setOpenReply }: Props) => {
 		});
 	};
 
+	if (!openReply) return null;
+
 	return (
-		openReply ? (
-			<Formik
-				initialValues={{ content: "" }}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{({ values }) => (
-					<Form>
-						<Field name="content" multiline component={TextFieldForm} />
-						<div className="flex justify-end gap-2">
-							<Button className="w-24" onClick={() => setOpenReply(false)}>
-								Cancel
-							</Button>
-							<Button
-								type="submit"
-								loading={isLoading}
-								disabled={!!!values.content}
-								variant="filled"
-								className="w-24"
-							>
-								Reply
-							</Button>
-						</div>
-					</Form>
-				)}
-			</Formik>
-		) : null
+		<Formik
+			initialValues={{ content: "" }}
+			onSubmit={handleSubmit}
+			validationSchema={schema}
+		>
+			{({ values }) => (
+				<Form>
+					<Field name="content" multiline component={TextFieldForm} />
+					<div className="flex justify-end gap-2">
+						<Button className="w-24" onClick={() => setOpenReply(false)}>
+							Cancel
+						</Button>
+						<Button
+							type="submit"
+							loading={isLoading}
+							disabled={!!!values.content}
+							variant="filled"
+							className="w-24"
+						>
+							Reply
+						</Button>
+					</div>
+				</Form>
+			)}
+		</Formik>
 	);
 };
 

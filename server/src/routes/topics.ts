@@ -28,7 +28,9 @@ router.get("/followed_topics", optionalAuth, async (req, res) => {
 	try {
 		const topics_followed = await Topic.query(`
 			select
-			t.title title
+			t.title title,
+			t.icon_image_url icon_image_url,
+			t.icon_image_name icon_image_name
 			from follow ft
 			left join topic t on ft.topic_id = t.id
 			where ft.user_id = $1

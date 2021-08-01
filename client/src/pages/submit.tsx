@@ -62,6 +62,9 @@ const AddPost = () => {
 	const { user } = useUser();
 	const router = useRouter();
 
+	let type = router.query.type;
+	if (type !== "text" && type !== "link" && type !== "photo") type = "text";
+
 	if (!user) {
 		router.push('/login');
 		return null;
@@ -83,7 +86,7 @@ const AddPost = () => {
 		file: "",
 		link: "",
 		topic: "",
-		type: "text"
+		type: type as FormValues['type']
 	};
 	return (
 		<Container>

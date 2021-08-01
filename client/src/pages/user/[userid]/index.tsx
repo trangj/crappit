@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import useProfile, { fetchProfile } from "../../../hooks/user-query/useProfile";
 import useProfilePosts, { fetchProfilePosts } from "../../../hooks/user-query/useProfilePosts";
-import { Button, Card, Container } from "../../../ui";
-import dayjs from "dayjs";
+import { Container } from "../../../ui";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
-import { FireIcon, SparklesIcon, ChartBarIcon } from "@heroicons/react/solid";
-import Image from 'next/image';
 import InfiniteScroll from "react-infinite-scroller";
 import PostLoaderSkeleton from "src/components/util/PostLoaderSkeleton";
 import PostSkeleton from "src/components/util/PostSkeleton";
 import PostItem from "src/components/post/PostItem";
+import SortPost from "src/components/post/SortPostCard";
+import SideBar from "src/components/post/SideBar";
+import UserCard from "src/components/user/UserCard";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -54,41 +54,7 @@ const Profile = () => {
 			</Head>
 			<div className="flex gap-5">
 				<div className="w-full">
-					<Card className="flex gap-2 p-3">
-						<Button
-							onClick={() => {
-								router.push(`/user/${profile?.id}?sort=hot`, undefined, { shallow: true });
-								setSortParam("hot");
-							}}
-							variant="ghost"
-							active={sortParam === "hot" || sortParam === ""}
-							icon={<FireIcon className="h-6 w-6 mr-1" />}
-						>
-							Hot
-						</Button>
-						<Button
-							onClick={() => {
-								router.push(`/user/${profile?.id}?sort=new`, undefined, { shallow: true });
-								setSortParam("new");
-							}}
-							variant="ghost"
-							active={sortParam === "new"}
-							icon={<SparklesIcon className="h-6 w-6 mr-1" />}
-						>
-							New
-						</Button>
-						<Button
-							onClick={() => {
-								router.push(`/user/${profile?.id}?sort=top`, undefined, { shallow: true });
-								setSortParam("top");
-							}}
-							variant="ghost"
-							active={sortParam === "top"}
-							icon={<ChartBarIcon className="h-6 w-6 mr-1" />}
-						>
-							Top
-						</Button>
-					</Card>
+					<SortPost setSortParam={setSortParam} sortParam={sortParam} url={`/user/${profile?.id}`} />
 					{!isLoading && data ? (
 						<InfiniteScroll
 							pageStart={0}
@@ -114,28 +80,9 @@ const Profile = () => {
 						</>
 					)}
 				</div>
-				<div className="flex-col w-80 hidden lg:flex">
-					<div style={{ width: 'inherit' }}>
-						<Card>
-							<div className="h-24 bg-blue-400" />
-							<div className="-mt-16 ml-3 h-20 w-20 border-4 rounded bg-gray-300 dark:bg-gray-500">
-								{profile && profile.avatar_image_name && <Image src={profile.avatar_image_name} alt="user avatar" height={80} width={80} />}
-							</div>
-							<div className="p-3 gap-3 flex flex-col">
-								<small className="font-medium">u/{profile?.username}</small>
-								<div className="flex flex-col">
-									<small className="font-medium">Cake Day</small>
-									<small>{dayjs(profile?.created_at).format('MMMM D, YYYY')}</small>
-								</div>
-							</div>
-						</Card>
-					</div>
-					<div className="sticky mt-12 flex justify-center" style={{ top: 'calc(100vh - 8px)', transform: 'translateY(-100%)' }}>
-						<Button variant="filled" onClick={() => document.documentElement.scrollTop = 0}>
-							Back to Top
-						</Button>
-					</div>
-				</div>
+				<SideBar>
+					<UserCard profile={profile!} />
+				</SideBar>
 			</div>
 		</Container>
 	);

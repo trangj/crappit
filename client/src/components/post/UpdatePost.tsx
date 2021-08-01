@@ -33,34 +33,34 @@ const UpdatePost = ({ post, openEdit, setOpenEdit }: Props) => {
 		});
 	};
 
+	if (!openEdit) return null;
+
 	return (
-		openEdit ? (
-			<Formik
-				initialValues={{ content: post.content }}
-				onSubmit={handleSubmit}
-				validationSchema={schema}
-			>
-				{({ values }) => (
-					<Form>
-						<Field name="content" multiline component={TextFieldForm} />
-						<div className="flex justify-end gap-2">
-							<Button className="w-24" onClick={() => setOpenEdit(false)}>
-								Cancel
-							</Button>
-							<Button
-								type="submit"
-								loading={isLoading}
-								disabled={!!!values.content}
-								variant="filled"
-								className="w-24"
-							>
-								Update
-							</Button>
-						</div>
-					</Form>
-				)}
-			</Formik>
-		) : null
+		<Formik
+			initialValues={{ content: post.content }}
+			onSubmit={handleSubmit}
+			validationSchema={schema}
+		>
+			{({ values }) => (
+				<Form>
+					<Field name="content" multiline component={TextFieldForm} />
+					<div className="flex justify-end gap-2">
+						<Button className="w-24" onClick={() => setOpenEdit(false)}>
+							Cancel
+						</Button>
+						<Button
+							type="submit"
+							loading={isLoading}
+							disabled={!!!values.content}
+							variant="filled"
+							className="w-24"
+						>
+							Update
+						</Button>
+					</div>
+				</Form>
+			)}
+		</Formik>
 	);
 };
 

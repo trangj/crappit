@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import AddReply from "./AddReply";
 import CommentVoting from "./CommentVoting";
 import Link from "next/link";
-import { useUser } from "../../context/UserState";
-import DeleteCommentModerator from "./DeleteCommentModerator";
 import dayjs from "dayjs";
 import { Comment } from "src/types/entities/comment";
 import { Topic } from "src/types/entities/topic";
 import { Button, Avatar } from '../../ui';
-import { ArrowsExpandIcon, ChatAltIcon } from "@heroicons/react/outline";
+import { ArrowsExpandIcon } from "@heroicons/react/outline";
 import Image from 'next/image';
+import CommentToolBar from "./CommentToolBar";
 
 type Props = {
 	comment: Comment,
@@ -19,12 +17,31 @@ type Props = {
 };
 
 const CommentItem = ({ comment, topic }: Props) => {
-	const { user } = useUser();
 	const [hideComments, setHideComments] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openReply, setOpenReply] = useState(false);
 
-	return !hideComments ? (
+	if (hideComments) {
+		return (
+			<div className="mt-4 flex gap-3">
+				<Button aria-label="Expand comments" icon={<ArrowsExpandIcon className="h-4 w-4 dark:text-blue-400 text-blue-600" />} onClick={() => setHideComments(false)} border="rounded" variant="ghost" />
+				<small className="self-center">
+					{comment.is_deleted ? '[deleted]' :
+						<Link href={`/user/${comment.author_id}`} passHref>
+							<a className="font-medium">
+								{comment.author}
+							</a>
+						</Link>
+					}
+					<div className="text-gray-400 dark:text-gray-400 inline">
+						{" "}&bull;{" "}{dayjs(comment.created_at).fromNow()}
+					</div>
+				</small>
+			</div>
+		);
+	}
+
+	return (
 		<div className="flex mt-4">
 			<div className="flex flex-col">
 				{comment.is_deleted ? (
@@ -57,10 +74,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 							{" "}&bull;{" "}
 							{dayjs(comment.created_at).fromNow()}
 							{comment.is_edited && (
-								<>
-									{" "}&bull;{" "}
-									<i>edited {dayjs(comment.updated_at).fromNow()}</i>
-								</>
+								<i> &bull; edited {dayjs(comment.updated_at).fromNow()}</i>
 							)}
 						</div>
 					</small>
@@ -73,54 +87,12 @@ const CommentItem = ({ comment, topic }: Props) => {
 					) : (
 						<>
 							<p>{comment.is_deleted ? "[deleted]" : comment.content}</p>
-							{comment.content ? (
+							{!comment.is_deleted && (
 								<div className="flex gap-2 mt-1">
 									<CommentVoting comment={comment} />
-									{user ? (
-										<>
-											<Button
-												onClick={() => setOpenReply(!openReply)}
-												variant="ghost"
-												border="rounded"
-												className="text-xs"
-												icon={<ChatAltIcon className="h-5 w-5 mr-1" />}
-											>
-												Reply
-											</Button>
-											{user.id === comment.author_id && (
-												<>
-													<DeleteComment comment={comment} />
-													<Button
-														onClick={() => setOpenEdit(!openEdit)}
-														variant="ghost"
-														border="rounded"
-														className="text-xs"
-													>
-														Edit
-													</Button>
-												</>
-											)}
-											{topic &&
-												user.id !== comment.author_id &&
-												topic.user_moderator_id && (
-													<DeleteCommentModerator comment={comment} />
-												)}
-										</>
-									) : (
-										<Link passHref href="/login">
-											<Button
-												variant="ghost"
-												border="rounded"
-												className="text-xs"
-												as="a"
-											>
-												<ChatAltIcon className="h-5 w-5 mr-1" />
-												Reply
-											</Button>
-										</Link>
-									)}
+									<CommentToolBar setOpenEdit={setOpenEdit} setOpenReply={setOpenReply} openEdit={openEdit} openReply={openReply} comment={comment} topic={topic} />
 								</div>
-							) : null}
+							)}
 						</>
 					)}
 				</div>
@@ -139,33 +111,15 @@ const CommentItem = ({ comment, topic }: Props) => {
 					</div>
 				)}
 				<div className="w-full">
-					{comment.children
-						? comment.children.map((comment) => (
-							<CommentItem
-								comment={comment}
-								topic={topic}
-								key={comment.id}
-							/>
-						))
-						: null}
+					{comment.children && comment.children.map((comment) => (
+						<CommentItem
+							comment={comment}
+							topic={topic}
+							key={comment.id}
+						/>
+					))}
 				</div>
 			</div>
-		</div>
-	) : (
-		<div className="mt-4 flex gap-3">
-			<Button aria-label="Expand comments" icon={<ArrowsExpandIcon className="h-4 w-4 dark:text-blue-400 text-blue-600" />} onClick={() => setHideComments(false)} border="rounded" variant="ghost" />
-			<small className="self-center">
-				{comment.is_deleted ? '[deleted]' :
-					<Link href={`/user/${comment.author_id}`} passHref>
-						<a className="font-medium">
-							{comment.author}
-						</a>
-					</Link>
-				}
-				<div className="text-gray-400 dark:text-gray-400 inline">
-					{" "}&bull;{" "}{dayjs(comment.created_at).fromNow()}
-				</div>
-			</small>
 		</div>
 	);
 };

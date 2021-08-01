@@ -38,7 +38,7 @@ const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 						{user.username}
 						<ChevronDownIcon className="h-4 w-4 ml-auto" />
 					</Menu.Button>
-					<Menu.Items className="absolute left-0 w-56 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 pb-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
+					<Menu.Items className="absolute left-0 w-56 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 py-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
 						<Menu.Item as={NextLink} href={`/user/${user.id}`}>
 							Profile
 						</Menu.Item>

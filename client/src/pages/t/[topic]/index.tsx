@@ -4,22 +4,18 @@ import TopicHeader from "../../../components/topic/TopicHeader";
 import InfiniteScroll from "react-infinite-scroller";
 import usePosts, { fetchPosts } from "../../../hooks/post-query/usePosts";
 import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
-import { Card } from "../../../ui";
-import Link from "next/link";
-import { useUser } from "../../../context/UserState";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import TopicCard from "src/components/topic/TopicCard";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
-import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
-import { Button } from "src/ui";
-import { Avatar } from "src/ui";
 import PostSkeleton from "src/components/util/PostSkeleton";
 import PostLoaderSkeleton from "src/components/util/PostLoaderSkeleton";
 import TopicModeratorCard from "src/components/topic/TopicModeratorCard";
-import Image from 'next/image';
+import SortPost from "src/components/post/SortPostCard";
+import SideBar from "src/components/post/SideBar";
+import CreatePost from "src/components/post/CreatePostCard";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -34,7 +30,6 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 };
 
 const TopicPage = () => {
-	const { user } = useUser();
 	const router = useRouter();
 
 	const topic = router.query.topic;
@@ -66,53 +61,8 @@ const TopicPage = () => {
 			<div className="mt-4 container mx-auto max-w-5xl sm:px-5">
 				<div className="flex gap-5">
 					<div className="w-full">
-						<Card className="flex p-2 gap-2 items-center">
-							<Link passHref href={user ? `/user/${user.id}` : "/login"}>
-								<a className='h-10 w-10 flex-none'>
-									{!user || !user.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={user.avatar_image_name} width={40} height={40} className="rounded-full" />}
-								</a>
-							</Link>
-							<Link passHref href={`/t/${topicData?.title}/submit`}>
-								<a className="w-full">
-									<input placeholder="Create post" className="w-full py-2 px-4 bg-gray-100 hover:bg-white hover:border-blue-500 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
-								</a>
-							</Link>
-						</Card>
-						<Card className="flex gap-2 p-3">
-							<Button
-								active={sortParam === "hot" || sortParam === ""}
-								onClick={() => {
-									setSortParam("hot");
-									router.push(`/t/${topicData?.title}/?sort=hot`, undefined, { shallow: true });
-								}}
-								variant="ghost"
-								icon={<FireIcon className="h-6 w-6 mr-1" />}
-							>
-								Hot
-							</Button>
-							<Button
-								active={sortParam === "new"}
-								onClick={() => {
-									setSortParam("new");
-									router.push(`/t/${topicData?.title}/?sort=new`, undefined, { shallow: true });
-								}}
-								variant="ghost"
-								icon={<SparklesIcon className="h-6 w-6 mr-1" />}
-							>
-								New
-							</Button>
-							<Button
-								active={sortParam === "top"}
-								onClick={() => {
-									setSortParam("top");
-									router.push(`/t/${topicData?.title}/?sort=top`, undefined, { shallow: true });
-								}}
-								variant="ghost"
-								icon={<ChartBarIcon className="h-6 w-6 mr-1" />}
-							>
-								Top
-							</Button>
-						</Card>
+						<CreatePost url={`/t/${topicData?.title}`} />
+						<SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/t/${topicData?.title}`} />
 						{!isLoading && data ? (
 							<InfiniteScroll
 								pageStart={0}
@@ -138,17 +88,10 @@ const TopicPage = () => {
 							</>
 						)}
 					</div>
-					<div className="flex-col w-80 hidden lg:flex">
-						<div style={{ width: 'inherit' }}>
-							<TopicCard topicData={topicData!} />
-							<TopicModeratorCard topicData={topicData!} />
-						</div>
-						<div className="sticky mt-12 flex justify-center" style={{ top: 'calc(100vh - 8px)', transform: 'translateY(-100%)' }}>
-							<Button variant="filled" onClick={() => document.documentElement.scrollTop = 0}>
-								Back to Top
-							</Button>
-						</div>
-					</div>
+					<SideBar>
+						<TopicCard topicData={topicData!} />
+						<TopicModeratorCard topicData={topicData!} />
+					</SideBar>
 				</div>
 			</div>
 		</>

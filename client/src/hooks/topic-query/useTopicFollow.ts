@@ -6,6 +6,8 @@ import { useUser } from '../../context/UserState';
 type FollowedTopics = {
     topics_followed: [{
         title: string;
+        icon_image_name: string;
+        icon_image_url: string;
     }];
 };
 
