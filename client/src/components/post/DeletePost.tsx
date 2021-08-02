@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Dialog } from '@headlessui/react';
 import useDeletePost from "../../hooks/post-query/useDeletePost";
 import { Post } from "src/types/entities/post";
-import { Button } from "src/ui";
+import { Button } from "src/ui/Button";
 import { TrashIcon } from "@heroicons/react/outline";
 
 type Props = {

@@ -3,8 +3,8 @@ import { Formik, Form } from "formik";
 import * as yup from "yup";
 import useUpdatePost from "../../hooks/post-query/useUpdatePost";
 import { Post } from "src/types/entities/post";
-import { Button } from "src/ui";
-import RichTextEditor from "src/ui/RichTextEditor";
+import { Button } from "src/ui/Button";
+import { RichTextEditor } from "src/ui/RichTextEditor";
 
 const schema = yup.object({
 	content: yup.string().required(""),

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Button } from 'src/ui';
+import { Button } from 'src/ui/Button';
 
 type Props = {
     children: ReactNode;

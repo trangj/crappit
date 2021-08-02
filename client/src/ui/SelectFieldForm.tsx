@@ -10,7 +10,7 @@ type Props = {
 	children: ReactNode;
 };
 
-const SelectFieldForm = ({ field, form, children, label, placeholder, className = "", ...props }: Props) => {
+export const SelectFieldForm = ({ field, form, children, label, placeholder, className = "", ...props }: Props) => {
 	const error =
 		getIn(form.touched, field.name) && getIn(form.errors, field.name);
 	return (
@@ -24,5 +24,3 @@ const SelectFieldForm = ({ field, form, children, label, placeholder, className 
 		</>
 	);
 };
-
-export default SelectFieldForm;

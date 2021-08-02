@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import useTopics, { fetchTopics } from "../../hooks/topic-query/useTopics";
-import { Container, LinkCard, LinkCardOverlay } from "../../ui";
+import { LinkCard, LinkCardOverlay } from "../../ui/LinkCard";
+import { Container } from "../../ui/Container";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";

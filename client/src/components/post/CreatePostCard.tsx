@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
-import { Card, Avatar, Button } from 'src/ui';
+import { Card } from 'src/ui/Card';
+import { Avatar } from 'src/ui/Avatar';
+import { Button } from 'src/ui/Button';
 import { useUser } from 'src/context/UserState';
 import { LinkIcon, PhotographIcon } from '@heroicons/react/outline';
 

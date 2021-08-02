@@ -3,7 +3,7 @@ import { useUser } from "../../context/UserState";
 import Link from "next/link";
 import useVoting from "../../hooks/post-query/useVoting";
 import { Post } from "src/types/entities/post";
-import { Button } from "src/ui";
+import { Button } from "src/ui/Button";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/solid";
 
 type Props = {

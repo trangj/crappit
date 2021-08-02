@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useComments from "../../hooks/comment-query/useComments";
-import { Card, Divider } from "../../ui";
+import { Card } from "../../ui/Card";
+import { Divider } from '../../ui/Divider';
 import { Post } from "src/types/entities/post";
 import { Topic } from "src/types/entities/topic";
 import { useRouter } from "next/router";

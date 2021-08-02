@@ -2,7 +2,7 @@ import React, { forwardRef, HTMLAttributes } from 'react';
 import { User } from 'src/types/entities/user';
 import Link from 'next/link';
 import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
-import { Divider } from 'src/ui';
+import { Divider } from 'src/ui/Divider';
 
 type Props = {
     user: User;

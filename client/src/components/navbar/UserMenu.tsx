@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import Link from "next/link";
 import { User } from "src/types/entities/user";
 import { Menu } from '@headlessui/react';
-import { Avatar } from "src/ui";
+import { Avatar } from "src/ui/Avatar";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import Image from 'next/image';
 

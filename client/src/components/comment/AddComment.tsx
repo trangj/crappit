@@ -1,12 +1,12 @@
 import { Formik, Form, FormikHelpers } from 'formik';
 import Link from 'next/link';
 import React from 'react';
-import { Button } from '../../ui';
+import { Button } from '../../ui/Button';
 import { useUser } from '../../context/UserState';
 import * as yup from "yup";
 import useAddComment from "../../hooks/comment-query/useAddComment";
 import { Post } from '../../types/entities/post';
-import RichTextEditor from 'src/ui/RichTextEditor';
+import { RichTextEditor } from 'src/ui/RichTextEditor';
 
 const schema = yup.object({
     content: yup.string().required(""),

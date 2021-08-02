@@ -1,10 +1,10 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../../ui/TextFieldForm";
 import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
 import { Topic } from "src/types/entities/topic";
-import { Button } from "src/ui";
+import { Button } from "src/ui/Button";
+import { TextFieldForm } from "src/ui/TextFieldForm";
 
 const schema = yup.object({
 	description: yup.string().required(""),

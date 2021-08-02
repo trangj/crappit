@@ -1,7 +1,9 @@
 import React from "react";
 import useTopic, { fetchTopic } from "../../../hooks/topic-query/useTopic";
 import { useUser } from "../../../context/UserState";
-import { Card, Container, Divider } from "../../../ui";
+import { Card } from "../../../ui/Card";
+import { Container } from "../../../ui/Container";
+import { Divider } from "../../../ui/Divider";
 import UpdateTopic from "../../../components/topic/UpdateTopic";
 import AddModerator from "../../../components/topic/AddModerator";
 import { useRouter } from "next/router";

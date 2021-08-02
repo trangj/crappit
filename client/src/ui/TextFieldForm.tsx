@@ -8,7 +8,7 @@ type Props = {
 	multiline: any;
 };
 
-const TextFieldForm = ({ field, form, multiline, label, ...props }: Props) => {
+export const TextFieldForm = ({ field, form, multiline, label, ...props }: Props) => {
 	const error =
 		getIn(form.touched, field.name) && getIn(form.errors, field.name);
 	return (
@@ -23,5 +23,3 @@ const TextFieldForm = ({ field, form, multiline, label, ...props }: Props) => {
 		</>
 	);
 };
-
-export default TextFieldForm;

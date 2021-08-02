@@ -4,7 +4,8 @@ import Link from "next/link";
 import { User } from "src/types/entities/user";
 import useTopicFollow from '../../hooks/topic-query/useTopicFollow';
 import { ChevronDownIcon, PlusIcon, SearchIcon } from "@heroicons/react/outline";
-import { Avatar, Divider } from "src/ui";
+import { Avatar } from "src/ui/Avatar";
+import { Divider } from 'src/ui/Divider';
 import { HomeIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 

@@ -11,7 +11,7 @@ import { GetServerSideProps } from "next";
 import { PostType } from "src/types/entities/post";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
-import { Container } from "src/ui";
+import { Container } from "src/ui/Container";
 import TopicModeratorCard from "src/components/topic/TopicModeratorCard";
 import SideBar from "src/components/post/SideBar";
 

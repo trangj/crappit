@@ -2,7 +2,7 @@ import React from 'react';
 import { User } from 'src/types/entities/user';
 import Image from 'next/image';
 import dayjs from "dayjs";
-import { Card } from 'src/ui';
+import { Card } from 'src/ui/Card';
 
 type Props = {
     profile: User;

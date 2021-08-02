@@ -8,7 +8,7 @@ type Props = {
 	label: string,
 };
 
-const FileFieldForm = ({ field, form, setFieldValue, label, ...props }: Props) => {
+export const FileFieldForm = ({ field, form, setFieldValue, label, ...props }: Props) => {
 	const error = getIn(form.errors, field.name);
 	return (
 		<>
@@ -23,5 +23,3 @@ const FileFieldForm = ({ field, form, setFieldValue, label, ...props }: Props) =
 		</>
 	);
 };
-
-export default FileFieldForm;

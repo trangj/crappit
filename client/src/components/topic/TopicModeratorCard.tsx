@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { Topic } from 'src/types/entities/topic';
-import { Card } from 'src/ui';
+import { Card } from 'src/ui/Card';
 
 type TopicModeratorCardProps = {
     topicData: Topic;

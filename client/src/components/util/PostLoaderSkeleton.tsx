@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'src/ui';
+import { Card } from 'src/ui/Card';
 
 const PostLoaderSkeleton = () => {
     return (

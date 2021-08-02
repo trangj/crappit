@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import useDeleteComment from "../../hooks/comment-query/useDeleteComment";
 import { Comment } from "src/types/entities/comment";
-import { Button } from '../../ui';
+import { Button } from '../../ui/Button';
 import { Dialog } from "@headlessui/react";
 
 type Props = {

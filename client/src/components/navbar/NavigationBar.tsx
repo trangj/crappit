@@ -4,7 +4,7 @@ import { useUser } from "../../context/UserState";
 import UserMenu from "./UserMenu";
 import BrowseMenu from "./BrowseMenu";
 import MobileMenu from "./MobileMenu";
-import { Button } from "src/ui";
+import { Button } from "src/ui/Button";
 import { MenuIcon } from '@heroicons/react/outline';
 import { useTheme } from "src/hooks/useTheme";
 

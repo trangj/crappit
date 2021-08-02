@@ -1,10 +1,12 @@
 import React from "react";
 import toast from "react-hot-toast";
 import * as yup from "yup";
-import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import { useUser } from "../context/UserState";
-import { Button, Card, Container } from "../ui";
+import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Container } from "../ui/Container";
+import { TextFieldForm } from "../ui/TextFieldForm";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";

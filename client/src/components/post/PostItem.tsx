@@ -2,10 +2,10 @@ import React from "react";
 import Voting from "./Voting";
 import Link from "next/link";
 import Image from 'next/image';
-import { LinkCard, LinkCardOverlay } from "../../ui";
+import { LinkCard, LinkCardOverlay } from "../../ui/LinkCard";
+import { Button } from '../../ui/Button';
 import dayjs from "dayjs";
 import { Post } from "src/types/entities/post";
-import { Button } from "src/ui";
 import { ChatAltIcon, ReplyIcon } from "@heroicons/react/outline";
 import toast from "react-hot-toast";
 

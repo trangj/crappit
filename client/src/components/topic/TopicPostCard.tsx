@@ -4,8 +4,10 @@ import React from 'react';
 import { useUser } from 'src/context/UserState';
 import useAddTopicFollow from 'src/hooks/topic-query/useAddTopicFollow';
 import { Topic } from 'src/types/entities/topic';
-import { Avatar, Card, Divider } from '../../ui';
-import { Button } from '../../ui';
+import { Avatar } from '../../ui/Avatar';
+import { Card } from '../../ui/Card';
+import { Divider } from '../../ui/Divider';
+import { Button } from '../../ui/Button';
 import Image from 'next/image';
 
 type TopicCardProps = {

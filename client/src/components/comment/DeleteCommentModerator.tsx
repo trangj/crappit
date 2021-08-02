@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import useDeleteCommentModerator from "../../hooks/comment-query/useDeleteCommentModerator";
 import { Comment } from "src/types/entities/comment";
-import { Button } from "src/ui";
+import { Button } from "src/ui/Button";
 import { XCircleIcon } from "@heroicons/react/outline";
 
 type Props = {

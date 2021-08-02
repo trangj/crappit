@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import { Topic } from 'src/types/entities/topic';
 import { Comment } from 'src/types/entities/comment';
-import { Button } from 'src/ui';
+import { Button } from 'src/ui/Button';
 import { useUser } from '../../context/UserState';
 import DeleteComment from './DeleteComment';
 import DeleteCommentModerator from './DeleteCommentModerator';

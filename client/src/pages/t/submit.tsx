@@ -1,10 +1,13 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../../ui/TextFieldForm";
-import FileFieldForm from "../../ui/FileFieldForm";
 import useAddTopic from "../../hooks/topic-query/useAddTopic";
-import { Button, Card, Container, Divider } from "../../ui";
+import { Button } from "../../ui/Button";
+import { Card } from "../../ui/Card";
+import { Container } from "../../ui/Container";
+import { Divider } from "../../ui/Divider";
+import { TextFieldForm } from "../../ui/TextFieldForm";
+import { FileFieldForm } from "../../ui/FileFieldForm";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useUser } from "src/context/UserState";

@@ -4,8 +4,8 @@ import useAddTopicFollow from "../../hooks/topic-query/useAddTopicFollow";
 import Link from "next/link";
 import { Topic } from "src/types/entities/topic";
 import Image from 'next/image';
-import { Button } from "src/ui";
-import { Avatar } from "src/ui";
+import { Button } from "src/ui/Button";
+import { Avatar } from "src/ui/Avatar";
 
 type Props = {
 	topic: Topic;

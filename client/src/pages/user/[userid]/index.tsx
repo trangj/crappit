@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import useProfile, { fetchProfile } from "../../../hooks/user-query/useProfile";
 import useProfilePosts, { fetchProfilePosts } from "../../../hooks/user-query/useProfilePosts";
-import { Container } from "../../../ui";
+import { Container } from "../../../ui/Container";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";

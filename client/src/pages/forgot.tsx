@@ -1,10 +1,13 @@
 import React from "react";
 import * as yup from "yup";
-import TextFieldForm from "../ui/TextFieldForm";
 import { Formik, Form, Field } from "formik";
 import toast from "react-hot-toast";
 import axios from "../axiosConfig";
-import { Button, Card, Container, Divider } from "../ui";
+import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Container } from "../ui/Container";
+import { Divider } from "../ui/Divider";
+import { TextFieldForm } from "../ui/TextFieldForm";
 import Head from "next/head";
 
 const schema = yup.object({

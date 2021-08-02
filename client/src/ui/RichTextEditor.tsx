@@ -77,7 +77,7 @@ const ToolBar = ({ editor }: { editor: Editor | null; }) => {
     );
 };
 
-const RichTextEditor = ({ value, name, placeholder, setFieldValue, isSubmitting }: Props) => {
+export const RichTextEditor = ({ value, name, placeholder, setFieldValue, isSubmitting }: Props) => {
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -104,6 +104,3 @@ const RichTextEditor = ({ value, name, placeholder, setFieldValue, isSubmitting 
         </div>
     );
 };
-
-
-export default RichTextEditor;

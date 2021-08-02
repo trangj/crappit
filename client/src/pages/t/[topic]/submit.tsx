@@ -1,17 +1,20 @@
 import React, { Fragment } from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../../../ui/TextFieldForm";
-import FileFieldForm from "../../../ui/FileFieldForm";
-import SelectFieldForm from "../../../ui/SelectFieldForm";
-import { Button, Card, Container, Divider } from "../../../ui";
+import { TextFieldForm } from "../../../ui/TextFieldForm";
+import { FileFieldForm } from "../../../ui/FileFieldForm";
+import { SelectFieldForm } from "../../../ui/SelectFieldForm";
+import { Button } from "../../../ui/Button";
+import { Card } from "../../../ui/Card";
+import { Container } from "../../../ui/Container";
+import { Divider } from "../../../ui/Divider";
 import useTopics from "../../../hooks/topic-query/useTopics";
 import useAddPost from "../../../hooks/post-query/useAddPost";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useUser } from "src/context/UserState";
-import RichTextEditor from "src/ui/RichTextEditor";
+import { RichTextEditor } from "src/ui/RichTextEditor";
 import { Tab } from "@headlessui/react";
 import { DocumentTextIcon, LinkIcon, PhotographIcon } from "@heroicons/react/solid";
 

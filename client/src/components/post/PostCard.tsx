@@ -3,14 +3,14 @@ import DeletePostModerator from "./DeletePostModerator";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
 import Voting from "./Voting";
-import { Card } from "../../ui";
+import { Card } from "../../ui/Card";
+import { Button } from "../../ui/Button";
 import Link from "next/link";
 import Image from 'next/image';
 import { useUser } from "../../context/UserState";
 import dayjs from "dayjs";
 import { Post } from "src/types/entities/post";
 import { Topic } from "src/types/entities/topic";
-import { Button } from "src/ui";
 import { ChatAltIcon, PencilIcon, ReplyIcon } from "@heroicons/react/outline";
 import toast from "react-hot-toast";
 

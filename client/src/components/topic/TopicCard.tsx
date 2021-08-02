@@ -3,7 +3,9 @@ import Link from 'next/link';
 import React from 'react';
 import { useUser } from 'src/context/UserState';
 import { Topic } from 'src/types/entities/topic';
-import { Button, Card, Divider } from '../../ui';
+import { Button } from '../../ui/Button';
+import { Card } from '../../ui/Card';
+import { Divider } from '../../ui/Divider';
 
 type TopicCardProps = {
     topicData: Topic,

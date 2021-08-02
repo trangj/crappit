@@ -1,7 +1,8 @@
 import { FireIcon, SparklesIcon, ChartBarIcon } from '@heroicons/react/solid';
 import router from 'next/router';
 import React from 'react';
-import { Card, Button } from 'src/ui';
+import { Card } from 'src/ui/Card';
+import { Button } from 'src/ui/Button';
 
 type Props = {
     sortParam: string,
