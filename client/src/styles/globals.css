@@ -32,10 +32,10 @@
 		@apply hover:underline;
 	}
 	ul {
-		@apply list-inside list-disc inline;
+		@apply list-inside list-disc pt-2;
 	}
 	ol {
-		@apply list-inside list-decimal inline;
+		@apply list-inside list-decimal pt-2;
 	}
 	p {
 		@apply pt-2;
@@ -132,4 +132,4 @@
 	color: #71717A;
     pointer-events: none;
     height: 0;
-  }
+}

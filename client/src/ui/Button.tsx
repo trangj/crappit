@@ -60,7 +60,7 @@ export const Button = React.forwardRef(({
         <Component
             disabled={disabled || loading}
             className={`button ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${fullWidth ? 'w-full' : ''} ${className}`}
-            type={type}
+            type={Component === "button" ? type : undefined}
             ref={ref}
             {...props}
         >
