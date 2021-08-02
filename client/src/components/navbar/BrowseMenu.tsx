@@ -59,7 +59,7 @@ const BrowseMenu = ({ user }: Props) => {
 							</Menu.Item>
 						) : (
 							!isLoading && data && data.topics_followed.map((topic, i) => (
-								<Menu.Item as={NextLink} key={i} href={`/t/${topic.title}`} icon={topic.icon_image_name ? <Image src={topic.icon_image_name} width={20} height={20} className="rounded-full" /> : <Avatar className="h-5 w-5 flex-none" />}>
+								<Menu.Item as={NextLink} key={i} href={`/t/${topic.title}`} icon={topic.icon_image_name ? <Image alt="topic icon" src={topic.icon_image_name} width={20} height={20} className="rounded-full" /> : <Avatar className="h-5 w-5 flex-none" />}>
 									t/{topic.title}
 								</Menu.Item>
 							))

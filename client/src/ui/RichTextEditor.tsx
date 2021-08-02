@@ -16,7 +16,7 @@ const ToolBar = ({ editor }: { editor: Editor | null; }) => {
     if (!editor) return null;
 
     return (
-        <div className="flex p-1 dark:bg-gray-800">
+        <div className="flex p-1 dark:bg-gray-800 bg-gray-50">
             <Button
                 variant="ghost"
                 size="lg"
