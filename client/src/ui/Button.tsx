@@ -10,7 +10,7 @@ export type ButtonProps = DetailedHTMLProps<
     HTMLButtonElement
 > & {
     variant?: "outline" | "filled" | "ghost";
-    border?: "rounded" | "rounded-full";
+    border?: "rounded" | "rounded-full" | "none";
     size?: "sm" | "md" | "lg";
     loading?: boolean;
     active?: boolean;
@@ -25,18 +25,20 @@ export const Button = React.forwardRef(({
     border = "rounded-full",
     size = "md",
     as: Component = "button",
+    type = "button",
+    className = "",
     disabled,
     active,
     loading,
     icon,
-    className = "",
     fullWidth,
     ...props
 }: ButtonProps, ref) => {
 
     const borderOptions = {
         "rounded-full": "rounded-full px-2",
-        "rounded": "rounded"
+        "rounded": "rounded",
+        "none": ""
     };
 
     const variantOptions = {
@@ -58,8 +60,9 @@ export const Button = React.forwardRef(({
         <Component
             disabled={disabled || loading}
             className={`button ${variantOptions[variant]} ${borderOptions[border]} ${sizeOptions[size]} ${disabled ? 'cursor-not-allowed opacity-70' : ''} ${fullWidth ? 'w-full' : ''} ${className}`}
-            {...props}
+            type={type}
             ref={ref}
+            {...props}
         >
             <span className={loading ? "opacity-0" : `flex items-center`}>
                 {icon ? icon : null}

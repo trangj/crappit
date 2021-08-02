@@ -1,10 +1,10 @@
 import React from "react";
 import * as yup from "yup";
-import TextFieldForm from "../../ui/TextFieldForm";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import useUpdateComment from "../../hooks/comment-query/useUpdateComment";
 import { Comment } from "src/types/entities/comment";
 import { Button } from '../../ui';
+import RichTextEditor from "src/ui/RichTextEditor";
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -41,9 +41,15 @@ const UpdateComment = ({ comment, openEdit, setOpenEdit }: Props) => {
 			onSubmit={handleSubmit}
 			validationSchema={schema}
 		>
-			{({ values }) => (
+			{({ values, setFieldValue, isSubmitting }) => (
 				<Form>
-					<Field name="content" multiline component={TextFieldForm} />
+					<RichTextEditor
+						value={values.content}
+						placeholder="What are your thoughts?"
+						name="content"
+						setFieldValue={setFieldValue}
+						isSubmitting={isSubmitting}
+					/>
 					<div className="flex justify-end gap-2">
 						<Button className="w-24" onClick={() => setOpenEdit(false)}>
 							Cancel

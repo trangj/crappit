@@ -45,9 +45,7 @@ const PostItem = ({ post, ...props }: Props) => {
 						</Link>
 					</h6>
 					{post.type === "text" && (
-						<p>
-							{post.content}
-						</p>
+						<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
 					)}
 					{post.type === "link" && (
 						<a href={post.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs">

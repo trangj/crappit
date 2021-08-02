@@ -82,11 +82,11 @@ const HomePage = () => {
 				</div>
 				<SideBar>
 					<Card className="flex flex-col gap-3 p-3">
-						<p className="font-semibold">Home</p>
-						<p>
+						<div className="font-semibold">Home</div>
+						<div>
 							Your personal Crappit frontpage. Come here to check in with your
 							favorite topics.
-						</p>
+						</div>
 						<Link passHref href={`/submit`}>
 							<Button variant="filled" fullWidth as="a">
 								Create Post

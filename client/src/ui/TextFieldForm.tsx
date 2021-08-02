@@ -13,7 +13,7 @@ const TextFieldForm = ({ field, form, multiline, label, ...props }: Props) => {
 		getIn(form.touched, field.name) && getIn(form.errors, field.name);
 	return (
 		<>
-			<p className="font-medium">{label}</p>
+			<div className="font-medium">{label}</div>
 			{!!multiline ? (
 				<textarea {...field} {...props} className={`text-input h-32 ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-300'}`} />
 			) : (

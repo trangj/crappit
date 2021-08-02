@@ -37,7 +37,7 @@ const AllTopics = () => {
 								</LinkCardOverlay>
 							</Link>
 						</h6>
-						<p>{topic.description}</p>
+						<div>{topic.description}</div>
 					</LinkCard>
 				))
 			) : (

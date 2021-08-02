@@ -86,7 +86,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 						/>
 					) : (
 						<>
-							<p>{comment.is_deleted ? "[deleted]" : comment.content}</p>
+							{comment.is_deleted ? <div>[deleted]</div> : <div dangerouslySetInnerHTML={{ __html: comment.content }}></div>}
 							{!comment.is_deleted && (
 								<div className="flex gap-2 mt-1">
 									<CommentVoting comment={comment} />

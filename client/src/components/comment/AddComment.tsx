@@ -1,12 +1,12 @@
-import { Formik, Form, Field, FormikHelpers } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import Link from 'next/link';
 import React from 'react';
 import { Button } from '../../ui';
-import TextFieldForm from '../../ui/TextFieldForm';
 import { useUser } from '../../context/UserState';
 import * as yup from "yup";
 import useAddComment from "../../hooks/comment-query/useAddComment";
 import { Post } from '../../types/entities/post';
+import RichTextEditor from 'src/ui/RichTextEditor';
 
 const schema = yup.object({
     content: yup.string().required(""),
@@ -44,9 +44,9 @@ const AddComment = ({ post, sortParam }: Props) => {
     if (!user) {
         return (
             <div className="flex border rounded p-3 mb-3 border-gray-400 dark:border-gray-600 items-center">
-                <p className="font-medium text-gray-500">
+                <div className="font-medium text-gray-500">
                     Log in or sign up to leave a comment
-                </p>
+                </div>
                 <div className="flex gap-2 ml-auto">
                     <Link passHref href="/login">
                         <Button as="a" className="w-24">
@@ -69,22 +69,25 @@ const AddComment = ({ post, sortParam }: Props) => {
                 Comment as <Link href={`/user/${user.id}`}><a className="hover:underline text-blue-500 dark:text-blue-400">{user.username}</a></Link>
             </small>
             <Formik
-                initialValues={{ content: "" }}
+                initialValues={{
+                    content: '<p></p>'
+                }}
                 onSubmit={handleSubmit}
                 validationSchema={schema}
             >
-                {({ values }) => (
+                {({ values, setFieldValue, isSubmitting }) => (
                     <Form>
-                        <Field
-                            name="content"
-                            multiline
-                            component={TextFieldForm}
+                        <RichTextEditor
+                            value={values.content}
                             placeholder="What are your thoughts?"
+                            name="content"
+                            setFieldValue={setFieldValue}
+                            isSubmitting={isSubmitting}
                         />
                         <Button
                             type="submit"
                             loading={isLoading}
-                            disabled={!!!values.content}
+                            disabled={values.content === '<p></p>'}
                             variant="filled"
                             className="w-24 ml-auto"
                         >

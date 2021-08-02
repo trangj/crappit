@@ -27,9 +27,9 @@ const CommentToolBar = ({ setOpenReply, setOpenEdit, openEdit, openReply, commen
                     variant="ghost"
                     border="rounded"
                     className="text-xs"
+                    icon={<ChatAltIcon className="h-5 w-5 mr-1" />}
                     as="a"
                 >
-                    <ChatAltIcon className="h-5 w-5 mr-1" />
                     Reply
                 </Button>
             </Link>

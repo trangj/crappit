@@ -81,7 +81,7 @@ const Settings = () => {
 					<Divider className="my-1" />
 					<div className="flex items-center">
 						<div>
-							<p className="font-medium">Change password</p>
+							<div className="font-medium">Change password</div>
 							<small className="text-gray-500 dark:text-gray-400">Password must be 6 characters long</small>
 						</div>
 						<Button onClick={() => handlePassword(user.email)} className="ml-auto">
@@ -90,7 +90,7 @@ const Settings = () => {
 					</div>
 					<div className="flex items-center">
 						<div>
-							<p className="font-medium">Email address</p>
+							<div className="font-medium">Email address</div>
 							<small className="text-gray-500 dark:text-gray-400">{user.email}</small>
 						</div>
 						<Button onClick={() => setOpen(true)} className="ml-auto">
@@ -113,7 +113,7 @@ const Settings = () => {
 										Update your email below. There will be a new verification email sent that you will need to use to verify this new email.
 									</Dialog.Description>
 									<form onSubmit={handleEmail}>
-										<p>Current Password</p>
+										<div>Current Password</div>
 										<input
 											type="password"
 											value={password}
@@ -121,7 +121,7 @@ const Settings = () => {
 											required
 											className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
 										/>
-										<p>New Email</p>
+										<div>New Email</div>
 										<input
 											type="email"
 											value={newEmail}
@@ -139,7 +139,7 @@ const Settings = () => {
 					</div>
 					<h6>Customize Profile</h6>
 					<Divider className="my-1" />
-					<p className="font-medium">Avatar image</p>
+					<div className="font-medium">Avatar image</div>
 					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
 					<small className="text-gray-500 dark:text-gray-400">Images must be in .png or .jpg format</small>
 				</div>

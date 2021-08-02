@@ -1,4 +1,5 @@
 import express from "express";
+import sanitizeHtml from 'sanitize-html';
 import { auth } from "../middleware/auth";
 import { Post, User, Comment, CommentVote } from "../entities";
 
@@ -17,7 +18,7 @@ router.post("/", auth, async (req, res) => {
 
 		const newComment = await Comment.create({
 			author: user,
-			content: req.body.content,
+			content: sanitizeHtml(req.body.content),
 			post: commentPost,
 		}).save();
 
@@ -56,7 +57,7 @@ router.put("/:commentid", auth, async (req, res) => {
 		const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
 		if (!comment) throw Error("No comment exists or you are not the author");
 
-		comment.content = req.body.content;
+		comment.content = sanitizeHtml(req.body.content);
 		comment.is_edited = true;
 
 		await comment.save();
@@ -177,7 +178,7 @@ router.post("/:commentid/reply", auth, async (req, res) => {
 
 		const newComment = await Comment.create({
 			author: user,
-			content: req.body.content,
+			content: sanitizeHtml(req.body.content),
 			post: commentPost,
 			parent_comment: comment
 		}).save();

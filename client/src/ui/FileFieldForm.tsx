@@ -12,7 +12,7 @@ const FileFieldForm = ({ field, form, setFieldValue, label, ...props }: Props) =
 	const error = getIn(form.errors, field.name);
 	return (
 		<>
-			<p className="font-medium">{label}</p>
+			<div className="font-medium">{label}</div>
 			<input
 				{...props}
 				type="file"

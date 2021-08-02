@@ -1,10 +1,10 @@
 import React from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import * as yup from "yup";
-import TextFieldForm from "../../ui/TextFieldForm";
 import useAddReply from "../../hooks/comment-query/useAddReply";
 import { Comment } from "src/types/entities/comment";
 import { Button } from '../../ui';
+import RichTextEditor from 'src/ui/RichTextEditor';
 
 const schema = yup.object({
 	content: yup.string().required(""),
@@ -42,9 +42,15 @@ const AddReply = ({ comment, openReply, setOpenReply }: Props) => {
 			onSubmit={handleSubmit}
 			validationSchema={schema}
 		>
-			{({ values }) => (
+			{({ values, setFieldValue, isSubmitting }) => (
 				<Form>
-					<Field name="content" multiline component={TextFieldForm} />
+					<RichTextEditor
+						value={values.content}
+						placeholder="What are your thoughts?"
+						name="content"
+						setFieldValue={setFieldValue}
+						isSubmitting={isSubmitting}
+					/>
 					<div className="flex justify-end gap-2">
 						<Button className="w-24" onClick={() => setOpenReply(false)}>
 							Cancel

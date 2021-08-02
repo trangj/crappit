@@ -56,7 +56,7 @@ const PostCard = ({ post, topic }: Props) => {
 						setOpenEdit={setOpenEdit}
 					/>
 				) : (
-					post.type === "text" && <p>{post.content}</p>
+					post.type === "text" && <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
 				)}
 				{post.type === "photo" && (
 					<a href={`https://crappit.imgix.net/${post.image_name}`} target="_blank" rel="noopener noreferrer">

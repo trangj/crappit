@@ -1,4 +1,5 @@
 import express from "express";
+import sanitizeHtml from 'sanitize-html';
 import { upload, deleteFile } from "../middleware/upload";
 import { auth, optionalAuth } from "../middleware/auth";
 import { Post, Topic, User, Vote } from "../entities";
@@ -48,7 +49,7 @@ router.post("/", auth, upload, async (req, res) => {
 		const newPost = Post.create({
 			title: req.body.title,
 			type: req.body.type,
-			content: req.body.content,
+			content: sanitizeHtml(req.body.content),
 			image_url: req.file ? req.file.location : "",
 			image_name: req.file ? req.file.key : "",
 			author: user,
@@ -98,7 +99,7 @@ router.put("/:id", auth, async (req, res) => {
 		if (post.type !== "text") throw Error("You can only edit text posts");
 
 		if (!req.body.content) throw Error("Missing required fields");
-		post.content = req.body.content;
+		post.content = sanitizeHtml(req.body.content);
 
 		await post.save();
 

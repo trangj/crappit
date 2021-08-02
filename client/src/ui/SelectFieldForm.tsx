@@ -6,16 +6,17 @@ type Props = {
 	form: any,
 	label: string,
 	placeholder?: ReactNode,
+	className?: string,
 	children: ReactNode;
 };
 
-const SelectFieldForm = ({ field, form, children, label, placeholder, ...props }: Props) => {
+const SelectFieldForm = ({ field, form, children, label, placeholder, className = "", ...props }: Props) => {
 	const error =
 		getIn(form.touched, field.name) && getIn(form.errors, field.name);
 	return (
 		<>
-			<p className="font-medium">{label}</p>
-			<select {...field} {...props} className={`select-input ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'}`}>
+			<div className="font-medium">{label}</div>
+			<select {...field} {...props} className={`select-input ${!!error ? 'border-red-500' : 'dark:border-gray-700 border-gray-400'} ${className}`}>
 				<option value="" selected className="select-option">{placeholder}</option>
 				{children}
 			</select>

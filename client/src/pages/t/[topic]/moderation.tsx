@@ -87,10 +87,10 @@ const Moderation = () => {
 					<UpdateTopic topic={topicData} />
 					<h6>Topic Appearance</h6>
 					<Divider className="my-1" />
-					<p className="font-medium">Topic Icon</p>
+					<div className="font-medium">Topic Icon</div>
 					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleIcon} />
 					<small className="text-gray-500 dark:text-gray-400">Required Size: 256x256px</small>
-					<p className="font-medium">Topic Banner</p>
+					<div className="font-medium">Topic Banner</div>
 					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleBanner} />
 					<small className="text-gray-500 dark:text-gray-400">Recommended upload size: 4,000x128px</small>
 					<h6 >Moderators</h6>

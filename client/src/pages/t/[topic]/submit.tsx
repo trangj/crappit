@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
 import TextFieldForm from "../../../ui/TextFieldForm";
@@ -11,7 +11,11 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useUser } from "src/context/UserState";
+import RichTextEditor from "src/ui/RichTextEditor";
+import { Tab } from "@headlessui/react";
+import { DocumentTextIcon, LinkIcon, PhotographIcon } from "@heroicons/react/solid";
 
+const types = ['text', 'link', 'photo'];
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
 const schema = yup.object({
@@ -35,7 +39,7 @@ interface FormValues {
 	link: string,
 	file: File | "",
 	topic: string;
-	type: 'text' | 'link' | 'photo';
+	type: 0 | 1 | 2;
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
@@ -63,8 +67,13 @@ const AddPost = () => {
 	} = useTopics();
 	const { isLoading, mutate } = useAddPost();
 
-	let type = router.query.type;
-	if (type !== "text" && type !== "link" && type !== "photo") type = "text";
+	const queryType = router.query.type;
+	let type = 0;
+	if (queryType === "link") {
+		type = 1;
+	} else if (queryType === "photo") {
+		type = 2;
+	}
 
 	if (!user) {
 		router.push('/login');
@@ -72,11 +81,12 @@ const AddPost = () => {
 	};
 
 	const handleSubmit = ({ title, content, link, type, file, topic }: FormValues) => {
+		console.log('hello');
 		const formData = new FormData();
 		formData.append("file", file);
 		formData.append("title", title);
 		formData.append("content", content ? content : link);
-		formData.append("type", type);
+		formData.append("type", types[type]);
 		formData.append("topic", topic);
 		mutate({ formData });
 	};
@@ -94,82 +104,107 @@ const AddPost = () => {
 			<Head>
 				<title>Submit to {topic}</title>
 			</Head>
-			<Card className="p-3 flex flex-col gap-2">
-				<h5>Create a post</h5>
-				<Divider />
-				<Formik
-					initialValues={initialValues}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{({ setFieldValue, values }) => (
-						<Form>
-							<Field
-								label="Topic"
-								name="topic"
-								component={SelectFieldForm}
-								placeholder={
-									topicsIsLoading
-										? "Loading..."
-										: topicsError
-											? topicsError.status.text
-											: "Choose a topic"
-								}
+			<h5>Create a post</h5>
+			<Divider className="my-3" />
+			<Formik
+				initialValues={initialValues}
+				onSubmit={handleSubmit}
+				validationSchema={schema}
+			>
+				{({ setFieldValue, values, isSubmitting }) => (
+					<Form className="flex flex-col">
+						<Field
+							name="topic"
+							className="w-1/3"
+							component={SelectFieldForm}
+							placeholder={
+								topicsIsLoading
+									? "Loading..."
+									: topicsError
+										? topicsError.status.text
+										: "Choose a topic"
+							}
+						>
+							{!topicsIsLoading && topicsData &&
+								topicsData.map((topic) => (
+									<option key={topic.title} value={topic.title} className="select-option">
+										t/{topic.title}
+									</option>
+								))}
+						</Field>
+						<Card className="mt-3">
+							<Tab.Group
+								defaultIndex={values.type}
+								onChange={(i) => setFieldValue('type', i)}
 							>
-								{!topicsIsLoading && topicsData &&
-									topicsData.map((topic) => (
-										<option key={topic.title} value={topic.title} className="select-option">
-											t/{topic.title}
-										</option>
-									))}
-							</Field>
-							<div role="group" aria-labelledby="type-group" className="flex justify-evenly mt-2">
-								<label>
-									Text
-									<Field type="radio" id="text_type" name="type" value="text" className="ml-2" />
-								</label>
-								<label>
-									Link
-									<Field type="radio" id="link_type" name="type" value="link" className="ml-2" />
-								</label>
-								<label>
-									Photo/GIF
-									<Field type="radio" id="photo_type" name="type" value="photo" className="ml-2" />
-								</label>
-							</div>
-							<Field label="Title" name="title" component={TextFieldForm} />
-							{values.type === "text" && (
-								<Field
-									label="Content"
-									name="content"
-									multiline
-									component={TextFieldForm}
-								/>
-							)}
-							{values.type === "link" && (
-								<Field label="Link" name="link" component={TextFieldForm} />
-							)}
-							{values.type === "photo" && (
-								<Field
-									label="File"
-									name="file"
-									component={FileFieldForm}
-									setFieldValue={setFieldValue}
-								/>
-							)}
-							<Button
-								type="submit"
-								loading={isLoading}
-								disabled={!!!values.title || !!!values.topic}
-								className="mt-2 w-20 ml-auto"
-								variant="filled"
-							>
-								Post
-							</Button>
-						</Form>
-					)}
-				</Formik>
-			</Card>
+								<Tab.List as="div" className="flex">
+									<Tab as={Fragment}>
+										{({ selected }) => (
+											<Button variant="ghost" border="none" icon={<DocumentTextIcon className="w-6 h-6" />}
+												className="py-4 px-10 flex flex-1 items-center border-gray-300 dark:border-gray-700 border-r border-b"
+												active={selected}
+											>
+												Text
+											</Button>
+										)}
+									</Tab>
+									<Tab as={Fragment}>
+										{({ selected }) => (
+											<Button variant="ghost" border="none" icon={<LinkIcon className="w-6 h-6" />}
+												className="py-4 px-10 flex flex-1 items-center border-gray-300 dark:border-gray-700 border-r border-b"
+												active={selected}
+											>
+												Link
+											</Button>
+										)}
+									</Tab>
+									<Tab as={Fragment}>
+										{({ selected }) => (
+											<Button variant="ghost" border="none" icon={<PhotographIcon className="w-6 h-6" />}
+												className="py-4 px-10 flex flex-1 items-center border-gray-300 dark:border-gray-700 border-r border-b"
+												active={selected}
+											>
+												Photo/GIF
+											</Button>
+										)}
+									</Tab>
+								</Tab.List>
+								<Tab.Panels as="div" className="p-3">
+									<Field name="title" placeholder="Title" component={TextFieldForm} />
+									<Tab.Panel>
+										<RichTextEditor
+											value={values.content}
+											placeholder="Text (optional)"
+											name="content"
+											setFieldValue={setFieldValue}
+											isSubmitting={isSubmitting}
+										/>
+									</Tab.Panel>
+									<Tab.Panel>
+										<Field placeholder="Link" name="link" component={TextFieldForm} />
+									</Tab.Panel>
+									<Tab.Panel>
+										<Field
+											name="file"
+											component={FileFieldForm}
+											setFieldValue={setFieldValue}
+										/>
+									</Tab.Panel>
+									<Button
+										type="submit"
+										loading={isLoading}
+										disabled={!!!values.title || !!!values.topic}
+										className="mt-2 w-20 ml-auto"
+										variant="filled"
+									>
+										Post
+									</Button>
+								</Tab.Panels>
+							</Tab.Group>
+						</Card>
+					</Form>
+				)}
+			</Formik>
 		</Container>
 	);
 };

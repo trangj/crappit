@@ -31,6 +31,18 @@
 	small a {
 		@apply hover:underline;
 	}
+	ul {
+		@apply list-inside list-disc inline;
+	}
+	ol {
+		@apply list-inside list-decimal inline;
+	}
+	p {
+		@apply pt-2;
+	}
+	li p {
+		@apply inline;
+	}
 }
 
 @layer components {
@@ -82,13 +94,15 @@
 
 	/* Select Input */
 	.select-input {
-		@apply w-full p-2 mt-2 bg-transparent border rounded;
+		@apply p-2 mt-2 bg-white dark:bg-gray-850 border rounded;
 	}
 	.select-option {
 		@apply bg-white dark:bg-gray-800;
 	}
+	
 }
 
+/* Link card styling */
 .link_card_overlay::before {
 	content: '';
     cursor: inherit;
@@ -105,3 +119,17 @@
 	position: relative;
 	z-index: 1;
 }
+
+/* TipTap styling */
+.ProseMirror {
+	padding: 0.2rem	1rem;
+	min-height: 130px;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+	color: #71717A;
+    pointer-events: none;
+    height: 0;
+  }

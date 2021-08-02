@@ -28,9 +28,9 @@ const CommentList = ({ isCommentsLoading, comments, topic }: Props) => {
             <div className="flex h-64 items-center justify-center">
                 <div className="text-gray-400 text-center">
                     <ChatAlt2Icon className="w-6 h-6 inline" />
-                    <p className="font-semibold">
+                    <div className="font-semibold">
                         No Comments Yet
-                    </p>
+                    </div>
                     <small>
                         Be the first to share what you think!
                     </small>

@@ -14,7 +14,7 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
     return (
         <Card className="p-3 flex flex-col gap-3">
             <div className="flex items-center">
-                <p className="text-gray-500 dark:text-gray-400 font-semibold text-sm">About Community</p>
+                <div className="text-gray-500 dark:text-gray-400 font-semibold text-sm">About Community</div>
                 {user && topicData.user_moderator_id && (
                     <Link
                         href={`/t/${topicData.title}/moderation`}
@@ -31,13 +31,13 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                     </Link>
                 )}
             </div>
-            <p>{topicData.description}</p>
+            <div>{topicData.description}</div>
             <div>
-                <p className="font-medium -mb-1">{topicData.number_of_followers}</p>
+                <div className="font-medium -mb-1">{topicData.number_of_followers}</div>
                 <small>Follower{topicData.number_of_followers === 1 ? "" : "s"}</small>
             </div>
             <Divider />
-            <p>Created {dayjs(topicData.created_at).format("LL")}</p>
+            <div>Created {dayjs(topicData.created_at).format("LL")}</div>
             <Link passHref href={`/t/${topicData.title}/submit`}>
                 <Button
                     as="a"

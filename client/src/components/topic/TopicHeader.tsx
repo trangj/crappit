@@ -60,7 +60,7 @@ const TopicHeader = ({ topic }: Props) => {
 								</Link>
 							)}
 						</div>
-						<p className="text-gray-500 dark:text-gray-400">t/{topic.title}</p>
+						<div className="text-gray-500 dark:text-gray-400">t/{topic.title}</div>
 					</div>
 				</div>
 			</div>

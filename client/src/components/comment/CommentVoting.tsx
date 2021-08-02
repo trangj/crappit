@@ -50,7 +50,7 @@ const CommentVoting = ({ comment }: Props) => {
 					/>
 				</Link>
 			)}
-			<p className={
+			<div className={
 				`mx-0.5 text-xs font-bold self-center ${user
 					? comment.user_vote === 1
 						? "text-upvote"
@@ -61,7 +61,7 @@ const CommentVoting = ({ comment }: Props) => {
 			}
 			>
 				{comment.vote}
-			</p>
+			</div>
 			{user ? (
 				<Button
 					aria-label="Upvote"
