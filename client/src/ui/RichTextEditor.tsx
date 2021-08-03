@@ -6,10 +6,10 @@ import { Link } from '@tiptap/extension-link';
 import { Button } from './Button';
 
 type Props = {
-    value: any,
+    value: string,
     name: string;
     placeholder: string;
-    setFieldValue: any;
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void;
     isSubmitting: boolean;
 };
 

@@ -1,15 +1,22 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 import axios from "../axiosConfig";
 import { User } from "src/types/entities/user";
+import { AxiosResponse } from "axios";
+
+type LoginProps = { email: string, password: string; };
+type RegisterProps = { username: string, email: string, password: string, password2: string; };
 
 type UserProviderProps = {
 	user: User | null;
-	token: string;
+	logoutUser: () => Promise<void>,
+	loginUser: (login: LoginProps) => Promise<AxiosResponse<any>>,
+	registerUser: (register: RegisterProps) => Promise<AxiosResponse<any>>,
+	setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
-const UserContext = createContext<any>({});
+const UserContext = createContext<UserProviderProps>({} as UserProviderProps);
 
-export const UserProvider: React.FC<UserProviderProps> = ({ user, token, children }) => {
+export const UserProvider: React.FC<{ user: User | null, children: ReactNode; }> = ({ user, children }) => {
 	const [current_user, setUser] = useState(user);
 
 	async function logoutUser() {
@@ -22,9 +29,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 		}
 	}
 
-	async function loginUser(user: any) {
+	async function loginUser(login: LoginProps) {
 		try {
-			const res = await axios.post(`/api/user/login`, user);
+			const res = await axios.post(`/api/user/login`, login);
 			axios.defaults.headers.authorization = res.data.access_token;
 			setUser(res.data.user);
 			return res;
@@ -33,9 +40,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ user, token, childre
 		}
 	}
 
-	async function registerUser(user: any) {
+	async function registerUser(register: RegisterProps) {
 		try {
-			const res = await axios.post(`/api/user/register`, user);
+			const res = await axios.post(`/api/user/register`, register);
 			axios.defaults.headers.authorization = res.data.access_token;
 			setUser(res.data.user);
 			return res;

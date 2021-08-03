@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 type Props = {
 	user: User,
-	logoutUser: any;
+	logoutUser: () => Promise<void>;
 	theme: string;
 	setTheme: (arg: string) => void;
 };

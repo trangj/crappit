@@ -116,7 +116,7 @@ const AddPost = () => {
 					<Form className="flex flex-col">
 						<Field
 							name="topic"
-							className="w-1/3"
+							className="sm:w-80 w-full"
 							component={SelectFieldForm}
 							placeholder={
 								topicsIsLoading

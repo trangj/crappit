@@ -1,10 +1,8 @@
 import React from "react";
-import { getIn } from "formik";
+import { FieldProps, getIn } from "formik";
 
-type Props = {
-	field: any,
-	form: any,
-	setFieldValue: any,
+type Props = FieldProps & {
+	setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
 	label: string,
 };
 

@@ -1,9 +1,7 @@
 import React from "react";
-import { getIn } from "formik";
+import { FieldProps, getIn } from "formik";
 
-type Props = {
-	field: any,
-	form: any,
+type Props = FieldProps & {
 	label: string,
 	multiline: any;
 };

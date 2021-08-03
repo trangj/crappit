@@ -5,7 +5,7 @@ import useTopicFollow from "../../hooks/topic-query/useTopicFollow";
 import { Divider } from 'src/ui/Divider';
 
 type Props = {
-    user: User;
+    user: User | null;
     logoutUser: () => void;
     showMenu: (arg: boolean) => void;
     theme: string;

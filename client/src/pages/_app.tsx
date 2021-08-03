@@ -51,7 +51,7 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
             <Head>
                 <meta property="og:image" content="https://crappit.me/img/logo.png" key="default" />
             </Head>
-            <UserProvider user={user} token={token}>
+            <UserProvider user={user}>
                 <QueryClientProvider client={queryClient}>
                     <NavigationBar />
                     <Hydrate state={pageProps.dehydratedState}>
