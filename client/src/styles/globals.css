@@ -43,6 +43,9 @@
 	li p {
 		@apply inline;
 	}
+	p a {
+		@apply hover:underline text-blue-500 dark:text-blue-400 cursor-pointer
+	}
 }
 
 @layer components {

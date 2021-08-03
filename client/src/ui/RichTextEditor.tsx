@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Placeholder } from '@tiptap/extension-placeholder';
+import { Link } from '@tiptap/extension-link';
 import { Button } from './Button';
 
 type Props = {
@@ -37,6 +38,18 @@ const ToolBar = ({ editor }: { editor: Editor | null; }) => {
                 variant="ghost"
                 size="lg"
                 border="rounded"
+                icon={<i className="fas fa-link"></i>}
+                onClick={() => {
+                    const url = window.prompt('URL');
+                    if (!url) return;
+                    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+                }}
+                active={editor.isActive('link')}
+            />
+            <Button
+                variant="ghost"
+                size="lg"
+                border="rounded"
                 icon={<i className="fas fa-strikethrough"></i>}
                 onClick={() => editor.chain().focus().toggleStrike().run()}
                 active={editor.isActive('strike')}
@@ -49,6 +62,7 @@ const ToolBar = ({ editor }: { editor: Editor | null; }) => {
                 onClick={() => editor.chain().focus().toggleCode().run()}
                 active={editor.isActive('code')}
             />
+            <div className="border-r border-gray-300 dark:border-gray-700 w-px m-2"></div>
             <Button
                 variant="ghost"
                 size="lg"
@@ -83,7 +97,8 @@ export const RichTextEditor = ({ value, name, placeholder, setFieldValue, isSubm
             StarterKit,
             Placeholder.configure({
                 placeholder
-            })
+            }),
+            Link
         ],
         content: value,
         onUpdate: ({ editor }) => {
