@@ -22,8 +22,9 @@ const SortComment = ({ sortParam, setSortParam, topic, post }: Props) => {
     return (
         <Listbox value={sortParam} onChange={handleSortChange} as="div" className="relative">
             <Listbox.Button className="font-medium text-blue-600 dark:text-blue-400 text-xs capitalize" >Sort by: {sortParam === '' ? 'Hot' : sortParam}</Listbox.Button>
-            <Listbox.Options className="cursor-pointer z-10 w-16 font-medium absolute left-0 origin-top-right border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded flex flex-col">
+            <Listbox.Options as="div" className="cursor-pointer z-10 w-16 font-medium absolute left-0 origin-top-right border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded flex flex-col">
                 <Listbox.Option
+                    as="div"
                     value="hot"
                     className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
                 >
@@ -34,6 +35,7 @@ const SortComment = ({ sortParam, setSortParam, topic, post }: Props) => {
                     )}
                 </Listbox.Option>
                 <Listbox.Option
+                    as="div"
                     value="new"
                     className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
                 >
@@ -44,6 +46,7 @@ const SortComment = ({ sortParam, setSortParam, topic, post }: Props) => {
                     )}
                 </Listbox.Option>
                 <Listbox.Option
+                    as="div"
                     value="top"
                     className="p-2 hover:bg-blue-400 hover:bg-opacity-10"
                 >
