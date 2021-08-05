@@ -24,7 +24,7 @@ const MobileMenu = ({ user, logoutUser, showMenu, theme, setTheme }: Props) => {
 
 
     return (
-        <div className="flex flex-col mt-3">
+        <div className="flex sm:hidden flex-col mt-3">
             <Link href="/" passHref>
                 <MenuItem onClick={() => showMenu(false)}>
                     Home

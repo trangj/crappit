@@ -7,12 +7,10 @@ import MobileMenu from "./MobileMenu";
 import { Button } from "src/ui/Button";
 import { MenuIcon } from '@heroicons/react/outline';
 import { useTheme } from "src/hooks/useTheme";
-import useViewport from "src/hooks/useViewport";
 
 const NavigationBar = () => {
 	const { logoutUser, user } = useUser();
 	const { theme, setTheme } = useTheme();
-	const { width } = useViewport();
 	const [menu, showMenu] = useState(false);
 
 	return (
@@ -27,43 +25,36 @@ const NavigationBar = () => {
 							</div>
 						</a>
 					</Link>
-					{width > 640 ? (
-						<>
-							<BrowseMenu user={user} />
-							<div className="w-full" />
-							<div className="hidden sm:flex gap-2">
-								{!user ? (
-									<>
-										<Link passHref href="/login">
-											<Button className="w-32" as="a">
-												Login
-											</Button>
-										</Link>
-										<Link passHref href="/register">
-											<Button className="w-32" variant="filled" as="a">
-												Register
-											</Button>
-										</Link>
-									</>
-								) : (
-									<UserMenu user={user} logoutUser={logoutUser} theme={theme} setTheme={setTheme} />
-								)}
-							</div>
-						</>
-					) : (
-						<>
-							<div className="w-full" />
-							<Button
-								onClick={() => showMenu(!menu)}
-								variant="ghost"
-								border="rounded"
-								icon={<MenuIcon className="w-8 h-8" />}
-								active={menu}
-							/>
-						</>
-					)}
+					<BrowseMenu user={user} />
+					<div className="w-full"></div>
+					<div className="hidden sm:flex gap-2">
+						{!user ? (
+							<>
+								<Link passHref href="/login">
+									<Button className="w-32" as="a">
+										Login
+									</Button>
+								</Link>
+								<Link passHref href="/register">
+									<Button className="w-32" variant="filled" as="a">
+										Register
+									</Button>
+								</Link>
+							</>
+						) : (
+							<UserMenu user={user} logoutUser={logoutUser} theme={theme} setTheme={setTheme} />
+						)}
+					</div>
+					<Button
+						className="block sm:hidden"
+						onClick={() => showMenu(!menu)}
+						variant="ghost"
+						border="rounded"
+						icon={<MenuIcon className="w-8 h-8" />}
+						active={menu}
+					/>
 				</div>
-				{menu && width < 640 && (
+				{menu && (
 					<MobileMenu user={user} logoutUser={logoutUser} showMenu={showMenu} theme={theme} setTheme={setTheme} />
 				)}
 			</div>
