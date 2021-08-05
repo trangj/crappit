@@ -24,7 +24,7 @@ const MobileMenu = ({ user, logoutUser, showMenu, theme, setTheme }: Props) => {
 
 
     return (
-        <div className="flex sm:hidden flex-col mt-3 ">
+        <div className="flex flex-col mt-3">
             <Link href="/" passHref>
                 <MenuItem onClick={() => showMenu(false)}>
                     Home
@@ -40,7 +40,7 @@ const MobileMenu = ({ user, logoutUser, showMenu, theme, setTheme }: Props) => {
                     Create a post
                 </MenuItem>
             </Link>
-            <Link href="/t/submit" passHref>
+            <Link href="/t/create" passHref>
                 <MenuItem onClick={() => showMenu(false)}>
                     Create a topic
                 </MenuItem>

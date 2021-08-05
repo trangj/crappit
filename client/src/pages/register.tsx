@@ -77,8 +77,8 @@ const Register = () => {
 			</Head>
 			<Card className="flex">
 				<div className="bg-blue-300 w-32" />
-				<div className="flex flex-col p-6 gap-2">
-					<h5>Register</h5>
+				<div className="flex flex-col p-6 my-4 gap-2">
+					<h6>Register</h6>
 					<small>By continuing, you agree to our User Agreement and Privacy Policy.</small>
 					<Formik
 						initialValues={{
@@ -129,9 +129,10 @@ const Register = () => {
 							</Form>
 						)}
 					</Formik>
-					<small className="mt-3">
+					<small className="mt-4">
+						Already a crappitor?{" "}
 						<Link href="/login">
-							<a>Already have an account?</a>
+							<a className="text-blue-500 dark:text-blue-400">Log in</a>
 						</Link>
 					</small>
 				</div>

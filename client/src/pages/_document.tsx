@@ -8,7 +8,6 @@ export default class Document extends NextDocument {
                         __html:
                             `!function(){var e=window.localStorage.getItem("theme"),t=window.document.documentElement;e?t.classList.add(e):(e=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")&&t.classList.add(e)}();`
                     }} />
-                    <script src="https://kit.fontawesome.com/dfd1b78df3.js" crossOrigin="anonymous" defer></script>
                     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
                     <link rel="apple-touch-icon" href="/img/logo.png" />
                     <link rel="apple-touch-startup-image" href="/img/logo512.png" />

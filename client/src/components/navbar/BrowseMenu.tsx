@@ -50,7 +50,7 @@ const BrowseMenu = ({ user }: Props) => {
 						<Menu.Item as={NextLink} href="/submit" icon={<PlusIcon className="h-5 w-5" />}>
 							Create Post
 						</Menu.Item>
-						<Menu.Item as={NextLink} href="/t/submit" icon={<PlusIcon className="h-5 w-5" />}>
+						<Menu.Item as={NextLink} href="/t/create" icon={<PlusIcon className="h-5 w-5" />}>
 							Create Topic
 						</Menu.Item>
 						<Divider className="my-2" />

@@ -6,7 +6,6 @@ import axios from "../axiosConfig";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Container } from "../ui/Container";
-import { Divider } from "../ui/Divider";
 import { TextFieldForm } from "../ui/TextFieldForm";
 import Head from "next/head";
 
@@ -33,31 +32,33 @@ const Forgot = () => {
 			<Head>
 				<title>crappit: Reset your password</title>
 			</Head>
-			<Card className="flex flex-col gap-2 p-3">
-				<h5>Forgot</h5>
-				<Divider />
-				<Formik
-					initialValues={{ email: "" }}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{() => (
-						<Form>
-							<h6>
-								Forgot your password? Enter your email to change your password.
-							</h6>
-							<Field
-								label="Email"
-								name="email"
-								type="email"
-								component={TextFieldForm}
-							/>
-							<Button type="submit" variant="filled" className="px-5 mt-3">
-								Request Password Change
-							</Button>
-						</Form>
-					)}
-				</Formik>
+			<Card className="flex">
+				<div className="bg-blue-300 w-32" />
+				<div className="flex flex-col p-6 gap-3 w-96">
+					<h6>Reset your password</h6>
+					<div>
+						Tell us the username and email address associated with your Reddit account, and we’ll send you an email with a link to reset your password.
+					</div>
+					<Formik
+						initialValues={{ email: "" }}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{() => (
+							<Form>
+								<Field
+									label="Email"
+									name="email"
+									type="email"
+									component={TextFieldForm}
+								/>
+								<Button type="submit" variant="filled" className="px-5 mt-3">
+									Reset Password
+								</Button>
+							</Form>
+						)}
+					</Formik>
+				</div>
 			</Card>
 		</Container>
 	);

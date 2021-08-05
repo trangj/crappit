@@ -3,7 +3,7 @@ import { Dialog } from '@headlessui/react';
 import useDeletePostModerator from "../../hooks/post-query/useDeletePostModerator";
 import { Post } from "src/types/entities/post";
 import { Button } from "src/ui/Button";
-import { XCircleIcon } from "@heroicons/react/outline";
+import { BanIcon } from "@heroicons/react/outline";
 
 type Props = {
 	post: Post;
@@ -16,7 +16,7 @@ const DeletePostModerator = ({ post }: Props) => {
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)} variant="ghost" border="rounded" className="text-xs" icon={<XCircleIcon className="h-5 w-5 mr-1" />}>
+			<Button onClick={() => setOpen(true)} variant="ghost" border="rounded" className="text-xs" icon={<BanIcon className="h-5 w-5 mr-1" />}>
 				Remove
 			</Button>
 			<Dialog

@@ -61,8 +61,8 @@ const Login = () => {
 			</Head>
 			<Card className="flex">
 				<div className="bg-blue-300 w-32" />
-				<div className="flex flex-col p-6 gap-2">
-					<h4>Login</h4>
+				<div className="flex flex-col p-6 my-4 gap-2">
+					<h6>Login</h6>
 					<small>By continuing, you agree to our User Agreement and Privacy Policy.</small>
 					<Formik
 						initialValues={{ email: "", password: "" }}
@@ -97,13 +97,20 @@ const Login = () => {
 							</Form>
 						)}
 					</Formik>
-					<small className="flex gap-3 mt-3">
-						<Link href="/forgot" passHref>
-							<a>Forgot your password?</a>
-						</Link>
-						<Link href="/register" passHref>
-							<a className="ml-auto">Sign up for an account!</a>
-						</Link>
+					<small className="flex flex-col gap-4 mt-4">
+						<div>
+							Forgot your{" "}
+							<Link href="/forgot" passHref>
+								<a className="text-blue-500 dark:text-blue-400">password</a>
+							</Link>
+							?
+						</div>
+						<div>
+							New to Crappit?{" "}
+							<Link href="/register" passHref>
+								<a className="text-blue-500 dark:text-blue-400">Sign up</a>
+							</Link>
+						</div>
 					</small>
 				</div>
 			</Card>

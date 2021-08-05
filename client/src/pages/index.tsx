@@ -93,7 +93,7 @@ const HomePage = () => {
 								Create Post
 							</Button>
 						</Link>
-						<Link passHref href={`/t/submit`}>
+						<Link passHref href={`/t/create`}>
 							<Button fullWidth as="a">
 								Create Topic
 							</Button>

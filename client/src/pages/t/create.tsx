@@ -7,34 +7,22 @@ import { Card } from "../../ui/Card";
 import { Container } from "../../ui/Container";
 import { Divider } from "../../ui/Divider";
 import { TextFieldForm } from "../../ui/TextFieldForm";
-import { FileFieldForm } from "../../ui/FileFieldForm";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useUser } from "src/context/UserState";
 import { useRouter } from "next/router";
 
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
-const FILE_SIZE = 10485760;
 const schema = yup.object({
 	title: yup
 		.string()
 		.required("Enter a title for your topic")
 		.matches(/^(\S+$)/, "Title cannot have any white space"),
 	description: yup.string().required("Enter a description about your topic"),
-	file: yup
-		.mixed()
-		.test("fileSize", "File Size is too large", (value) =>
-			value === undefined ? true : value.size <= FILE_SIZE
-		)
-		.test("fileType", "Unsupported File Format", (value) =>
-			value === undefined ? true : SUPPORTED_FORMATS.includes(value.type)
-		),
 });
 
 interface FormValues {
 	title: string,
 	description: string,
-	file: File | "";
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
@@ -61,56 +49,53 @@ const AddTopic = () => {
 		return null;
 	};
 
-	const handleSubmit = ({ title, description, file }: FormValues) => {
+	const handleSubmit = ({ title, description }: FormValues) => {
 		const formData = new FormData();
 		formData.append("title", title);
 		formData.append("description", description);
-		formData.append("file", file);
 		mutate({ formData });
 	};
 
-	const initialValues: FormValues = { title: "", description: "", file: "" };
+	const initialValues: FormValues = { title: "", description: "" };
 
 	return (
 		<Container>
 			<Head>
 				<title>Create Topic</title>
 			</Head>
-			<Card className="p-3 flex flex-col gap-2">
-				<h5>Create a topic</h5>
-				<Divider />
-				<Formik
-					initialValues={initialValues}
-					onSubmit={handleSubmit}
-					validationSchema={schema}
-				>
-					{({ setFieldValue, values }) => (
-						<Form>
-							<Field label="Title" name="title" component={TextFieldForm} />
-							<Field
-								label="Description"
-								name="description"
-								multiline
-								component={TextFieldForm}
-							/>
-							<Field
-								label="File"
-								name="file"
-								component={FileFieldForm}
-								setFieldValue={setFieldValue}
-							/>
-							<Button
-								type="submit"
-								loading={isLoading}
-								className="mt-2 w-20 ml-auto"
-								variant="filled"
-								disabled={!!!values.title || !!!values.description}
-							>
-								Post
-							</Button>
-						</Form>
-					)}
-				</Formik>
+			<Card className="flex">
+				<div className="bg-blue-300 w-32" />
+				<div className="flex flex-col p-6 gap-2">
+					<h5>Create a topic</h5>
+					<Divider />
+					<Formik
+						initialValues={initialValues}
+						onSubmit={handleSubmit}
+						validationSchema={schema}
+					>
+						{({ values }) => (
+							<Form className="w-96 flex flex-col ">
+								<Field label="Title" name="title" component={TextFieldForm} />
+								<small className="text-gray-500 dark:text-gray-400 mb-3">Topic names including capitalization cannot be changed.</small>
+								<Field
+									label="Description"
+									name="description"
+									multiline
+									component={TextFieldForm}
+								/>
+								<Button
+									type="submit"
+									loading={isLoading}
+									className="mt-3 ml-auto"
+									variant="filled"
+									disabled={!!!values.title || !!!values.description}
+								>
+									Create Topic
+								</Button>
+							</Form>
+						)}
+					</Formik>
+				</div>
 			</Card>
 		</Container>
 	);
