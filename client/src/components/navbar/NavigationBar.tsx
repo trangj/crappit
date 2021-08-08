@@ -25,17 +25,17 @@ const NavigationBar = () => {
 							</div>
 						</a>
 					</Link>
-					<BrowseMenu user={user} />
+					{user && <BrowseMenu />}
 					<div className="w-full"></div>
 					{!user && (
 						<div className="hidden sm:flex gap-2 ml-5">
 							<Link passHref href="/login">
-								<Button className="md:w-32 w-20" as="a">
+								<Button className="w-32" as="a">
 									Login
 								</Button>
 							</Link>
 							<Link passHref href="/register">
-								<Button className="md:w-32 w-20" variant="filled" as="a">
+								<Button className="w-32" variant="filled" as="a">
 									Register
 								</Button>
 							</Link>

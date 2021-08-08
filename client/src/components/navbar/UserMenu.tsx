@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { ButtonHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 import { User } from "src/types/entities/user";
 import { Menu } from '@headlessui/react';
 import { Avatar } from "src/ui/Avatar";
-import { ChevronDownIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, SearchIcon, UserCircleIcon, CogIcon, LogoutIcon, MoonIcon, SunIcon } from "@heroicons/react/outline";
 import Image from 'next/image';
 
 type Props = {
@@ -16,22 +16,38 @@ type Props = {
 type NextLinkProps = {
 	href: string,
 	children: ReactNode,
+	icon?: ReactNode;
 };
 
-const NextLink = ({ href, children, ...props }: NextLinkProps) => {
+type OptionProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+	children: ReactNode,
+	icon?: ReactNode,
+};
+
+const NextLink = ({ href, children, icon, ...props }: NextLinkProps) => {
 	return (
 		<Link href={href} passHref>
-			<a {...props} className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6">
+			<a {...props} className="menu-option text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white">
+				{icon ? icon : null}
 				{children}
 			</a>
 		</Link>
 	);
 };
 
+const Option = ({ children, icon, ...props }: OptionProps) => {
+	return (
+		<button {...props} className="menu-option text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white">
+			{icon ? icon : null}
+			{children}
+		</button>
+	);
+};
+
 const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 	return (
 		<Menu as="div" className="relative hidden sm:inline-block text-left">
-			<Menu.Button className={`${user ? 'xl:w-56' : ''} flex text-xs items-center text-left px-3 rounded h-10 font-medium`}>
+			<Menu.Button className={`menu-button ml-6 ${user ? 'xl:w-56' : 'mr-6'}`}>
 				{user && (
 					<>
 						<span className="h-6 w-6 mr-2">
@@ -42,43 +58,39 @@ const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 				)}
 				<ChevronDownIcon className="h-4 w-4 ml-auto" />
 			</Menu.Button>
-			<Menu.Items className="absolute right-0 w-56 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 py-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll">
-				{user ? (
+			<Menu.Items className="menu w-56">
+				{user && (
 					<>
-						<Menu.Item as={NextLink} href={`/user/${user.id}`}>
+						<Menu.Item as={NextLink} href={`/user/${user.id}`} icon={<UserCircleIcon className="h-5 w-5" />}>
 							Profile
 						</Menu.Item>
-						<Menu.Item as={NextLink} href={"/settings"}>
+						<Menu.Item as={NextLink} href={"/settings"} icon={<CogIcon className="h-5 w-5" />}>
 							Settings
 						</Menu.Item>
-						<Menu.Item
-							as="div"
-							onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-							className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6 cursor-pointer"
-						>
-							Dark Mode
-						</Menu.Item>
-						<Menu.Item
-							onClick={async () => await logoutUser()}
-							as="div"
-							className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6 cursor-pointer"
-						>
-							Logout
-						</Menu.Item>
 					</>
+				)}
+				<Menu.Item as={NextLink} href="/t" icon={<SearchIcon className="h-5 w-5" />}>
+					Discover Topics
+				</Menu.Item>
+				<Menu.Item
+					as={Option}
+					onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+					icon={theme === "dark" ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
+				>
+					Dark Mode
+				</Menu.Item>
+				{user ? (
+					<Menu.Item
+						onClick={async () => await logoutUser()}
+						as={Option}
+						icon={<LogoutIcon className="h-5 w-5" />}
+					>
+						Logout
+					</Menu.Item>
 				) : (
-					<>
-						<Menu.Item
-							as="div"
-							onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-							className="hover:bg-gray-100 dark:hover:bg-gray-800 py-2 px-6 cursor-pointer"
-						>
-							Dark Mode
-						</Menu.Item>
-						<Menu.Item as={NextLink} href={`/login`}>
-							Sign Up or Log In
-						</Menu.Item>
-					</>
+					<Menu.Item as={NextLink} href={"/login"} icon={<UserCircleIcon className="h-5 w-5" />}>
+						Sign Up or Log In
+					</Menu.Item>
 				)}
 			</Menu.Items>
 		</Menu>
