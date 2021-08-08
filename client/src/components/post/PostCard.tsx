@@ -79,7 +79,7 @@ const PostCard = ({ post, topic }: Props) => {
 					</div>
 					<Button variant="ghost" border="rounded" className="text-xs p-2" icon={<ReplyIcon className="h-5 w-5 mr-1" />}
 						onClick={() => {
-							navigator.clipboard.writeText(`https://crappit.me/t/${post.topic}/comments/${post.id}`);
+							navigator.clipboard.writeText(`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/t/${post.topic}/comments/${post.id}`);
 							toast.success("Copied link!");
 						}}
 					>

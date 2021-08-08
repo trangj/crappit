@@ -50,7 +50,7 @@ const Profile = () => {
 				<meta name="description" content={`u/${profile?.username}`} />
 				<meta property="og:title" content={`u/${profile?.username} - Crappit`} />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content={`https://crappit.me/user${profile?.id}`} />
+				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/user${profile?.id}`} />
 			</Head>
 			<div className="flex gap-5">
 				<div className="w-full">

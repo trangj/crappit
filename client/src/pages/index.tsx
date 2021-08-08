@@ -49,7 +49,7 @@ const HomePage = () => {
 				<meta name="description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
 				<meta property="og:title" content="crappit" />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://crappit.me/" />
+				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/`} />
 				<meta property="og:description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
 			</Head>
 			<div className="flex gap-5">

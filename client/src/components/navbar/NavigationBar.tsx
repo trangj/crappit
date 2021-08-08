@@ -27,24 +27,21 @@ const NavigationBar = () => {
 					</Link>
 					<BrowseMenu user={user} />
 					<div className="w-full"></div>
-					<div className="hidden sm:flex gap-2">
-						{!user ? (
-							<>
-								<Link passHref href="/login">
-									<Button className="w-32" as="a">
-										Login
-									</Button>
-								</Link>
-								<Link passHref href="/register">
-									<Button className="w-32" variant="filled" as="a">
-										Register
-									</Button>
-								</Link>
-							</>
-						) : (
-							<UserMenu user={user} logoutUser={logoutUser} theme={theme} setTheme={setTheme} />
-						)}
-					</div>
+					{!user && (
+						<div className="hidden sm:flex gap-2 ml-5">
+							<Link passHref href="/login">
+								<Button className="md:w-32 w-20" as="a">
+									Login
+								</Button>
+							</Link>
+							<Link passHref href="/register">
+								<Button className="md:w-32 w-20" variant="filled" as="a">
+									Register
+								</Button>
+							</Link>
+						</div>
+					)}
+					<UserMenu user={user} logoutUser={logoutUser} theme={theme} setTheme={setTheme} />
 					<Button
 						className="block sm:hidden"
 						onClick={() => showMenu(!menu)}

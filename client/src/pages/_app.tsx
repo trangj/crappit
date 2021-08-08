@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
     return (
         <>
             <Head>
-                <meta property="og:image" content="https://crappit.me/img/logo.png" key="default" />
+                <meta property="og:image" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/img/logo.png`} key="default" />
             </Head>
             <UserProvider user={user}>
                 <QueryClientProvider client={queryClient}>

@@ -23,7 +23,7 @@ const CreatePost = ({ url = '' }: Props) => {
             </Link>
             <Link passHref href={`${url}/submit`}>
                 <a className="w-full">
-                    <input placeholder="Create post" className="w-full py-2 px-4 bg-gray-100 hover:bg-white hover:border-blue-500 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
+                    <input placeholder="Create post" className="w-full h-10 px-4 bg-gray-100 hover:bg-white hover:border-blue-500 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded" />
                 </a>
             </Link>
             <Link passHref href={`${url}/submit?type=photo`}>

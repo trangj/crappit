@@ -48,7 +48,7 @@ const PostPage = () => {
 				<meta property="og:title" content={`t/${data.topic} - ${data.title}`} />
 				<meta property="og:type" content={data.type === PostType.PHOTO ? 'image' : 'website'} />
 				{data.type === PostType.PHOTO ? (<meta property="og:image" content={`https://crappit.imgix.net/${data.image_name}`} key="default" />) : null}
-				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}/comments/${data.id}`} />
+				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/t/${topicData?.title}/comments/${data.id}`} />
 				<meta property="og:description" content={`${data.vote} votes and ${data.number_of_comments} comments so far on Crappit`} />
 			</Head>
 			<div className="flex gap-5">

@@ -54,7 +54,7 @@ const TopicPage = () => {
 				<meta name="description" content={`t/${topicData?.title}: ${topicData?.description.split(" ").splice(0, 20).join(" ")} ...`} />
 				<meta property="og:title" content={`t/${topicData?.title}`} />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content={`https://crappit.me/t/${topicData?.title}`} />
+				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/t/${topicData?.title}`} />
 				<meta property="og:description" content={`${topicData?.description.split(" ").splice(0, 20).join(" ")} ...`} />
 			</Head>
 			<TopicHeader topic={topicData!} />
