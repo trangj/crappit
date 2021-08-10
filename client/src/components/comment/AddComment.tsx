@@ -69,9 +69,7 @@ const AddComment = ({ post, sortParam }: Props) => {
                 Comment as <Link href={`/user/${user.id}`}><a className="hover:underline text-blue-500 dark:text-blue-400">{user.username}</a></Link>
             </small>
             <Formik
-                initialValues={{
-                    content: '<p></p>'
-                }}
+                initialValues={{ content: '' }}
                 onSubmit={handleSubmit}
                 validationSchema={schema}
             >
@@ -87,7 +85,7 @@ const AddComment = ({ post, sortParam }: Props) => {
                         <Button
                             type="submit"
                             loading={isLoading}
-                            disabled={values.content === '<p></p>'}
+                            disabled={!!!values.content}
                             variant="filled"
                             className="w-24 ml-auto"
                         >

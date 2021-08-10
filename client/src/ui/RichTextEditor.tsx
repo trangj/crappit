@@ -128,7 +128,7 @@ export const RichTextEditor = ({ value, name, placeholder, setFieldValue, isSubm
         ],
         content: value,
         onUpdate: ({ editor }) => {
-            setFieldValue(name, editor.getHTML());
+            setFieldValue(name, editor.isEmpty ? '' : editor.getHTML());
         }
     });
 

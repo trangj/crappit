@@ -84,7 +84,6 @@ const AddPost = () => {
 	};
 
 	const handleSubmit = ({ title, content, link, type, file, topic }: FormValues) => {
-		console.log('hello');
 		const formData = new FormData();
 		formData.append("file", file);
 		formData.append("title", title);
