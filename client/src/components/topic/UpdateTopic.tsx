@@ -43,13 +43,13 @@ const UpdateTopic = ({ topic }: Props) => {
 		>
 			{({ values }) => (
 				<Form>
+					<Field label="Topic Headline" name="headline" component={TextFieldForm} />
 					<Field
 						label="Topic Description"
 						name="description"
 						multiline
 						component={TextFieldForm}
 					/>
-					<Field label="Topic Headline" name="headline" component={TextFieldForm} />
 					<Button
 						type="submit"
 						loading={isLoading}

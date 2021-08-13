@@ -40,9 +40,9 @@ const AllTopics = () => {
 			</Head>
 			<div className="bg-white dark:bg-gray-850 h-24 mt-12 flex items-center">
 				<div className="container mx-auto max-w-5xl sm:px-5">
-					<h6>
+					<div className="font-medium text-2xl">
 						Discover Topics
-					</h6>
+					</div>
 					<small className="text-gray-500 dark:text-gray-400">
 						Browse all the topics that Crappit has to offer.
 					</small>
@@ -53,8 +53,8 @@ const AllTopics = () => {
 					{topics?.map((topic, i) => (
 						<Link key={topic.title} passHref href={`t/${topic.title}`}>
 							<a className={`flex items-center gap-2 p-3 border-gray-300 dark:border-gray-700 ${i === 0 ? '' : 'border-t'}`}>
-								<div className=" h-11 w-11 rounded-full">
-									{!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={44} height={44} className="rounded-full" />}
+								<div className=" h-10 w-10 rounded-full">
+									{!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={40} height={40} className="rounded-full" />}
 								</div>
 								<div className="font-medium">t/{topic.title}</div>
 							</a>

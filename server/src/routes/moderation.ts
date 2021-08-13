@@ -30,6 +30,32 @@ router.post("/topic/:topic", auth, async (req, res) => {
 	}
 });
 
+// @route   POST /api/moderation/topic/:topic/:userid
+// @desc    Delete a moderator of a topic
+// @access  Private
+
+router.delete("/topic/:topic/:userid", auth, async (req, res) => {
+	try {
+		const user = await User.findOne(req.params.userid, { relations: ['topics_moderated'] });
+		if (!user) throw Error("User does not exist");
+		const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
+		if (!topic) throw Error("Topic does not exist");
+		if (!topic.moderators.some(moderator => moderator.id === req.user.id)) throw Error("You are not a moderator");
+
+		user.topics_moderated = user.topics_moderated.filter(curTopic => curTopic.id !== topic.id);
+
+		await user.save();
+		res.status(200).json({
+			user: { user_id: user.id, username: user.username, topic_id: topic.id },
+			status: { text: "Moderator successfully removed", severity: "success" },
+		});
+	} catch (err) {
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
+	}
+});
+
 // @route   DELETE /api/moderation/post/:post
 // @desc    Delete a post
 // @access  Private

@@ -19,7 +19,7 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                 <div className="text-gray-500 dark:text-gray-400 font-semibold text-sm">About Community</div>
                 {user && topicData.user_moderator_id && (
                     <Link
-                        href={`/t/${topicData.title}/moderation`}
+                        href={`/t/${topicData.title}/about`}
                         passHref
                     >
                         <Button
@@ -33,9 +33,9 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                     </Link>
                 )}
             </div>
-            <div>{topicData.description}</div>
             <div>
-                <div className="font-medium -mb-1">{topicData.number_of_followers}</div>
+                <div>{topicData.description}</div>
+                <div className="font-medium -mb-1 mt-1">{topicData.number_of_followers}</div>
                 <small>Follower{topicData.number_of_followers === 1 ? "" : "s"}</small>
             </div>
             <Divider />
