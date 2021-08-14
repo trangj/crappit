@@ -3,8 +3,6 @@ import toast from 'react-hot-toast';
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
 import { Button } from "../ui/Button";
-import { Card } from "../ui/Card";
-import { Container } from "../ui/Container";
 import { Divider } from "../ui/Divider";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -74,12 +72,12 @@ const Settings = () => {
 	};
 
 	return (
-		<Container>
+		<div className="bg-white dark:bg-gray-850 h-screen">
 			<Head>
 				<title>Crappit Settings</title>
 			</Head>
-			<Card className="p-3">
-				<div className="w-1/2 flex flex-col gap-3">
+			<div className="pt-16 container mx-auto max-w-5xl px-5">
+				<div className="max-w-2xl flex flex-col gap-3">
 					<h6>Account Settings</h6>
 					<Divider className="my-1" />
 					<div className="flex items-center">
@@ -146,8 +144,8 @@ const Settings = () => {
 					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
 					<small className="text-gray-500 dark:text-gray-400">Images must be in .png or .jpg format</small>
 				</div>
-			</Card>
-		</Container>
+			</div>
+		</div>
 	);
 };
 
