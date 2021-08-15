@@ -53,7 +53,14 @@ const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 						<span className="h-6 w-6 mr-2">
 							{!user || !user.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={user.avatar_image_name} width={24} height={24} className="rounded-full" />}
 						</span>
-						<span className="hidden xl:inline-block">{user.username}</span>
+						<div className="hidden xl:flex flex-col">
+							<span>
+								{user.username}
+							</span>
+							<span className="text-gray-500 dark:text-gray-400">
+								{user.karma} karma
+							</span>
+						</div>
 					</>
 				)}
 				<ChevronDownIcon className="h-4 w-4 ml-auto" />

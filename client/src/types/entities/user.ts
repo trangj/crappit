@@ -8,4 +8,5 @@ export interface User extends Template {
     topics_followed: [{ title: string; }];
     reset_password_token: string,
     reset_password_expires: number;
+    karma: number;
 }

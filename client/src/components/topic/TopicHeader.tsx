@@ -45,7 +45,7 @@ const TopicHeader = ({ topic }: Props) => {
 									loading={isLoading}
 									onClick={() => mutate(topic.title)}
 									variant={topic.user_followed_id ? "outline" : "filled"}
-									className="w-24 self-center"
+									className="w-24 self-center mt-1"
 								>
 									{topic.user_followed_id ? "Unfollow" : "Follow"}
 								</Button>
@@ -53,7 +53,7 @@ const TopicHeader = ({ topic }: Props) => {
 								<Link passHref href="/login">
 									<Button
 										as="a"
-										className="w-24 self-center"
+										className="w-24 self-center mt-1"
 									>
 										Follow
 									</Button>
