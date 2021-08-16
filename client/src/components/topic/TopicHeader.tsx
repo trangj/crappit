@@ -36,7 +36,7 @@ const TopicHeader = ({ topic }: Props) => {
 						{!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={80} height={80} className="rounded-full" />}
 					</div>
 					<div className="flex flex-col mt-5 pl-4">
-						<div className="flex gap-3">
+						<div className="flex gap-3 h-10">
 							<h4>
 								{topic.headline ? topic.headline : topic.title}
 							</h4>
@@ -45,7 +45,7 @@ const TopicHeader = ({ topic }: Props) => {
 									loading={isLoading}
 									onClick={() => mutate(topic.title)}
 									variant={topic.user_followed_id ? "outline" : "filled"}
-									className="w-24 self-center mt-1"
+									className="w-24 self-center"
 								>
 									{topic.user_followed_id ? "Unfollow" : "Follow"}
 								</Button>
@@ -53,7 +53,7 @@ const TopicHeader = ({ topic }: Props) => {
 								<Link passHref href="/login">
 									<Button
 										as="a"
-										className="w-24 self-center mt-1"
+										className="w-24 self-center"
 									>
 										Follow
 									</Button>
