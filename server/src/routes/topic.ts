@@ -55,7 +55,8 @@ router.post("/", auth, upload, async (req, res) => {
 			image_url: req.file ? req.file.location : "",
 			image_name: req.file ? req.file.key : "",
 			moderators: [user],
-			followers: [user]
+			followers: [user],
+			number_of_followers: 1
 		}).save().catch(err => { throw Error('A topic with that title already exists'); });
 
 		res.status(200).json({
