@@ -106,10 +106,12 @@ router.delete("/:commentid", auth, async (req, res) => {
 
 router.put("/:commentid/changevote", auth, async (req, res) => {
 	try {
-		const comment = await Comment.findOne(req.params.commentid);
+		const comment = await Comment.findOne(req.params.commentid, { relations: ['author'] });
 		if (!comment) throw Error("No comment exists");
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user exists");
+		const comment_author = await User.findOne(comment.author.id);
+		if (!comment_author) throw Error("Comment author does not exist");
 
 		const vote = await CommentVote.findOne({ comment, user });
 
@@ -120,7 +122,9 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 				value: req.query.vote === "like" ? 1 : -1
 			}).save();
 			comment.vote += req.query.vote === "like" ? 1 : -1;
+			comment_author.karma += req.query.vote === "like" ? 1 : -1;
 			await comment.save();
+			await comment_author.save();
 			res.status(200).json({ vote: comment.vote, user_vote: newVote.value });
 		} else {
 			if (req.query.vote === "like") {
@@ -128,32 +132,39 @@ router.put("/:commentid/changevote", auth, async (req, res) => {
 					// if user likes and already liked comment
 					vote.value = 0;
 					comment.vote -= 1;
+					comment_author.karma -= 1;
 				} else if (vote.value === 0) {
 					// if user likes an unvoted comment
 					vote.value = 1;
 					comment.vote += 1;
+					comment_author.karma += 1;
 				} else {
 					// if user likes an already disliked comment
 					vote.value = 1;
 					comment.vote += 2;
+					comment_author.karma += 2;
 				}
 			} else {
 				if (vote.value === -1) {
 					// if user dislikes an already disliked comment
 					vote.value = 0;
 					comment.vote += 1;
+					comment_author.karma += 1;
 				} else if (vote.value === 0) {
 					// if user dislikes an unvoted comment
 					vote.value = -1;
 					comment.vote -= 1;
+					comment_author.karma -= 1;
 				} else {
 					// if user dislikes an already liked comment
 					vote.value = -1;
 					comment.vote -= 2;
+					comment_author.karma -= 2;
 				}
 			}
 			await vote.save();
 			await comment.save();
+			await comment_author.save();
 			res.status(200).json({ vote: comment.vote, user_vote: vote.value });
 		}
 	} catch (err) {

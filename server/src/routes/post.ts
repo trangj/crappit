@@ -118,10 +118,12 @@ router.put("/:id", auth, async (req, res) => {
 
 router.put("/:id/changevote", auth, async (req, res) => {
 	try {
-		const post = await Post.findOne(req.params.id);
+		const post = await Post.findOne(req.params.id, { relations: ['author'] });
 		if (!post) throw Error("No post exists");
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user exists");
+		const post_author = await User.findOne(post.author.id);
+		if (!post_author) throw Error("Post author does not exist");
 
 		const vote = await Vote.findOne({ post, user });
 		if (!vote) {
@@ -131,7 +133,9 @@ router.put("/:id/changevote", auth, async (req, res) => {
 				value: req.query.vote === "like" ? 1 : -1
 			}).save();
 			post.vote += req.query.vote === "like" ? 1 : -1;
+			post_author.karma += req.query.vote === "like" ? 1 : -1;
 			await post.save();
+			await post_author.save();
 			res.status(200).json({ vote: post.vote, user_vote: newVote.value });
 		} else {
 			if (req.query.vote === "like") {
@@ -139,32 +143,39 @@ router.put("/:id/changevote", auth, async (req, res) => {
 					// if user likes and already liked post
 					vote.value = 0;
 					post.vote -= 1;
+					post_author.karma -= 1;
 				} else if (vote.value === 0) {
 					// if user likes an unvoted post
 					vote.value = 1;
 					post.vote += 1;
+					post_author.karma += 1;
 				} else {
 					// if user likes an already disliked post
 					vote.value = 1;
 					post.vote += 2;
+					post_author.karma += 2;
 				}
 			} else {
 				if (vote.value === -1) {
 					// if user dislikes an already disliked post
 					vote.value = 0;
 					post.vote += 1;
+					post_author.karma += 1;
 				} else if (vote.value === 0) {
 					// if user dislikes an unvoted post
 					vote.value = -1;
 					post.vote -= 1;
+					post_author.karma -= 1;
 				} else {
 					// if user dislikes an already liked post
 					vote.value = -1;
 					post.vote -= 2;
+					post_author.karma -= 2;
 				}
 			}
 			await vote.save();
 			await post.save();
+			await post_author.save();
 			res.status(200).json({ vote: post.vote, user_vote: vote.value });
 		}
 	} catch (err) {

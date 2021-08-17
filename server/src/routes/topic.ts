@@ -15,8 +15,7 @@ router.get("/:topic", optionalAuth, async (req, res) => {
 			select
 			t.*,
 			f.user_id user_followed_id,
-			m.user_id user_moderator_id,
-			(select cast(count(*) as int) from follow nf where nf.topic_id = t.id) number_of_followers
+			m.user_id user_moderator_id
 			from topic t
 			left join follow f on f.topic_id = t.id and f.user_id = $1
 			left join moderator m on m.topic_id = t.id and m.user_id = $2
@@ -85,15 +84,18 @@ router.post("/:topic/followtopic", auth, async (req, res) => {
 
 		if (user.topics_followed.some(curTopic => curTopic.id === topic.id)) {
 			user.topics_followed = user.topics_followed.filter(curTopic => curTopic.id !== topic.id);
+			topic.number_of_followers -= 1;
 			message = "Successfully unfollowed";
 			follow = null;
 		} else {
 			user.topics_followed.push(topic);
+			topic.number_of_followers += 1;
 			message = "Successfully followed";
 			follow = user.id;
 		}
 
 		await user.save();
+		await topic.save();
 
 		res.status(200).json({
 			topic: topic.title,

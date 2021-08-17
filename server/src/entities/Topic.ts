@@ -30,4 +30,7 @@ export class Topic extends Template {
 
     @ManyToMany(() => User, user => user.topics_moderated)
     moderators: User[];
+
+    @Column({ type: 'int', default: 0 })
+    number_of_followers: number;
 }

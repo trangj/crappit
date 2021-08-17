@@ -78,7 +78,7 @@ router.post("/register", async (req, res) => {
 			})
 			.json({
 				access_token,
-				user: { ...newUser, karma: 0 },
+				user: { ...newUser },
 				status: {
 					text: "Successfully registered!",
 					severity: "success",
@@ -106,10 +106,6 @@ router.post("/login", async (req, res) => {
 		const isMatch = await bcyrpt.compare(password, user.password).catch((err) => { throw new Error('Invalid email or password'); });
 		if (!isMatch) throw Error("Invalid email or password");
 
-		const karma = await Post.query(`
-			select ((select sum(vote) from post where post.author_id = $1) + (select sum(vote) from comment where comment.author_id = $1)) as karma
-		`, [user.id]);
-
 		const refresh_token = jwt.sign(
 			{ id: user.id, token_version: user.token_version },
 			process.env.REFRESH_TOKEN_SECRET,
@@ -131,7 +127,7 @@ router.post("/login", async (req, res) => {
 			})
 			.json({
 				access_token,
-				user: { ...user, karma: karma[0].karma },
+				user: { ...user },
 				status: { text: "Successfully logged in!", severity: "success" },
 			});
 	} catch (err) {
@@ -266,13 +262,9 @@ router.get("/:userid", async (req, res) => {
 		const user = await User.findOne(req.params.userid);
 		if (!user) throw Error("No user found");
 
-		const karma = await User.query(`
-			select ((select coalesce(sum(vote), 0) from post where post.author_id = $1) + (select coalesce(sum(vote), 0) from comment where comment.author_id = $1)) as karma
-		`, [req.params.userid]);
-
 		const { password, ...rest } = user;
 
-		res.status(200).json({ user: { ...rest, karma: karma[0].karma } });
+		res.status(200).json({ user: { ...rest } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -367,10 +359,6 @@ router.post("/refresh_token", async (req, res) => {
 		if (!user) throw Error;
 		if (user.token_version !== (payload as any).token_version) throw Error;
 
-		const karma = await User.query(`
-			select ((select coalesce(sum(vote), 0) from post where post.author_id = $1) + (select coalesce(sum(vote), 0) from comment where comment.author_id = $1)) as karma
-		`, [user.id]);
-
 		const { password, ...rest } = user;
 
 		const new_refresh_token = jwt.sign(
@@ -392,7 +380,7 @@ router.post("/refresh_token", async (req, res) => {
 				secure: process.env.NODE_ENV === 'production',
 				domain: process.env.DOMAIN
 			})
-			.json({ access_token: new_access_token, user: { ...rest, karma: karma[0].karma } });
+			.json({ access_token: new_access_token, user: { ...rest } });
 	} catch (err) {
 		res.status(401).json({ status: { text: "Refresh token expired", severity: "error" } });;
 	}
