@@ -28,39 +28,41 @@ const PostCard = ({ post, topic }: Props) => {
 			<div className="pb-auto p-2">
 				<Voting post={post} />
 			</div>
-			<div className="w-full px-2 pt-2">
-				<small>
-					<Link passHref href={`/t/${post.topic}`}>
-						<a className="font-medium">
-							t/{post.topic}
+			<div className="flex flex-col w-full">
+				<div className="w-full p-2">
+					<small>
+						<Link passHref href={`/t/${post.topic}`}>
+							<a className="font-medium">
+								t/{post.topic}
+							</a>
+						</Link>
+						<div className="text-gray-500 dark:text-gray-400 inline">
+							{" "}&bull; Posted by{" "}
+							<Link href={`/user/${post.author_id}`} passHref><a>u/{post.author}</a></Link>{" "}
+							{dayjs(post.created_at).fromNow()}
+						</div>
+					</small>
+					<h6 className="font-medium">
+						{post.title}
+					</h6>
+					{post.type === "link" && (
+						<a href={post.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs">
+							{post.content}
 						</a>
-					</Link>
-					<div className="text-gray-500 dark:text-gray-400 inline">
-						{" "}&bull; Posted by{" "}
-						<Link href={`/user/${post.author_id}`} passHref><a>u/{post.author}</a></Link>{" "}
-						{dayjs(post.created_at).fromNow()}
-					</div>
-				</small>
-				<h6 className="font-medium">
-					{post.title}
-				</h6>
-				{post.type === "link" && (
-					<a href={post.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs">
-						{post.content}
-					</a>
-				)}
-				{openEdit ? (
-					<UpdatePost
-						post={post}
-						openEdit={openEdit}
-						setOpenEdit={setOpenEdit}
-					/>
-				) : (
-					post.type === "text" && <div className="py-2" dangerouslySetInnerHTML={{ __html: post.content }}></div>
-				)}
+					)}
+					{openEdit ? (
+						<UpdatePost
+							post={post}
+							openEdit={openEdit}
+							setOpenEdit={setOpenEdit}
+						/>
+					) : (
+						post.type === "text" && <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+					)}
+				</div>
 				{post.type === "photo" && (
 					<a href={`https://crappit.imgix.net/${post.image_name}`} target="_blank" rel="noopener noreferrer">
-						<div style={{ maxHeight: 700, position: 'relative', marginTop: '1rem' }}>
+						<div style={{ maxHeight: 700, position: 'relative' }}>
 							<div style={{ paddingBottom: '100%' }} />
 							<Image
 								alt={post.title}
