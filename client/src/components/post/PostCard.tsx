@@ -6,7 +6,6 @@ import Voting from "./Voting";
 import { Card } from "../../ui/Card";
 import { Button } from "../../ui/Button";
 import Link from "next/link";
-import Image from 'next/image';
 import { useUser } from "../../context/UserState";
 import dayjs from "dayjs";
 import { Post } from "src/types/entities/post";
@@ -61,16 +60,8 @@ const PostCard = ({ post, topic }: Props) => {
 					)}
 				</div>
 				{post.type === "photo" && (
-					<a href={`https://crappit.imgix.net/${post.image_name}`} target="_blank" rel="noopener noreferrer">
-						<div style={{ maxHeight: 700, position: 'relative' }}>
-							<div style={{ paddingBottom: '100%' }} />
-							<Image
-								alt={post.title}
-								src={post.image_name}
-								layout="fill"
-								objectFit="contain"
-							/>
-						</div>
+					<a href={`https://crappit.imgix.net/${post.image_name}`} className="self-center" target="_blank" rel="noopener noreferrer">
+						<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} style={{ maxHeight: 700 }} />
 					</a>
 				)}
 				<div className="flex gap-2">

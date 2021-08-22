@@ -22,5 +22,5 @@ async function fetchTopicFollow() {
 
 export default function useTopicFollow() {
     const { user } = useUser();
-    return useQuery<FollowedTopics, Error>(["followed_topics"], fetchTopicFollow, { enabled: !!user });
+    return useQuery<FollowedTopics, Error>(["followed_topics"], fetchTopicFollow, { enabled: !!user, staleTime: Infinity });
 }

@@ -47,7 +47,7 @@ const AddComment = ({ post, sortParam }: Props) => {
                 <div className="font-medium text-gray-500">
                     Log in or sign up to leave a comment
                 </div>
-                <div className="flex gap-2 ml-auto">
+                <div className="flex flex-col sm:flex-row gap-2 ml-auto">
                     <Link passHref href="/login">
                         <Button as="a" className="w-24">
                             Login

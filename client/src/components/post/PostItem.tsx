@@ -1,7 +1,6 @@
 import React from "react";
 import Voting from "./Voting";
 import Link from "next/link";
-import Image from 'next/image';
 import { LinkCard, LinkCardOverlay } from "../../ui/LinkCard";
 import { Button } from '../../ui/Button';
 import dayjs from "dayjs";
@@ -45,7 +44,10 @@ const PostItem = ({ post, ...props }: Props) => {
 						</Link>
 					</h6>
 					{post.type === "text" && (
-						<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+						<div style={{ maxHeight: 512, overflow: 'hidden' }} className="relative">
+							<div className="absolute h-full w-full bg-gradient-to-b from-transparent dark:from-transparent via-transparent dark:via-transparent to-white dark:to-gray-850" style={{ minHeight: 100 }} />
+							<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+						</div>
 					)}
 					{post.type === "link" && (
 						<a href={post.content} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-xs">
@@ -55,16 +57,8 @@ const PostItem = ({ post, ...props }: Props) => {
 				</div>
 				{post.type === "photo" && (
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
-						<a>
-							<div style={{ maxHeight: 512, position: 'relative' }}>
-								<div style={{ paddingBottom: '100%' }} />
-								<Image
-									alt={post.title}
-									src={post.image_name}
-									layout="fill"
-									objectFit="contain"
-								/>
-							</div>
+						<a className="self-center">
+							<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} style={{ maxHeight: 512 }} />
 						</a>
 					</Link>
 				)}

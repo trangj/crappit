@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
-import App, { AppProps } from "next/app";
+import { AppProps } from "next/app";
 import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import NavigationBar from "src/components/navbar/NavigationBar";
@@ -22,7 +22,6 @@ type MyAppProps = AppProps & {
 };
 
 MyApp.getInitialProps = async (ctx: any) => {
-    const props = await App.getInitialProps(ctx);
     let user = null;
     let token = '';
     try {
@@ -35,16 +34,12 @@ MyApp.getInitialProps = async (ctx: any) => {
     } catch (err) {
         ctx.ctx.res.setHeader('Set-Cookie', `token=; Domain=${process.env.DOMAIN}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure`);
     }
-    return {
-        ...props,
-        user,
-        token
-    };
+    return { user, token };
 };
 
 function MyApp({ Component, pageProps, token, user }: MyAppProps) {
     axios.defaults.headers.authorization = token;
-    const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 10000 } } }));
+    const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 30000 } } }));
 
     return (
         <>
