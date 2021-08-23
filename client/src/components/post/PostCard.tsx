@@ -61,7 +61,7 @@ const PostCard = ({ post, topic }: Props) => {
 				</div>
 				{post.type === "photo" && (
 					<a href={`https://crappit.imgix.net/${post.image_name}`} className="self-center" target="_blank" rel="noopener noreferrer">
-						<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} style={{ maxHeight: 700 }} />
+						<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} alt="post media" style={{ maxHeight: 700 }} />
 					</a>
 				)}
 				<div className="flex gap-2">

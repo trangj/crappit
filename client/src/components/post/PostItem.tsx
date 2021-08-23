@@ -19,7 +19,7 @@ const PostItem = ({ post, ...props }: Props) => {
 				<Voting post={post} />
 			</div>
 			<div className="flex flex-col w-full">
-				<div className="w-full p-2">
+				<div className="w-full p-2 pb-0">
 					<small>
 						<Link passHref href={`/t/${post.topic}`}>
 							<a className="font-medium">
@@ -43,10 +43,17 @@ const PostItem = ({ post, ...props }: Props) => {
 							</LinkCardOverlay>
 						</Link>
 					</h6>
-					{post.type === "text" && (
-						<div style={{ maxHeight: 512, overflow: 'hidden' }} className="relative">
-							<div className="absolute h-full w-full bg-gradient-to-b from-transparent dark:from-transparent via-transparent dark:via-transparent to-white dark:to-gray-850" style={{ minHeight: 100 }} />
-							<div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+					{post.type === "text" && post.content && (
+						<div
+							style={{
+								maxHeight: 250,
+								overflow: 'hidden',
+								WebkitMaskImage: 'linear-gradient(180deg,#000 60%,transparent)',
+								maskImage: 'linear-gradient(180deg,#000 60%,transparent)'
+							}}
+							className="pb-2.5"
+							dangerouslySetInnerHTML={{ __html: post.content }}
+						>
 						</div>
 					)}
 					{post.type === "link" && (
@@ -57,8 +64,8 @@ const PostItem = ({ post, ...props }: Props) => {
 				</div>
 				{post.type === "photo" && (
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
-						<a className="self-center">
-							<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} style={{ maxHeight: 512 }} />
+						<a className="self-center mt-2">
+							<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} alt="post media" style={{ maxHeight: 512 }} />
 						</a>
 					</Link>
 				)}
