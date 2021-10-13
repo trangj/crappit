@@ -41,7 +41,6 @@ const TopicPage = () => {
 		fetchNextPage,
 		hasNextPage,
 		isLoading,
-		isFetching
 	} = usePosts(topic as string, sortParam);
 	const {
 		data: topicData
@@ -67,7 +66,7 @@ const TopicPage = () => {
 							<InfiniteScroll
 								pageStart={0}
 								loadMore={fetchNextPage as (page: number) => void}
-								hasMore={!isFetching && hasNextPage}
+								hasMore={hasNextPage}
 								loader={<PostLoaderSkeleton />}
 							>
 								{data.pages.map((group, i) => (

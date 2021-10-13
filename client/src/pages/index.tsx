@@ -39,7 +39,6 @@ const HomePage = () => {
 		fetchNextPage,
 		hasNextPage,
 		isLoading,
-		isFetching,
 	} = usePosts("", sortParam);
 
 	return (
@@ -60,7 +59,7 @@ const HomePage = () => {
 						<InfiniteScroll
 							pageStart={0}
 							loadMore={fetchNextPage as (page: number) => void}
-							hasMore={!isFetching && hasNextPage}
+							hasMore={hasNextPage}
 							loader={<PostLoaderSkeleton />}
 						>
 							{data.pages.map((group, i) => (
