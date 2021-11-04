@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import { Button } from 'src/ui/Button';
 import { Card } from 'src/ui/Card';
