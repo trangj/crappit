@@ -51,7 +51,7 @@ const PostPage = () => {
 				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/t/${topicData?.title}/comments/${data.id}`} />
 				<meta property="og:description" content={`${data.vote} votes and ${data.number_of_comments} comments so far on Crappit`} />
 			</Head>
-			<div className="flex gap-5">
+			<div className="flex gap-6">
 				<div className="flex flex-col w-full">
 					<PostCard post={data} topic={topicData} />
 					<CommentCard post={data} topic={topicData} />

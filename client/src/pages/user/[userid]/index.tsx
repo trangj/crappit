@@ -52,7 +52,7 @@ const Profile = () => {
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/user${profile?.id}`} />
 			</Head>
-			<div className="flex gap-5">
+			<div className="flex gap-6">
 				<div className="w-full">
 					<SortPost setSortParam={setSortParam} sortParam={sortParam} url={`/user/${profile?.id}`} />
 					{!isLoading && data ? (

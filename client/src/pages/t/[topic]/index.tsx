@@ -58,7 +58,7 @@ const TopicPage = () => {
 			</Head>
 			<TopicHeader topic={topicData!} />
 			<div className="mt-4 container mx-auto max-w-5xl sm:px-5">
-				<div className="flex gap-5">
+				<div className="flex gap-6">
 					<div className="w-full">
 						<CreatePost url={`/t/${topicData?.title}`} />
 						<SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/t/${topicData?.title}`} />
