@@ -74,10 +74,10 @@
 
 	/* Card */
 	.link_card {
-		@apply relative overflow-hidden my-2 border bg-white border-gray-300 dark:bg-gray-850 dark:border-gray-700 rounded hover:border-gray-500 dark:hover:border-gray-500;
+		@apply relative overflow-hidden my-3 border bg-white border-gray-300 dark:bg-gray-850 dark:border-gray-700 rounded hover:border-gray-500 dark:hover:border-gray-500;
 	}
 	.card {
-		@apply mb-3 border rounded overflow-hidden bg-white dark:bg-gray-850 border-gray-300 dark:border-gray-700;
+		@apply mb-4 border rounded overflow-hidden bg-white dark:bg-gray-850 border-gray-300 dark:border-gray-700;
 	}
 
 	/* Divider */

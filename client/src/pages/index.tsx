@@ -51,7 +51,7 @@ const HomePage = () => {
 				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/`} />
 				<meta property="og:description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
 			</Head>
-			<div className="flex gap-5">
+			<div className="flex gap-6">
 				<div className="w-full">
 					<CreatePostCard />
 					<SortPost sortParam={sortParam} setSortParam={setSortParam} />

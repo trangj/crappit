@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps, token, user }: MyAppProps) {
             <UserProvider user={user}>
                 <QueryClientProvider client={queryClient}>
                     <NavigationBar />
-                    <Hydrate state={pageProps.dehydratedState}>
+                    <Hydrate state={pageProps && pageProps.dehydratedState}>
                         <Component {...pageProps} />
                     </Hydrate>
                 </ QueryClientProvider>
