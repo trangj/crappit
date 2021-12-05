@@ -43,8 +43,16 @@ const TopicPage = () => {
 		isLoading,
 	} = usePosts(topic as string, sortParam);
 	const {
-		data: topicData
+		data: topicData,
 	} = useTopic(topic as string);
+
+	if (!topicData) {
+		return (
+			<div className="fixed inset-y-1/2 w-full text-center">
+				topic not found
+			</div>
+		);
+	};
 
 	return (
 		<>

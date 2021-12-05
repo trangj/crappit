@@ -7,7 +7,7 @@ const NotFound = () => {
       <Head>
         <title>crappit: page not found</title>
       </Head>
-      <div style={{ top: '50%', position: 'fixed', width: '100%', textAlign: 'center' }}>
+      <div className="fixed inset-y-1/2 w-full text-center">
         page not found
       </div>
     </>

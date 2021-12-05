@@ -43,6 +43,14 @@ const Profile = () => {
 		isFetching
 	} = useProfilePosts(userid as string, sortParam);
 
+	if (!profile) {
+		return (
+			<div className="fixed inset-y-1/2 w-full text-center">
+				user not found
+			</div>
+		);
+	};
+
 	return (
 		<Container>
 			<Head>

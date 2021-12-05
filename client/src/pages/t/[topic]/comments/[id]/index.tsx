@@ -38,7 +38,13 @@ const PostPage = () => {
 		data: topicData,
 	} = useTopic(topic as string);
 
-	if (!data || !topicData) return <div>Loading...</div>;
+	if (!data || !topicData) {
+		return (
+			<div className="fixed inset-y-1/2 w-full text-center">
+				post not found
+			</div>
+		);
+	};
 
 	return (
 		<Container>
