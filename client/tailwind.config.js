@@ -20,6 +20,9 @@ module.exports = {
 				upvote: "#ff4500",
 				downvote: "#7193ff",
 			},
+			minHeight: (theme) => ({
+				...theme("spacing"),
+			}),
 		},
 	},
 	variants: {
