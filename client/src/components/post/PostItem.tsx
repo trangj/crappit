@@ -15,7 +15,7 @@ type Props = {
 const PostItem = ({ post, ...props }: Props) => {
 	return (
 		<LinkCard {...props} className="flex">
-			<div className="pb-auto p-1 dark:bg-gray-900 bg-gray-50">
+			<div className="pb-auto p-1 dark:bg-gray-900 bg-gray-50 hidden sm:flex">
 				<Voting post={post} />
 			</div>
 			<div className="flex flex-col w-full">
@@ -70,6 +70,9 @@ const PostItem = ({ post, ...props }: Props) => {
 					</Link>
 				)}
 				<div className="flex px-2">
+					<div className="flex sm:hidden">
+						<Voting post={post} orientation="horizontal" />
+					</div>
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}#comments`}>
 						<Button variant="ghost" border="rounded" className="text-xs p-2" as="a" icon={<ChatAltIcon className="h-5 w-5 mr-1" />}>
 							{post.number_of_comments}

@@ -6,6 +6,7 @@ import { Topic } from 'src/types/entities/topic';
 import { Button } from '../../ui/Button';
 import { Card } from '../../ui/Card';
 import { Divider } from '../../ui/Divider';
+import { ShieldCheckIcon } from '@heroicons/react/outline';
 
 type TopicCardProps = {
     topicData: Topic,
@@ -27,8 +28,10 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                             className="ml-auto text-xs"
                             variant="ghost"
                             border="rounded"
+                            size="sm"
+                            icon={<ShieldCheckIcon height={21} width={21} className='mr-1' />}
                         >
-                            Settings
+                            MOD TOOLS
                         </Button>
                     </Link>
                 )}

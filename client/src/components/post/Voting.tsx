@@ -8,9 +8,10 @@ import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/solid";
 
 type Props = {
 	post: Post;
+	orientation?: "vertical" | "horizontal";
 };
 
-const Voting = ({ post }: Props) => {
+const Voting = ({ post, orientation = "vertical" }: Props) => {
 	const { user } = useUser();
 	const { mutate } = useVoting(post);
 
@@ -23,7 +24,7 @@ const Voting = ({ post }: Props) => {
 	};
 
 	return (
-		<div className="flex flex-col">
+		<div className={`flex ${orientation === "vertical" ? 'flex-col' : ''}`}>
 			{user ? (
 				<Button
 					aria-label="Upvote"
