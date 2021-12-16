@@ -60,7 +60,7 @@ const HomePage = () => {
 							pageStart={0}
 							loadMore={fetchNextPage as (page: number) => void}
 							hasMore={hasNextPage}
-							loader={<PostLoaderSkeleton />}
+							loader={<PostLoaderSkeleton key="loader" />}
 						>
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>
@@ -83,7 +83,7 @@ const HomePage = () => {
 				<SideBar>
 					<Card className="flex flex-col gap-3 p-3">
 						<div className="font-semibold">Home</div>
-						<div>
+						<div className="content">
 							Your personal Crappit frontpage. Come here to check in with your
 							favorite topics.
 						</div>

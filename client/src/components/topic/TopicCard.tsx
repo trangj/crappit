@@ -37,12 +37,12 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                 )}
             </div>
             <div>
-                <div>{topicData.description}</div>
-                <div className="font-medium -mb-1 mt-1">{topicData.number_of_followers}</div>
-                <small>Follower{topicData.number_of_followers === 1 ? "" : "s"}</small>
+                <div className='content'>{topicData.description}</div>
+                <div className="font-medium mt-1">{topicData.number_of_followers}</div>
+                <div className='font-medium text-xs'>Follower{topicData.number_of_followers === 1 ? "" : "s"}</div>
             </div>
             <Divider />
-            <div>Created {dayjs(topicData.created_at).format("LL")}</div>
+            <div className='content'>Created {dayjs(topicData.created_at).format("LL")}</div>
             <Link passHref href={`/t/${topicData.title}/submit`}>
                 <Button
                     as="a"

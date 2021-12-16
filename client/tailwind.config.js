@@ -24,6 +24,9 @@ module.exports = {
 				...theme("spacing"),
 			}),
 		},
+		fontFamily: {
+			sans: ["IBM Plex Sans", "Arial", "sans-serif"],
+		},
 	},
 	variants: {
 		extend: {

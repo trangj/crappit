@@ -51,7 +51,7 @@
 @layer components {
 	/* Button */
 	.button {
-		@apply flex font-medium items-center justify-center;
+		@apply flex items-center justify-center font-bold text-sm;
 	}
 	.button-outline {
 		@apply border border-blue-500 text-blue-500 dark:border-gray-200 dark:text-gray-200 active:bg-opacity-20 dark:active:bg-opacity-20 hover:bg-blue-500 hover:bg-opacity-10 dark:hover:bg-white dark:hover:bg-opacity-10;
@@ -145,4 +145,18 @@
 	color: #71717A;
     pointer-events: none;
     height: 0;
+}
+
+.ProseMirror, p, input, textarea, .content {
+	font-family: Noto Sans, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 21px;
+}
+
+.button {
+	font-family: Noto Sans, Arial, sans-serif;
+}
+
+.button.rounded {
+	font-family: IBM Plex Sans, Arial, sans-serif;
 }

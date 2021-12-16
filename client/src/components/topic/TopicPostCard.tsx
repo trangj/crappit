@@ -39,31 +39,19 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
                             <div className="h-14 w-14 rounded-full">
                                 {!topicData.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topicData.icon_image_name} width={56} height={56} className="rounded-full" />}
                             </div>
-                            <div className="text-lg self-center">
+                            <div className="text-lg self-center font-medium">
                                 r/{topicData.title}
                             </div>
                         </a>
                     </Link>
-                    {user && topicData.user_moderator_id && (
-                        <Link
-                            href={`/t/${topicData.title}/about`}
-                            passHref
-                        >
-                            <Button variant="ghost" border="rounded" className="text-xs ml-auto">
-                                Settings
-                            </Button>
-                        </Link>
-                    )}
                 </div>
                 <div>
-                    <div>{topicData.description}</div>
-                    <div className="font-medium -mb-1 mt-1">{topicData.number_of_followers}</div>
-                    <small>Follower{topicData.number_of_followers === 1 ? "" : "s"}</small>
+                    <div className='content'>{topicData.description}</div>
+                    <div className="font-medium mt-1">{topicData.number_of_followers}</div>
+                    <div className='font-medium text-xs'>Follower{topicData.number_of_followers === 1 ? "" : "s"}</div>
                 </div>
                 <Divider />
-                <div>
-                    Created {dayjs(topicData.created_at).format("LL")}
-                </div>
+                <div className='content'>Created {dayjs(topicData.created_at).format("LL")}</div>
                 {user ? (
                     <Button
                         loading={isLoading}

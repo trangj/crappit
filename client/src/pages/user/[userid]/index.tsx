@@ -68,7 +68,7 @@ const Profile = () => {
 							pageStart={0}
 							loadMore={fetchNextPage as (page: number) => void}
 							hasMore={!isFetching && hasNextPage}
-							loader={<PostLoaderSkeleton />}
+							loader={<PostLoaderSkeleton key="loader" />}
 						>
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>

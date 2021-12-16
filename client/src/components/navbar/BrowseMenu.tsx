@@ -33,7 +33,7 @@ const BrowseMenu = () => {
 		<Menu as="div" className="relative hidden sm:inline-block text-left">
 			{({ open }) => (
 				<>
-					<Menu.Button className={`menu-button border-transparent hover:border-gray-200 dark:hover:border-gray-700 rounded border w-64 ${open ? 'border-gray-200 dark:border-gray-700 rounded-b-none' : ''}`}>
+					<Menu.Button className={`menu-button text-sm border-transparent hover:border-gray-200 dark:hover:border-gray-700 rounded border w-64 ${open ? 'border-gray-200 dark:border-gray-700 rounded-b-none' : ''}`}>
 						Browse
 						<ChevronDownIcon className="h-4 w-4 ml-auto" />
 					</Menu.Button>

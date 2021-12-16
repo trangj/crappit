@@ -31,7 +31,7 @@ const PostCard = ({ post, topic }: Props) => {
 				<div className="w-full p-2">
 					<small>
 						<Link passHref href={`/t/${post.topic}`}>
-							<a className="font-medium">
+							<a className="font-bold">
 								t/{post.topic}
 							</a>
 						</Link>
@@ -56,7 +56,7 @@ const PostCard = ({ post, topic }: Props) => {
 							setOpenEdit={setOpenEdit}
 						/>
 					) : (
-						post.type === "text" && <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+						post.type === "text" && <div className="content" dangerouslySetInnerHTML={{ __html: post.content }}></div>
 					)}
 				</div>
 				{post.type === "photo" && (
@@ -64,13 +64,13 @@ const PostCard = ({ post, topic }: Props) => {
 						<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} alt="post media" style={{ maxHeight: 700 }} />
 					</a>
 				)}
-				<div className="flex gap-2">
+				<div className="flex flex-wrap gap-x-2">
 					<div className="p-2 font-medium text-gray-500 dark:text-gray-400 text-xs flex items-center">
 						<ChatAltIcon className="h-5 w-5 mr-1 inline" />
 						{post.number_of_comments}
 						{post.number_of_comments === 1 ? " Comment" : " Comments"}
 					</div>
-					<Button variant="ghost" border="rounded" className="text-xs p-2" icon={<ReplyIcon className="h-5 w-5 mr-1" />}
+					<Button size="lg" variant="ghost" border="rounded" className="text-xs" icon={<ReplyIcon className="h-5 w-5 mr-1" />}
 						onClick={() => {
 							navigator.clipboard.writeText(`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/t/${post.topic}/comments/${post.id}`);
 							toast.success("Copied link!");
@@ -84,6 +84,7 @@ const PostCard = ({ post, topic }: Props) => {
 							{post.type === "text" && (
 								<Button
 									onClick={() => setOpenEdit(!openEdit)}
+									size="lg"
 									variant="ghost"
 									border="rounded"
 									className="text-xs"

@@ -16,7 +16,7 @@ const DeletePost = ({ post }: Props) => {
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)} variant="ghost" border="rounded" className="text-xs" icon={<TrashIcon className="h-5 w-5 mr-1" />}>
+			<Button onClick={() => setOpen(true)} size="lg" variant="ghost" border="rounded" className="text-xs" icon={<TrashIcon className="h-5 w-5 mr-1" />}>
 				Delete
 			</Button>
 			<Dialog

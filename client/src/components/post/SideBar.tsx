@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import { Button } from 'src/ui/Button';
 import { Card } from 'src/ui/Card';
@@ -15,15 +16,17 @@ const SideBar = ({ children }: Props) => {
             <div className="h-full relative" style={{ width: 'inherit' }}>
                 <Card className="p-3 sticky top-16 text-xs">
                     <div className="flex">
-                        <div className="flex flex-col w-1/2 gap-1.5">
+                        <div className="flex flex-col w-1/2 gap-1">
                             <a>Help</a>
                             <a>Crappit Coins</a>
                             <a>Crappit Premium</a>
                             <a>Crappit Gifts</a>
                             <a>Communities</a>
-                            <a>Topics</a>
+                            <Link href="/t">
+                                <a>Topics</a>
+                            </Link>
                         </div>
-                        <div className="flex flex-col w-1/2 gap-1.5">
+                        <div className="flex flex-col w-1/2 gap-1">
                             <a>About</a>
                             <a>Careers</a>
                             <a>Press</a>

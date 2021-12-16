@@ -22,7 +22,7 @@ const PostItem = ({ post, ...props }: Props) => {
 				<div className="w-full p-2 pb-0">
 					<small>
 						<Link passHref href={`/t/${post.topic}`}>
-							<a className="font-medium">
+							<a className="font-bold">
 								t/{post.topic}
 							</a>
 						</Link>{" "}
@@ -51,7 +51,7 @@ const PostItem = ({ post, ...props }: Props) => {
 								WebkitMaskImage: 'linear-gradient(180deg,#000 60%,transparent)',
 								maskImage: 'linear-gradient(180deg,#000 60%,transparent)'
 							}}
-							className="pb-2.5"
+							className="pb-2.5 content"
 							dangerouslySetInnerHTML={{ __html: post.content }}
 						>
 						</div>
@@ -74,12 +74,12 @@ const PostItem = ({ post, ...props }: Props) => {
 						<Voting post={post} orientation="horizontal" />
 					</div>
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}#comments`}>
-						<Button variant="ghost" border="rounded" className="text-xs p-2" as="a" icon={<ChatAltIcon className="h-5 w-5 mr-1" />}>
+						<Button variant="ghost" border="rounded" className="text-xs" size="lg" as="a" icon={<ChatAltIcon className="h-5 w-5 mr-1" />}>
 							{post.number_of_comments}
 							{post.number_of_comments === 1 ? " Comment" : " Comments"}
 						</Button>
 					</Link>
-					<Button variant="ghost" border="rounded" className="text-xs p-2" icon={<ReplyIcon className="h-5 w-5 mr-1" />}
+					<Button variant="ghost" border="rounded" className="text-xs" size="lg" icon={<ReplyIcon className="h-5 w-5 mr-1" />}
 						onClick={() => {
 							navigator.clipboard.writeText(`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/t/${post.topic}/comments/${post.id}`);
 							toast.success("Copied link!");

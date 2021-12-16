@@ -16,7 +16,7 @@ const DeletePostModerator = ({ post }: Props) => {
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)} variant="ghost" border="rounded" className="text-xs" icon={<BanIcon className="h-5 w-5 mr-1" />}>
+			<Button onClick={() => setOpen(true)} variant="ghost" size="lg" border="rounded" className="text-xs" icon={<BanIcon className="h-5 w-5 mr-1" />}>
 				Remove
 			</Button>
 			<Dialog
