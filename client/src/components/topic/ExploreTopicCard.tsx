@@ -45,7 +45,7 @@ const ExploreTopicCard = () => {
                 </div>}
             <ol>
                 {topics.map((topic, ind) =>
-                    <li className='border-b border-gray-300 dark:border-gray-700'>
+                    <li key={ind} className='border-b border-gray-300 dark:border-gray-700'>
                         <Link href={`/t/${topic.title}`} passHref>
                             <a className='flex items-center h-12 px-3 justify-between'>
                                 <div className='flex items-center'>
