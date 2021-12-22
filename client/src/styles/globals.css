@@ -31,17 +31,8 @@
 	small a {
 		@apply hover:underline;
 	}
-	ul {
-		@apply list-inside list-disc pt-2;
-	}
-	ol {
-		@apply list-inside list-decimal pt-2;
-	}
 	p {
 		@apply pt-2;
-	}
-	li p {
-		@apply inline;
 	}
 	p a {
 		@apply hover:underline text-blue-500 dark:text-blue-400 cursor-pointer
@@ -151,6 +142,17 @@
 	font-family: Noto Sans, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 21px;
+
+	ul {
+		list-style-position: inside;
+		list-style-type: disc;
+		padding-top: 0.5rem;
+	}
+	ol {
+		list-style-position: inside;
+		list-style-type: decimal;
+		padding-top: 0.5rem;
+	}
 }
 
 .button {

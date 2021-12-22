@@ -16,6 +16,7 @@ import PostLoaderSkeleton from "src/components/util/PostLoaderSkeleton";
 import SortPost from "src/components/post/SortPostCard";
 import SideBar from "src/components/post/SideBar";
 import CreatePostCard from "src/components/post/CreatePostCard";
+import ExploreTopicCard from "src/components/topic/ExploreTopicCard";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? query.sort as string : "";
@@ -81,6 +82,7 @@ const HomePage = () => {
 					)}
 				</div>
 				<SideBar>
+					<ExploreTopicCard />
 					<Card className="flex flex-col gap-3 p-3">
 						<div className="font-semibold">Home</div>
 						<div className="content">
