@@ -43,4 +43,31 @@ router.get("/followed_topics", optionalAuth, async (req, res) => {
 	}
 });
 
+// @route   GET /api/topics/top
+// @desc    Get top topics
+// @access  Public
+
+router.get("/top", optionalAuth, async (req, res) => {
+	try {
+		const top_topics = await Topic.query(`
+			select
+			t.title title,
+			t.icon_image_url icon_image_url,
+			t.icon_image_name icon_image_name,
+			t.image_url image_url,
+			t.image_name image_name
+			from topic t
+			order by t.number_of_followers desc
+			limit 5
+		`);
+		res.status(200).json({
+			top_topics
+		});
+	} catch (err) {
+		res.status(400).json({
+			status: { text: err.message, severity: "error" },
+		});
+	}
+});
+
 export const TopicsRouter = router;
