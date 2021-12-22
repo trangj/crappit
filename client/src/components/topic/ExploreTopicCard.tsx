@@ -36,11 +36,11 @@ const ExploreTopicCard = () => {
                         objectFit="cover"
                         objectPosition="center"
                     />
-                    <div className='h-full w-full absolute bg-gradient-to-t from-gray-850'></div>
+                    <div className='h-full w-full absolute bg-gradient-to-t from-white dark:from-gray-850'></div>
                     <h6 className='absolute bottom-2 left-4 font-medium text-base'>Top Communities</h6>
                 </div> :
                 <div className="h-20 bg-blue-400 relative">
-                    <div className='h-full w-full absolute bg-gradient-to-t from-gray-850'></div>
+                    <div className='h-full w-full absolute bg-gradient-to-t from-white dark:from-gray-850'></div>
                     <h6 className='absolute bottom-2 left-4 font-medium text-base'>Top Communities</h6>
                 </div>}
             <ol>
