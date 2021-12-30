@@ -1,3 +1,4 @@
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -10,6 +11,13 @@ import PostSkeleton from 'src/components/util/PostSkeleton';
 import useSearchPosts from 'src/hooks/search-query/useSearchPosts';
 import { Card } from 'src/ui/Card';
 import { Container } from 'src/ui/Container';
+import axios from '../axiosConfig';
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    return {
+        props: {}
+    };
+};
 
 const Search = () => {
     const router = useRouter();
@@ -38,6 +46,7 @@ const Search = () => {
             <div className="flex gap-6">
                 <div className='w-full'>
                     <SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/search?q=${q}&`} />
+                    {axios.defaults.headers.authorization}
                     {!isLoading && data && data.pages[0].posts.length === 0 &&
                         <Card>
                             <div className='p-4 text-center'>
