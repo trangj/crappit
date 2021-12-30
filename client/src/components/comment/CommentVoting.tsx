@@ -29,7 +29,7 @@ const CommentVoting = ({ comment }: Props) => {
 	};
 
 	return (
-		<div className="flex">
+		<div className="flex items-center">
 			{user ? (
 				<Button
 					aria-label="Upvote"
@@ -37,6 +37,7 @@ const CommentVoting = ({ comment }: Props) => {
 					icon={<ArrowUpIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
+					size="sm"
 					className={comment.user_vote === 1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-upvote dark:text-upvote" : ""}
 				/>
 			) : (
@@ -46,6 +47,7 @@ const CommentVoting = ({ comment }: Props) => {
 						icon={<ArrowUpIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
+						size="sm"
 						as="a"
 					/>
 				</Link>
@@ -69,6 +71,7 @@ const CommentVoting = ({ comment }: Props) => {
 					icon={<ArrowDownIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
+					size="sm"
 					className={comment.user_vote === -1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-downvote dark:text-downvote" : ""}
 				/>
 			) : (
@@ -78,6 +81,7 @@ const CommentVoting = ({ comment }: Props) => {
 						icon={<ArrowDownIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
+						size="sm"
 						as="a"
 					/>
 				</Link>

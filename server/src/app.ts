@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 import express from "express";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
-import { UserRouter, TopicsRouter, TopicRouter, PostsRouter, PostRouter, CommentRouter, ModerationRouter, CommentsRouter } from './routes';
+import { UserRouter, TopicsRouter, TopicRouter, PostsRouter, PostRouter, CommentRouter, ModerationRouter, CommentsRouter, SearchRouter } from './routes';
 import { createConnection } from "typeorm";
 import passport from './middleware/passport';
 
@@ -27,6 +27,7 @@ import passport from './middleware/passport';
 	app.use("/api/topics", TopicsRouter);
 	app.use("/api/user", UserRouter);
 	app.use("/api/moderation", ModerationRouter);
+	app.use("/api/search", SearchRouter);
 
 	app.listen(process.env.PORT || 5000, () =>
 		console.log("Server started on port 5000...")

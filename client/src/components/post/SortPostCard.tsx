@@ -10,12 +10,12 @@ type Props = {
     url?: string;
 };
 
-const SortPost = ({ sortParam, setSortParam, url = "" }: Props) => {
+const SortPost = ({ sortParam, setSortParam, url = "?" }: Props) => {
     return (
         <Card className="flex gap-2 p-3">
             <Button
                 onClick={() => {
-                    router.push(`${url}?sort=hot`, undefined, { shallow: true });
+                    router.push(`${url}sort=hot`, undefined, { shallow: true });
                     setSortParam("hot");
                 }}
                 variant="ghost"
@@ -26,7 +26,7 @@ const SortPost = ({ sortParam, setSortParam, url = "" }: Props) => {
             </Button>
             <Button
                 onClick={() => {
-                    router.push(`${url}?sort=new`, undefined, { shallow: true });
+                    router.push(`${url}sort=new`, undefined, { shallow: true });
                     setSortParam("new");
                 }}
                 variant="ghost"
@@ -37,7 +37,7 @@ const SortPost = ({ sortParam, setSortParam, url = "" }: Props) => {
             </Button>
             <Button
                 onClick={() => {
-                    router.push(`${url}?sort=top`, undefined, { shallow: true });
+                    router.push(`${url}sort=top`, undefined, { shallow: true });
                     setSortParam("top");
                 }}
                 variant="ghost"

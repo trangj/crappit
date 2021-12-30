@@ -40,7 +40,7 @@ const Profile = () => {
 		fetchNextPage,
 		hasNextPage,
 		isLoading,
-		isFetching
+		isError
 	} = useProfilePosts(userid as string, sortParam);
 
 	if (!profile) {
@@ -66,8 +66,8 @@ const Profile = () => {
 					{!isLoading && data ? (
 						<InfiniteScroll
 							pageStart={0}
-							loadMore={fetchNextPage as (page: number) => void}
-							hasMore={!isFetching && hasNextPage}
+							loadMore={() => fetchNextPage({ cancelRefetch: false })}
+							hasMore={!isError && hasNextPage}
 							loader={<PostLoaderSkeleton key="loader" />}
 						>
 							{data.pages.map((group, i) => (

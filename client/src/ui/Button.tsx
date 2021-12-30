@@ -11,7 +11,7 @@ export type ButtonProps = DetailedHTMLProps<
 > & {
     variant?: "outline" | "filled" | "ghost";
     border?: "rounded" | "rounded-full" | "none";
-    size?: "sm" | "md" | "lg";
+    size?: "xs" | "sm" | "md" | "lg";
     loading?: boolean;
     active?: boolean;
     icon?: ReactNode;
@@ -36,7 +36,7 @@ export const Button = React.forwardRef(({
 }: ButtonProps, ref) => {
 
     const borderOptions = {
-        "rounded-full": "rounded-full px-2",
+        "rounded-full": `rounded-full ${icon ? 'px-2' : 'px-4'}`,
         "rounded": "rounded",
         "none": ""
     };
@@ -51,9 +51,10 @@ export const Button = React.forwardRef(({
     };
 
     const sizeOptions = {
-        sm: "p-0",
-        md: 'p-1',
-        lg: 'p-2'
+        xs: "p-0",
+        sm: "p-1",
+        md: 'p-1 min-h-8',
+        lg: 'p-2 min-h-9'
     };
 
     return (

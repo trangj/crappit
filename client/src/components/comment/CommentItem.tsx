@@ -89,7 +89,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 						<>
 							{<div className="content my-1" dangerouslySetInnerHTML={{ __html: comment.is_deleted ? "<div>[deleted]</div>" : comment.content }}></div>}
 							{!comment.is_deleted && (
-								<div className="flex gap-2 mt-1">
+								<div className="flex gap-1 mt-1">
 									<CommentVoting comment={comment} />
 									<CommentToolBar setOpenEdit={setOpenEdit} setOpenReply={setOpenReply} openEdit={openEdit} openReply={openReply} comment={comment} topic={topic} />
 								</div>

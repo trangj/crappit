@@ -32,6 +32,7 @@ const Voting = ({ post, orientation = "vertical" }: Props) => {
 					icon={<ArrowUpIcon className="w-5 h-5" />}
 					variant="ghost"
 					border="rounded"
+					size="sm"
 					className={post.user_vote === 1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-upvote dark:text-upvote" : ""}
 				/>
 			) : (
@@ -41,6 +42,7 @@ const Voting = ({ post, orientation = "vertical" }: Props) => {
 						icon={<ArrowUpIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
+						size="sm"
 						as="a"
 					/>
 				</Link>
@@ -63,6 +65,7 @@ const Voting = ({ post, orientation = "vertical" }: Props) => {
 					onClick={handleDownvote}
 					icon={<ArrowDownIcon className="w-5 h-5" />}
 					variant="ghost"
+					size="sm"
 					border="rounded"
 					className={post.user_vote === -1 ? "bg-black bg-opacity-5 dark:bg-white dark:bg-opacity-5 text-downvote dark:text-downvote" : ""}
 				/>
@@ -73,6 +76,7 @@ const Voting = ({ post, orientation = "vertical" }: Props) => {
 						icon={<ArrowDownIcon className="w-5 h-5" />}
 						variant="ghost"
 						border="rounded"
+						size="sm"
 						as="a"
 					/>
 				</Link>

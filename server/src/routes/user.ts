@@ -423,7 +423,7 @@ router.get('/:userid/posts', optionalAuth, async (req, res) => {
 				(case when $3 = 'hot' or $3 = '' then p.number_of_comments end) desc
 			limit 10 offset $4
 		`, [req.user.id, req.params.userid, req.query.sort, req.query.skip]);
-		if (!posts) throw Error("No posts found");
+
 		res.status(200).json({
 			posts,
 			nextCursor: posts.length
@@ -431,7 +431,9 @@ router.get('/:userid/posts', optionalAuth, async (req, res) => {
 				: undefined,
 		});
 	} catch (err) {
-		res.status(400).json({ status: { text: err.message, severity: "error" } });
+		res.status(400).json({
+			status: { text: "Could not fetch posts", severity: "error" }
+		});
 	}
 });
 

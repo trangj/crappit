@@ -47,7 +47,7 @@ const Option = ({ children, icon, ...props }: OptionProps) => {
 const UserMenu = ({ user, logoutUser, theme, setTheme }: Props) => {
 	return (
 		<Menu as="div" className="relative hidden sm:inline-block text-left">
-			<Menu.Button className={`menu-button ml-6 ${user ? 'xl:w-56' : 'mr-6'}`}>
+			<Menu.Button className={`menu-button ${user ? 'xl:w-56' : 'ml-4'}`}>
 				{user && (
 					<>
 						<span className="h-6 w-6 mr-2">

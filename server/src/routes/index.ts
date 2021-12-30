@@ -6,3 +6,4 @@ export * from './topic';
 export * from './topics';
 export * from './user';
 export * from './comments';
+export * from './search';

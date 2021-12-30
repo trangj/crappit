@@ -99,7 +99,7 @@
 		@apply absolute right-0 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 py-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll;
 	}
 	.menu-button {
-		@apply flex text-xs items-center text-left px-3 h-10 font-medium;
+		@apply flex text-xs items-center text-left px-3 h-9 font-medium;
 	}
 	.menu-option {
 		@apply hover:bg-gray-100 dark:hover:bg-gray-800 py-2.5 px-6 flex gap-2 items-center text-sm;

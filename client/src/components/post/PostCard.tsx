@@ -64,7 +64,7 @@ const PostCard = ({ post, topic }: Props) => {
 						<img src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`} alt="post media" style={{ maxHeight: 700 }} />
 					</a>
 				)}
-				<div className="flex flex-wrap gap-x-2">
+				<div className="flex flex-wrap gap-x-1">
 					<div className="p-2 font-medium text-gray-500 dark:text-gray-400 text-xs flex items-center">
 						<ChatAltIcon className="h-5 w-5 mr-1 inline" />
 						{post.number_of_comments}
