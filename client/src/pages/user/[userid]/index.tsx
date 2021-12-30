@@ -62,7 +62,7 @@ const Profile = () => {
 			</Head>
 			<div className="flex gap-6">
 				<div className="w-full">
-					<SortPost setSortParam={setSortParam} sortParam={sortParam} url={`/user/${profile?.id}`} />
+					<SortPost setSortParam={setSortParam} sortParam={sortParam} url={`/user/${profile?.id}?`} />
 					{!isLoading && data ? (
 						<InfiniteScroll
 							pageStart={0}

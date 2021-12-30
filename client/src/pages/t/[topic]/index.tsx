@@ -70,7 +70,7 @@ const TopicPage = () => {
 				<div className="flex gap-6">
 					<div className="w-full">
 						<CreatePost url={`/t/${topicData?.title}`} />
-						<SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/t/${topicData?.title}`} />
+						<SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/t/${topicData?.title}?`} />
 						{!isLoading && data ? (
 							<InfiniteScroll
 								pageStart={0}
