@@ -16,7 +16,7 @@ const SearchBar = () => {
     };
 
     return (
-        <div className={`flex-grow ${!user ? 'mx-auto max-w-2xl' : 'mx-4'}`}>
+        <div className={`flex-grow px-4 ${!user ? 'mx-auto max-w-2xl' : ''}`}>
             <form onSubmit={handleSubmit} className='flex h-9 bg-gray-100 hover:bg-white hover:border-blue-500 dark:bg-gray-800 border dark:border-gray-700 dark:hover:border-white dark:hover:bg-gray-900 rounded'>
                 <label className='flex'>
                     <div className='flex items-center pr-2 pl-4'>
