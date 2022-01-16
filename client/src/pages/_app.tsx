@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { AppProps } from "next/app";
+import App, { AppProps } from "next/app";
 import React, { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import NavigationBar from "src/components/navbar/NavigationBar";
@@ -24,8 +24,10 @@ type MyAppProps = AppProps & {
 MyApp.getInitialProps = async (ctx: any) => {
     let user = null;
     let token = '';
+    const appProps = await App.getInitialProps(ctx);
+
     try {
-        if (typeof window === 'undefined' && ctx.ctx.req.cookies.token) {
+        if (typeof window === 'undefined' && ctx.ctx.req.cookies.token && !ctx.ctx.req?.url?.startsWith('/_next/data')) {
             const res = await axios.post('/api/user/refresh_token', {}, { headers: { cookie: 'token=' + ctx.ctx.req.cookies.token } });
             axios.defaults.headers.authorization = res.data.access_token;
             user = res.data.user;
@@ -34,11 +36,13 @@ MyApp.getInitialProps = async (ctx: any) => {
     } catch (err) {
         ctx.ctx.res.setHeader('Set-Cookie', `token=; Domain=${process.env.DOMAIN}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure`);
     }
-    return { user, token };
+    return { user, token, ...appProps };
 };
 
 function MyApp({ Component, pageProps, token, user }: MyAppProps) {
-    axios.defaults.headers.authorization = token;
+    if (token) {
+        axios.defaults.headers.authorization = token;
+    }
     const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 30000 } } }));
 
     return (
