@@ -27,7 +27,7 @@ MyApp.getInitialProps = async (ctx: any) => {
     const appProps = await App.getInitialProps(ctx);
 
     try {
-        if (typeof window === 'undefined' && ctx.ctx.req.cookies.token && !ctx.ctx.req?.url?.startsWith('/_next/data')) {
+        if (typeof window === 'undefined' && ctx.ctx.req.cookies.token) {
             const res = await axios.post('/api/user/refresh_token', {}, { headers: { cookie: 'token=' + ctx.ctx.req.cookies.token } });
             axios.defaults.headers.authorization = res.data.access_token;
             user = res.data.user;
@@ -40,9 +40,7 @@ MyApp.getInitialProps = async (ctx: any) => {
 };
 
 function MyApp({ Component, pageProps, token, user }: MyAppProps) {
-    if (token) {
-        axios.defaults.headers.authorization = token;
-    }
+    axios.defaults.headers.authorization = token;
     const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 30000 } } }));
 
     return (
