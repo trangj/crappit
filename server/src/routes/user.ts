@@ -2,7 +2,6 @@ import express from "express";
 import bcyrpt from "bcryptjs";
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
-import jwt, { verify } from "jsonwebtoken";
 import { auth, optionalAuth } from "../middleware/auth";
 import { Post, User } from "../entities";
 import { MoreThan } from 'typeorm';
@@ -25,14 +24,38 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 // @acess   Public
 
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL, session: false }), async (req, res) => {
-	res
-		.cookie('token', req.user, {
-			httpOnly: true,
-			maxAge: 1000 * 60 * 60 * 24 * 7,
-			secure: process.env.NODE_ENV === 'production',
-			domain: process.env.DOMAIN
-		})
-		.redirect(process.env.CLIENT_URL);
+	req.session.user = req.user;
+	res.redirect(process.env.CLIENT_URL);
+});
+
+// @route   GET /api/user/me
+// @desc    Get new refresh/access token
+// @access  Public
+
+router.get("/me", auth, async (req, res) => {
+	try {
+		const user = await User.findOne(req.user.id);
+
+		if (user.token_version !== req.user.version) throw Error;
+
+		const { password, ...rest } = user;
+
+		res
+			.status(200)
+			.json({ user: { ...rest } });
+	} catch (err) {
+		req.session.destroy((err: any) => {
+			if (err) throw Error("Something went wrong");
+		});
+		res
+			.status(403)
+			.clearCookie('crappit_session', {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				domain: process.env.DOMAIN
+			})
+			.json({ user: null });
+	}
 });
 
 // @route   POST /api/user/register
@@ -57,33 +80,15 @@ router.post("/register", async (req, res) => {
 			password: hash,
 		}).save().catch(err => { throw Error("A user already exists with that username or email"); });
 
-		const refresh_token = jwt.sign(
-			{ id: newUser.id, token_version: newUser.token_version },
-			process.env.REFRESH_TOKEN_SECRET,
-			{ expiresIn: '7d' }
-		);
+		req.session.user = { id: newUser.id, version: newUser.token_version };
 
-		const access_token = jwt.sign(
-			{ id: newUser.id },
-			process.env.ACCESS_TOKEN_SECRET,
-			{ expiresIn: '15m' }
-		);
-
-		res.status(200)
-			.cookie('token', refresh_token, {
-				httpOnly: true,
-				maxAge: 1000 * 60 * 60 * 24 * 7,
-				secure: process.env.NODE_ENV === 'production',
-				domain: process.env.DOMAIN
-			})
-			.json({
-				access_token,
-				user: { ...newUser },
-				status: {
-					text: "Successfully registered!",
-					severity: "success",
-				},
-			});
+		res.status(200).json({
+			user: { ...newUser },
+			status: {
+				text: "Successfully registered!",
+				severity: "success",
+			},
+		});
 	} catch (err) {
 		res
 			.status(400)
@@ -106,27 +111,10 @@ router.post("/login", async (req, res) => {
 		const isMatch = await bcyrpt.compare(password, user.password).catch((err) => { throw new Error('Invalid email or password'); });
 		if (!isMatch) throw Error("Invalid email or password");
 
-		const refresh_token = jwt.sign(
-			{ id: user.id, token_version: user.token_version },
-			process.env.REFRESH_TOKEN_SECRET,
-			{ expiresIn: '7d' }
-		);
-
-		const access_token = jwt.sign(
-			{ id: user.id },
-			process.env.ACCESS_TOKEN_SECRET,
-			{ expiresIn: '15m' }
-		);
+		req.session.user = { id: user.id, version: user.token_version };
 
 		res.status(200)
-			.cookie('token', refresh_token, {
-				httpOnly: true,
-				maxAge: 1000 * 60 * 60 * 24 * 7,
-				secure: process.env.NODE_ENV === 'production',
-				domain: process.env.DOMAIN
-			})
 			.json({
-				access_token,
 				user: { ...user },
 				status: { text: "Successfully logged in!", severity: "success" },
 			});
@@ -237,8 +225,13 @@ router.post("/reset/:token", async (req, res) => {
 				"This inbox is not monitored and responses will not be seen.",
 		};
 		await sgMail.send(msg);
+
+		req.session.destroy((err: any) => {
+			if (err) throw Error("Something went wrong");
+		});
+
 		res.status(200)
-			.clearCookie('token', {
+			.clearCookie('crappit_session', {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',
 				domain: process.env.DOMAIN
@@ -246,6 +239,7 @@ router.post("/reset/:token", async (req, res) => {
 			.json({
 				status: { text: "Your password has been changed. Please login again.", severity: "success" },
 			});
+
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
@@ -342,62 +336,25 @@ router.post('/:userid/avatar', auth, upload, async (req, res) => {
 	}
 });
 
-// @route   POST /api/user/refresh_token
-// @desc    Get new refresh/access token
-// @access  Public
-
-router.post("/refresh_token", async (req, res) => {
-	try {
-		const refresh_token = req.cookies.token;
-		if (!refresh_token) throw Error;
-
-		let payload = null;
-		payload = verify(refresh_token, process.env.REFRESH_TOKEN_SECRET);
-		if (!payload) throw Error;
-
-		const user = await User.findOne((payload as any).id);
-		if (!user) throw Error;
-		if (user.token_version !== (payload as any).token_version) throw Error;
-
-		const { password, ...rest } = user;
-
-		const new_refresh_token = jwt.sign(
-			{ id: user.id, token_version: user.token_version },
-			process.env.REFRESH_TOKEN_SECRET,
-			{ expiresIn: '7d' }
-		);
-
-		const new_access_token = jwt.sign(
-			{ id: user.id },
-			process.env.ACCESS_TOKEN_SECRET,
-			{ expiresIn: '15s' }
-		);
-
-		res.status(200)
-			.cookie("token", new_refresh_token, {
-				httpOnly: true,
-				maxAge: 1000 * 60 * 60 * 24 * 7,
-				secure: process.env.NODE_ENV === 'production',
-				domain: process.env.DOMAIN
-			})
-			.json({ access_token: new_access_token, user: { ...rest } });
-	} catch (err) {
-		res.status(401).json({ status: { text: "Refresh token expired", severity: "error" } });;
-	}
-});
-
 // @route   POST /api/user/logout
 // @desc    Logout user
 // @access  Public
 
 router.post('/logout', async (req, res) => {
-	res
-		.clearCookie('token', {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			domain: process.env.DOMAIN
-		})
-		.json({ access_token: '' });
+	try {
+		req.session.destroy((err: any) => {
+			if (err) throw Error("Something went wrong");
+		});
+		res
+			.clearCookie('crappit_session', {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				domain: process.env.DOMAIN
+			})
+			.json({ status: { text: "Successfully logged out", severity: "success" } });
+	} catch (err) {
+		res.status(400).json({ status: { text: err.message, severity: "error" } });
+	}
 });
 
 // @route   POST /api/user/:userid/posts

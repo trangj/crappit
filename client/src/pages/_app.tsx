@@ -17,30 +17,28 @@ dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 
 type MyAppProps = AppProps & {
-    token: string,
     user: User;
 };
 
 MyApp.getInitialProps = async (ctx: any) => {
     let user = null;
-    let token = '';
-    const appProps = await App.getInitialProps(ctx);
+    const props = await App.getInitialProps(ctx);
 
     try {
-        if (typeof window === 'undefined' && ctx.ctx.req.cookies.token) {
-            const res = await axios.post('/api/user/refresh_token', {}, { headers: { cookie: 'token=' + ctx.ctx.req.cookies.token } });
-            axios.defaults.headers.authorization = res.data.access_token;
-            user = res.data.user;
-            token = res.data.access_token;
+        if (typeof window === 'undefined' && ctx.ctx.req.cookies['crappit_session']) {
+            axios.defaults.headers.get.Cookie = 'crappit_session=' + ctx.ctx.req.cookies['crappit_session'];
+            if (!ctx.ctx.req?.url?.startsWith('/_next/data')) {
+                const res = await axios.get('/api/user/me');
+                user = res.data.user;
+            }
         }
     } catch (err) {
-        ctx.ctx.res.setHeader('Set-Cookie', `token=; Domain=${process.env.DOMAIN}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure`);
+        ctx.ctx.res.setHeader('Set-Cookie', `crappit_session=; Domain=${process.env.DOMAIN}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure`);
     }
-    return { user, token, ...appProps };
+    return { user, ...props };
 };
 
-function MyApp({ Component, pageProps, token, user }: MyAppProps) {
-    axios.defaults.headers.authorization = token;
+function MyApp({ Component, pageProps, user }: MyAppProps) {
     const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { staleTime: 30000 } } }));
 
     return (

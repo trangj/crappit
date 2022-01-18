@@ -1,6 +1,5 @@
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
-import jwt from 'jsonwebtoken';
 import { User } from '../entities';
 
 passport.use(new Strategy({
@@ -23,13 +22,7 @@ passport.use(new Strategy({
             }).save().catch(err => { throw Error("A user already exists with that username or email"); });
         }
 
-        const refresh_token = jwt.sign(
-            { id: user.id, token_version: user.token_version },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '7d' }
-        );
-
-        done(undefined, refresh_token);
+        done(undefined, { id: user.id, version: user.token_version });
     } catch (err) {
         console.log(err);
         done(err);

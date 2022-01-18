@@ -1,12 +1,10 @@
-import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from 'express';
 
 export const auth = (req: Request, res: Response, next: NextFunction) => {
-	const token = req.headers.authorization;
+	const user = req.session.user;
 	try {
-		if (!token || token === 'undefined') throw Error("You are not authorized");
-		const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-		req.user = decoded;
+		if (!user) throw Error("You are not authorized");
+		req.user = user;
 		next();
 	} catch (err) {
 		res
@@ -16,14 +14,13 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
-	const token = req.headers.authorization;
+	const user = req.session.user;
 	try {
-		if (!token || token === 'undefined') {
-			req.user = { id: null, user: null };
+		if (user) {
+			req.user = user;
 			next();
 		} else {
-			const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-			req.user = decoded;
+			req.user = { id: null };
 			next();
 		}
 	} catch (err) {

@@ -17,7 +17,7 @@ import { Tab } from "@headlessui/react";
 import DeleteModerator from "src/components/topic/DeleteModerator";
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
-	if (!req.cookies.token) {
+	if (!req.cookies['crappit_session']) {
 		return {
 			redirect: {
 				destination: '/login',

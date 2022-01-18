@@ -22,7 +22,6 @@ export const UserProvider: React.FC<{ user: User | null, children: ReactNode; }>
 	async function logoutUser() {
 		try {
 			await axios.post('/api/user/logout');
-			delete axios.defaults.headers.authorization;
 			setUser(null);
 		} catch (err) {
 			throw err.response.data;
@@ -32,7 +31,6 @@ export const UserProvider: React.FC<{ user: User | null, children: ReactNode; }>
 	async function loginUser(login: LoginProps) {
 		try {
 			const res = await axios.post(`/api/user/login`, login);
-			axios.defaults.headers.authorization = res.data.access_token;
 			setUser(res.data.user);
 			return res;
 		} catch (err) {
@@ -43,7 +41,6 @@ export const UserProvider: React.FC<{ user: User | null, children: ReactNode; }>
 	async function registerUser(register: RegisterProps) {
 		try {
 			const res = await axios.post(`/api/user/register`, register);
-			axios.defaults.headers.authorization = res.data.access_token;
 			setUser(res.data.user);
 			return res;
 		} catch (err) {

@@ -46,7 +46,7 @@ interface FormValues {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	if (!req.cookies.token) {
+	if (!req.cookies['crappit_session']) {
 		return {
 			redirect: {
 				destination: '/login',
