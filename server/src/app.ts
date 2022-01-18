@@ -18,6 +18,8 @@ import Redis from 'ioredis';
 
 	const RedisStore = connectRedis(session);
 	const redis = new Redis(process.env.REDIS_URL);
+
+	app.set("trust proxy", 1);
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
