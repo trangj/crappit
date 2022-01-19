@@ -29,6 +29,7 @@ import Redis from 'ioredis';
 			secret: process.env.SESSION_SECRET,
 			cookie: {
 				httpOnly: true,
+				sameSite: 'lax',
 				maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
 				secure: process.env.NODE_ENV === 'production',
 				domain: process.env.DOMAIN

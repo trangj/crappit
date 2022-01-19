@@ -51,6 +51,7 @@ router.get("/me", auth, async (req, res) => {
 			.status(403)
 			.clearCookie('crappit_session', {
 				httpOnly: true,
+				sameSite: 'lax',
 				secure: process.env.NODE_ENV === 'production',
 				domain: process.env.DOMAIN
 			})
@@ -233,6 +234,7 @@ router.post("/reset/:token", async (req, res) => {
 		res.status(200)
 			.clearCookie('crappit_session', {
 				httpOnly: true,
+				sameSite: 'lax',
 				secure: process.env.NODE_ENV === 'production',
 				domain: process.env.DOMAIN
 			})
@@ -348,6 +350,7 @@ router.post('/logout', async (req, res) => {
 		res
 			.clearCookie('crappit_session', {
 				httpOnly: true,
+				sameSite: 'lax',
 				secure: process.env.NODE_ENV === 'production',
 				domain: process.env.DOMAIN
 			})
