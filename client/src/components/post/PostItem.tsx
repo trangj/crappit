@@ -70,7 +70,7 @@ const PostItem = ({ post, ...props }: Props) => {
 					</Link>
 				)}
 				<div className="flex px-2">
-					<div className="flex sm:hidden">
+					<div className="flex items-center sm:hidden">
 						<Voting post={post} orientation="horizontal" />
 					</div>
 					<Link passHref href={`/t/${post.topic}/comments/${post.id}#comments`}>
