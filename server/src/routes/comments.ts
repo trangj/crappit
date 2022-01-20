@@ -4,9 +4,15 @@ import { Comment } from '../entities';
 
 const router = express.Router();
 
-const createCommentThread = (id: any, comments: Comment[]): any => {
-	return comments.filter(({ parent_comment_id }) => parent_comment_id == id)
-		.map(({ id, parent_comment_id, ...rest }) => ({ id, ...rest, children: createCommentThread(id, comments) }));
+const createCommentThread = (comments: Comment[]): any => {
+  const hashTable = Object.create(null);
+  comments.forEach(comment => hashTable[comment.id] = {...comment, children: []});
+  const dataTree: Comment[] = [];
+  comments.forEach(comment => {
+    if(comment.parent_comment_id) hashTable[comment.parent_comment_id].children.push(hashTable[comment.id])
+    else dataTree.push(hashTable[comment.id])
+  });
+  return dataTree;
 };
 
 // @route   GET /api/comments/:id
@@ -31,7 +37,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
 				(case when $3 = 'new' then c.created_at end) desc,
 				(case when $3 = 'hot' or $3 = '' then c end) desc
 		`, [req.user.id, req.params.id, req.query.sort]);
-		res.status(200).json({ comments: createCommentThread(null, comments) });
+		res.status(200).json({ comments: createCommentThread(comments) });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },
