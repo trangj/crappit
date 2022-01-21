@@ -1,5 +1,5 @@
 import React, { FormEventHandler, useRef, useState } from "react";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
 import { Button } from "../ui/Button";
@@ -10,16 +10,16 @@ import { useRouter } from "next/router";
 import { Dialog } from "@headlessui/react";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	if (!req.cookies['crappit_session']) {
+	if (!req.cookies["crappit_session"]) {
 		return {
 			redirect: {
-				destination: '/login',
-				permanent: false
-			}
+				destination: "/login",
+				permanent: false,
+			},
 		};
 	}
 	return {
-		props: {}
+		props: {},
 	};
 };
 
@@ -32,9 +32,9 @@ const Settings = () => {
 	const cancelRef = useRef(null);
 
 	if (!user) {
-		router.push('/login');
+		router.push("/login");
 		return null;
-	};
+	}
 
 	const handlePassword = async (email: string) => {
 		try {
@@ -60,9 +60,14 @@ const Settings = () => {
 	const handleAvatar = async (e: any) => {
 		try {
 			const file = e.target.files[0];
-			if (file.type !== 'image/png' && file.type !== 'image/jpg' && file.type !== 'image/jpeg') throw Error("Invalid file type");
+			if (
+				file.type !== "image/png" &&
+				file.type !== "image/jpg" &&
+				file.type !== "image/jpeg"
+			)
+				throw Error("Invalid file type");
 			const formData = new FormData();
-			formData.append('file', file);
+			formData.append("file", file);
 			const res = await axios.post(`/api/user/${user.id}/avatar`, formData);
 			setUser({ ...user, ...res.data.user });
 			toast.success(res.data.status.text);
@@ -78,21 +83,28 @@ const Settings = () => {
 			</Head>
 			<div className="pt-16 container mx-auto max-w-5xl px-5">
 				<div className="max-w-2xl flex flex-col gap-3">
-					<h6>Account Settings</h6>
+					<h5>Account Settings</h5>
 					<Divider className="my-1" />
 					<div className="flex items-center">
 						<div>
 							<div className="font-medium">Change password</div>
-							<small className="text-gray-500 dark:text-gray-400">Password must be 6 characters long</small>
+							<small className="text-gray-500 dark:text-gray-400">
+								Password must be 6 characters long
+							</small>
 						</div>
-						<Button onClick={() => handlePassword(user.email)} className="ml-auto">
+						<Button
+							onClick={() => handlePassword(user.email)}
+							className="ml-auto"
+						>
 							Change
 						</Button>
 					</div>
 					<div className="flex items-center">
 						<div>
 							<div className="font-medium">Email address</div>
-							<small className="text-gray-500 dark:text-gray-400">{user.email}</small>
+							<small className="text-gray-500 dark:text-gray-400">
+								{user.email}
+							</small>
 						</div>
 						<Button onClick={() => setOpen(true)} className="ml-auto">
 							Change
@@ -107,11 +119,11 @@ const Settings = () => {
 							<Dialog.Overlay className="fixed inset-0 bg-black opacity-30 z-50" />
 							<div className="flex items-center justify-center min-h-screen">
 								<div className="bg-white dark:bg-gray-850 rounded border border-gray-200 dark:border-gray-700 max-w-sm mx-auto z-50 p-6 gap-3 flex flex-col">
-									<Dialog.Title as="h6">
-										Update your email
-									</Dialog.Title>
+									<Dialog.Title as="h6">Update your email</Dialog.Title>
 									<Dialog.Description>
-										Update your email below. There will be a new verification email sent that you will need to use to verify this new email.
+										Update your email below. There will be a new verification
+										email sent that you will need to use to verify this new
+										email.
 									</Dialog.Description>
 									<form onSubmit={handleEmail}>
 										<div>Current Password</div>
@@ -130,7 +142,11 @@ const Settings = () => {
 											required
 											className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
 										/>
-										<Button type="submit" className="mt-3 ml-auto" variant="filled">
+										<Button
+											type="submit"
+											className="mt-3 ml-auto"
+											variant="filled"
+										>
 											Save Email
 										</Button>
 									</form>
@@ -138,11 +154,13 @@ const Settings = () => {
 							</div>
 						</Dialog>
 					</div>
-					<h6>Customize Profile</h6>
+					<h5>Customize Profile</h5>
 					<Divider className="my-1" />
 					<div className="font-medium">Avatar image</div>
 					<input type="file" accept=".png,.jpg,.jpeg" onChange={handleAvatar} />
-					<small className="text-gray-500 dark:text-gray-400">Images must be in .png or .jpg format</small>
+					<small className="text-gray-500 dark:text-gray-400">
+						Images must be in .png or .jpg format
+					</small>
 				</div>
 			</div>
 		</div>

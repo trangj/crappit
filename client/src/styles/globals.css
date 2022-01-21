@@ -16,10 +16,10 @@
 		@apply text-3xl;
 	}
 	h5 {
-		@apply text-2xl;
+		@apply text-xl;
 	}
 	h6 {
-		@apply text-xl;
+		@apply text-lg;
 	}
 	h1,
 	h2,

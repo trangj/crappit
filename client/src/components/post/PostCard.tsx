@@ -42,7 +42,7 @@ const PostCard = ({ post, topic }: Props) => {
 							{dayjs(post.created_at).fromNow()}
 						</div>
 					</small>
-					<h6 className="font-medium">{post.title}</h6>
+					<h5 className="font-medium">{post.title}</h5>
 					{post.type === "link" && (
 						<a
 							href={post.content}

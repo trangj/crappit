@@ -21,21 +21,21 @@ const schema = yup.object({
 });
 
 interface FormValues {
-	title: string,
-	description: string,
-};
+	title: string;
+	description: string;
+}
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	if (!req.cookies['crappit_session']) {
+	if (!req.cookies["crappit_session"]) {
 		return {
 			redirect: {
-				destination: '/login',
-				permanent: false
-			}
+				destination: "/login",
+				permanent: false,
+			},
 		};
 	}
 	return {
-		props: {}
+		props: {},
 	};
 };
 
@@ -45,9 +45,9 @@ const AddTopic = () => {
 	const router = useRouter();
 
 	if (!user) {
-		router.push('/login');
+		router.push("/login");
 		return null;
-	};
+	}
 
 	const handleSubmit = ({ title, description }: FormValues) => {
 		const formData = new FormData();
@@ -66,7 +66,7 @@ const AddTopic = () => {
 			<Card className="flex">
 				<div className="bg-blue-300 w-32" />
 				<div className="flex flex-col p-6 gap-2">
-					<h5>Create a topic</h5>
+					<h6>Create a topic</h6>
 					<Divider />
 					<Formik
 						initialValues={initialValues}
@@ -76,7 +76,9 @@ const AddTopic = () => {
 						{({ values }) => (
 							<Form className="w-96 flex flex-col ">
 								<Field label="Title" name="title" component={TextFieldForm} />
-								<small className="text-gray-500 dark:text-gray-400 mb-3">Topic names including capitalization cannot be changed.</small>
+								<small className="text-gray-500 dark:text-gray-400 mb-3">
+									Topic names including capitalization cannot be changed.
+								</small>
 								<Field
 									label="Description"
 									name="description"
