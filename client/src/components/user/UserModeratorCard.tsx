@@ -15,7 +15,7 @@ const UserModeratorCard = ({ profile }: Props) => {
 			<div className="text-gray-500 dark:text-gray-400 font-bold text-sm mb-3">
 				Moderator of these topics
 			</div>
-			<div className="flex flex-col">
+			<div className="flex flex-col gap-3">
 				{profile.topics_moderated.map((topic, ind) => (
 					<div key={ind} className="flex">
 						<div className="h-8 w-8 flex rounded-full mr-2">

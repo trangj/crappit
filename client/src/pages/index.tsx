@@ -45,7 +45,7 @@ const HomePage = () => {
 	return (
 		<Container>
 			<Head>
-				<title>crappit: the front page of the internet</title>
+				<title>Crappit - Dive into anything</title>
 				<meta
 					name="description"
 					content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!"
