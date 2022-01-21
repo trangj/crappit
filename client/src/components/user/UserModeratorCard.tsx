@@ -16,8 +16,8 @@ const UserModeratorCard = ({ profile }: Props) => {
 				Moderator of these topics
 			</div>
 			<div className="flex flex-col">
-				{profile.topics_moderated.map((topic) => (
-					<div className="flex">
+				{profile.topics_moderated.map((topic, ind) => (
+					<div key={ind} className="flex">
 						<div className="h-8 w-8 flex rounded-full mr-2">
 							{!topic.icon_image_name ? (
 								<Avatar />
