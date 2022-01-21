@@ -3,7 +3,7 @@ import bcyrpt from "bcryptjs";
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 import { auth, optionalAuth } from "../middleware/auth";
-import { Post, User } from "../entities";
+import { Post, Topic, User } from "../entities";
 import { MoreThan } from 'typeorm';
 import { deleteFile, upload } from "../middleware/upload";
 import passport from '../middleware/passport';
@@ -258,9 +258,20 @@ router.get("/:userid", async (req, res) => {
 		const user = await User.findOne(req.params.userid);
 		if (!user) throw Error("No user found");
 
+		const topics_moderated = await Topic.query(`
+			select
+			t.title title,
+			t.icon_image_url icon_image_url,
+			t.icon_image_name icon_image_name,
+			t.number_of_followers number_of_followers
+			from moderator m
+			left join topic t on m.topic_id = t.id
+			where m.user_id = $1
+		`, [req.params.userid]);
+
 		const { password, ...rest } = user;
 
-		res.status(200).json({ user: { ...rest } });
+		res.status(200).json({ user: { ...rest, topics_moderated } });
 	} catch (err) {
 		res.status(400).json({
 			status: { text: err.message, severity: "error" },

@@ -6,7 +6,7 @@ import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Container } from "../ui/Container";
 import Link from "next/link";
-import Head from 'next/head';
+import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
@@ -19,39 +19,47 @@ import CreatePostCard from "src/components/post/CreatePostCard";
 import ExploreTopicCard from "src/components/topic/ExploreTopicCard";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-	const sort = query.sort ? query.sort as string : "";
+	const sort = query.sort ? (query.sort as string) : "";
 	const queryClient = new QueryClient();
-	await queryClient.prefetchInfiniteQuery(['posts', '', sort], () => fetchPosts('', 0, sort));
+	await queryClient.prefetchInfiniteQuery(["posts", "", sort], () =>
+		fetchPosts("", 0, sort)
+	);
 	return {
 		props: {
-			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient)))
-		}
+			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+		},
 	};
 };
 
 const HomePage = () => {
 	const router = useRouter();
 
-	const sort = router.query.sort ? router.query.sort as string : "";
+	const sort = router.query.sort ? (router.query.sort as string) : "";
 
 	const [sortParam, setSortParam] = useState(sort);
-	const {
-		data,
-		fetchNextPage,
-		hasNextPage,
-		isLoading,
-		isError
-	} = usePosts("", sortParam);
+	const { data, fetchNextPage, hasNextPage, isLoading, isError } = usePosts(
+		"",
+		sortParam
+	);
 
 	return (
 		<Container>
 			<Head>
 				<title>crappit: the front page of the internet</title>
-				<meta name="description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
+				<meta
+					name="description"
+					content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!"
+				/>
 				<meta property="og:title" content="crappit" />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/`} />
-				<meta property="og:description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
+				<meta
+					property="og:url"
+					content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/`}
+				/>
+				<meta
+					property="og:description"
+					content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!"
+				/>
 			</Head>
 			<div className="flex gap-6">
 				<div className="w-full">
@@ -67,10 +75,7 @@ const HomePage = () => {
 							{data.pages.map((group, i) => (
 								<React.Fragment key={i}>
 									{group.posts.map((post) => (
-										<PostItem
-											post={post}
-											key={post.id}
-										/>
+										<PostItem post={post} key={post.id} />
 									))}
 								</React.Fragment>
 							))}
