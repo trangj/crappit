@@ -4,10 +4,10 @@
 
 @layer base {
 	h1 {
-	  	@apply text-6xl;
+		@apply text-6xl;
 	}
 	h2 {
-	  	@apply text-5xl;
+		@apply text-5xl;
 	}
 	h3 {
 		@apply text-4xl;
@@ -21,7 +21,12 @@
 	h6 {
 		@apply text-xl;
 	}
-	h1, h2, h3, h4, h5, h6 {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
 		@apply font-bold;
 	}
 	body {
@@ -35,7 +40,10 @@
 		@apply pt-2;
 	}
 	p a {
-		@apply hover:underline text-blue-500 dark:text-blue-400 cursor-pointer
+		@apply hover:underline text-blue-500 dark:text-blue-400 cursor-pointer;
+	}
+	p:first-child {
+		@apply pt-0;
 	}
 }
 
@@ -80,7 +88,7 @@
 	.avatar {
 		@apply text-gray-300 dark:text-gray-500 fill-current;
 	}
-	
+
 	/* Text Input */
 	.text-input {
 		@apply w-full py-2 px-4 mt-2 bg-transparent border rounded;
@@ -93,7 +101,7 @@
 	.select-option {
 		@apply bg-white dark:bg-gray-800;
 	}
-	
+
 	/* Menu */
 	.menu {
 		@apply absolute right-0 origin-top-right border-t-0 border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 py-2 rounded-b flex flex-col max-h-96 overflow-x-hidden overflow-y-scroll;
@@ -108,51 +116,63 @@
 
 /* Link card styling */
 .link_card_overlay::before {
-	content: '';
-    cursor: inherit;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
+	content: "";
+	cursor: inherit;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
 }
 
-.link_card a[href]:not(.link_card_overlay), .link_card button:not(.link_card_overlay) {
+.link_card a[href]:not(.link_card_overlay),
+.link_card button:not(.link_card_overlay) {
 	position: relative;
 	z-index: 2;
 }
 
 /* TipTap styling */
 .ProseMirror {
-	padding: 0.2rem	1rem;
+	padding: 0.2rem 1rem;
 	min-height: 130px;
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-    content: attr(data-placeholder);
-    float: left;
-	color: #71717A;
-    pointer-events: none;
-    height: 0;
+	content: attr(data-placeholder);
+	float: left;
+	color: #71717a;
+	pointer-events: none;
+	height: 0;
 }
 
-.ProseMirror, p, input, textarea, .content {
+.ProseMirror,
+p,
+input,
+textarea,
+.content {
 	font-family: Noto Sans, Arial, sans-serif;
 	font-size: 14px;
 	line-height: 21px;
+}
 
-	ul {
-		list-style-position: inside;
-		list-style-type: disc;
-		padding-top: 0.5rem;
-	}
-	ol {
-		list-style-position: inside;
-		list-style-type: decimal;
-		padding-top: 0.5rem;
-	}
+.ProseMirror ul,
+.content ul {
+	list-style-position: inside;
+	list-style-type: disc;
+	padding-top: 0.5rem;
+}
+.ProseMirror ol,
+.content ol {
+	list-style-position: inside;
+	list-style-type: decimal;
+	padding-top: 0.5rem;
+}
+
+ol p,
+ul p {
+	display: inline;
 }
 
 .button {

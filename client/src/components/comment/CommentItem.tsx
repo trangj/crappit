@@ -6,14 +6,14 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { Comment } from "src/types/entities/comment";
 import { Topic } from "src/types/entities/topic";
-import { Avatar } from '../../ui/Avatar';
-import { Button } from '../../ui/Button';
+import { Avatar } from "../../ui/Avatar";
+import { Button } from "../../ui/Button";
 import { ArrowsExpandIcon } from "@heroicons/react/outline";
-import Image from 'next/image';
+import Image from "next/image";
 import CommentToolBar from "./CommentToolBar";
 
 type Props = {
-	comment: Comment,
+	comment: Comment;
 	topic: Topic;
 };
 
@@ -24,18 +24,28 @@ const CommentItem = ({ comment, topic }: Props) => {
 
 	if (hideComments) {
 		return (
-			<div className="mt-4 flex gap-3">
-				<Button aria-label="Expand comments" icon={<ArrowsExpandIcon className="h-4 w-4 dark:text-blue-400 text-blue-600" />} onClick={() => setHideComments(false)} border="rounded" variant="ghost" />
-				<small className="self-center">
-					{comment.is_deleted ? '[deleted]' :
-						<Link href={`/user/${comment.author_id}`} passHref>
-							<a className="font-medium">
-								{comment.author}
-							</a>
-						</Link>
+			<div className="mt-3.5 flex gap-3 items-center">
+				<Button
+					aria-label="Expand comments"
+					icon={
+						<ArrowsExpandIcon className="h-4 w-4 dark:text-blue-400 text-blue-600" />
 					}
+					onClick={() => setHideComments(false)}
+					border="rounded"
+					variant="ghost"
+					size="sm"
+				/>
+				<small>
+					{comment.is_deleted ? (
+						"[deleted]"
+					) : (
+						<Link href={`/user/${comment.author_id}`} passHref>
+							<a className="font-medium">{comment.author}</a>
+						</Link>
+					)}
 					<div className="text-gray-400 dark:text-gray-400 inline">
-						{" "}&bull;{" "}{dayjs(comment.created_at).fromNow()}
+						{" "}
+						&bull; {dayjs(comment.created_at).fromNow()}
 					</div>
 				</small>
 			</div>
@@ -43,7 +53,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 	}
 
 	return (
-		<div className="flex mt-4">
+		<div className="flex mt-3">
 			<div className="flex flex-col">
 				{comment.is_deleted ? (
 					<div>
@@ -52,7 +62,17 @@ const CommentItem = ({ comment, topic }: Props) => {
 				) : (
 					<Link passHref href={`/user/${comment.author_id}`}>
 						<a className="h-7 w-7 mb-2">
-							{!comment.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={comment.avatar_image_name} width={28} height={28} className="rounded-full" />}
+							{!comment.avatar_image_name ? (
+								<Avatar />
+							) : (
+								<Image
+									alt="user avatar"
+									src={comment.avatar_image_name}
+									width={28}
+									height={28}
+									className="rounded-full"
+								/>
+							)}
 						</a>
 					</Link>
 				)}
@@ -60,7 +80,10 @@ const CommentItem = ({ comment, topic }: Props) => {
 					className="self-center w-3.5 cursor-pointer border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-300 h-full"
 					onClick={() => setHideComments(true)}
 				>
-					<div className="border-r-2 w-2 h-full" style={{ borderRightColor: 'inherit' }}></div>
+					<div
+						className="border-r-2 w-2 h-full"
+						style={{ borderRightColor: "inherit" }}
+					></div>
 				</div>
 			</div>
 			<div className="flex flex-col w-full">
@@ -69,11 +92,13 @@ const CommentItem = ({ comment, topic }: Props) => {
 						{comment.is_deleted ? (
 							"[deleted]"
 						) : (
-							<Link href={`/user/${comment.author_id}`} passHref><a className="font-medium">{comment.author}</a></Link>
+							<Link href={`/user/${comment.author_id}`} passHref>
+								<a className="font-medium">{comment.author}</a>
+							</Link>
 						)}
 						<div className="text-gray-500 dark:text-gray-400 inline">
-							{" "}&bull;{" "}
-							{dayjs(comment.created_at).fromNow()}
+							{" "}
+							&bull; {dayjs(comment.created_at).fromNow()}
 							{comment.is_edited && (
 								<i> &bull; edited {dayjs(comment.updated_at).fromNow()}</i>
 							)}
@@ -87,11 +112,27 @@ const CommentItem = ({ comment, topic }: Props) => {
 						/>
 					) : (
 						<>
-							{<div className="content my-1" dangerouslySetInnerHTML={{ __html: comment.is_deleted ? "<div>[deleted]</div>" : comment.content }}></div>}
+							{
+								<div
+									className="content my-1"
+									dangerouslySetInnerHTML={{
+										__html: comment.is_deleted
+											? "<div>[deleted]</div>"
+											: comment.content,
+									}}
+								></div>
+							}
 							{!comment.is_deleted && (
 								<div className="flex gap-1 mt-1">
 									<CommentVoting comment={comment} />
-									<CommentToolBar setOpenEdit={setOpenEdit} setOpenReply={setOpenReply} openEdit={openEdit} openReply={openReply} comment={comment} topic={topic} />
+									<CommentToolBar
+										setOpenEdit={setOpenEdit}
+										setOpenReply={setOpenReply}
+										openEdit={openEdit}
+										openReply={openReply}
+										comment={comment}
+										topic={topic}
+									/>
 								</div>
 							)}
 						</>
@@ -112,13 +153,10 @@ const CommentItem = ({ comment, topic }: Props) => {
 					</div>
 				)}
 				<div className="w-full">
-					{comment.children && comment.children.map((comment) => (
-						<CommentItem
-							comment={comment}
-							topic={topic}
-							key={comment.id}
-						/>
-					))}
+					{comment.children &&
+						comment.children.map((comment) => (
+							<CommentItem comment={comment} topic={topic} key={comment.id} />
+						))}
 				</div>
 			</div>
 		</div>
