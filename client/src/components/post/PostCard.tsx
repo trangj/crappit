@@ -62,7 +62,7 @@ const PostCard = ({ post, topic }: Props) => {
 					) : (
 						post.type === "text" && (
 							<div
-								className="py-2 content"
+								className="pt-2 content"
 								dangerouslySetInnerHTML={{ __html: post.content }}
 							></div>
 						)

@@ -37,13 +37,19 @@
 		@apply hover:underline;
 	}
 	p {
-		@apply pt-2;
+		@apply pt-2.5;
 	}
 	p a {
 		@apply hover:underline text-blue-500 dark:text-blue-400 cursor-pointer;
 	}
 	p:first-child {
 		@apply pt-0;
+	}
+	li p {
+		@apply inline;
+	}
+	small {
+		@apply text-xs;
 	}
 }
 
@@ -159,20 +165,29 @@ textarea,
 
 .ProseMirror ul,
 .content ul {
-	list-style-position: inside;
+	list-style-position: outside;
 	list-style-type: disc;
 	padding-top: 0.5rem;
+	margin-left: 0.375rem;
 }
 .ProseMirror ol,
 .content ol {
-	list-style-position: inside;
+	list-style-position: outside;
 	list-style-type: decimal;
 	padding-top: 0.5rem;
+	margin-left: 0.375rem;
 }
 
-ol p,
-ul p {
-	display: inline;
+.ProseMirror h5,
+.content h5 {
+	font-weight: 400;
+	margin-top: 1.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.ProseMirror li,
+.content li {
+	@apply m-1.5 ml-4;
 }
 
 .button {
