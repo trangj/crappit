@@ -20,11 +20,11 @@ const PostItem = ({ post, ...props }: Props) => {
 			</div>
 			<div className="flex flex-col w-full">
 				<div className="w-full p-2 pb-0">
-					<small>
+					<small className="flex pb-1">
 						<Link passHref href={`/t/${post.topic}`}>
 							<a className="font-bold">t/{post.topic}</a>
 						</Link>{" "}
-						<div className="text-gray-500 dark:text-gray-400 inline">
+						<div className="text-gray-500 dark:text-gray-400 ml-1">
 							&bull; Posted by{" "}
 							<Link passHref href={`/user/${post.author_id}`}>
 								<a>u/{post.author}</a>
