@@ -24,7 +24,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 
 	if (hideComments) {
 		return (
-			<div className="mt-3.5 flex gap-3 items-center">
+			<div className="mt-4 pt-0.5 flex gap-3 items-center">
 				<Button
 					aria-label="Expand comments"
 					icon={
@@ -53,7 +53,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 	}
 
 	return (
-		<div className="flex mt-3">
+		<div className="flex mt-4">
 			<div className="flex flex-col">
 				{comment.is_deleted ? (
 					<div>
@@ -152,7 +152,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 						</div>
 					</div>
 				)}
-				<div className="w-full">
+				<div className="w-full -ml-1.5">
 					{comment.children &&
 						comment.children.map((comment) => (
 							<CommentItem comment={comment} topic={topic} key={comment.id} />
