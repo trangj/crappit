@@ -153,6 +153,7 @@
 	height: 0;
 }
 
+/* Content styling */
 .ProseMirror,
 p,
 input,
@@ -190,6 +191,14 @@ textarea,
 	@apply m-1.5 ml-4;
 }
 
+.content-overlay {
+	max-height: 250px;
+	overflow: hidden;
+	-webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
+	mask-image: linear-gradient(180deg, #000 60%, transparent);
+}
+
+/* Button font styling */
 .button {
 	font-family: Noto Sans, Arial, sans-serif;
 }

@@ -110,16 +110,14 @@ const Moderation = () => {
 
 	if (topicData.user_moderator_id !== user?.id) {
 		return (
-			<div
-				style={{
-					top: "50%",
-					position: "fixed",
-					width: "100%",
-					textAlign: "center",
-				}}
-			>
-				You are not a moderator of this topic
-			</div>
+			<>
+				<Head>
+					<title>{topicData.title}</title>
+				</Head>
+				<div className="fixed inset-y-1/2 w-full text-center">
+					You must be a moderator of t/{topicData.title} to view this page
+				</div>
+			</>
 		);
 	}
 

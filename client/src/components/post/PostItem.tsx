@@ -39,13 +39,7 @@ const PostItem = ({ post, ...props }: Props) => {
 					</h6>
 					{post.type === "text" && post.content && (
 						<div
-							style={{
-								maxHeight: 250,
-								overflow: "hidden",
-								WebkitMaskImage: "linear-gradient(180deg,#000 60%,transparent)",
-								maskImage: "linear-gradient(180deg,#000 60%,transparent)",
-							}}
-							className="pb-2 pt-1 content"
+							className="pb-2 pt-1 content content-overlay"
 							dangerouslySetInnerHTML={{ __html: post.content }}
 						></div>
 					)}
