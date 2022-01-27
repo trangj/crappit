@@ -139,7 +139,7 @@ const CommentItem = ({ comment, topic }: Props) => {
 					)}
 				</div>
 				{openReply && (
-					<div className="flex">
+					<div className="flex -ml-1.5">
 						<div className="w-8">
 							<div className="border-r-2 w-3.5 border-gray-200 dark:border-gray-700 h-full"></div>
 						</div>

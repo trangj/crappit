@@ -23,18 +23,15 @@ const PostCard = ({ post, topic }: Props) => {
 	const [openEdit, setOpenEdit] = useState(false);
 
 	return (
-		<Card className="flex">
+		<Card className="flex border-0">
 			<div className="pb-auto p-2">
 				<Voting post={post} />
 			</div>
 			<div className="flex flex-col w-full">
 				<div className="w-full p-2">
 					<small className="flex pb-1">
-						<Link passHref href={`/t/${post.topic}`}>
-							<a className="font-bold">t/{post.topic}</a>
-						</Link>
-						<div className="text-gray-500 dark:text-gray-400 ml-1">
-							&bull; Posted by{" "}
+						<div className="text-gray-500 dark:text-gray-400">
+							Posted by{" "}
 							<Link href={`/user/${post.author_id}`} passHref>
 								<a>u/{post.author}</a>
 							</Link>{" "}
