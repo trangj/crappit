@@ -19,14 +19,13 @@ const TopicRuleCard = ({ topicData }: TopicRuleCardProps) => {
 				<Disclosure as="div" key={i}>
 					{({ open }) => (
 						<>
-							<Disclosure.Button className="font-medium py-2 w-full flex items-center text-sm">
-								<span>
-									{i + 1}. {rule.name}
-								</span>
+							<Disclosure.Button className="font-medium py-2 w-full flex text-sm">
+								<span className="mr-1">{i + 1}.</span>
+								<span className="mr-1">{rule.name}</span>
 								{open ? (
-									<ChevronUpIcon className="h-4 w-4 ml-auto" />
+									<ChevronUpIcon className="h-4 w-4 ml-auto flex-none" />
 								) : (
-									<ChevronDownIcon className="h-4 w-4 ml-auto" />
+									<ChevronDownIcon className="h-4 w-4 ml-auto flex-none" />
 								)}
 							</Disclosure.Button>
 							<Disclosure.Panel as="div" className="content px-4 pb-2">
