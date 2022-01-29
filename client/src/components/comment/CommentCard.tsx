@@ -26,7 +26,7 @@ const CommentCard = ({ post, topic }: Props) => {
 	);
 
 	return (
-		<Card id="comments" className="p-3 border-0">
+		<Card id="comments" className="p-3">
 			<div className="mx-6">
 				<AddComment post={post} sortParam={sortParam} />
 				<SortComment

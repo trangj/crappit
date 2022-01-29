@@ -51,6 +51,9 @@
 	small {
 		@apply text-xs;
 	}
+	blockquote {
+		@apply ml-2 pl-2 border-l-4 border-gray-300 dark:border-gray-700;
+	}
 }
 
 @layer components {
@@ -141,7 +144,7 @@
 
 /* TipTap styling */
 .ProseMirror {
-	padding: 0.2rem 1rem;
+	padding: 0.3rem 1rem;
 	min-height: 130px;
 }
 

@@ -23,9 +23,9 @@ const TopicRuleCard = ({ topicData }: TopicRuleCardProps) => {
 								<span className="mr-1">{i + 1}.</span>
 								<span className="mr-1 text-left">{rule.name}</span>
 								{open ? (
-									<ChevronUpIcon className="h-4 w-4 ml-auto flex-none" />
+									<ChevronUpIcon className="h-4 w-4 mt-0.5 ml-auto flex-none" />
 								) : (
-									<ChevronDownIcon className="h-4 w-4 ml-auto flex-none" />
+									<ChevronDownIcon className="h-4 w-4 mt-0.5 ml-auto flex-none" />
 								)}
 							</Disclosure.Button>
 							<Disclosure.Panel as="div" className="content px-4 pb-2">

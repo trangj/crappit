@@ -85,7 +85,7 @@ const PostPage = () => {
 			<div className="mt-12">
 				<TopicBanner topic={topicData} />
 			</div>
-			<div className="mt-6 container mx-auto max-w-5xl sm:px-5">
+			<div className="mt-4 container mx-auto max-w-5xl sm:px-5">
 				<div className="flex gap-6">
 					<div className="flex flex-col w-full">
 						<PostCard post={data} topic={topicData} />

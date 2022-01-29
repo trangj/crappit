@@ -23,7 +23,7 @@ const PostCard = ({ post, topic }: Props) => {
 	const [openEdit, setOpenEdit] = useState(false);
 
 	return (
-		<Card className="flex border-0">
+		<Card className="flex">
 			<div className="pb-auto p-2">
 				<Voting post={post} />
 			</div>
