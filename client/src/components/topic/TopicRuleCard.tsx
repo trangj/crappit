@@ -21,7 +21,7 @@ const TopicRuleCard = ({ topicData }: TopicRuleCardProps) => {
 						<>
 							<Disclosure.Button className="font-medium py-2 w-full flex text-sm">
 								<span className="mr-1">{i + 1}.</span>
-								<span className="mr-1">{rule.name}</span>
+								<span className="mr-1 text-left">{rule.name}</span>
 								{open ? (
 									<ChevronUpIcon className="h-4 w-4 ml-auto flex-none" />
 								) : (
