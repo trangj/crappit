@@ -40,27 +40,27 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
 					</Link>
 				)}
 			</div>
-			<div className="flex items-center mt-3">
-				<Link href={`/t/${topicData.title}`} passHref>
-					<a className="flex gap-3">
-						<div className="h-14 w-14 rounded-full">
-							{!topicData.icon_image_name ? (
-								<Avatar />
-							) : (
-								<Image
-									alt="topic icon"
-									src={topicData.icon_image_name}
-									width={56}
-									height={56}
-									className="rounded-full"
-								/>
-							)}
-						</div>
-						<div className="text-lg self-center font-medium">
+			<div className="flex items-center mt-2">
+				<div className="flex gap-3">
+					<div className="h-14 w-14 rounded-full">
+						{!topicData.icon_image_name ? (
+							<Avatar />
+						) : (
+							<Image
+								alt="topic icon"
+								src={topicData.icon_image_name}
+								width={56}
+								height={56}
+								className="rounded-full"
+							/>
+						)}
+					</div>
+					<Link href={`/t/${topicData.title}`} passHref>
+						<a className="text-lg self-center font-medium">
 							r/{topicData.title}
-						</div>
-					</a>
-				</Link>
+						</a>
+					</Link>
+				</div>
 			</div>
 			<div>
 				<div className="content">{topicData.description}</div>
@@ -82,7 +82,7 @@ const TopicCard = ({ topicData }: TopicCardProps) => {
 					<Button as="a">Follow</Button>
 				</Link>
 			)}
-			<Link passHref href={`/t/${topicData.title}`}>
+			<Link passHref href={`/t/${topicData.title}/submit`}>
 				<Button variant="filled" as="a">
 					Create Post
 				</Button>

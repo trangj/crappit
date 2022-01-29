@@ -78,7 +78,7 @@ const PostCard = ({ post, topic }: Props) => {
 						/>
 					</a>
 				)}
-				<div className="flex flex-wrap gap-x-1">
+				<div className="flex flex-wrap gap-x-1 mt-1">
 					<div className="p-2 text-gray-500 dark:text-gray-400 text-xs button rounded">
 						<ChatAltIcon className="h-5 w-5 mr-1 inline" />
 						{post.number_of_comments}

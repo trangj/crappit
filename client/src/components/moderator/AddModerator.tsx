@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import * as yup from "yup";
-import useAddModerator from "../../hooks/topic-query/useAddModerator";
+import useAddModerator from "../../hooks/moderator-query/useAddModerator";
 import { Topic } from "src/types/entities/topic";
 import { Button } from "../../ui/Button";
 import { TextFieldForm } from "../../ui/TextFieldForm";
@@ -21,7 +21,10 @@ interface FormValues {
 const AddModerator = ({ topic }: Props) => {
 	const { isLoading, mutate } = useAddModerator(topic);
 
-	const handleSubmit = ({ username }: FormValues, { resetForm }: FormikHelpers<FormValues>) => {
+	const handleSubmit = (
+		{ username }: FormValues,
+		{ resetForm }: FormikHelpers<FormValues>
+	) => {
 		mutate({
 			topic: topic.title,
 			username,
@@ -36,7 +39,7 @@ const AddModerator = ({ topic }: Props) => {
 			validationSchema={schema}
 		>
 			{({ values }) => (
-				<Form className="flex">
+				<Form className="flex items-center">
 					<Field
 						placeholder="Add Moderator"
 						name="username"
@@ -47,7 +50,7 @@ const AddModerator = ({ topic }: Props) => {
 						loading={isLoading}
 						disabled={!!!values.username}
 						variant="filled"
-						className="flex-none ml-4 mt-2 self-center px-6 h-8"
+						className="flex-none ml-4 mt-2"
 					>
 						Add User
 					</Button>

@@ -37,7 +37,8 @@ const Forgot = () => {
 				<div className="flex flex-col p-6 gap-3 w-96">
 					<h6>Reset your password</h6>
 					<div>
-						Tell us the username and email address associated with your Reddit account, and we’ll send you an email with a link to reset your password.
+						Tell us the email address associated with your Reddit account, and
+						we’ll send you an email with a link to reset your password.
 					</div>
 					<Formik
 						initialValues={{ email: "" }}

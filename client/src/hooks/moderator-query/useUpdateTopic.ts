@@ -5,7 +5,7 @@ import axios from "../../axiosConfig";
 
 async function updateTopic({ topic, newTopic }: { topic: string, newTopic: { description: string, headline: string; }; }) {
 	try {
-		const res = await axios.put(`/api/topic/${topic}`, newTopic);
+		const res = await axios.put(`/api/moderation/${topic}`, newTopic);
 		return res.data;
 	} catch (err) {
 		throw err.response.data;

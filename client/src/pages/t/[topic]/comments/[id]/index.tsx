@@ -15,8 +15,8 @@ import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
 import TopicModeratorCard from "src/components/topic/TopicModeratorCard";
 import SideBar from "src/components/post/SideBar";
-import Image from "next/image";
-import Link from "next/link";
+import TopicBanner from "src/components/topic/TopicBanner";
+import TopicRuleCard from "src/components/topic/TopicRuleCard";
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const sort = query.sort ? (query.sort as string) : "";
@@ -83,25 +83,9 @@ const PostPage = () => {
 				/>
 			</Head>
 			<div className="mt-12">
-				<Link href={`/t/${topicData.title}`} passHref>
-					<a>
-						{topicData.image_url ? (
-							<div style={{ position: "relative", height: 164 }}>
-								<Image
-									alt="Topic banner"
-									src={topicData.image_name}
-									layout="fill"
-									objectFit="cover"
-									objectPosition="center"
-								/>
-							</div>
-						) : (
-							<div className="w-full h-24 bg-blue-300 mt-12" />
-						)}
-					</a>
-				</Link>
+				<TopicBanner topic={topicData} />
 			</div>
-			<div className="mt-4 container mx-auto max-w-5xl sm:px-5">
+			<div className="mt-6 container mx-auto max-w-5xl sm:px-5">
 				<div className="flex gap-6">
 					<div className="flex flex-col w-full">
 						<PostCard post={data} topic={topicData} />
@@ -109,6 +93,9 @@ const PostPage = () => {
 					</div>
 					<SideBar>
 						<TopicPostCard topicData={topicData} />
+						{topicData.rules.length !== 0 && (
+							<TopicRuleCard topicData={topicData} />
+						)}
 						<TopicModeratorCard topicData={topicData} />
 					</SideBar>
 				</div>

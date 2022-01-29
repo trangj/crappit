@@ -1,4 +1,4 @@
-import React, { FormEventHandler, useRef, useState } from "react";
+import React from "react";
 import toast from "react-hot-toast";
 import { useUser } from "../context/UserState";
 import axios from "../axiosConfig";
@@ -7,7 +7,7 @@ import { Divider } from "../ui/Divider";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Dialog } from "@headlessui/react";
+import ChangeEmail from "src/components/settings/ChangeEmail";
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 	if (!req.cookies["crappit_session"]) {
@@ -26,10 +26,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 const Settings = () => {
 	const router = useRouter();
 	const { user, setUser } = useUser();
-	const [newEmail, setNewEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [open, setOpen] = useState(false);
-	const cancelRef = useRef(null);
 
 	if (!user) {
 		router.push("/login");
@@ -39,18 +35,6 @@ const Settings = () => {
 	const handlePassword = async (email: string) => {
 		try {
 			const res = await axios.post(`/api/user/forgot`, { email });
-			toast.success(res.data.status.text);
-		} catch (err) {
-			toast.error(err.response.data.status.text);
-		}
-	};
-
-	const handleEmail: FormEventHandler = async (e) => {
-		e.preventDefault();
-		try {
-			const res = await axios.post("/api/user/email", { newEmail, password });
-			setUser({ ...user, email: res.data.user.email });
-			setOpen(false);
 			toast.success(res.data.status.text);
 		} catch (err) {
 			toast.error(err.response.data.status.text);
@@ -106,53 +90,7 @@ const Settings = () => {
 								{user.email}
 							</small>
 						</div>
-						<Button onClick={() => setOpen(true)} className="ml-auto">
-							Change
-						</Button>
-						<Dialog
-							as="div"
-							className="fixed inset-0 z-10 overflow-y-auto"
-							open={open}
-							onClose={() => setOpen(false)}
-							initialFocus={cancelRef}
-						>
-							<Dialog.Overlay className="fixed inset-0 bg-black opacity-30 z-50" />
-							<div className="flex items-center justify-center min-h-screen">
-								<div className="bg-white dark:bg-gray-850 rounded border border-gray-200 dark:border-gray-700 max-w-sm mx-auto z-50 p-6 gap-3 flex flex-col">
-									<Dialog.Title as="h6">Update your email</Dialog.Title>
-									<Dialog.Description>
-										Update your email below. There will be a new verification
-										email sent that you will need to use to verify this new
-										email.
-									</Dialog.Description>
-									<form onSubmit={handleEmail}>
-										<div>Current Password</div>
-										<input
-											type="password"
-											value={password}
-											onChange={(e) => setPassword(e.target.value)}
-											required
-											className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
-										/>
-										<div>New Email</div>
-										<input
-											type="email"
-											value={newEmail}
-											onChange={(e) => setNewEmail(e.target.value)}
-											required
-											className="w-full p-2 mt-2 bg-transparent border rounded dark:border-gray-700 border-gray-400"
-										/>
-										<Button
-											type="submit"
-											className="mt-3 ml-auto"
-											variant="filled"
-										>
-											Save Email
-										</Button>
-									</form>
-								</div>
-							</div>
-						</Dialog>
+						<ChangeEmail />
 					</div>
 					<h5>Customize Profile</h5>
 					<Divider className="my-1" />

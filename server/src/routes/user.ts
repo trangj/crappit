@@ -103,10 +103,10 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
 	try {
-		const { email, password } = req.body;
-		if (!email || !password) throw Error("Missing fields");
+		const { username, password } = req.body;
+		if (!username || !password) throw Error("Missing fields");
 
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ username });
 		if (!user) throw Error("User does not exist");
 
 		const isMatch = await bcyrpt.compare(password, user.password).catch((err) => { throw new Error('Invalid email or password'); });

@@ -3,25 +3,33 @@ import axios from "../axiosConfig";
 import { User } from "src/types/entities/user";
 import { AxiosResponse } from "axios";
 
-type LoginProps = { email: string, password: string; };
-type RegisterProps = { username: string, email: string, password: string, password2: string; };
+type LoginProps = { username: string; password: string };
+type RegisterProps = {
+	username: string;
+	email: string;
+	password: string;
+	password2: string;
+};
 
 type UserProviderProps = {
 	user: User | null;
-	logoutUser: () => Promise<void>,
-	loginUser: (login: LoginProps) => Promise<AxiosResponse<any>>,
-	registerUser: (register: RegisterProps) => Promise<AxiosResponse<any>>,
+	logoutUser: () => Promise<void>;
+	loginUser: (login: LoginProps) => Promise<AxiosResponse<any>>;
+	registerUser: (register: RegisterProps) => Promise<AxiosResponse<any>>;
 	setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const UserContext = createContext<UserProviderProps>({} as UserProviderProps);
 
-export const UserProvider: React.FC<{ user: User | null, children: ReactNode; }> = ({ user, children }) => {
-	const [current_user, setUser] = useState(user);
+export const UserProvider: React.FC<{
+	user: User | null;
+	children: ReactNode;
+}> = ({ user, children }) => {
+	const [current_user, setUser] = useState<User | null>(user);
 
 	async function logoutUser() {
 		try {
-			await axios.post('/api/user/logout');
+			await axios.post("/api/user/logout");
 			setUser(null);
 		} catch (err) {
 			throw err.response.data;

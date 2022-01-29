@@ -6,6 +6,7 @@ import { Topic } from "src/types/entities/topic";
 import Image from "next/image";
 import { Button } from "src/ui/Button";
 import { Avatar } from "src/ui/Avatar";
+import TopicBanner from "./TopicBanner";
 
 type Props = {
 	topic: Topic;
@@ -17,19 +18,7 @@ const TopicHeader = ({ topic }: Props) => {
 
 	return (
 		<div className="mt-12 bg-white dark:bg-gray-850">
-			{topic.image_url ? (
-				<div style={{ position: "relative", height: 164 }}>
-					<Image
-						alt="Topic banner"
-						src={topic.image_name}
-						layout="fill"
-						objectFit="cover"
-						objectPosition="center"
-					/>
-				</div>
-			) : (
-				<div className="w-full h-24 bg-blue-300" />
-			)}
+			<TopicBanner topic={topic} />
 			<div className="container mx-auto max-w-5xl px-5">
 				<div className="flex pb-3 -mt-3.5">
 					<div
@@ -56,7 +45,10 @@ const TopicHeader = ({ topic }: Props) => {
 							className="inline-block gap-3 min-h-10 pr-4 "
 							style={{ maxWidth: "calc(100% - 96px)" }}
 						>
-							<h4 className="overflow-ellipsis whitespace-nowrap overflow-hidden">
+							<h4
+								className="overflow-ellipsis whitespace-nowrap overflow-hidden"
+								style={{ fontSize: 28 }}
+							>
 								{topic.headline ? topic.headline : topic.title}
 							</h4>
 							<div className="text-gray-500 dark:text-gray-400 text-sm">

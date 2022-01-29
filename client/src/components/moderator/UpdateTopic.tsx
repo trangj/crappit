@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as yup from "yup";
-import useUpdateTopic from "../../hooks/topic-query/useUpdateTopic";
+import useUpdateTopic from "../../hooks/moderator-query/useUpdateTopic";
 import { Topic } from "src/types/entities/topic";
 import { Button } from "src/ui/Button";
 import { TextFieldForm } from "src/ui/TextFieldForm";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 interface FormValues {
-	description: string,
+	description: string;
 	headline: string;
 }
 
@@ -25,7 +25,7 @@ const UpdateTopic = ({ topic }: Props) => {
 	const handleSubmit = ({ description, headline }: FormValues) => {
 		const newTopic = {
 			description,
-			headline
+			headline,
 		};
 		mutate({ topic: topic.title, newTopic });
 	};
@@ -43,7 +43,11 @@ const UpdateTopic = ({ topic }: Props) => {
 		>
 			{({ values }) => (
 				<Form>
-					<Field label="Topic Headline" name="headline" component={TextFieldForm} />
+					<Field
+						label="Topic Headline"
+						name="headline"
+						component={TextFieldForm}
+					/>
 					<Field
 						label="Topic Description"
 						name="description"
@@ -55,7 +59,7 @@ const UpdateTopic = ({ topic }: Props) => {
 						loading={isLoading}
 						disabled={!!!values.description}
 						className="mt-3 ml-auto"
-						variant='filled'
+						variant="filled"
 					>
 						Save changes
 					</Button>

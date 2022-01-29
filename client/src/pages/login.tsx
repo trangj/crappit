@@ -13,12 +13,12 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 
 const schema = yup.object({
-	email: yup.string().required("Enter your username"),
+	username: yup.string().required("Enter your username"),
 	password: yup.string().required("Enter your password"),
 });
 
 interface FormValues {
-	email: string;
+	username: string;
 	password: string;
 }
 
@@ -40,10 +40,10 @@ const Login = () => {
 	const { loginUser } = useUser();
 	const router = useRouter();
 
-	const handleSubmit = async ({ email, password }: FormValues) => {
+	const handleSubmit = async ({ username, password }: FormValues) => {
 		try {
 			const user = {
-				email,
+				username,
 				password,
 			};
 			const res = await loginUser(user);
@@ -67,7 +67,7 @@ const Login = () => {
 						By continuing, you agree to our User Agreement and Privacy Policy.
 					</small>
 					<Formik
-						initialValues={{ email: "", password: "" }}
+						initialValues={{ username: "", password: "" }}
 						onSubmit={handleSubmit}
 						validationSchema={schema}
 					>
@@ -85,9 +85,9 @@ const Login = () => {
 									<span className="border-b border-gray-300 dark:border-gray-700 w-2/5"></span>
 								</div>
 								<Field
-									label="Email"
-									name="email"
-									type="email"
+									label="Username"
+									name="username"
+									type="username"
 									component={TextFieldForm}
 								/>
 								<Field

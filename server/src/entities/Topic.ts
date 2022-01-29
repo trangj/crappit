@@ -33,4 +33,7 @@ export class Topic extends Template {
 
     @Column({ type: 'int', default: 0 })
     number_of_followers: number;
+
+    @Column({type: 'jsonb', default: () => "'[]'", nullable: false})
+    rules: {name: string, description: string, created_at: string}[]
 }
