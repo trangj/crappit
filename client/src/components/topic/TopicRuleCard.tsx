@@ -17,7 +17,7 @@ const TopicRuleCard = ({ topicData }: TopicRuleCardProps) => {
 			</div>
 			{topicData?.rules.map((rule, i) => (
 				<Disclosure as="div" key={i}>
-					{({ open }) => (
+					{({ open, close }) => (
 						<>
 							<Disclosure.Button className="font-medium py-2 w-full flex text-sm">
 								<span className="mr-1">{i + 1}.</span>
@@ -28,7 +28,11 @@ const TopicRuleCard = ({ topicData }: TopicRuleCardProps) => {
 									<ChevronDownIcon className="h-4 w-4 mt-0.5 ml-auto flex-none" />
 								)}
 							</Disclosure.Button>
-							<Disclosure.Panel as="div" className="content px-4 pb-2">
+							<Disclosure.Panel
+								as="div"
+								className="content px-4 pb-2 cursor-pointer"
+								onClick={() => close()}
+							>
 								{rule.description}
 							</Disclosure.Panel>
 							{i !== topicData.rules.length - 1 && <Divider />}

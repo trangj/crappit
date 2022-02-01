@@ -46,7 +46,7 @@ const TopicHeader = ({ topic }: Props) => {
 							style={{ maxWidth: "calc(100% - 96px)" }}
 						>
 							<h4
-								className="overflow-ellipsis whitespace-nowrap overflow-hidden"
+								className="overflow-ellipsis overflow-hidden"
 								style={{ fontSize: 28 }}
 							>
 								{topic.headline ? topic.headline : topic.title}
@@ -60,13 +60,13 @@ const TopicHeader = ({ topic }: Props) => {
 								loading={isLoading}
 								onClick={() => mutate(topic.title)}
 								variant={topic.user_followed_id ? "outline" : "filled"}
-								className="w-24 self-center"
+								className="w-24 self-start"
 							>
 								{topic.user_followed_id ? "Unfollow" : "Follow"}
 							</Button>
 						) : (
 							<Link passHref href="/login">
-								<Button as="a" className="w-24 self-center">
+								<Button as="a" className="w-24 self-start">
 									Follow
 								</Button>
 							</Link>
