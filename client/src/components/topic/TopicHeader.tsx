@@ -38,7 +38,7 @@ const TopicHeader = ({ topic }: Props) => {
 						)}
 					</div>
 					<div
-						className="flex mt-6 pl-4 w-full justify-between"
+						className="flex mt-6 pl-4 w-full"
 						style={{ width: "calc(100% - 80px)" }}
 					>
 						<div
