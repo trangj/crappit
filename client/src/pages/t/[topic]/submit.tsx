@@ -16,13 +16,20 @@ import { GetServerSideProps } from "next";
 import { useUser } from "src/context/UserState";
 import { RichTextEditor } from "src/ui/RichTextEditor";
 import { Tab } from "@headlessui/react";
-import { DocumentTextIcon, LinkIcon, PhotographIcon } from "@heroicons/react/solid";
+import {
+	DocumentTextIcon,
+	LinkIcon,
+	PhotographIcon,
+} from "@heroicons/react/solid";
 
-const types = ['text', 'link', 'photo'];
+const types = ["text", "link", "photo"];
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
 const schema = yup.object({
-	title: yup.string().required("Enter a title for your post"),
+	title: yup
+		.string()
+		.max(300, "Post title can be at most 300 characters")
+		.required("Enter a title for your post"),
 	topic: yup.string().required("Select a topic to post to"),
 	content: yup.string(),
 	link: yup.string().url("Enter a valid URL"),
@@ -37,25 +44,25 @@ const schema = yup.object({
 });
 
 interface FormValues {
-	title: string,
-	content: string,
-	link: string,
-	file: File | "",
+	title: string;
+	content: string;
+	link: string;
+	file: File | "";
 	topic: string;
 	type: 0 | 1 | 2;
-};
+}
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-	if (!req.cookies['crappit_session']) {
+	if (!req.cookies["crappit_session"]) {
 		return {
 			redirect: {
-				destination: '/login',
-				permanent: false
-			}
+				destination: "/login",
+				permanent: false,
+			},
 		};
 	}
 	return {
-		props: {}
+		props: {},
 	};
 };
 
@@ -79,11 +86,18 @@ const AddPost = () => {
 	}
 
 	if (!user) {
-		router.push('/login');
+		router.push("/login");
 		return null;
-	};
+	}
 
-	const handleSubmit = ({ title, content, link, type, file, topic }: FormValues) => {
+	const handleSubmit = ({
+		title,
+		content,
+		link,
+		type,
+		file,
+		topic,
+	}: FormValues) => {
 		const formData = new FormData();
 		formData.append("file", file);
 		formData.append("title", title);
@@ -99,7 +113,7 @@ const AddPost = () => {
 		file: "",
 		link: "",
 		topic: topic as string,
-		type: type as FormValues['type']
+		type: type as FormValues["type"],
 	};
 	return (
 		<Container>
@@ -113,7 +127,7 @@ const AddPost = () => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{({ setFieldValue, values, isSubmitting }) => (
+				{({ setFieldValue, values, isSubmitting, isValid }) => (
 					<Form className="flex flex-col">
 						<Field
 							name="topic"
@@ -123,13 +137,18 @@ const AddPost = () => {
 								topicsIsLoading
 									? "Loading..."
 									: topicsError
-										? topicsError.status.text
-										: "Choose a topic"
+									? topicsError.status.text
+									: "Choose a topic"
 							}
 						>
-							{!topicsIsLoading && topicsData &&
+							{!topicsIsLoading &&
+								topicsData &&
 								topicsData.map((topic) => (
-									<option key={topic.title} value={topic.title} className="select-option">
+									<option
+										key={topic.title}
+										value={topic.title}
+										className="select-option"
+									>
 										t/{topic.title}
 									</option>
 								))}
@@ -137,12 +156,15 @@ const AddPost = () => {
 						<Card className="mt-3">
 							<Tab.Group
 								defaultIndex={values.type}
-								onChange={(i) => setFieldValue('type', i)}
+								onChange={(i) => setFieldValue("type", i)}
 							>
 								<Tab.List as="div" className="flex">
 									<Tab as={Fragment}>
 										{({ selected }) => (
-											<Button variant="ghost" border="none" icon={<DocumentTextIcon className="w-6 h-6" />}
+											<Button
+												variant="ghost"
+												border="none"
+												icon={<DocumentTextIcon className="w-6 h-6" />}
 												className="py-4 px-10 flex flex-1 items-center border-gray-300 dark:border-gray-700 border-r border-b"
 												active={selected}
 											>
@@ -152,7 +174,10 @@ const AddPost = () => {
 									</Tab>
 									<Tab as={Fragment}>
 										{({ selected }) => (
-											<Button variant="ghost" border="none" icon={<LinkIcon className="w-6 h-6" />}
+											<Button
+												variant="ghost"
+												border="none"
+												icon={<LinkIcon className="w-6 h-6" />}
 												className="py-4 px-10 flex flex-1 items-center border-gray-300 dark:border-gray-700 border-r border-b"
 												active={selected}
 											>
@@ -162,7 +187,10 @@ const AddPost = () => {
 									</Tab>
 									<Tab as={Fragment}>
 										{({ selected }) => (
-											<Button variant="ghost" border="none" icon={<PhotographIcon className="w-6 h-6" />}
+											<Button
+												variant="ghost"
+												border="none"
+												icon={<PhotographIcon className="w-6 h-6" />}
 												className="py-4 px-10 flex flex-1 items-center border-gray-300 dark:border-gray-700 border-r border-b"
 												active={selected}
 											>
@@ -172,7 +200,11 @@ const AddPost = () => {
 									</Tab>
 								</Tab.List>
 								<Tab.Panels as="div" className="p-3">
-									<Field name="title" placeholder="Title" component={TextFieldForm} />
+									<Field
+										name="title"
+										placeholder="Title"
+										component={TextFieldForm}
+									/>
 									<Tab.Panel>
 										<RichTextEditor
 											value={values.content}
@@ -183,7 +215,11 @@ const AddPost = () => {
 										/>
 									</Tab.Panel>
 									<Tab.Panel>
-										<Field placeholder="Link" name="link" component={TextFieldForm} />
+										<Field
+											placeholder="Link"
+											name="link"
+											component={TextFieldForm}
+										/>
 									</Tab.Panel>
 									<Tab.Panel>
 										<Field
@@ -195,7 +231,7 @@ const AddPost = () => {
 									<Button
 										type="submit"
 										loading={isLoading}
-										disabled={!!!values.title || !!!values.topic}
+										disabled={!!!values.title || !!!values.topic || !isValid}
 										className="mt-2 w-20 ml-auto"
 										variant="filled"
 									>

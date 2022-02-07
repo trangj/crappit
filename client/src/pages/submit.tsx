@@ -26,7 +26,10 @@ const types = ["text", "link", "photo"];
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 const FILE_SIZE = 10485760;
 const schema = yup.object({
-	title: yup.string().required("Enter a title for your post"),
+	title: yup
+		.string()
+		.max(300, "Post title can be at most 300 characters")
+		.required("Enter a title for your post"),
 	topic: yup.string().required("Select a topic to post to"),
 	content: yup.string(),
 	link: yup.string().url("Enter a valid URL"),
@@ -123,7 +126,7 @@ const AddPost = () => {
 				onSubmit={handleSubmit}
 				validationSchema={schema}
 			>
-				{({ setFieldValue, values, isSubmitting }) => (
+				{({ setFieldValue, values, isSubmitting, isValid }) => (
 					<Form className="flex flex-col">
 						<Field
 							name="topic"
@@ -227,7 +230,7 @@ const AddPost = () => {
 									<Button
 										type="submit"
 										loading={isLoading}
-										disabled={!!!values.title || !!!values.topic}
+										disabled={!!!values.title || !!!values.topic || !isValid}
 										className="mt-2 w-20 ml-auto"
 										variant="filled"
 									>

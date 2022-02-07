@@ -81,7 +81,7 @@ const AddTopic = () => {
 						onSubmit={handleSubmit}
 						validationSchema={schema}
 					>
-						{({ values }) => (
+						{({ values, isValid }) => (
 							<Form className="w-96 flex flex-col ">
 								<Field label="Title" name="title" component={TextFieldForm} />
 								<small className="text-gray-500 dark:text-gray-400 mb-3">
@@ -98,7 +98,9 @@ const AddTopic = () => {
 									loading={isLoading}
 									className="mt-3 ml-auto"
 									variant="filled"
-									disabled={!!!values.title || !!!values.description}
+									disabled={
+										!!!values.title || !!!values.description || !isValid
+									}
 								>
 									Create Topic
 								</Button>

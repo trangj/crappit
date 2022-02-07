@@ -46,6 +46,8 @@ router.post("/", auth, upload, async (req, res) => {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user exists");
 
+		if (req.body.title.length > 300) throw Error("Post title is too long")
+
 		const newPost = Post.create({
 			title: req.body.title,
 			type: req.body.type,
