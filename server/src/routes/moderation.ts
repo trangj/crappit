@@ -117,6 +117,10 @@ router.post("/:topic/add_rule", auth, async (req,res) => {
 	
 		const user = await User.findOne(req.user.id);
 		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
+
+		if (topic.rules.length === 15) throw Error("You can have at most 15 rules")
+		if (req.body.rule.name.length > 100) throw Error("Rule name is too long")
+		if (req.body.rule.description.length > 500) throw Error("Rule description is too long")
 		
 		topic.rules.push(req.body.rule);
 
@@ -237,6 +241,9 @@ router.put("/:topic", auth, async (req, res) => {
 
 		const user = await User.findOne(req.user.id);
 		if (!topic.moderators.some(moderator => moderator.id === user.id)) throw Error("You are not a moderator");
+
+		if (req.body.description.length > 500) throw Error("Topic description is too long")
+		if (req.body.headline.length > 100) throw Error("Topic headline is too long")
 
 		topic.description = req.body.description;
 		topic.headline = req.body.headline;

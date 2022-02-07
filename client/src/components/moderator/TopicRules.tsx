@@ -12,10 +12,17 @@ type TopicRulesProps = {
 const TopicRules = ({ topic }: TopicRulesProps) => {
 	return (
 		<>
-			<span className="flex items-center">
-				<h5>Rules</h5>
-				<AddRule topic={topic} />
-			</span>
+			<div>
+				<span className="flex items-center">
+					<h5>Rules</h5>
+					<AddRule topic={topic} />
+				</span>
+				<p>
+					These are rules that visitors must follow to participate. They can be
+					used as reasons to report or ban posts, comments, and users.
+					Communities can have a maximum of 15 rules.
+				</p>
+			</div>
 			<div>
 				{topic.rules.length === 0 ? (
 					<div className="h-72 flex justify-center items-center font-bold">

@@ -8,8 +8,14 @@ import { TextFieldForm } from "src/ui/TextFieldForm";
 import * as yup from "yup";
 
 const schema = yup.object({
-	name: yup.string().required(""),
-	description: yup.string().required(""),
+	name: yup
+		.string()
+		.max(100, "Rule names can be at most 100 characters")
+		.required(""),
+	description: yup
+		.string()
+		.max(500, "Rule descriptions can be at most 500 characters")
+		.required(""),
 });
 
 type AddRuleProps = {
@@ -45,6 +51,7 @@ const AddRule = ({ topic }: AddRuleProps) => {
 				onClick={() => {
 					setOpen(true);
 				}}
+				disabled={topic.rules.length === 15}
 				className="ml-auto"
 				variant="filled"
 			>
@@ -66,7 +73,7 @@ const AddRule = ({ topic }: AddRuleProps) => {
 							onSubmit={handleSubmit}
 							validationSchema={schema}
 						>
-							{({ values }) => (
+							{({ isValid }) => (
 								<Form>
 									<Field
 										label="Rule"
@@ -88,7 +95,7 @@ const AddRule = ({ topic }: AddRuleProps) => {
 										<Button
 											type="submit"
 											loading={isLoading}
-											disabled={!!!values.description || !!!values.name}
+											disabled={!isValid}
 											variant="filled"
 										>
 											Add new rule

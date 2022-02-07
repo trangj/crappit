@@ -7,7 +7,13 @@ import { Button } from "src/ui/Button";
 import { TextFieldForm } from "src/ui/TextFieldForm";
 
 const schema = yup.object({
-	description: yup.string().required(""),
+	headline: yup
+		.string()
+		.max(100, "Topic headlines can be at most 100 characters"),
+	description: yup
+		.string()
+		.max(500, "Topic descriptions can be at most 500 characters")
+		.required(""),
 });
 
 type Props = {
@@ -41,7 +47,7 @@ const UpdateTopic = ({ topic }: Props) => {
 			onSubmit={handleSubmit}
 			validationSchema={schema}
 		>
-			{({ values }) => (
+			{({ isValid }) => (
 				<Form>
 					<Field
 						label="Topic Headline"
@@ -57,7 +63,7 @@ const UpdateTopic = ({ topic }: Props) => {
 					<Button
 						type="submit"
 						loading={isLoading}
-						disabled={!!!values.description}
+						disabled={!isValid}
 						className="mt-3 ml-auto"
 						variant="filled"
 					>

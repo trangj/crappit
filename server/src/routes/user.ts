@@ -29,7 +29,7 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
 });
 
 // @route   GET /api/user/me
-// @desc    Get new refresh/access token
+// @desc    Get user
 // @access  Public
 
 router.get("/me", auth, async (req, res) => {
@@ -68,6 +68,8 @@ router.post("/register", async (req, res) => {
 		const { username, email, password, password2 } = req.body;
 		if (!username || !email || !password || !password2) throw Error("Missing field");
 		if (password !== password2) throw Error("Passwords are not the same");
+		if (username.length > 20 || username.length < 3) throw Error("Username is too short or too long")
+		if (password.length < 6) throw Error("Password is too short")
 
 		const salt = await bcyrpt.genSalt(10);
 		if (!salt) throw Error("Error with generating salt");
@@ -105,6 +107,7 @@ router.post("/login", async (req, res) => {
 	try {
 		const { username, password } = req.body;
 		if (!username || !password) throw Error("Missing fields");
+		if (username.length > 20 || username.length < 3) throw Error("Username is too short or too long")
 
 		const user = await User.findOne({ username });
 		if (!user) throw Error("User does not exist");
@@ -196,6 +199,7 @@ router.post("/reset/:token", async (req, res) => {
 	try {
 		if (!password || !password2) throw Error("Please enter a new password");
 		if (password !== password2) throw Error("Passwords are not the same");
+		if (password.length < 6) throw Error("Password is too short")
 
 		const user = await User.findOne({
 			reset_password_token: req.params.token,

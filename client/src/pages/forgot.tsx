@@ -45,7 +45,7 @@ const Forgot = () => {
 						onSubmit={handleSubmit}
 						validationSchema={schema}
 					>
-						{() => (
+						{({ isValid }) => (
 							<Form>
 								<Field
 									label="Email"
@@ -53,7 +53,12 @@ const Forgot = () => {
 									type="email"
 									component={TextFieldForm}
 								/>
-								<Button type="submit" variant="filled" className="px-5 mt-3">
+								<Button
+									type="submit"
+									variant="filled"
+									className="px-5 mt-3"
+									disabled={!isValid}
+								>
 									Reset Password
 								</Button>
 							</Form>

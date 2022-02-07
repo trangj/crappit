@@ -15,9 +15,17 @@ import { useRouter } from "next/router";
 const schema = yup.object({
 	title: yup
 		.string()
+		.min(3, "Topic title must be at least 3 characters")
+		.max(21, "Topic title can be at most 21 characters")
 		.required("Enter a title for your topic")
-		.matches(/^(\S+$)/, "Title cannot have any white space"),
-	description: yup.string().required("Enter a description about your topic"),
+		.matches(
+			/^[^\W_]+$/,
+			"Title cannot have any white space. Title can only contain letters, numbers, or underscores"
+		),
+	description: yup
+		.string()
+		.max(500, "Topic descriptions can be at most 500 characters")
+		.required("Enter a description about your topic"),
 });
 
 interface FormValues {

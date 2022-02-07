@@ -10,7 +10,7 @@ import axios from "../../axiosConfig";
 
 const schema = yup.object({
 	password: yup.string().required(""),
-	newEmail: yup.string().required(""),
+	newEmail: yup.string().email("Enter a valid email").required(""),
 });
 
 interface FormValues {
@@ -68,7 +68,7 @@ const ChangeEmail = () => {
 							onSubmit={handleEmail}
 							validationSchema={schema}
 						>
-							{({ values }) => (
+							{({ isValid }) => (
 								<Form>
 									<Field
 										label="Current Password"
@@ -89,9 +89,7 @@ const ChangeEmail = () => {
 										<Button
 											type="submit"
 											loading={loading}
-											disabled={
-												(!!!values.newEmail && !!!values.password) || loading
-											}
+											disabled={!isValid}
 											variant="filled"
 										>
 											Save Email

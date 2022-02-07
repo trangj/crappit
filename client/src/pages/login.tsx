@@ -13,7 +13,11 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 
 const schema = yup.object({
-	username: yup.string().required("Enter your username"),
+	username: yup
+		.string()
+		.min(3, "Username must be at least 3 characters")
+		.max(20, "Username must be at most 20 characters")
+		.required("Enter your username"),
 	password: yup.string().required("Enter your password"),
 });
 

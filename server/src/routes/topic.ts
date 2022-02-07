@@ -49,6 +49,9 @@ router.post("/", auth, upload, async (req, res) => {
 		const user = await User.findOne(req.user.id);
 		if (!user) throw Error("No user was found with that id");
 
+		if (req.body.title.length > 21 || req.body.title < 3) throw Error("Topic title is too long or too short")
+		if (req.body.description.length > 500) throw Error("Topic description is too long")
+
 		const newTopic = await Topic.create({
 			title: req.body.title,
 			description: req.body.description,

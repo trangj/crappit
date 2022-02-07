@@ -16,8 +16,10 @@ const schema = yup.object({
 	username: yup
 		.string()
 		.required("Enter an username")
+		.min(3, "Username must be at least 3 characters")
+		.max(20, "Username must be at most 20 characters")
 		.matches(/^(\S+$)/, "Username cannot have any white space"),
-	email: yup.string().email().required("Enter an email"),
+	email: yup.string().email("Enter a valid email").required("Enter an email"),
 	password: yup
 		.string()
 		.required("Enter a password")
