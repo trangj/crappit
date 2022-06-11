@@ -40,8 +40,5 @@ export class User extends Template {
     google_access_token: string;
 
     @Column({ type: 'int', default: 0 })
-    token_version: number;
-
-    @Column({ type: 'int', default: 0 })
     karma: number;
 }

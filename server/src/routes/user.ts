@@ -7,6 +7,7 @@ import { Post, Topic, User } from "../entities";
 import { MoreThan } from 'typeorm';
 import { deleteFile, upload } from "../middleware/upload";
 import passport from '../middleware/passport';
+import redis from '../common/redis';
 
 const router = express.Router();
 
@@ -35,8 +36,6 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
 router.get("/me", auth, async (req, res) => {
 	try {
 		const user = await User.findOne(req.user.id);
-
-		if (user.token_version !== req.user.version) throw Error;
 
 		const { password, ...rest } = user;
 
@@ -81,9 +80,10 @@ router.post("/register", async (req, res) => {
 			username,
 			email,
 			password: hash,
-		}).save().catch(err => { throw Error("A user already exists with that username or email"); });
+		}).save().catch(() => { throw Error("A user already exists with that username or email"); });
 
-		req.session.user = { id: newUser.id, version: newUser.token_version };
+		req.session.user = { id: newUser.id };
+		redis.sadd('user_sess:' + newUser.id, 'sess:' + req.session.id);
 
 		res.status(200).json({
 			user: { ...newUser },
@@ -112,10 +112,11 @@ router.post("/login", async (req, res) => {
 		const user = await User.findOne({ username });
 		if (!user) throw Error("User does not exist");
 
-		const isMatch = await bcyrpt.compare(password, user.password).catch((err) => { throw new Error('Invalid email or password'); });
+		const isMatch = await bcyrpt.compare(password, user.password).catch(() => { throw new Error('Invalid email or password'); });
 		if (!isMatch) throw Error("Invalid email or password");
 
-		req.session.user = { id: user.id, version: user.token_version };
+		req.session.user = { id: user.id };
+		redis.sadd('user_sess:' + user.id, 'sess:' + req.session.id);
 
 		res.status(200)
 			.json({
@@ -216,7 +217,6 @@ router.post("/reset/:token", async (req, res) => {
 		user.password = hash;
 		user.reset_password_token = null;
 		user.reset_password_expires = null;
-		user.token_version += 1;
 		await user.save();
 
 		const msg = {
@@ -230,6 +230,10 @@ router.post("/reset/:token", async (req, res) => {
 				"This inbox is not monitored and responses will not be seen.",
 		};
 		await sgMail.send(msg);
+
+		const user_sessions = await redis.smembers('user_sess:' + user.id);
+		await redis.del('user_sess:' + user.id);  
+		await redis.del(user_sessions);
 
 		req.session.destroy((err: any) => {
 			if (err) throw Error("Something went wrong");
@@ -298,7 +302,7 @@ router.post("/email", auth, async (req, res) => {
 		if (!isMatch) throw Error("Incorrect password");
 
 		user.email = req.body.newEmail;
-		await user.save().catch(err => { throw Error("A user already exists with that email"); });
+		await user.save().catch(() => { throw Error("A user already exists with that email"); });
 
 		const msg = {
 			to: user.email,
@@ -357,8 +361,9 @@ router.post('/:userid/avatar', auth, upload, async (req, res) => {
 // @desc    Logout user
 // @access  Public
 
-router.post('/logout', async (req, res) => {
+router.post('/logout', auth, async (req, res) => {
 	try {
+		await redis.srem('user_sess:' + req.user.id, 'sess:' + req.session.id);
 		req.session.destroy((err: any) => {
 			if (err) throw Error("Something went wrong");
 		});

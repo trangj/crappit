@@ -19,10 +19,10 @@ passport.use(new Strategy({
                 username: Date.now().toString(),
                 email: profile.emails[0].value,
                 google_id: profile.id
-            }).save().catch(err => { throw Error("A user already exists with that username or email"); });
+            }).save().catch(() => { throw Error("A user already exists with that username or email"); });
         }
 
-        done(undefined, { id: user.id, version: user.token_version });
+        done(undefined, { id: user.id });
     } catch (err) {
         console.log(err);
         done(err);

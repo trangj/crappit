@@ -9,7 +9,7 @@ import { createConnection } from "typeorm";
 import passport from './middleware/passport';
 import connectRedis from "connect-redis";
 import session from "express-session";
-import Redis from 'ioredis';
+import redis from './common/redis';
 
 (async () => {
 	const app = express();
@@ -17,7 +17,6 @@ import Redis from 'ioredis';
 	await createConnection();
 
 	const RedisStore = connectRedis(session);
-	const redis = new Redis(process.env.REDIS_URL);
 
 	app.set("trust proxy", 1);
 	app.use(express.json());
