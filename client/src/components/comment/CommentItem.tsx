@@ -107,6 +107,7 @@ function CommentItem({ comment, topic }: Props) {
               <i>
                 {' '}
                 &bull; edited
+                {' '}
                 {dayjs(comment.updated_at).fromNow()}
               </i>
               )}
