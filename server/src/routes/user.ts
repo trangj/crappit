@@ -26,6 +26,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: process.env.CLIENT_URL, session: false }), async (req, res) => {
   req.session.user = req.user;
+  redis.sadd(`user_sess:${req.user.id}`, `sess:${req.session.id}`);
   res.redirect(process.env.CLIENT_URL);
 });
 
