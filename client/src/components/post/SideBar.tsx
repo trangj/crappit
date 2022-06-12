@@ -5,7 +5,7 @@ import { Button } from 'src/ui/Button';
 import { Card } from 'src/ui/Card';
 
 type Props = {
-    children: ReactNode;
+  children?: ReactNode;
 };
 
 function SideBar({ children }: Props) {

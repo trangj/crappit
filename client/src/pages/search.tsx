@@ -89,9 +89,7 @@ function Search() {
             </>
           )}
         </div>
-        <SideBar>
-          <div>Hello</div>
-        </SideBar>
+        <SideBar />
       </div>
     </Container>
   );
