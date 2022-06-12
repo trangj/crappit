@@ -1,4 +1,4 @@
-import { Template } from "./template";
+import { Template } from './template';
 
 export interface Comment extends Template {
     author: string,

@@ -1,6 +1,6 @@
 export interface Error {
     status: {
-        severity: "info" | "warning" | "success" | "error",
+        severity: 'info' | 'warning' | 'success' | 'error',
         text: string;
     };
 }

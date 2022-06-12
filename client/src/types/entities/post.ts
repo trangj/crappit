@@ -1,5 +1,6 @@
-import { Template } from "./template";
-import { Comment } from "./comment";
+/* eslint-disable no-shadow */
+import { Template } from './template';
+import { Comment } from './comment';
 
 export enum PostType {
     TEXT = 'text',

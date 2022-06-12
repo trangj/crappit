@@ -1,7 +1,7 @@
-import Head from "next/head";
-import React from "react";
+import Head from 'next/head';
+import React from 'react';
 
-const NotFound = () => {
+function NotFound() {
   return (
     <>
       <Head>
@@ -12,6 +12,6 @@ const NotFound = () => {
       </div>
     </>
   );
-};
+}
 
 export default NotFound;

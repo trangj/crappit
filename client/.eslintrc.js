@@ -1,0 +1,52 @@
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  extends: [
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'airbnb',
+    'next',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
+  plugins: [
+    'react',
+    '@typescript-eslint',
+  ],
+  rules: {
+    'import/extensions': 0,
+    'import/no-unresolved': 0,
+    'import/prefer-default-export': 0,
+    camelcase: 0,
+    radix: 0,
+    'global-require': 0,
+    'class-methods-use-this': 0,
+    'no-use-before-define': 0,
+    'no-shadow': 0,
+    'no-unused-vars': 'off',
+    'no-param-reassign': 0,
+    'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
+    'react/jsx-props-no-spreading': 0,
+    'react/display-name': 0,
+    'react/no-array-index-key': 0,
+    'react/require-default-props': 0,
+    'jsx-a11y/click-events-have-key-events': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
+    'jsx-a11y/label-has-associated-control': 0,
+    'jsx-a11y/anchor-is-valid': ['error', {
+      components: ['Link'],
+      specialLink: ['hrefLeft', 'hrefRight'],
+      aspects: ['invalidHref', 'preferButton'],
+    }],
+    '@typescript-eslint/no-unused-vars': ['error'],
+  },
+};
