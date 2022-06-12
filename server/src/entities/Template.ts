@@ -1,12 +1,14 @@
-import { PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
+import {
+  PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, BaseEntity,
+} from 'typeorm';
 
 export abstract class Template extends BaseEntity {
-    @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn()
     id!: number;
 
-    @CreateDateColumn()
+  @CreateDateColumn()
     created_at: Date;
 
-    @UpdateDateColumn()
+  @UpdateDateColumn()
     updated_at: Date;
 }

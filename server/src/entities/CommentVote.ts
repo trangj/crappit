@@ -1,22 +1,24 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
-import { Comment, User } from ".";
+import {
+  BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn,
+} from 'typeorm';
+import { Comment, User } from '.';
 
 @Entity()
 export class CommentVote extends BaseEntity {
-    @ManyToOne(() => User, user => user.id, { onDelete: 'CASCADE' })
-    @JoinColumn()
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
+  @JoinColumn()
     user!: User;
 
-    @PrimaryColumn()
+  @PrimaryColumn()
     user_id: number;
 
-    @ManyToOne(() => Comment, comment => comment.id, { onDelete: 'CASCADE' })
-    @JoinColumn()
+  @ManyToOne(() => Comment, (comment) => comment.id, { onDelete: 'CASCADE' })
+  @JoinColumn()
     comment!: Comment;
 
-    @PrimaryColumn()
+  @PrimaryColumn()
     comment_id: number;
 
-    @Column()
+  @Column()
     value!: 1 | 0 | -1;
 }

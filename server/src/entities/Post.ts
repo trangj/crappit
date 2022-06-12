@@ -1,6 +1,9 @@
-import { User, Topic } from ".";
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { Template } from "./Template";
+/* eslint-disable no-shadow */
+import {
+  Column, Entity, JoinColumn, ManyToOne,
+} from 'typeorm';
+import { User, Topic } from '.';
+import { Template } from './Template';
 
 enum PostType {
     TEXT = 'text',
@@ -10,32 +13,32 @@ enum PostType {
 
 @Entity()
 export class Post extends Template {
-    @Column()
+  @Column()
     title!: string;
 
-    @Column({ type: 'enum', enum: PostType })
+  @Column({ type: 'enum', enum: PostType })
     type!: PostType;
 
-    @Column({ type: 'text' })
+  @Column({ type: 'text' })
     content?: string;
 
-    @Column()
+  @Column()
     image_url?: string;
 
-    @Column()
+  @Column()
     image_name?: string;
 
-    @Column({ default: 0 })
+  @Column({ default: 0 })
     vote: number;
 
-    @Column({ default: 0 })
+  @Column({ default: 0 })
     number_of_comments: number;
 
-    @ManyToOne(() => User)
-    @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
+  @ManyToOne(() => User)
+  @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
     author!: User;
 
-    @ManyToOne(() => Topic)
-    @JoinColumn([{ name: 'topic_id', referencedColumnName: 'id' }])
+  @ManyToOne(() => Topic)
+  @JoinColumn([{ name: 'topic_id', referencedColumnName: 'id' }])
     topic!: Topic;
 }
