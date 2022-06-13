@@ -54,8 +54,8 @@ router.post('/', auth, upload, async (req, res) => {
       title: req.body.title,
       type: req.body.type,
       content: sanitizeHtml(req.body.content),
-      image_url: req.file ? req.file.location : '',
-      image_name: req.file ? req.file.key : '',
+      image_url: req.file && req.body.type === 'photo' ? req.file.location : '',
+      image_name: req.file && req.body.type === 'photo' ? req.file.key : '',
       author: user,
       topic,
     });
