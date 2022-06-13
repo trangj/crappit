@@ -94,7 +94,7 @@ function AddPost() {
     topic,
   }: FormValues) => {
     const formData = new FormData();
-    formData.append('file', file);
+    if (types[type] === 'photo') formData.append('file', file);
     formData.append('title', title);
     formData.append('content', content || link);
     formData.append('type', types[type]);
