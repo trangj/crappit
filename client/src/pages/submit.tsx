@@ -102,6 +102,12 @@ function AddPost() {
     mutate({ formData });
   };
 
+  const displayPlaceholder = () => {
+    if (topicsIsLoading) return 'Loading...';
+    if (topicsError) return topicsError.status.text;
+    return 'Choose a topic';
+  };
+
   const initialValues: FormValues = {
     title: '',
     content: '',
@@ -130,11 +136,7 @@ function AddPost() {
               name="topic"
               className="sm:w-80 w-full"
               component={SelectFieldForm}
-              placeholder={() => {
-                if (topicsIsLoading) return 'Loading...';
-                if (topicsError) return topicsError.status.text;
-                return 'Choose a topic';
-              }}
+              placeholder={displayPlaceholder()}
             >
               {!topicsIsLoading
                 && topicsData
