@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
-import { Formik, Form, Field } from 'formik';
+import {
+  Formik, Form, Field, FormikHelpers,
+} from 'formik';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -93,9 +95,19 @@ function AddPost() {
     type,
     file,
     topic,
-  }: FormValues) => {
+  }: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
     const formData = new FormData();
-    if (types[type] === 'photo') formData.append('file', file);
+    if (types[type] === 'photo') {
+      if (!file) {
+        formikHelpers.setFieldError('file', 'Please upload a file.');
+        return;
+      }
+      formData.append('file', file);
+    }
+    if (types[type] === 'link' && !link) {
+      formikHelpers.setFieldError('link', 'Please add a link.');
+      return;
+    }
     formData.append('title', title);
     formData.append('content', content || link);
     formData.append('type', types[type]);
