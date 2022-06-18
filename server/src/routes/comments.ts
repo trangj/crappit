@@ -26,22 +26,45 @@ const createCommentThread = (comments: Comment[]): any => {
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const comments = await Comment.query(`
-      select
-      c.*,
-      u.username author,
-      u.avatar_image_url avatar_image_url,
-      u.avatar_image_name avatar_image_name,
-      cv.value user_vote
-      from comment c
-      left join "user" u on c.author_id = u.id
-      left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
-      where c.post_id = $2
-            order by 
-        (case when $3 = 'top' then c.vote end) desc,
-        (case when $3 = 'new' then c.created_at end) desc,
-        (case when $3 = 'hot' or $3 = '' then c end) desc
-    `, [req.user.id, req.params.id, req.query.sort]);
-    res.status(200).json({ comments: createCommentThread(comments) });
+      with recursive cte
+      as (
+        (select 
+          c.*,
+          u.username author,
+            u.avatar_image_url avatar_image_url,
+            u.avatar_image_name avatar_image_name,
+            cv.value user_vote
+        from comment c
+        left join "user" u on c.author_id = u.id
+          left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
+        where  c.parent_comment_id is null and c.post_id = $2
+        limit 5 offset $4)
+        union all
+          select cc.*,
+            u.username author,
+              u.avatar_image_url avatar_image_url,
+              u.avatar_image_name avatar_image_name,
+              cv.value user_vote
+          from comment cc
+          left join "user" u on cc.author_id = u.id
+            left join comment_vote cv on cc.id = cv.comment_id and cv.user_id = $1
+          inner join cte on cte.id = cc.parent_comment_id
+      )
+      select * from cte
+      order by 
+        (case when $3 = 'top' then vote end) desc,
+        (case when $3 = 'new' then created_at end) desc,
+        (case when $3 = 'hot' or $3 = '' then id end) desc
+    `, [req.user.id, req.params.id, req.query.sort, req.query.skip]);
+
+    const commentThread = createCommentThread(comments);
+
+    res.status(200).json({
+      comments: commentThread,
+      nextCursor: commentThread.length
+        ? parseInt(req.query.skip as string) + commentThread.length
+        : undefined,
+    });
   } catch (err) {
     res.status(400).json({
       status: { text: err.message, severity: 'error' },

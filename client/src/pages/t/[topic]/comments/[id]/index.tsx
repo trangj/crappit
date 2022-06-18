@@ -23,10 +23,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
   await queryClient.prefetchQuery(['post', query.id], () => fetchPost(query.id as string));
-  await queryClient.prefetchQuery(['comments', query.id, sort], () => fetchComments(query.id as string, sort));
+  await queryClient.prefetchInfiniteQuery(['comments', query.id, sort], () => fetchComments(query.id as string, 0, sort));
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
     },
   };
 };

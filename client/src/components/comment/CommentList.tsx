@@ -1,28 +1,22 @@
 import { ChatAlt2Icon } from '@heroicons/react/solid';
 import React from 'react';
-import { Comment } from '../../types/entities/comment';
-import { Topic } from '../../types/entities/topic';
-import CommentSkeleton from '../util/CommentSkeleton';
+import { InfiniteData } from 'react-query';
+import { Comment } from 'src/types/entities/comment';
+import { Topic } from 'src/types/entities/topic';
 import CommentItem from './CommentItem';
 
+interface Response {
+  comments: Comment[],
+  nextCursor: number;
+}
+
 type Props = {
-  isCommentsLoading: boolean;
-  comments: Comment[];
+  data: InfiniteData<Response>;
   topic: Topic;
 };
 
-function CommentList({ isCommentsLoading, comments, topic }: Props) {
-  if (isCommentsLoading && !comments) {
-    return (
-      <>
-        <CommentSkeleton />
-        <CommentSkeleton />
-        <CommentSkeleton />
-      </>
-    );
-  }
-
-  if (comments.length === 0) {
+function CommentList({ data, topic }: Props) {
+  if (data.pages[0].comments.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center">
         <div className="text-gray-400 text-center">
@@ -36,8 +30,12 @@ function CommentList({ isCommentsLoading, comments, topic }: Props) {
 
   return (
     <>
-      {comments.map((comment) => (
-        <CommentItem comment={comment} key={comment.id} topic={topic} />
+      {data.pages.map((group, i) => (
+        <React.Fragment key={i}>
+          {group.comments.map((comment) => (
+            <CommentItem comment={comment} key={comment.id} topic={topic} />
+          ))}
+        </React.Fragment>
       ))}
     </>
   );

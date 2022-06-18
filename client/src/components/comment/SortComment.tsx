@@ -25,6 +25,7 @@ function SortComment({
     <Listbox value={sortParam} onChange={handleSortChange} as="div" className="relative">
       <Listbox.Button className="font-medium text-blue-600 dark:text-blue-400 text-xs capitalize">
         Sort by:
+        {' '}
         {sortParam === '' ? 'Hot' : sortParam}
       </Listbox.Button>
       <Listbox.Options as="div" className="cursor-pointer z-10 w-16 font-medium absolute left-0 origin-top-right border bg-white dark:bg-gray-850 border-gray-200 dark:border-gray-700 rounded flex flex-col">

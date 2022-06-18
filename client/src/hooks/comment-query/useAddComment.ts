@@ -21,7 +21,10 @@ export default function useAddComment(id: string, sortParam: string) {
   const queryClient = useQueryClient();
   return useMutation<Response, Error, any, any>(addComment, {
     onSuccess: (res) => {
-      queryClient.setQueryData(['comments', id, sortParam], (initialData: any) => [res.comment, ...initialData]);
+      queryClient.setQueryData(['comments', id, sortParam], (initialData: any) => {
+        initialData.pages[0].comments = [res.comment, ...initialData.pages[0].comments];
+        return initialData;
+      });
     },
     onError: (err) => {
       toast.error(err.status.text);

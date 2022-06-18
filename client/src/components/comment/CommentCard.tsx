@@ -8,6 +8,7 @@ import { Divider } from '../../ui/Divider';
 import AddComment from './AddComment';
 import CommentList from './CommentList';
 import SortComment from './SortComment';
+import CommentSkeleton from '../util/CommentSkeleton';
 
 type Props = {
   post: Post;
@@ -20,7 +21,9 @@ function CommentCard({ post, topic }: Props) {
   const sort = router.query.sort ? (router.query.sort as string) : '';
 
   const [sortParam, setSortParam] = useState(sort);
-  const { data: comments, isLoading: isCommentsLoading } = useComments(
+  const {
+    data, isLoading, fetchNextPage, hasNextPage,
+  } = useComments(
     String(post.id),
     sortParam,
   );
@@ -37,11 +40,25 @@ function CommentCard({ post, topic }: Props) {
         />
         <Divider className="mb-8 mt-1" />
       </div>
-      <CommentList
-        isCommentsLoading={isCommentsLoading}
-        comments={comments!}
-        topic={topic}
-      />
+      {
+        data && !isLoading ? (
+          <CommentList
+            data={data}
+            topic={topic}
+          />
+        ) : (
+          <>
+            <CommentSkeleton />
+            <CommentSkeleton />
+            <CommentSkeleton />
+          </>
+        )
+      }
+      {hasNextPage && (
+      <button className="font-medium text-blue-600 dark:text-blue-400 text-xs capitalize" type="button" onClick={() => fetchNextPage()}>
+        Load more
+      </button>
+      )}
     </Card>
   );
 }
