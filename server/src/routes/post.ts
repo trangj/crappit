@@ -28,7 +28,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
     `, [req.user.id, req.params.id]);
     if (!post[0]) throw Error('Post does not exist');
 
-    res.status(200).json({ post: { ...post[0] } });
+    res.status(200).json({ post: post[0] });
   } catch (err) {
     res.status(400).json({
       status: { text: err.message, severity: 'error' },

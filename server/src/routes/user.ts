@@ -38,12 +38,13 @@ router.get('/me', auth, async (req, res) => {
   try {
     const user = await User.findOne(req.user.id);
 
-    const { password, ...rest } = user;
+    delete user.password;
 
     res
       .status(200)
-      .json({ user: { ...rest } });
+      .json({ user });
   } catch (err) {
+    await redis.srem(`user_sess:${req.user.id}`, `sess:${req.session.id}`);
     req.session.destroy((session_err: any) => {
       if (session_err) throw Error('Something went wrong');
     });
@@ -89,7 +90,7 @@ router.post('/register', async (req, res) => {
     redis.sadd(`user_sess:${newUser.id}`, `sess:${req.session.id}`);
 
     res.status(200).json({
-      user: { ...newUser },
+      user: newUser,
       status: {
         text: 'Successfully registered!',
         severity: 'success',
@@ -121,9 +122,11 @@ router.post('/login', async (req, res) => {
     req.session.user = { id: user.id };
     redis.sadd(`user_sess:${user.id}`, `sess:${req.session.id}`);
 
+    delete user.password;
+
     res.status(200)
       .json({
-        user: { ...user },
+        user,
         status: { text: 'Successfully logged in!', severity: 'success' },
       });
   } catch (err) {
@@ -279,9 +282,10 @@ router.get('/:userid', async (req, res) => {
       where m.user_id = $1
   `, [req.params.userid]);
 
-    const { password, ...rest } = user;
+    delete user.password;
+    user.topics_moderated = topics_moderated;
 
-    res.status(200).json({ user: { ...rest, topics_moderated } });
+    res.status(200).json({ user });
   } catch (err) {
     res.status(400).json({
       status: { text: err.message, severity: 'error' },

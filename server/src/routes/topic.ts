@@ -32,9 +32,9 @@ router.get('/:topic', optionalAuth, async (req, res) => {
       where m.topic_id = $1
     `, [topic[0].id]);
 
-    res.status(200).json({
-      topic: { ...topic[0], moderators },
-    });
+    topic[0].moderators = moderators;
+
+    res.status(200).json({ topic: topic[0] });
   } catch (err) {
     res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }
