@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import App, { AppProps } from 'next/app';
+import App, { AppProps, AppContext } from 'next/app';
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import NavigationBar from 'src/components/navbar/NavigationBar';
@@ -9,8 +9,8 @@ import { UserProvider } from 'src/context/UserState';
 import '../styles/globals.css';
 import { User } from 'src/types/entities/user';
 import { Hydrate } from 'react-query/hydration';
-import { ToastBar, Toaster } from 'react-hot-toast';
 import Head from 'next/head';
+import CustomToaster from 'src/components/util/CustomToaster';
 import axios from '../axiosConfig';
 
 dayjs.extend(relativeTime);
@@ -20,16 +20,13 @@ type MyAppProps = AppProps & {
   user: User;
 };
 
-MyApp.getInitialProps = async (ctx: any) => {
+MyApp.getInitialProps = async (ctx: AppContext) => {
   let user = null;
   const props = await App.getInitialProps(ctx);
 
   try {
-    if (
-      typeof window === 'undefined'
-      && ctx.ctx.req.cookies.crappit_session
-    ) {
-      axios.defaults.headers.get.Cookie = `crappit_session=${ctx.ctx.req.cookies.crappit_session}`;
+    if (typeof window === 'undefined' && ctx.ctx.req?.headers.cookie) {
+      axios.defaults.headers.get.Cookie = ctx.ctx.req?.headers.cookie;
       if (!ctx.ctx.req?.url?.startsWith('/_next/data')) {
         const res = await axios.get('/api/user/me');
         user = res.data.user;
@@ -37,7 +34,7 @@ MyApp.getInitialProps = async (ctx: any) => {
     }
   } catch (err: any) {
     if (err.response && err.response.status === 403) {
-      ctx.ctx.res.setHeader(
+      ctx.ctx.res?.setHeader(
         'Set-Cookie',
         `crappit_session=; Domain=${process.env.DOMAIN}; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure`,
       );
@@ -68,25 +65,7 @@ function MyApp({ Component, pageProps, user }: MyAppProps) {
           </Hydrate>
         </QueryClientProvider>
       </UserProvider>
-      <Toaster
-        position="bottom-center"
-        toastOptions={{
-          className:
-            'bg-white border-gray-500 dark:bg-gray-850 dark:border-gray-500 dark:text-gray-200 w-full border justify-start',
-          duration: 5000,
-        }}
-      >
-        {(t) => (
-          <ToastBar toast={t} style={{ maxWidth: '476px', padding: '0.7rem' }}>
-            {({ icon, message }) => (
-              <>
-                {icon}
-                <div>{message}</div>
-              </>
-            )}
-          </ToastBar>
-        )}
-      </Toaster>
+      <CustomToaster />
     </>
   );
 }
