@@ -7,8 +7,6 @@ if (process.env.NODE_ENV !== 'production') {
 import express from 'express';
 import cors from 'cors';
 import { createConnection } from 'typeorm';
-import path from 'path';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
 import passport from './middleware/passport';
@@ -17,20 +15,12 @@ import {
   CommentRouter, ModerationRouter, CommentsRouter, SearchRouter,
 } from './routes';
 import redis from './common/redis';
+import ormconfig from './ormconfig';
 
 (async () => {
   const app = express();
 
-  await createConnection({
-    type: 'postgres',
-    url: process.env.DATABASE_URL,
-    namingStrategy: new SnakeNamingStrategy(),
-    entities: [path.join(__dirname, './entities/*')],
-    migrations: [path.join(__dirname, './migrations/*')],
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  });
+  await createConnection(ormconfig);
 
   const RedisStore = connectRedis(session);
 
