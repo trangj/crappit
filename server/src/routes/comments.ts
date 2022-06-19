@@ -39,9 +39,9 @@ router.get('/:id', optionalAuth, async (req, res) => {
         left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
         where  c.parent_comment_id is null and c.post_id = $2
         order by 
-          (case when '' = 'top' then c.vote end) desc,
-          (case when '' = 'new' then c.created_at end) desc,
-          (case when '' = 'hot' or '' = '' then c.id end) desc
+          (case when $3 = 'top' then c.vote end) desc,
+          (case when $3 = 'new' then c.created_at end) desc,
+          (case when $3 = 'hot' or $3 = '' then c.id end) desc
         limit 5 offset $4)
         union all
           select cc.*,
