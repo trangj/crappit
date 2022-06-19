@@ -36,8 +36,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
             cv.value user_vote
         from comment c
         left join "user" u on c.author_id = u.id
-          left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
+        left join comment_vote cv on c.id = cv.comment_id and cv.user_id = $1
         where  c.parent_comment_id is null and c.post_id = $2
+        order by 
+          (case when '' = 'top' then c.vote end) desc,
+          (case when '' = 'new' then c.created_at end) desc,
+          (case when '' = 'hot' or '' = '' then c.id end) desc
         limit 5 offset $4)
         union all
           select cc.*,
@@ -51,10 +55,6 @@ router.get('/:id', optionalAuth, async (req, res) => {
           inner join cte on cte.id = cc.parent_comment_id
       )
       select * from cte
-      order by 
-        (case when $3 = 'top' then vote end) desc,
-        (case when $3 = 'new' then created_at end) desc,
-        (case when $3 = 'hot' or $3 = '' then id end) desc
     `, [req.user.id, req.params.id, req.query.sort, req.query.skip]);
 
     const commentThread = createCommentThread(comments);
