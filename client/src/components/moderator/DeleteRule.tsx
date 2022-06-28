@@ -1,4 +1,5 @@
 import { Dialog } from '@headlessui/react';
+import { TrashIcon } from '@heroicons/react/outline';
 import React, { useRef, useState } from 'react';
 import useDeleteRule from 'src/hooks/moderator-query/useDeleteRule';
 import { Rule, Topic } from 'src/types/entities/topic';
@@ -18,13 +19,11 @@ function DeleteRule({ topic, rule }: DeleteRuleProps) {
     <>
       <Button
         onClick={() => setOpen(true)}
-        variant="filled"
-        border="rounded-full"
-        className="bg-red-500 dark:bg-red-500"
+        variant="ghost"
+        border="rounded"
         size="sm"
-      >
-        Delete
-      </Button>
+        icon={<TrashIcon className="h-4 w-4" />}
+      />
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"

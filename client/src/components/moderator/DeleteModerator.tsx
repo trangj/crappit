@@ -1,4 +1,5 @@
 import { Dialog } from '@headlessui/react';
+import { TrashIcon } from '@heroicons/react/outline';
 import React, { useRef, useState } from 'react';
 import useDeleteModerator from 'src/hooks/moderator-query/useDeleteModerator';
 import { Topic } from 'src/types/entities/topic';
@@ -21,13 +22,11 @@ function DeleteModerator({ topic, user }: DeleteModeratorProps) {
     <>
       <Button
         onClick={() => setOpen(true)}
-        variant="filled"
-        border="rounded-full"
-        className="bg-red-500 dark:bg-red-500 ml-auto"
+        variant="ghost"
+        border="rounded"
         size="sm"
-      >
-        Remove
-      </Button>
+        icon={<TrashIcon className="h-4 w-4" />}
+      />
       <Dialog
         as="div"
         className="fixed inset-0 z-10 overflow-y-auto"

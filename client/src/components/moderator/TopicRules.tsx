@@ -2,6 +2,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { Topic } from 'src/types/entities/topic';
 import { Divider } from 'src/ui/Divider';
+import { Disclosure } from '@headlessui/react';
+import { ArrowsExpandIcon } from '@heroicons/react/outline';
+import { Button } from 'src/ui/Button';
 import AddRule from './AddRule';
 import DeleteRule from './DeleteRule';
 
@@ -30,17 +33,21 @@ function TopicRules({ topic }: TopicRulesProps) {
           </div>
         ) : (
           topic.rules.map((rule, i) => (
-            <div key={i}>
-              <Divider />
-              <div className="font-medium pt-2 w-full flex items-center text-sm justify-between">
+            <Disclosure key={i}>
+              <Divider className="mt-4" />
+              <div className="font-medium pt-4 w-full flex items-center text-sm justify-between">
                 <span>
                   {i + 1}
                   .
+                  {' '}
                   {rule.name}
                 </span>
-                <DeleteRule topic={topic} rule={rule} />
+                <div className="flex gap-2">
+                  <DeleteRule topic={topic} rule={rule} />
+                  <Disclosure.Button as={Button} variant="ghost" border="rounded" size="sm" icon={<ArrowsExpandIcon className="h-4 w-4" />} />
+                </div>
               </div>
-              <div className="content px-4 pb-2">
+              <Disclosure.Panel className="content px-4 pb-4">
                 <small className="text-gray-500 dark:text-gray-400">
                   Description
                 </small>
@@ -49,8 +56,8 @@ function TopicRules({ topic }: TopicRulesProps) {
                   Created
                 </small>
                 <div>{dayjs(rule.created_at).fromNow()}</div>
-              </div>
-            </div>
+              </Disclosure.Panel>
+            </Disclosure>
           ))
         )}
       </div>
