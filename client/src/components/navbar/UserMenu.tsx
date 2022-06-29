@@ -57,7 +57,7 @@ function UserMenu({
         {user && (
         <>
           <span className="h-6 w-6 mr-2">
-            {!user || !user.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={user.avatar_image_name} width={24} height={24} className="rounded-full" />}
+            {!user || !user.avatar_image_name ? <Avatar /> : <Image alt="user avatar" src={user.avatar_image_name} width={24} height={24} className="rounded-full bg-white" />}
           </span>
           <div className="hidden xl:flex flex-col">
             <span>

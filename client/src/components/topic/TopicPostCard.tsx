@@ -51,7 +51,7 @@ function TopicCard({ topicData }: TopicCardProps) {
                 src={topicData.icon_image_name}
                 width={56}
                 height={56}
-                className="rounded-full"
+                className="rounded-full bg-white"
               />
             )}
           </div>

@@ -72,7 +72,7 @@ function CommentItem({ comment, topic }: Props) {
                   src={comment.avatar_image_name}
                   width={28}
                   height={28}
-                  className="rounded-full"
+                  className="rounded-full bg-white"
                 />
               )}
             </a>

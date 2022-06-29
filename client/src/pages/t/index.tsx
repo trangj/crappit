@@ -54,7 +54,7 @@ function AllTopics() {
             <Link key={topic.title} passHref href={`t/${topic.title}`}>
               <a className={`flex items-center gap-2 p-3 border-gray-300 dark:border-gray-700 ${i === 0 ? '' : 'border-t'}`}>
                 <div className=" h-10 w-10 rounded-full">
-                  {!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={40} height={40} className="rounded-full" />}
+                  {!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={40} height={40} className="rounded-full bg-white" />}
                 </div>
                 <div className="font-medium">
                   t/

@@ -19,6 +19,7 @@ function UserCard({ profile }: Props) {
           alt="user avatar"
           height={80}
           width={80}
+          className="bg-white"
         />
         )}
       </div>

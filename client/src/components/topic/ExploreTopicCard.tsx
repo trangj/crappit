@@ -55,7 +55,7 @@ function ExploreTopicCard() {
                 <div className="flex items-center">
                   <span className="font-medium w-5 text-right">{ind + 1}</span>
                   <div className="h-8 w-8 flex rounded-full mx-2">
-                    {!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={32} height={32} className="rounded-full" />}
+                    {!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={32} height={32} className="rounded-full bg-white" />}
                   </div>
                   <span className="">
                     <span className="font-medium text-sm">

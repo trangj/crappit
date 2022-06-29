@@ -33,7 +33,7 @@ function TopicHeader({ topic }: Props) {
                 src={topic.icon_image_name}
                 width={80}
                 height={80}
-                className="rounded-full"
+                className="rounded-full bg-white"
               />
             )}
           </div>

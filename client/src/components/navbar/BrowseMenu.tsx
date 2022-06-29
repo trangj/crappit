@@ -69,7 +69,7 @@ function BrowseMenu() {
                         src={topic.icon_image_name}
                         width={20}
                         height={20}
-                        className="rounded-full"
+                        className="rounded-full bg-white"
                       />
                     ) : (
                       <Avatar className="h-5 w-5 flex-none" />

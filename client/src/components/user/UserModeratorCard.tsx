@@ -27,7 +27,7 @@ function UserModeratorCard({ profile }: Props) {
                   src={topic.icon_image_name}
                   width={32}
                   height={32}
-                  className="rounded-full"
+                  className="rounded-full bg-white"
                 />
               )}
             </div>
