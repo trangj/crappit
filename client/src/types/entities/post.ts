@@ -19,6 +19,8 @@ export interface Post extends Template {
     image_name: string,
     vote: number,
     number_of_comments: number,
-    comments: Comment[];
-    author_id: number;
+    comments: Comment[],
+    author_id: number,
+    icon_image_url: string,
+    icon_image_name: string,
 }

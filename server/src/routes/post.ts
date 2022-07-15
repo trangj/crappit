@@ -18,6 +18,8 @@ router.get('/:id', optionalAuth, async (req, res) => {
       select
       p.*,
       t.title topic,
+      t.icon_image_url icon_image_url,
+      t.icon_image_name icon_image_name,
       u.username author,
       v.value user_vote
       from post p

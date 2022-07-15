@@ -4,6 +4,9 @@ import dayjs from 'dayjs';
 import { Post } from 'src/types/entities/post';
 import { ChatAltIcon, ReplyIcon } from '@heroicons/react/outline';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
+import { Avatar } from 'src/ui/Avatar';
+import { useRouter } from 'next/router';
 import { Button } from '../../ui/Button';
 import { LinkCard, LinkCardOverlay } from '../../ui/LinkCard';
 import Voting from './Voting';
@@ -13,6 +16,8 @@ type Props = {
 };
 
 function PostItem({ post, ...props }: Props) {
+  const router = useRouter();
+
   return (
     <LinkCard {...props} className="flex">
       <div className="pb-auto p-1 dark:bg-gray-900 bg-gray-50 hidden sm:flex">
@@ -20,7 +25,27 @@ function PostItem({ post, ...props }: Props) {
       </div>
       <div className="flex flex-col w-full">
         <div className="w-full p-2 pb-0">
-          <small className="flex pb-1">
+          <small className="flex pb-1 items-center">
+            {
+              router.route !== '/t/[topic]'
+            && (
+            <Link passHref href={`/t/${post.topic}`}>
+              <a className="h-5 w-5 flex-none mr-1">
+                {!post.icon_image_name ? (
+                  <Avatar />
+                ) : (
+                  <Image
+                    alt="user avatar"
+                    src={post.icon_image_name}
+                    width={20}
+                    height={20}
+                    className="rounded-full bg-white"
+                  />
+                )}
+              </a>
+            </Link>
+            )
+            }
             <Link passHref href={`/t/${post.topic}`}>
               <a className="font-bold">
                 t/

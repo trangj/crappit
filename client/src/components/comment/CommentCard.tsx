@@ -22,7 +22,7 @@ function CommentCard({ post, topic }: Props) {
 
   const [sortParam, setSortParam] = useState(sort);
   const {
-    data, isLoading, fetchNextPage, hasNextPage,
+    data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage,
   } = useComments(
     String(post.id),
     sortParam,
@@ -56,7 +56,7 @@ function CommentCard({ post, topic }: Props) {
       }
       {hasNextPage && (
       <button className="font-medium text-blue-600 dark:text-blue-400 text-xs capitalize" type="button" onClick={() => fetchNextPage()}>
-        Load more
+        {isFetchingNextPage ? 'Loading...' : 'Load more'}
       </button>
       )}
     </Card>
