@@ -8,7 +8,7 @@ function ModeratorLayout({ children } : any) {
   return (
     <>
       <div
-        className="mt-12 dark:bg-gray-900 h-10 flex items-center"
+        className="top-12 dark:bg-gray-900 h-10 flex items-center fixed w-full"
       >
         <Link passHref href={`/t/${router.query.topic}`}>
           <a className="ml-4 font-semibold uppercase text-sm">
@@ -43,7 +43,7 @@ function ModeratorLayout({ children } : any) {
           </Link>
         </div>
         <div
-          className="mt-5 container mx-auto max-w-6xl sm:px-5"
+          className="mt-28 container mx-auto max-w-6xl sm:px-5"
         >
           {children}
         </div>
