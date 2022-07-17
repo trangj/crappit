@@ -5,8 +5,8 @@ import { Topic } from 'src/types/entities/topic';
 import { Comment } from 'src/types/entities/comment';
 import { Button } from 'src/ui/Button';
 import { useUser } from '../../context/UserState';
-import DeleteComment from './DeleteComment';
 import DeleteCommentModerator from './DeleteCommentModerator';
+import DeleteComment from './DeleteComment';
 
 type Props = {
     setOpenReply: (arg: boolean) => void,
@@ -65,7 +65,7 @@ function CommentToolBar({
       {topic
                 && user.id !== comment.author_id
                 && topic.user_moderator_id && (
-                <DeleteCommentModerator comment={comment} />
+                <DeleteCommentModerator comment={comment} topic={topic} />
       )}
     </>
   );

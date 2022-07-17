@@ -5,7 +5,7 @@ import axios from '../../axiosConfig';
 
 async function deleteModerator({ topic, id }: { topic: string, id: number; }) {
   try {
-    const res = await axios.delete(`/api/moderation/topic/${topic}/${id}`);
+    const res = await axios.delete(`/api/moderation/${topic}/user/${id}`);
     return res.data;
   } catch (err: any) {
     throw err.response.data;

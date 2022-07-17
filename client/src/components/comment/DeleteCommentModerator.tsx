@@ -3,13 +3,15 @@ import { Dialog } from '@headlessui/react';
 import { Comment } from 'src/types/entities/comment';
 import { Button } from 'src/ui/Button';
 import { BanIcon } from '@heroicons/react/outline';
+import { Topic } from 'src/types/entities/topic';
 import useDeleteCommentModerator from '../../hooks/comment-query/useDeleteCommentModerator';
 
 type Props = {
   comment: Comment;
+  topic: Topic
 };
 
-function DeleteCommentModerator({ comment }: Props) {
+function DeleteCommentModerator({ comment, topic }: Props) {
   const [open, setOpen] = useState(false);
   const { isLoading, mutate } = useDeleteCommentModerator(comment, setOpen);
   const cancelRef = useRef(null);
@@ -43,6 +45,7 @@ function DeleteCommentModerator({ comment }: Props) {
                 onClick={() => {
                   mutate({
                     commentId: comment.id,
+                    topic: topic.title,
                   });
                 }}
                 loading={isLoading}

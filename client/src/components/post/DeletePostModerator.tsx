@@ -43,6 +43,7 @@ function DeletePostModerator({ post }: Props) {
                 onClick={() => {
                   mutate({
                     postid: post.id,
+                    topic: post.topic,
                   });
                 }}
                 loading={isLoading}

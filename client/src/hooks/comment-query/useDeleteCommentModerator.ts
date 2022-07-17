@@ -3,9 +3,9 @@ import toast from 'react-hot-toast';
 import { Comment } from 'src/types/entities/comment';
 import axios from '../../axiosConfig';
 
-async function deleteCommentModerator({ commentId }: { commentId: number; }) {
+async function deleteCommentModerator({ commentId, topic }: { commentId: number, topic: string }) {
   try {
-    const res = await axios.delete(`/api/moderation/comment/${commentId}`);
+    const res = await axios.delete(`/api/moderation/${topic}/comment/${commentId}`);
     return res.data;
   } catch (err: any) {
     throw err.response.data;

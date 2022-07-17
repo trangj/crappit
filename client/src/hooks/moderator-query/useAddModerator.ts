@@ -5,7 +5,7 @@ import axios from '../../axiosConfig';
 
 async function addModerator({ topic, username }: { topic: string, username: string; }) {
   try {
-    const res = await axios.post(`/api/moderation/topic/${topic}`, {
+    const res = await axios.post(`/api/moderation/${topic}/user`, {
       username,
     });
     return res.data;

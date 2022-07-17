@@ -9,7 +9,7 @@ import useTopic, { fetchTopic } from 'src/hooks/topic-query/useTopic';
 import ModeratorLayout from 'src/components/moderator/ModeratorLayout';
 import { Card } from 'src/ui/Card';
 import { Divider } from 'src/ui/Divider';
-import axios from 'axios';
+import axios from 'src/axiosConfig';
 import toast from 'react-hot-toast';
 import type { NextPageWithLayout } from 'src/pages/_app';
 

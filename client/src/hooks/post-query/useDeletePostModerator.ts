@@ -4,9 +4,9 @@ import { useMutation } from 'react-query';
 import { Post } from 'src/types/entities/post';
 import axios from '../../axiosConfig';
 
-async function deletePostModerator({ postid }: { postid: number; }) {
+async function deletePostModerator({ postid, topic }: { postid: number, topic: string }) {
   try {
-    const res = await axios.delete(`/api/moderation/post/${postid}`);
+    const res = await axios.delete(`/api/moderation/${topic}/post/${postid}`);
     return res.data;
   } catch (err: any) {
     throw err.response.data;
