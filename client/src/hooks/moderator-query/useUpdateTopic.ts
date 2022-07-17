@@ -1,6 +1,5 @@
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
-import { Topic } from 'src/types/entities/topic';
 import axios from '../../axiosConfig';
 
 async function updateTopic(
@@ -14,11 +13,11 @@ async function updateTopic(
   }
 }
 
-export default function useUpdateTopic(topic: Topic) {
+export default function useUpdateTopic(topic: string) {
   const queryClient = useQueryClient();
   return useMutation(updateTopic, {
     onSuccess: (res) => {
-      queryClient.setQueryData(['topic', topic.title], (initalData: any) => {
+      queryClient.setQueryData(['topic', topic], (initalData: any) => {
         initalData.description = res.topic.description;
         initalData.headline = res.topic.headline;
         return initalData;

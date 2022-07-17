@@ -34,6 +34,7 @@ module.exports = {
     'no-shadow': 0,
     'no-unused-vars': 'off',
     'no-param-reassign': 0,
+    'func-names': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.jsx', '.tsx'] }],
     'react/jsx-props-no-spreading': 0,
     'react/display-name': 0,

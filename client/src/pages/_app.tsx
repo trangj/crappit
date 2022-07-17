@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import App, { AppProps, AppContext } from 'next/app';
-import React, { useState } from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import NavigationBar from 'src/components/navbar/NavigationBar';
 import { UserProvider } from 'src/context/UserState';
@@ -11,13 +11,19 @@ import { User } from 'src/types/entities/user';
 import { Hydrate } from 'react-query/hydration';
 import Head from 'next/head';
 import CustomToaster from 'src/components/util/CustomToaster';
+import { NextPage } from 'next';
 import axios from '../axiosConfig';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
 type MyAppProps = AppProps & {
-  user: User;
+  user: User,
+  Component: NextPageWithLayout,
 };
 
 MyApp.getInitialProps = async (ctx: AppContext) => {
@@ -47,6 +53,7 @@ function MyApp({ Component, pageProps, user }: MyAppProps) {
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: { queries: { staleTime: 30000 } } }),
   );
+  const getLayout = Component.getLayout || ((page) => page);
 
   return (
     <>
@@ -61,7 +68,7 @@ function MyApp({ Component, pageProps, user }: MyAppProps) {
         <QueryClientProvider client={queryClient}>
           <NavigationBar />
           <Hydrate state={pageProps && pageProps.dehydratedState}>
-            <Component {...pageProps} />
+            {getLayout(<Component {...pageProps} />)}
           </Hydrate>
         </QueryClientProvider>
       </UserProvider>
@@ -69,4 +76,5 @@ function MyApp({ Component, pageProps, user }: MyAppProps) {
     </>
   );
 }
+
 export default MyApp;
