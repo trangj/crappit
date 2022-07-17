@@ -20,7 +20,7 @@ export default function useDeleteRule(topic: Topic) {
     onSuccess: (res) => {
       queryClient.setQueryData(['topic', topic.title], (initialData: any) => {
         initialData.rules = initialData.rules.filter(
-          (rule: any) => rule.name !== res.rule.name && rule.created_at !== res.rule.created_at,
+          (rule: any) => rule.created_at !== res.rule.created_at,
         );
         return initialData;
       });

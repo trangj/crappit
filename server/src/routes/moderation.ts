@@ -150,7 +150,7 @@ router.post('/:topic/delete_rule', auth, async (req, res) => {
     if (!topic.moderators.some((moderator) => moderator.id === user.id)) throw Error('You are not a moderator');
 
     topic.rules = topic.rules.filter(
-      (rule) => rule.name !== req.body.rule.name && rule.created_at !== req.body.rule.created_at,
+      (rule) => rule.created_at !== req.body.rule.created_at,
     );
 
     await topic.save();
