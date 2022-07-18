@@ -17,6 +17,7 @@
 	}
 	h5 {
 		@apply text-xl;
+		line-height: 1.5rem;
 	}
 	h6 {
 		@apply text-lg;
