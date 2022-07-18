@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable import/first */
+import * as dotenv from 'dotenv';
+
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+  dotenv.config();
 }
 
 import express from 'express';
