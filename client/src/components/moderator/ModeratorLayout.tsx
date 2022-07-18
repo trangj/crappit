@@ -5,39 +5,62 @@ import React from 'react';
 function ModeratorLayout({ children } : any) {
   const router = useRouter();
 
+  const getCurrentPath = () => {
+    switch (router.route) {
+      case '/t/[topic]/about':
+        return 'Topic Settings';
+      case '/t/[topic]/about/appearance':
+        return 'Topic Appearance';
+      case '/t/[topic]/about/moderators':
+        return 'Moderators';
+      case '/t/[topic]/about/rules':
+        return 'Rules';
+      default:
+        return '';
+    }
+  };
+
   return (
     <>
       <div
-        className="top-12 dark:bg-gray-900 h-10 flex items-center fixed w-full"
+        className="top-12 dark:bg-gray-850 h-10 flex items-center fixed w-full"
       >
-        <Link passHref href={`/t/${router.query.topic}`}>
-          <a className="ml-4 font-semibold uppercase text-sm">
-            t/
-            {router.query.topic}
-          </a>
-        </Link>
+        <span
+          className="ml-6 font-bold uppercase text-xs"
+        >
+          <Link passHref href={`/t/${router.query.topic}`}>
+            <a>
+              t/
+              {router.query.topic}
+            </a>
+          </Link>
+          {' '}
+          /
+          {' '}
+          {getCurrentPath()}
+        </span>
       </div>
       <div className="flex">
         <div
-          className="bg-white dark:bg-gray-850 flex flex-col w-64 overflow-x-hidden top-20 mt-2 bottom-0 fixed py-2"
+          className="bg-white dark:bg-gray-800 flex flex-col w-64 overflow-x-hidden top-20 mt-2 bottom-0 fixed py-2"
         >
           <Link passHref href={`/t/${router.query.topic}/about`}>
-            <a className={`menu-option cursor-pointer ${router.route === '/t/[topic]/about' ? 'button-ghost-active' : ''}`}>
+            <a className={`menu-option cursor-pointer dark:hover:bg-white hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5 ${router.route === '/t/[topic]/about' ? 'button-ghost-active' : ''}`}>
               Topic Settings
             </a>
           </Link>
           <Link passHref href={`/t/${router.query.topic}/about/appearance`}>
-            <a className={`menu-option cursor-pointer ${router.route === '/t/[topic]/about/appearance' ? 'button-ghost-active' : ''}`}>
+            <a className={`menu-option cursor-pointer dark:hover:bg-white hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5 ${router.route === '/t/[topic]/about/appearance' ? 'button-ghost-active' : ''}`}>
               Topic Appearance
             </a>
           </Link>
           <Link passHref href={`/t/${router.query.topic}/about/moderators`}>
-            <a className={`menu-option cursor-pointer ${router.route === '/t/[topic]/about/moderators' ? 'button-ghost-active' : ''}`}>
+            <a className={`menu-option cursor-pointer dark:hover:bg-white hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5 ${router.route === '/t/[topic]/about/moderators' ? 'button-ghost-active' : ''}`}>
               Moderators
             </a>
           </Link>
           <Link passHref href={`/t/${router.query.topic}/about/rules`}>
-            <a className={`menu-option cursor-pointer ${router.route === '/t/[topic]/about/rules' ? 'button-ghost-active' : ''}`}>
+            <a className={`menu-option cursor-pointer dark:hover:bg-white hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5 ${router.route === '/t/[topic]/about/rules' ? 'button-ghost-active' : ''}`}>
               Rules
             </a>
           </Link>
