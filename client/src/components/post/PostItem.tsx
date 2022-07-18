@@ -25,7 +25,7 @@ function PostItem({ post, ...props }: Props) {
       </div>
       <div className="flex flex-col w-full">
         <div className="w-full p-2 pb-0">
-          <small className="flex pb-1 items-center">
+          <small className="flex mb-2 items-center">
             {
               router.route !== '/t/[topic]'
             && (
@@ -99,7 +99,7 @@ function PostItem({ post, ...props }: Props) {
           </a>
         </Link>
         )}
-        <div className="flex px-2">
+        <div className="flex px-2 mt-1">
           <div className="flex items-center sm:hidden">
             <Voting post={post} orientation="horizontal" />
           </div>
