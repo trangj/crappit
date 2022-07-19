@@ -5,11 +5,9 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import axios from '../axiosConfig';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
-import { Container } from '../ui/Container';
-import { Divider } from '../ui/Divider';
 import { TextFieldForm } from '../ui/TextFieldForm';
 import { useUser } from '../context/UserState';
 
@@ -48,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 };
 
-function Forgot({ status }: any) {
+function Reset({ status }: any) {
   const router = useRouter();
   const { setUser } = useUser();
   const { token } = router.query;
@@ -74,13 +72,14 @@ function Forgot({ status }: any) {
   };
 
   return (
-    <Container>
+    <div className="flex bg-white dark:bg-gray-850 h-screen">
       <Head>
-        <title>crappit: Reset password</title>
+        <title>crappit.lol: Reset your password</title>
       </Head>
-      <Card className="p-3 flex flex-col gap-2">
-        <h5>Forgot</h5>
-        <Divider />
+      <div className="bg-blue-300 w-32" />
+      <div className="my-auto flex flex-col p-6 gap-2">
+        <h5>Reset your password</h5>
+        <span>Choose a new password here, then log in to your account.</span>
         <Formik
           initialValues={{ password: '', password2: '' }}
           onSubmit={handleSubmit}
@@ -95,20 +94,35 @@ function Forgot({ status }: any) {
                 component={TextFieldForm}
               />
               <Field
-                label="Confirm Password"
+                label="Verify Password"
                 name="password2"
                 type="password"
                 component={TextFieldForm}
               />
-              <Button type="submit" variant="filled" className="ml-auto mt-3 px-3">
-                Change Password
+              <Button type="submit" variant="filled" className="mt-3 px-3">
+                Set Password
               </Button>
             </Form>
           )}
         </Formik>
-      </Card>
-    </Container>
+        <div className="flex uppercase mt-1 text-xs font-bold gap-1 text-blue-500 dark:text-blue-400">
+          <Link href="/login">
+            <a>
+              Log in
+            </a>
+          </Link>
+          <span>
+            •
+          </span>
+          <Link href="/register">
+            <a>
+              Sign up
+            </a>
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default Forgot;
+export default Reset;

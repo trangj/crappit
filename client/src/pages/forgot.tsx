@@ -5,8 +5,6 @@ import toast from 'react-hot-toast';
 import Head from 'next/head';
 import axios from '../axiosConfig';
 import { Button } from '../ui/Button';
-import { Card } from '../ui/Card';
-import { Container } from '../ui/Container';
 import { TextFieldForm } from '../ui/TextFieldForm';
 
 const schema = yup.object({
@@ -28,45 +26,43 @@ function Forgot() {
   };
 
   return (
-    <Container>
+    <div className="flex bg-white dark:bg-gray-850 h-screen">
       <Head>
         <title>crappit: Reset your password</title>
       </Head>
-      <Card className="flex">
-        <div className="bg-blue-300 w-32" />
-        <div className="flex flex-col p-6 gap-3 w-96">
-          <h6>Reset your password</h6>
-          <div>
-            Tell us the email address associated with your Reddit account, and
-            we’ll send you an email with a link to reset your password.
-          </div>
-          <Formik
-            initialValues={{ email: '' }}
-            onSubmit={handleSubmit}
-            validationSchema={schema}
-          >
-            {({ isValid }) => (
-              <Form>
-                <Field
-                  label="Email"
-                  name="email"
-                  type="email"
-                  component={TextFieldForm}
-                />
-                <Button
-                  type="submit"
-                  variant="filled"
-                  className="px-5 mt-3"
-                  disabled={!isValid}
-                >
-                  Reset Password
-                </Button>
-              </Form>
-            )}
-          </Formik>
+      <div className="bg-blue-300 w-32" />
+      <div className="my-auto flex flex-col p-6 gap-2 max-w-md">
+        <h6>Reset your password</h6>
+        <div>
+          Tell us the email address associated with your Reddit account, and
+          we’ll send you an email with a link to reset your password.
         </div>
-      </Card>
-    </Container>
+        <Formik
+          initialValues={{ email: '' }}
+          onSubmit={handleSubmit}
+          validationSchema={schema}
+        >
+          {({ isValid }) => (
+            <Form>
+              <Field
+                label="Email"
+                name="email"
+                type="email"
+                component={TextFieldForm}
+              />
+              <Button
+                type="submit"
+                variant="filled"
+                className="px-5 mt-3"
+                disabled={!isValid}
+              >
+                Reset Password
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
   );
 }
 

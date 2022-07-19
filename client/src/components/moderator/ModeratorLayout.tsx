@@ -1,9 +1,35 @@
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { useUser } from 'src/context/UserState';
+import useTopic from 'src/hooks/topic-query/useTopic';
 
-function ModeratorLayout({ children } : any) {
+function ModeratorLayout({ children } : { children : ReactNode}) {
   const router = useRouter();
+  const { topic } = router.query;
+  const { user } = useUser();
+  const { isLoading: topicLoading, data: topicData } = useTopic(
+    topic as string,
+  );
+
+  if (topicLoading || !topicData) return <div>Loading...</div>;
+
+  if (topicData.user_moderator_id !== user?.id) {
+    return (
+      <>
+        <Head>
+          <title>{topicData.title}</title>
+        </Head>
+        <div className="fixed inset-y-1/2 w-full text-center">
+          You must be a moderator of t/
+          {topicData.title}
+          {' '}
+          to view this page
+        </div>
+      </>
+    );
+  }
 
   const getCurrentPath = () => {
     switch (router.route) {
