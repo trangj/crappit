@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useQueryClient } from 'react-query';
 import { useUser } from '../context/UserState';
 import { Button } from '../ui/Button';
 import { TextFieldForm } from '../ui/TextFieldForm';
@@ -41,6 +42,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 function Login() {
   const { loginUser } = useUser();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async ({ username, password }: FormValues) => {
     try {
@@ -50,6 +52,7 @@ function Login() {
       };
       const res = await loginUser(user);
       toast.success(res.data.status.text);
+      queryClient.clear();
       router.back();
     } catch (err: any) {
       toast.error(err.status.text);
