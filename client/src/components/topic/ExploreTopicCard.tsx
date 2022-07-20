@@ -5,6 +5,7 @@ import { Topic } from 'src/types/entities/topic';
 import { Card } from 'src/ui/Card';
 import { Avatar } from 'src/ui/Avatar';
 import { Button } from 'src/ui/Button';
+import { Divider } from 'src/ui/Divider';
 import axios from '../../axiosConfig';
 
 function ExploreTopicCard() {
@@ -25,30 +26,31 @@ function ExploreTopicCard() {
     fetchTopics();
   }, []);
 
-  return !loading && topics.length !== 0 ? (
+  return (
     <Card>
-      {topics[0].image_url
+      {!loading && topics
         ? (
-          <div className="relative h-20">
-            <Image
-              alt="Topic banner"
-              src={topics[0].image_name}
-              layout="fill"
-              objectFit="cover"
-              objectPosition="center"
-            />
+          <div className={`relative h-20 ${topics.length && !topics[0].image_url && 'bg-blue-400'}`}>
+            {
+              topics.length && topics[0].image_url && (
+                <Image
+                  alt="Topic banner"
+                  src={topics[0].image_name}
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="center"
+                />
+              )
+            }
             <div className="h-full w-full absolute bg-gradient-to-t from-white dark:from-gray-850" />
             <h6 className="absolute bottom-2 left-4 font-medium text-base">Top Communities</h6>
           </div>
         )
         : (
-          <div className="h-20 bg-blue-400 relative">
-            <div className="h-full w-full absolute bg-gradient-to-t from-white dark:from-gray-850" />
-            <h6 className="absolute bottom-2 left-4 font-medium text-base">Top Communities</h6>
-          </div>
+          <div className="h-20 bg-gray-200 dark:bg-gray-700" />
         )}
       <ol>
-        {topics.map((topic, ind) => (
+        {!loading && topics ? topics.map((topic, ind) => (
           <li key={ind} className="border-b border-gray-300 dark:border-gray-700">
             <Link href={`/t/${topic.title}`} passHref>
               <a className="flex items-center h-12 px-3 justify-between">
@@ -67,7 +69,19 @@ function ExploreTopicCard() {
               </a>
             </Link>
           </li>
-        ))}
+        )) : (
+          <div className="animate-pulse flex flex-col">
+            {Array.from({ length: 5 }, () => (
+              <>
+                <div className="flex gap-2 m-2">
+                  <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
+                  <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
+                </div>
+                <Divider />
+              </>
+            ))}
+          </div>
+        )}
       </ol>
       <Link href="/t" passHref>
         <Button
@@ -78,32 +92,6 @@ function ExploreTopicCard() {
           View All
         </Button>
       </Link>
-    </Card>
-  ) : (
-    <Card>
-      <div className="animate-pulse flex flex-col">
-        <div className="h-20 bg-gray-200 dark:bg-gray-700" />
-        <div className="flex gap-2 m-2">
-          <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
-          <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-        <div className="flex gap-2 m-2">
-          <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
-          <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-        <div className="flex gap-2 m-2">
-          <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
-          <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-        <div className="flex gap-2 m-2">
-          <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
-          <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-        <div className="flex gap-2 m-2">
-          <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
-          <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
-        </div>
-      </div>
     </Card>
   );
 }
