@@ -82,8 +82,8 @@ function TopicPage() {
       {
         topicData && !isTopicLoading ? <TopicHeader topic={topicData} />
           : (
-            <div className="h-40 bg-white dark:bg-gray-850">
-              <div className="w-full h-20 bg-blue-300 mt-12" />
+            <div className="bg-white dark:bg-gray-850 h-56">
+              <div className="animate-pulse w-full h-36 bg-gray-200 dark:bg-gray-700 mt-12" />
             </div>
           )
       }

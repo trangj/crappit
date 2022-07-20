@@ -12,7 +12,7 @@ function TopicBanner({ topic }: TopicBannerProps) {
     <Link href={`/t/${topic.title}`} passHref>
       <a>
         {topic.image_url ? (
-          <div style={{ position: 'relative', height: 144 }}>
+          <div className="h-36 relative">
             <Image
               alt="Topic banner"
               src={topic.image_name}
@@ -22,7 +22,7 @@ function TopicBanner({ topic }: TopicBannerProps) {
             />
           </div>
         ) : (
-          <div className="w-full h-20 bg-blue-300 mt-12" />
+          <div className="w-full h-36 bg-blue-300 mt-12" />
         )}
       </a>
     </Link>

@@ -85,7 +85,7 @@ function PostPage() {
       <div className="mt-12">
         {
           topicData && !isTopicLoading ? <TopicBanner topic={topicData} />
-            : <div className="w-full h-20 bg-blue-300 mt-12" />
+            : <div className="animate-pulse w-full h-36 bg-gray-200 dark:bg-gray-700 mt-12" />
         }
       </div>
       <div className="mt-4 mx-auto sm:px-5" style={{ maxWidth: 1114 }}>

@@ -22,6 +22,9 @@ function TopicCardSkeleton() {
             <div className="h-4 w-24 rounded bg-gray-200 dark:bg-gray-700" />
           </div>
         </div>
+        <div className="m-2">
+          <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
+        </div>
       </div>
     </Card>
   );

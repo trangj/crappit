@@ -17,7 +17,7 @@ function TopicHeader({ topic }: Props) {
   const { isLoading, mutate } = useAddTopicFollow(topic);
 
   return (
-    <div className="mt-12 bg-white dark:bg-gray-850">
+    <div className="mt-12 min-h-56 bg-white dark:bg-gray-850">
       <TopicBanner topic={topic} />
       <div className="container mx-auto max-w-5xl px-5">
         <div className="flex pb-3 -mt-3.5">
