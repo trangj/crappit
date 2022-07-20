@@ -7,8 +7,6 @@ import { useUser } from 'src/context/UserState';
 import { useRouter } from 'next/router';
 import useAddTopic from '../../hooks/topic-query/useAddTopic';
 import { Button } from '../../ui/Button';
-import { Card } from '../../ui/Card';
-import { Container } from '../../ui/Container';
 import { Divider } from '../../ui/Divider';
 import { TextFieldForm } from '../../ui/TextFieldForm';
 
@@ -67,49 +65,47 @@ function AddTopic() {
   const initialValues: FormValues = { title: '', description: '' };
 
   return (
-    <Container>
+    <div className="flex bg-white dark:bg-gray-850 h-screen">
       <Head>
         <title>Create Topic</title>
       </Head>
-      <Card className="flex">
-        <div className="bg-blue-300 w-32" />
-        <div className="flex flex-col p-6 gap-2">
-          <h6>Create a topic</h6>
-          <Divider />
-          <Formik
-            initialValues={initialValues}
-            onSubmit={handleSubmit}
-            validationSchema={schema}
-          >
-            {({ values, isValid }) => (
-              <Form className="w-96 flex flex-col ">
-                <Field label="Title" name="title" component={TextFieldForm} />
-                <small className="text-gray-500 dark:text-gray-400 mb-3">
-                  Topic names including capitalization cannot be changed.
-                </small>
-                <Field
-                  label="Description"
-                  name="description"
-                  multiline
-                  component={TextFieldForm}
-                />
-                <Button
-                  type="submit"
-                  loading={isLoading}
-                  className="mt-3 ml-auto"
-                  variant="filled"
-                  disabled={
+      <div className="bg-blue-300 w-32" />
+      <div className="my-auto flex flex-col p-6 gap-2">
+        <h6>Create a topic</h6>
+        <Divider />
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={schema}
+        >
+          {({ values, isValid }) => (
+            <Form className="w-96 flex flex-col ">
+              <Field label="Title" name="title" component={TextFieldForm} />
+              <small className="text-gray-500 dark:text-gray-400 mb-3">
+                Topic names including capitalization cannot be changed.
+              </small>
+              <Field
+                label="Description"
+                name="description"
+                multiline
+                component={TextFieldForm}
+              />
+              <Button
+                type="submit"
+                loading={isLoading}
+                className="mt-3 ml-auto"
+                variant="filled"
+                disabled={
                     !values.title || !values.description || !isValid
                   }
-                >
-                  Create Topic
-                </Button>
-              </Form>
-            )}
-          </Formik>
-        </div>
-      </Card>
-    </Container>
+              >
+                Create Topic
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </div>
   );
 }
 
