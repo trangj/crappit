@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { Comment } from 'src/types/entities/comment';
-import { Topic } from 'src/types/entities/topic';
 import { ArrowsExpandIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 import { Avatar } from '../../ui/Avatar';
@@ -14,10 +13,9 @@ import CommentToolBar from './CommentToolBar';
 
 type Props = {
   comment: Comment;
-  topic: Topic;
 };
 
-function CommentItem({ comment, topic }: Props) {
+function CommentItem({ comment }: Props) {
   const [hideComments, setHideComments] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openReply, setOpenReply] = useState(false);
@@ -138,7 +136,6 @@ function CommentItem({ comment, topic }: Props) {
                   openEdit={openEdit}
                   openReply={openReply}
                   comment={comment}
-                  topic={topic}
                 />
               </div>
               )}
@@ -162,7 +159,7 @@ function CommentItem({ comment, topic }: Props) {
         <div className="w-full -ml-1.5">
           {comment.children
             && comment.children.map((comment) => (
-              <CommentItem comment={comment} topic={topic} key={comment.id} />
+              <CommentItem comment={comment} key={comment.id} />
             ))}
         </div>
       </div>

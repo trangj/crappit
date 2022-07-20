@@ -6,14 +6,13 @@ import { RichTextEditor } from 'src/ui/RichTextEditor';
 import { Button } from '../../ui/Button';
 import { useUser } from '../../context/UserState';
 import useAddComment from '../../hooks/comment-query/useAddComment';
-import { Post } from '../../types/entities/post';
 
 const schema = yup.object({
   content: yup.string().required(''),
 });
 
 type Props = {
-  post: Post;
+  post: string;
   sortParam: string;
 };
 
@@ -23,7 +22,7 @@ interface FormValues {
 
 function AddComment({ post, sortParam }: Props) {
   const { user } = useUser();
-  const { isLoading, mutate } = useAddComment(String(post.id), sortParam);
+  const { isLoading, mutate } = useAddComment(String(post), sortParam);
 
   const handleSubmit = (
     values: FormValues,
@@ -32,7 +31,7 @@ function AddComment({ post, sortParam }: Props) {
     const { content } = values;
     const newComment = {
       content,
-      postId: post.id,
+      postId: post,
     };
     mutate({
       newComment,

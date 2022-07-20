@@ -1,9 +1,10 @@
 import { ChatAltIcon } from '@heroicons/react/outline';
 import Link from 'next/link';
 import React from 'react';
-import { Topic } from 'src/types/entities/topic';
 import { Comment } from 'src/types/entities/comment';
 import { Button } from 'src/ui/Button';
+import useTopic from 'src/hooks/topic-query/useTopic';
+import { useRouter } from 'next/router';
 import { useUser } from '../../context/UserState';
 import DeleteCommentModerator from './DeleteCommentModerator';
 import DeleteComment from './DeleteComment';
@@ -14,13 +15,14 @@ type Props = {
     openEdit: boolean,
     openReply: boolean,
     comment: Comment,
-    topic: Topic;
 };
 
 function CommentToolBar({
-  setOpenReply, setOpenEdit, openEdit, openReply, comment, topic,
+  setOpenReply, setOpenEdit, openEdit, openReply, comment,
 }: Props) {
+  const router = useRouter();
   const { user } = useUser();
+  const { data: topic } = useTopic(router.query.topic as string);
 
   if (!user) {
     return (

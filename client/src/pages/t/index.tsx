@@ -1,36 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import { GetServerSideProps } from 'next';
-import { QueryClient } from 'react-query';
-import { dehydrate } from 'react-query/hydration';
 import PostSkeleton from 'src/components/util/PostSkeleton';
 import { Card } from 'src/ui/Card';
 import Image from 'next/image';
 import { Avatar } from 'src/ui/Avatar';
-import useTopics, { fetchTopics } from '../../hooks/topic-query/useTopics';
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['topics'], fetchTopics);
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
+import useTopics from '../../hooks/topic-query/useTopics';
 
 function AllTopics() {
   const { isLoading, data: topics } = useTopics();
-
-  if (isLoading) {
-    return (
-      <>
-        <PostSkeleton />
-        <PostSkeleton />
-      </>
-    );
-  }
 
   return (
     <>
@@ -49,21 +27,27 @@ function AllTopics() {
         </div>
       </div>
       <div className="mt-4 container mx-auto max-w-5xl sm:px-5">
-        <Card>
-          {topics?.map((topic, i) => (
-            <Link key={topic.title} passHref href={`t/${topic.title}`}>
-              <a className={`flex items-center gap-2 p-3 border-gray-300 dark:border-gray-700 ${i === 0 ? '' : 'border-t'}`}>
-                <div className=" h-10 w-10 rounded-full">
-                  {!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={40} height={40} className="rounded-full bg-white" />}
-                </div>
-                <div className="font-medium">
-                  t/
-                  {topic.title}
-                </div>
-              </a>
-            </Link>
-          ))}
-        </Card>
+        {!isLoading
+          ? (
+            <Card>
+              {topics?.map((topic, i) => (
+                <Link key={topic.title} passHref href={`t/${topic.title}`}>
+                  <a className={`flex items-center gap-2 p-3 border-gray-300 dark:border-gray-700 ${i === 0 ? '' : 'border-t'}`}>
+                    <div className=" h-10 w-10 rounded-full">
+                      {!topic.icon_image_name ? <Avatar /> : <Image alt="topic icon" src={topic.icon_image_name} width={40} height={40} className="rounded-full bg-white" />}
+                    </div>
+                    <div className="font-medium">
+                      t/
+                      {topic.title}
+                    </div>
+                  </a>
+                </Link>
+              ))}
+            </Card>
+          )
+          : (
+            <PostSkeleton />
+          )}
       </div>
     </>
   );

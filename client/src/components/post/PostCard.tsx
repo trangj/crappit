@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { Post } from 'src/types/entities/post';
-import { Topic } from 'src/types/entities/topic';
 import { ChatAltIcon, PencilIcon, ReplyIcon } from '@heroicons/react/outline';
 import toast from 'react-hot-toast';
+import useTopic from 'src/hooks/topic-query/useTopic';
+import { useRouter } from 'next/router';
 import DeletePostModerator from './DeletePostModerator';
 import DeletePost from './DeletePost';
 import UpdatePost from './UpdatePost';
@@ -15,11 +16,12 @@ import { useUser } from '../../context/UserState';
 
 type Props = {
   post: Post;
-  topic: Topic;
 };
 
-function PostCard({ post, topic }: Props) {
+function PostCard({ post }: Props) {
+  const router = useRouter();
   const { user } = useUser();
+  const { data: topic } = useTopic(router.query.topic as string);
   const [openEdit, setOpenEdit] = useState(false);
 
   return (
@@ -121,7 +123,7 @@ function PostCard({ post, topic }: Props) {
             )}
           </>
           )}
-          {user && topic.user_moderator_id && (
+          {user && topic && topic.user_moderator_id && (
           <DeletePostModerator post={post} />
           )}
         </div>

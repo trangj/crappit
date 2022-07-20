@@ -18,22 +18,26 @@ import { Button } from '../ui/Button';
 import usePosts, { fetchPosts } from '../hooks/post-query/usePosts';
 import PostItem from '../components/post/PostItem';
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const sort = query.sort ? (query.sort as string) : '';
-  const queryClient = new QueryClient();
-  await queryClient.prefetchInfiniteQuery(['posts', '', sort], () => fetchPosts('', 0, sort));
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
+  if (!req.url?.startsWith('/_next/data')) {
+    const sort = query.sort ? (query.sort as string) : '';
+    const queryClient = new QueryClient();
+    await queryClient.prefetchInfiniteQuery(['posts', '', sort], () => fetchPosts('', 0, sort));
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+
   return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
+    props: {},
   };
 };
 
 function HomePage() {
   const router = useRouter();
-
   const sort = router.query.sort ? (router.query.sort as string) : '';
-
   const [sortParam, setSortParam] = useState(sort);
   const {
     data, fetchNextPage, hasNextPage, isLoading, isError,

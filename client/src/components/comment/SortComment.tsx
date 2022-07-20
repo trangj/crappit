@@ -1,14 +1,12 @@
 import { Listbox } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Post } from 'src/types/entities/post';
-import { Topic } from 'src/types/entities/topic';
 
 type Props = {
     sortParam: string,
     setSortParam: (arg: string) => void;
-    topic: Topic,
-    post: Post;
+    topic: string,
+    post: string;
 };
 
 function SortComment({
@@ -18,7 +16,7 @@ function SortComment({
 
   const handleSortChange = (sort: string) => {
     setSortParam(sort);
-    router.push(`/t/${topic.title}/comments/${post.id}?sort=${sort}`, undefined, { shallow: true });
+    router.push(`/t/${topic}/comments/${post}?sort=${sort}`, undefined, { shallow: true });
   };
 
   return (

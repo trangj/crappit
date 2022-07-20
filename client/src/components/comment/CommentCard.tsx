@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { Post } from 'src/types/entities/post';
-import { Topic } from 'src/types/entities/topic';
 import { useRouter } from 'next/router';
 import useComments from '../../hooks/comment-query/useComments';
 import { Card } from '../../ui/Card';
@@ -10,31 +8,25 @@ import CommentList from './CommentList';
 import SortComment from './SortComment';
 import CommentSkeleton from '../util/CommentSkeleton';
 
-type Props = {
-  post: Post;
-  topic: Topic;
-};
-
-function CommentCard({ post, topic }: Props) {
+function CommentCard() {
   const router = useRouter();
-
+  const { id: post, topic } = router.query;
   const sort = router.query.sort ? (router.query.sort as string) : '';
-
   const [sortParam, setSortParam] = useState(sort);
   const {
     data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage,
   } = useComments(
-    String(post.id),
+    post as string,
     sortParam,
   );
 
   return (
     <Card id="comments" className="p-3">
       <div className="mx-6">
-        <AddComment post={post} sortParam={sortParam} />
+        <AddComment post={post as string} sortParam={sortParam} />
         <SortComment
-          post={post}
-          topic={topic}
+          post={post as string}
+          topic={topic as string}
           sortParam={sortParam}
           setSortParam={setSortParam}
         />
@@ -44,7 +36,6 @@ function CommentCard({ post, topic }: Props) {
         data && !isLoading ? (
           <CommentList
             data={data}
-            topic={topic}
           />
         ) : (
           <>

@@ -12,24 +12,33 @@ import SortPost from 'src/components/post/SortPostCard';
 import SideBar from 'src/components/post/SideBar';
 import UserCard from 'src/components/user/UserCard';
 import UserModeratorCard from 'src/components/user/UserModeratorCard';
+import TopicCardSkeleton from 'src/components/util/TopicCardSkeleton';
 import { Container } from '../../../ui/Container';
 import useProfilePosts, {
   fetchProfilePosts,
 } from '../../../hooks/user-query/useProfilePosts';
 import useProfile, { fetchProfile } from '../../../hooks/user-query/useProfile';
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const sort = query.sort ? (query.sort as string) : '';
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['profile', query.userid], () => fetchProfile(query.userid as string));
-  await queryClient.prefetchInfiniteQuery(
-    ['profile', 'posts', query.userid, sort],
-    () => fetchProfilePosts(query.userid as string, 0, sort),
-  );
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
+  if (!req.url?.startsWith('/_next/data')) {
+    const sort = query.sort ? (query.sort as string) : '';
+    const queryClient = new QueryClient();
+    await Promise.all([
+      queryClient.prefetchQuery(['profile', query.userid], () => fetchProfile(query.userid as string)),
+      queryClient.prefetchInfiniteQuery(
+        ['profile', 'posts', query.userid, sort],
+        () => fetchProfilePosts(query.userid as string, 0, sort),
+      ),
+    ]);
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+
   return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
+    props: {},
   };
 };
 
@@ -38,12 +47,12 @@ function Profile() {
   const { userid } = router.query;
   const sort = router.query.sort ? (router.query.sort as string) : '';
   const [sortParam, setSortParam] = useState(sort);
-  const { data: profile } = useProfile(userid as string);
+  const { data: profile, isLoading: isProfileLoading } = useProfile(userid as string);
   const {
     data, fetchNextPage, hasNextPage, isLoading, isError,
   } = useProfilePosts(userid as string, sortParam);
 
-  if (!profile) {
+  if (!profile || isProfileLoading) {
     return (
       <div className="fixed inset-y-1/2 w-full text-center">user not found</div>
     );
@@ -51,6 +60,7 @@ function Profile() {
 
   return (
     <Container>
+      {profile && (
       <Head>
         <title>
           u/
@@ -69,6 +79,7 @@ function Profile() {
           content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/user${profile?.id}`}
         />
       </Head>
+      )}
       <div className="flex gap-6">
         <div className="w-full">
           <SortPost
@@ -99,9 +110,15 @@ function Profile() {
           )}
         </div>
         <SideBar>
-          <UserCard profile={profile!} />
-          {profile?.topics_moderated.length !== 0 && (
-          <UserModeratorCard profile={profile!} />
+          {profile && !isProfileLoading ? (
+            <>
+              <UserCard profile={profile} />
+              {profile.topics_moderated.length !== 0 && (
+              <UserModeratorCard profile={profile} />
+              )}
+            </>
+          ) : (
+            <TopicCardSkeleton />
           )}
         </SideBar>
       </div>

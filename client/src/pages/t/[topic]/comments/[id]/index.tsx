@@ -9,6 +9,8 @@ import TopicModeratorCard from 'src/components/topic/TopicModeratorCard';
 import SideBar from 'src/components/post/SideBar';
 import TopicBanner from 'src/components/topic/TopicBanner';
 import TopicRuleCard from 'src/components/topic/TopicRuleCard';
+import PostSkeleton from 'src/components/util/PostSkeleton';
+import TopicCardSkeleton from 'src/components/util/TopicCardSkeleton';
 import { fetchComments } from '../../../../../hooks/comment-query/useComments';
 import useTopic, {
   fetchTopic,
@@ -18,33 +20,36 @@ import TopicPostCard from '../../../../../components/topic/TopicPostCard';
 import CommentCard from '../../../../../components/comment/CommentCard';
 import PostCard from '../../../../../components/post/PostCard';
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const sort = query.sort ? (query.sort as string) : '';
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
-  await queryClient.prefetchQuery(['post', query.id], () => fetchPost(query.id as string));
-  await queryClient.prefetchInfiniteQuery(['comments', query.id, sort], () => fetchComments(query.id as string, 0, sort));
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
+  if (!req.url?.startsWith('/_next/data')) {
+    const sort = query.sort ? (query.sort as string) : '';
+    const queryClient = new QueryClient();
+    await Promise.all([
+      queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string)),
+      queryClient.prefetchQuery(['post', query.id], () => fetchPost(query.id as string)),
+      queryClient.prefetchInfiniteQuery(['comments', query.id, sort], () => fetchComments(query.id as string, 0, sort)),
+    ]);
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+
   return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
+    props: {},
   };
 };
 
 function PostPage() {
   const router = useRouter();
   const { id, topic } = router.query;
-  const { data } = usePost(id as string);
-  const { data: topicData } = useTopic(topic as string);
-
-  if (!data || !topicData) {
-    return (
-      <div className="fixed inset-y-1/2 w-full text-center">post not found</div>
-    );
-  }
+  const { data, isLoading } = usePost(id as string);
+  const { data: topicData, isLoading: isTopicLoading } = useTopic(topic as string);
 
   return (
     <>
+      {data && topicData && (
       <Head>
         <title>{`${data.title} : ${data.topic}`}</title>
         <meta
@@ -76,21 +81,39 @@ function PostPage() {
           content={`${data.vote} votes and ${data.number_of_comments} comments so far on Crappit`}
         />
       </Head>
+      )}
       <div className="mt-12">
-        <TopicBanner topic={topicData} />
+        {
+          topicData && !isTopicLoading ? <TopicBanner topic={topicData} />
+            : <div className="w-full h-20 bg-blue-300 mt-12" />
+        }
       </div>
       <div className="mt-4 mx-auto sm:px-5" style={{ maxWidth: 1114 }}>
         <div className="flex gap-6">
           <div className="flex flex-col w-full">
-            <PostCard post={data} topic={topicData} />
-            <CommentCard post={data} topic={topicData} />
+            {
+              data && !isLoading ? (
+                <PostCard post={data} />
+              ) : (
+                <PostSkeleton />
+              )
+            }
+            <CommentCard />
           </div>
           <SideBar>
-            <TopicPostCard topicData={topicData} />
-            {topicData.rules.length !== 0 && (
-            <TopicRuleCard topicData={topicData} />
-            )}
-            <TopicModeratorCard topicData={topicData} />
+            {
+              topicData && !isTopicLoading ? (
+                <>
+                  <TopicPostCard topicData={topicData} />
+                  {topicData.rules.length !== 0 && (
+                  <TopicRuleCard topicData={topicData} />
+                  )}
+                  <TopicModeratorCard topicData={topicData} />
+                </>
+              ) : (
+                <TopicCardSkeleton />
+              )
+            }
           </SideBar>
         </div>
       </div>

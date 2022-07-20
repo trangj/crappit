@@ -13,29 +13,36 @@ import SortPost from 'src/components/post/SortPostCard';
 import SideBar from 'src/components/post/SideBar';
 import CreatePost from 'src/components/post/CreatePostCard';
 import TopicRuleCard from 'src/components/topic/TopicRuleCard';
+import TopicCardSkeleton from 'src/components/util/TopicCardSkeleton';
 import useTopic, { fetchTopic } from '../../../hooks/topic-query/useTopic';
 import usePosts, { fetchPosts } from '../../../hooks/post-query/usePosts';
 import TopicHeader from '../../../components/topic/TopicHeader';
 import PostItem from '../../../components/post/PostItem';
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const sort = query.sort ? (query.sort as string) : '';
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string));
-  await queryClient.prefetchInfiniteQuery(['posts', query.topic, sort], () => fetchPosts(query.topic as string, 0, sort));
+export const getServerSideProps: GetServerSideProps = async ({ query, req }) => {
+  if (!req.url?.startsWith('/_next/data')) {
+    const sort = query.sort ? (query.sort as string) : '';
+    const queryClient = new QueryClient();
+    await Promise.all([
+      queryClient.prefetchQuery(['topic', query.topic], () => fetchTopic(query.topic as string)),
+      queryClient.prefetchInfiniteQuery(['posts', query.topic, sort], () => fetchPosts(query.topic as string, 0, sort)),
+    ]);
+    return {
+      props: {
+        dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      },
+    };
+  }
+
   return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
+    props: {},
   };
 };
 
 function TopicPage() {
   const router = useRouter();
-
   const { topic } = router.query;
   const sort = router.query.sort ? (router.query.sort as string) : '';
-
   const [sortParam, setSortParam] = useState(sort);
   const {
     data, fetchNextPage, hasNextPage, isLoading, isError,
@@ -43,18 +50,11 @@ function TopicPage() {
     topic as string,
     sortParam,
   );
-  const { data: topicData } = useTopic(topic as string);
-
-  if (!topicData) {
-    return (
-      <div className="fixed inset-y-1/2 w-full text-center">
-        topic not found
-      </div>
-    );
-  }
+  const { data: topicData, isLoading: isTopicLoading } = useTopic(topic as string);
 
   return (
     <>
+      {topicData && (
       <Head>
         <title>{topicData?.headline || topicData?.title}</title>
         <meta
@@ -78,7 +78,15 @@ function TopicPage() {
             .join(' ')} ...`}
         />
       </Head>
-      <TopicHeader topic={topicData!} />
+      )}
+      {
+        topicData && !isTopicLoading ? <TopicHeader topic={topicData} />
+          : (
+            <div className="h-40 bg-white dark:bg-gray-850">
+              <div className="w-full h-20 bg-blue-300 mt-12" />
+            </div>
+          )
+      }
       <div className="mt-4 container mx-auto max-w-5xl sm:px-5">
         <div className="flex gap-6">
           <div className="w-full">
@@ -111,11 +119,19 @@ function TopicPage() {
             )}
           </div>
           <SideBar>
-            <TopicCard topicData={topicData!} />
-            {topicData.rules.length !== 0 && (
-            <TopicRuleCard topicData={topicData} />
-            )}
-            <TopicModeratorCard topicData={topicData!} />
+            {
+              topicData && !isTopicLoading ? (
+                <>
+                  <TopicCard topicData={topicData} />
+                  {topicData.rules.length !== 0 && (
+                  <TopicRuleCard topicData={topicData} />
+                  )}
+                  <TopicModeratorCard topicData={topicData} />
+                </>
+              ) : (
+                <TopicCardSkeleton />
+              )
+            }
           </SideBar>
         </div>
       </div>
