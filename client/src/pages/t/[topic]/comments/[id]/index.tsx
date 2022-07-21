@@ -89,7 +89,7 @@ function PostPage() {
         }
       </div>
       <div className="mt-4 max-w-7xl mx-auto sm:px-5 flex gap-6 justify-center">
-        <div className="flex flex-col w-full" style={{ maxWidth: 740 }}>
+        <div className="lg:max-w-3xl flex flex-col max-w-full w-full">
           {
               data && !isLoading ? (
                 <PostCard post={data} />
