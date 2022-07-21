@@ -79,7 +79,7 @@ function PostCard({ post }: Props) {
           rel="noopener noreferrer"
         >
           <img
-            src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`}
+            src={`https://crappit.imgix.net/${post.image_name}?auto=format`}
             alt="post media"
             style={{ maxHeight: 700 }}
           />
