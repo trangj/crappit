@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { Comment } from 'src/types/entities/comment';
-import { RichTextEditor } from 'src/ui/RichTextEditor';
+import RichTextEditor from 'src/ui/RichTextEditorLazy';
 import useAddReply from '../../hooks/comment-query/useAddReply';
 import { Button } from '../../ui/Button';
 

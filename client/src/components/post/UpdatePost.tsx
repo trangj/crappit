@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { Post } from 'src/types/entities/post';
 import { Button } from 'src/ui/Button';
-import { RichTextEditor } from 'src/ui/RichTextEditor';
+import RichTextEditor from 'src/ui/RichTextEditorLazy';
 import useUpdatePost from '../../hooks/post-query/useUpdatePost';
 
 const schema = yup.object({

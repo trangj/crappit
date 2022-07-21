@@ -190,7 +190,7 @@ function ToolBar({ editor }: { editor: Editor | null }) {
   );
 }
 
-export function RichTextEditor({
+export default function RichTextEditor({
   value,
   name,
   placeholder,

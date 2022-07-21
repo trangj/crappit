@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { useUser } from 'src/context/UserState';
-import { RichTextEditor } from 'src/ui/RichTextEditor';
+import RichTextEditor from 'src/ui/RichTextEditorLazy';
 import { Tab } from '@headlessui/react';
 import {
   DocumentTextIcon,
