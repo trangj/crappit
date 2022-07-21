@@ -1,6 +1,6 @@
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { Post } from 'src/types/entities/post';
 import axios from '../../axiosConfig';
 
@@ -15,8 +15,10 @@ async function deletePostModerator({ postid, topic }: { postid: number, topic: s
 
 export default function useDeletePostModerator(post: Post) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   return useMutation(deletePostModerator, {
     onSuccess: (res) => {
+      queryClient.invalidateQueries(['posts', post.topic]);
       toast.success(res.status.text);
       router.push(`/t/${post.topic}`);
     },
