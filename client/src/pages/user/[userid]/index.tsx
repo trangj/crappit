@@ -52,12 +52,6 @@ function Profile() {
     data, fetchNextPage, hasNextPage, isLoading, isError,
   } = useProfilePosts(userid as string, sortParam);
 
-  if (!profile || isProfileLoading) {
-    return (
-      <div className="fixed inset-y-1/2 w-full text-center">user not found</div>
-    );
-  }
-
   return (
     <Container>
       {profile && (
