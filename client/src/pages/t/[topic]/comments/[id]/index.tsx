@@ -88,20 +88,19 @@ function PostPage() {
             : <div className="animate-pulse w-full h-36 bg-gray-200 dark:bg-gray-700 mt-12" />
         }
       </div>
-      <div className="mt-4 mx-auto sm:px-5" style={{ maxWidth: 1114 }}>
-        <div className="flex gap-6">
-          <div className="flex flex-col w-full">
-            {
+      <div className="mt-4 max-w-7xl mx-auto sm:px-5 flex gap-6 justify-center">
+        <div className="flex flex-col w-full" style={{ maxWidth: 740 }}>
+          {
               data && !isLoading ? (
                 <PostCard post={data} />
               ) : (
                 <PostSkeleton />
               )
             }
-            <CommentCard />
-          </div>
-          <SideBar>
-            {
+          <CommentCard />
+        </div>
+        <SideBar>
+          {
               topicData && !isTopicLoading ? (
                 <>
                   <TopicPostCard topicData={topicData} />
@@ -114,8 +113,7 @@ function PostPage() {
                 <TopicCardSkeleton />
               )
             }
-          </SideBar>
-        </div>
+        </SideBar>
       </div>
     </>
   );
