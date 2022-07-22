@@ -9,6 +9,7 @@ import Link from 'next/link';
 import AddModerator from 'src/components/moderator/AddModerator';
 import DeleteModerator from 'src/components/moderator/DeleteModerator';
 import type { NextPageWithLayout } from 'src/pages/_app';
+import { Moderator } from 'src/types/entities/topic';
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -32,6 +33,19 @@ const TopicModerators : NextPageWithLayout = function () {
   const { isLoading: topicLoading, data: topicData } = useTopic(
     topic as string,
   );
+  const permissionsAsString = (user: Moderator) => {
+    const array = [];
+    if (user.can_manage_everything) {
+      return 'Everything';
+    }
+    if (user.can_manage_posts_and_comments) {
+      array.push('Manage Posts & Comments');
+    }
+    if (user.can_manage_settings) {
+      array.push('Manage Settings');
+    }
+    return array.join(', ');
+  };
 
   if (topicLoading || !topicData) return <div>Loading...</div>;
 
@@ -60,9 +74,7 @@ const TopicModerators : NextPageWithLayout = function () {
                 </a>
               </Link>
               <small className="mr-2 ml-auto">
-                {user.can_manage_everything && 'Everything, '}
-                {user.can_manage_posts_and_comments && 'Manage Posts & Comments, '}
-                {user.can_manage_settings && 'Manage Settings '}
+                {permissionsAsString(user)}
               </small>
               {topicData.can_manage_everything && <DeleteModerator topic={topicData} user={user} />}
             </div>

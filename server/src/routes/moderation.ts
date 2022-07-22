@@ -21,22 +21,23 @@ router.post('/:topic/user', auth, isModerator, canManageEverything, async (req, 
     const moderator = await Moderator.findOne({ topic_id: req.topic.id, user_id: user.id });
     if (moderator) throw Error('User is already a moderator');
 
-    await Moderator.create({
+    const newModerator = await Moderator.create({
       topic_id: req.topic.id,
       user_id: user.id,
       can_manage_everything: req.body.can_manage_everything,
-      can_manage_posts_and_comments: req.body.can_manage_posts_and_comments,
-      can_manage_settings: req.body.can_manage_settings,
+      can_manage_posts_and_comments: req.body.can_manage_everything
+        ? true : req.body.can_manage_posts_and_comments,
+      can_manage_settings: req.body.can_manage_everything ? true : req.body.can_manage_settings,
     }).save();
 
     res.status(200).json({
       user: {
         user_id: user.id,
         username: user.username,
-        topic_id: req.topic.id,
-        can_manage_everything: req.body.can_manage_everything,
-        can_manage_posts_and_comments: req.body.can_manage_posts_and_comments,
-        can_manage_settings: req.body.can_manage_settings,
+        topic_id: newModerator.topic_id,
+        can_manage_everything: newModerator.can_manage_everything,
+        can_manage_posts_and_comments: newModerator.can_manage_posts_and_comments,
+        can_manage_settings: newModerator.can_manage_settings,
       },
       status: { text: 'Moderator successfully added', severity: 'success' },
     });

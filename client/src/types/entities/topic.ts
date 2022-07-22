@@ -6,6 +6,13 @@ export interface Rule {
     created_at: string,
 }
 
+export interface Moderator {
+    username: string, user_id: number;
+    can_manage_posts_and_comments: boolean,
+    can_manage_settings: boolean,
+    can_manage_everything: boolean
+}
+
 export interface Topic extends Template {
     user_followed_id: number,
     user_moderator_id: number,
@@ -20,11 +27,6 @@ export interface Topic extends Template {
     icon_image_url: string,
     icon_image_name: string,
     number_of_followers: number;
-    moderators: [{
-        username: string, user_id: number;
-        can_manage_posts_and_comments: boolean,
-        can_manage_settings: boolean,
-        can_manage_everything: boolean
-    }];
+    moderators: [Moderator];
     rules: Rule[]
 }
