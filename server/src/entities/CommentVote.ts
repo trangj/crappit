@@ -1,9 +1,10 @@
 import {
-  BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn,
+  BaseEntity, Check, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn,
 } from 'typeorm';
 import { Comment, User } from '.';
 
 @Entity()
+@Check('"value" >= -1 AND "value" <= 1')
 export class CommentVote extends BaseEntity {
   @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn()
