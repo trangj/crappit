@@ -20,6 +20,11 @@ export interface Topic extends Template {
     icon_image_url: string,
     icon_image_name: string,
     number_of_followers: number;
-    moderators: [{ username: string, user_id: number; }];
+    moderators: [{
+        username: string, user_id: number;
+        can_manage_posts_and_comments: boolean,
+        can_manage_settings: boolean,
+        can_manage_everything: boolean
+    }];
     rules: Rule[]
 }

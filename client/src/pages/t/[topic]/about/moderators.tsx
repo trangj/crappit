@@ -59,6 +59,11 @@ const TopicModerators : NextPageWithLayout = function () {
                   {user.username}
                 </a>
               </Link>
+              <small className="mr-2 ml-auto">
+                {user.can_manage_everything && 'Everything, '}
+                {user.can_manage_posts_and_comments && 'Manage Posts & Comments, '}
+                {user.can_manage_settings && 'Manage Settings '}
+              </small>
               {topicData.can_manage_everything && <DeleteModerator topic={topicData} user={user} />}
             </div>
           ))}

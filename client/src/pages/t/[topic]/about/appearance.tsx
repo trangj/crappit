@@ -38,9 +38,9 @@ const TopicAppearance : NextPageWithLayout = function () {
   if (topicLoading || !topicData) return <div>Loading...</div>;
   if (!topicData.can_manage_settings) {
     return (
-      <div className="fixed inset-y-1/2 w-full text-center">
+      <Card className="p-3 flex flex-col gap-3 ml-64">
         You do not have permission.
-      </div>
+      </Card>
     );
   }
 
