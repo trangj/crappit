@@ -123,11 +123,11 @@ router.put('/:id', auth, async (req, res) => {
 
 router.put('/:id/changevote', auth, async (req, res) => {
   try {
-    const post = await Post.findOne(req.params.id, { relations: ['author'] });
+    const post = await Post.findOne(req.params.id);
     if (!post) throw Error('No post exists');
     const user = await User.findOne(req.user.id);
     if (!user) throw Error('No user exists');
-    const post_author = await User.findOne(post.author.id);
+    const post_author = await User.findOne(post.author_id);
     if (!post_author) throw Error('Post author does not exist');
 
     const vote = await Vote.findOne({ post, user });

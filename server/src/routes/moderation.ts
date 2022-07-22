@@ -77,6 +77,7 @@ router.delete('/:topic/post/:post', auth, isModerator, canManagePostsAndComments
   try {
     const post = await Post.findOne(req.params.post);
     if (!post) throw Error('Post does not exist');
+    if (post.topic_id !== req.topic.id) throw Error('Post does not belong to topic');
 
     await Post.remove(post);
     if (post.type === 'photo') deleteFile(post.image_name);
@@ -96,6 +97,8 @@ router.delete('/:topic/comment/:commentid', auth, isModerator, canManagePostsAnd
   try {
     const comment = await Comment.findOne(req.params.commentid);
     if (!comment) throw Error('Comment does not exist');
+    const post = await Post.findOne(comment.post_id);
+    if (post.topic_id !== req.topic.id) throw Error('Comment does not belong to topic');
 
     comment.content = null;
     comment.author = null;

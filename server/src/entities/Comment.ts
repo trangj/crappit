@@ -14,13 +14,19 @@ export class Comment extends Template {
   @Column({ default: 0 })
     vote: number;
 
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => User)
   @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
     author!: User;
 
-  @ManyToOne(() => Post, { nullable: true, onDelete: 'CASCADE' })
+  @Column({ nullable: true })
+    author_id: number;
+
+  @ManyToOne(() => Post, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'post_id', referencedColumnName: 'id' }])
     post!: Post;
+
+  @Column({ nullable: true })
+    post_id: number;
 
   @Column({ nullable: true })
     parent_comment_id: number;

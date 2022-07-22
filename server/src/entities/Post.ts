@@ -38,7 +38,13 @@ export class Post extends Template {
   @JoinColumn([{ name: 'author_id', referencedColumnName: 'id' }])
     author!: User;
 
+  @Column({ nullable: true })
+    author_id: number;
+
   @ManyToOne(() => Topic)
   @JoinColumn([{ name: 'topic_id', referencedColumnName: 'id' }])
     topic!: Topic;
+
+  @Column({ nullable: true })
+    topic_id: number;
 }

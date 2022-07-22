@@ -108,11 +108,11 @@ router.delete('/:commentid', auth, async (req, res) => {
 
 router.put('/:commentid/changevote', auth, async (req, res) => {
   try {
-    const comment = await Comment.findOne(req.params.commentid, { relations: ['author'] });
+    const comment = await Comment.findOne(req.params.commentid);
     if (!comment) throw Error('No comment exists');
     const user = await User.findOne(req.user.id);
     if (!user) throw Error('No user exists');
-    const comment_author = await User.findOne(comment.author.id);
+    const comment_author = await User.findOne(comment.author_id);
     if (!comment_author) throw Error('Comment author does not exist');
 
     const vote = await CommentVote.findOne({ comment, user });
