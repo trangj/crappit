@@ -9,6 +9,7 @@ export const isModerator = async (req: Request, res: Response, next: NextFunctio
     if (!moderator) throw Error('You are not a moderator');
 
     req.topic = topic;
+    req.moderator = moderator;
     next();
   } catch (err) {
     res

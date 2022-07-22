@@ -1,4 +1,5 @@
 import express from 'express';
+import { canManageEverything, canManagePostsAndComments, canManageSettings } from '../middleware/checkModPermission';
 import { isModerator } from '../middleware/isModerator';
 import { deleteFile, upload } from '../middleware/upload';
 import { auth } from '../middleware/auth';
@@ -12,7 +13,7 @@ const router = express.Router();
 // @desc    Add a moderator to a topic
 // @access  Private
 
-router.post('/:topic/user', auth, isModerator, async (req, res) => {
+router.post('/:topic/user', auth, isModerator, canManageEverything, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) throw Error('User does not exist');
@@ -29,7 +30,14 @@ router.post('/:topic/user', auth, isModerator, async (req, res) => {
     }).save();
 
     res.status(200).json({
-      user: { user_id: user.id, username: user.username, topic_id: req.topic.id },
+      user: {
+        user_id: user.id,
+        username: user.username,
+        topic_id: req.topic.id,
+        can_manage_everything: req.body.can_manage_everything,
+        can_manage_posts_and_comments: req.body.can_manage_posts_and_comments,
+        can_manage_settings: req.body.can_manage_settings,
+      },
       status: { text: 'Moderator successfully added', severity: 'success' },
     });
   } catch (err) {
@@ -43,7 +51,7 @@ router.post('/:topic/user', auth, isModerator, async (req, res) => {
 // @desc    Delete a moderator of a topic
 // @access  Private
 
-router.delete('/:topic/user/:userid', auth, isModerator, async (req, res) => {
+router.delete('/:topic/user/:userid', auth, isModerator, canManageEverything, async (req, res) => {
   try {
     const user = await User.findOne(req.params.userid);
     if (!user) throw Error('User does not exist');
@@ -65,7 +73,7 @@ router.delete('/:topic/user/:userid', auth, isModerator, async (req, res) => {
 // @desc    Delete a post
 // @access  Private
 
-router.delete('/:topic/post/:post', auth, isModerator, async (req, res) => {
+router.delete('/:topic/post/:post', auth, isModerator, canManagePostsAndComments, async (req, res) => {
   try {
     const post = await Post.findOne(req.params.post);
     if (!post) throw Error('Post does not exist');
@@ -84,7 +92,7 @@ router.delete('/:topic/post/:post', auth, isModerator, async (req, res) => {
 // @desc    Delete a comment
 // @access  Private
 
-router.delete('/:topic/comment/:commentid', auth, isModerator, async (req, res) => {
+router.delete('/:topic/comment/:commentid', auth, isModerator, canManagePostsAndComments, async (req, res) => {
   try {
     const comment = await Comment.findOne(req.params.commentid);
     if (!comment) throw Error('Comment does not exist');
@@ -110,7 +118,7 @@ router.delete('/:topic/comment/:commentid', auth, isModerator, async (req, res) 
 // @desc    Add rule
 // @access  Private
 
-router.post('/:topic/add_rule', auth, isModerator, async (req, res) => {
+router.post('/:topic/add_rule', auth, isModerator, canManageSettings, async (req, res) => {
   try {
     if (req.topic.rules.length === 15) throw Error('You can have at most 15 rules');
     if (req.body.rule.name.length > 100) throw Error('Rule name is too long');
@@ -133,7 +141,7 @@ router.post('/:topic/add_rule', auth, isModerator, async (req, res) => {
 // @desc    Delete rule
 // @access  Private
 
-router.post('/:topic/delete_rule', auth, isModerator, async (req, res) => {
+router.post('/:topic/delete_rule', auth, isModerator, canManageSettings, async (req, res) => {
   try {
     req.topic.rules = req.topic.rules.filter(
       (rule: any) => rule.created_at !== req.body.rule.created_at,
@@ -154,7 +162,7 @@ router.post('/:topic/delete_rule', auth, isModerator, async (req, res) => {
 // @desc    Change topic icon
 // @access  Private
 
-router.post('/:topic/icon', auth, isModerator, upload, async (req, res) => {
+router.post('/:topic/icon', auth, isModerator, canManageSettings, upload, async (req, res) => {
   try {
     if (req.topic.icon_image_name && req.file) {
       // if topic already has banner and a photo has been uploaded
@@ -185,7 +193,7 @@ router.post('/:topic/icon', auth, isModerator, upload, async (req, res) => {
 // @desc    Change topic banner
 // @access  Private
 
-router.post('/:topic/banner', auth, isModerator, upload, async (req, res) => {
+router.post('/:topic/banner', auth, isModerator, canManageSettings, upload, async (req, res) => {
   try {
     if (req.topic.image_name && req.file) {
       // if topic already has banner and a photo has been uploaded
@@ -213,7 +221,7 @@ router.post('/:topic/banner', auth, isModerator, upload, async (req, res) => {
 // @desc    Update a topic
 // @access  Private
 
-router.put('/:topic', auth, isModerator, async (req, res) => {
+router.put('/:topic', auth, isModerator, canManageSettings, async (req, res) => {
   try {
     if (req.body.description.length > 500) throw Error('Topic description is too long');
     if (req.body.headline.length > 100) throw Error('Topic headline is too long');
