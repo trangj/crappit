@@ -1,6 +1,6 @@
 import express from 'express';
 import { auth, optionalAuth } from '../middleware/auth';
-import { Topic, User } from '../entities';
+import { Moderator, Topic, User } from '../entities';
 import { upload } from '../middleware/upload';
 
 const router = express.Router();
@@ -15,7 +15,10 @@ router.get('/:topic', optionalAuth, async (req, res) => {
       select
       t.*,
       f.user_id user_followed_id,
-      m.user_id user_moderator_id
+      m.user_id user_moderator_id,
+      m.can_manage_everything can_manage_everything,
+      m.can_manage_posts_and_comments can_manage_posts_and_comments,
+      m.can_manage_settings can_manage_settings
       from topic t
       left join follow f on f.topic_id = t.id and f.user_id = $1
       left join moderator m on m.topic_id = t.id and m.user_id = $2
@@ -57,10 +60,14 @@ router.post('/', auth, upload, async (req, res) => {
       description: req.body.description,
       image_url: req.file ? req.file.location : '',
       image_name: req.file ? req.file.key : '',
-      moderators: [user],
       followers: [user],
       number_of_followers: 1,
     }).save().catch(() => { throw Error('A topic with that title already exists'); });
+
+    await Moderator.create({
+      topic_id: newTopic.id,
+      user_id: user.id,
+    }).save();
 
     res.status(200).json({
       topic: { title: newTopic.title },

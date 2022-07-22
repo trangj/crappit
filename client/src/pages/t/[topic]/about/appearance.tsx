@@ -36,6 +36,13 @@ const TopicAppearance : NextPageWithLayout = function () {
   );
 
   if (topicLoading || !topicData) return <div>Loading...</div>;
+  if (!topicData.can_manage_settings) {
+    return (
+      <div className="fixed inset-y-1/2 w-full text-center">
+        You do not have permission.
+      </div>
+    );
+  }
 
   const handleIcon = async (e: any) => {
     try {

@@ -123,7 +123,7 @@ function PostCard({ post }: Props) {
             )}
           </>
           )}
-          {user && topic && topic.user_moderator_id && (
+          {user && topic && topic.user_moderator_id && topic.can_manage_posts_and_comments && (
           <DeletePostModerator post={post} />
           )}
         </div>

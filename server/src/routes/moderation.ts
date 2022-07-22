@@ -3,7 +3,7 @@ import { isModerator } from '../middleware/isModerator';
 import { deleteFile, upload } from '../middleware/upload';
 import { auth } from '../middleware/auth';
 import {
-  User, Post, Comment,
+  User, Post, Comment, Moderator,
 } from '../entities';
 
 const router = express.Router();
@@ -14,11 +14,20 @@ const router = express.Router();
 
 router.post('/:topic/user', auth, isModerator, async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username }, { relations: ['topics_moderated'] });
+    const user = await User.findOne({ username: req.body.username });
     if (!user) throw Error('User does not exist');
 
-    user.topics_moderated.push(req.topic);
-    await user.save();
+    const moderator = await Moderator.findOne({ topic_id: req.topic.id, user_id: user.id });
+    if (moderator) throw Error('User is already a moderator');
+
+    await Moderator.create({
+      topic_id: req.topic.id,
+      user_id: user.id,
+      can_manage_everything: req.body.can_manage_everything,
+      can_manage_posts_and_comments: req.body.can_manage_posts_and_comments,
+      can_manage_settings: req.body.can_manage_settings,
+    }).save();
+
     res.status(200).json({
       user: { user_id: user.id, username: user.username, topic_id: req.topic.id },
       status: { text: 'Moderator successfully added', severity: 'success' },
@@ -36,13 +45,11 @@ router.post('/:topic/user', auth, isModerator, async (req, res) => {
 
 router.delete('/:topic/user/:userid', auth, isModerator, async (req, res) => {
   try {
-    const user = await User.findOne(req.params.userid, { relations: ['topics_moderated'] });
+    const user = await User.findOne(req.params.userid);
     if (!user) throw Error('User does not exist');
 
-    user.topics_moderated = user.topics_moderated
-      .filter((curTopic) => curTopic.id !== req.topic.id);
+    await Moderator.delete({ user_id: user.id, topic_id: req.topic.id });
 
-    await user.save();
     res.status(200).json({
       user: { user_id: user.id, username: user.username, topic_id: req.topic.id },
       status: { text: 'Moderator successfully removed', severity: 'success' },

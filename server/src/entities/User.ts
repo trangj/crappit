@@ -25,10 +25,6 @@ export class User extends Template {
   @JoinTable({ name: 'follow' })
     topics_followed: Topic[];
 
-  @ManyToMany(() => Topic, (topic) => topic.moderators)
-  @JoinTable({ name: 'moderator' })
-    topics_moderated: Topic[];
-
   @Column({ nullable: true })
     reset_password_token?: string;
 

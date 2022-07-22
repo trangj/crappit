@@ -283,9 +283,8 @@ router.get('/:userid', async (req, res) => {
   `, [req.params.userid]);
 
     delete user.password;
-    user.topics_moderated = topics_moderated;
 
-    res.status(200).json({ user });
+    res.status(200).json({ user: { ...user, topics_moderated } });
   } catch (err) {
     res.status(400).json({
       status: { text: err.message, severity: 'error' },

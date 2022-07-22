@@ -48,7 +48,7 @@ const TopicRules : NextPageWithLayout = function () {
         <div>
           <span className="flex items-center">
             <h5>Rules</h5>
-            <AddRule topic={topicData} />
+            {topicData.can_manage_settings && <AddRule topic={topicData} />}
           </span>
           <p>
             These are rules that visitors must follow to participate. They can be
@@ -73,7 +73,7 @@ const TopicRules : NextPageWithLayout = function () {
                     {rule.name}
                   </span>
                   <div className="flex gap-2">
-                    <DeleteRule topic={topicData} rule={rule} />
+                    {topicData.can_manage_settings && <DeleteRule topic={topicData} rule={rule} />}
                     <Disclosure.Button as={Button} variant="ghost" border="rounded" size="sm" icon={<ArrowsExpandIcon className="h-4 w-4" />} />
                   </div>
                 </div>

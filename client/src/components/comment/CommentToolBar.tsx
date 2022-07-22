@@ -66,7 +66,7 @@ function CommentToolBar({
       )}
       {topic
                 && user.id !== comment.author_id
-                && topic.user_moderator_id && (
+                && topic.user_moderator_id && topic.can_manage_posts_and_comments && (
                 <DeleteCommentModerator comment={comment} topic={topic} />
       )}
     </>

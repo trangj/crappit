@@ -9,6 +9,9 @@ export interface Rule {
 export interface Topic extends Template {
     user_followed_id: number,
     user_moderator_id: number,
+    can_manage_posts_and_comments: boolean,
+    can_manage_settings: boolean,
+    can_manage_everything: boolean
     title: string,
     headline: string,
     description: string,

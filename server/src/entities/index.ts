@@ -4,3 +4,4 @@ export * from './Topic';
 export * from './User';
 export * from './Vote';
 export * from './CommentVote';
+export * from './Moderator';

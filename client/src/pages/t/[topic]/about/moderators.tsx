@@ -44,7 +44,7 @@ const TopicModerators : NextPageWithLayout = function () {
         <div>
           <span className="flex items-center">
             <h5>Moderators</h5>
-            <AddModerator topic={topicData} />
+            {topicData.can_manage_everything && <AddModerator topic={topicData} />}
           </span>
         </div>
         <div className="flex flex-col mt-2">
@@ -59,7 +59,7 @@ const TopicModerators : NextPageWithLayout = function () {
                   {user.username}
                 </a>
               </Link>
-              <DeleteModerator topic={topicData} user={user} />
+              {topicData.can_manage_everything && <DeleteModerator topic={topicData} user={user} />}
             </div>
           ))}
         </div>

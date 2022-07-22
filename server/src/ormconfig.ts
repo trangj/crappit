@@ -9,7 +9,7 @@ export default {
   entities: [path.join(__dirname, './entities/*')],
   migrations: [path.join(__dirname, './migrations/*')],
   cli: {
-    migrationsDir: path.join(__dirname, './migrations'),
+    migrationsDir: 'src/migrations',
   },
   ssl: {
     rejectUnauthorized: false,

@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { Topic } from '../entities';
+import { Moderator, Topic } from '../entities';
 
 export const isModerator = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const topic = await Topic.findOne({ title: req.params.topic }, { relations: ['moderators'] });
+    const topic = await Topic.findOne({ title: req.params.topic });
     if (!topic) throw Error('Topic does not exist');
-    if (!topic.moderators.some((moderator) => moderator.id === req.user.id)) throw Error('You are not a moderator');
+    const moderator = await Moderator.findOne({ topic_id: topic.id, user_id: req.user.id });
+    if (!moderator) throw Error('You are not a moderator');
 
     req.topic = topic;
     next();
