@@ -47,9 +47,6 @@ router.post('/', auth, upload, async (req, res) => {
     const topic = await Topic.findOne({ title: req.body.topic });
     if (!topic) throw Error('No topic exists');
 
-    const user = await User.findOne(req.user.id);
-    if (!user) throw Error('No user exists');
-
     if (req.body.title.length > 300) throw Error('Post title is too long');
 
     const newPost = Post.create({
@@ -58,7 +55,7 @@ router.post('/', auth, upload, async (req, res) => {
       content: sanitizeHtml(req.body.content),
       image_url: req.file && req.body.type === 'photo' ? req.file.location : '',
       image_name: req.file && req.body.type === 'photo' ? req.file.key : '',
-      author: user,
+      author_id: req.user.id,
       topic,
     });
 
@@ -79,8 +76,7 @@ router.post('/', auth, upload, async (req, res) => {
 
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const user = await User.findOne(req.user.id);
-    const post = await Post.findOne({ id: parseInt(req.params.id), author: user });
+    const post = await Post.findOne({ id: parseInt(req.params.id), author_id: req.user.id });
     if (!post) throw Error('Post does not exist or you are not the author');
     await Post.remove(post);
     if (post.type === 'photo') deleteFile(post.image_name);
@@ -98,8 +94,7 @@ router.delete('/:id', auth, async (req, res) => {
 
 router.put('/:id', auth, async (req, res) => {
   try {
-    const user = await User.findOne(req.user.id);
-    const post = await Post.findOne({ id: parseInt(req.params.id), author: user });
+    const post = await Post.findOne({ id: parseInt(req.params.id), author_id: req.user.id });
     if (!post) throw Error('Post does not exist or you are not the author of the post');
     if (post.type !== 'text') throw Error('You can only edit text posts');
 
@@ -125,16 +120,14 @@ router.put('/:id/changevote', auth, async (req, res) => {
   try {
     const post = await Post.findOne(req.params.id);
     if (!post) throw Error('No post exists');
-    const user = await User.findOne(req.user.id);
-    if (!user) throw Error('No user exists');
     const post_author = await User.findOne(post.author_id);
     if (!post_author) throw Error('Post author does not exist');
 
-    const vote = await Vote.findOne({ post, user });
+    const vote = await Vote.findOne({ post, user_id: req.user.id });
     if (!vote) {
       const newVote = await Vote.create({
         post,
-        user,
+        user_id: req.user.id,
         value: req.query.vote === 'like' ? 1 : -1,
       }).save();
       post.vote += req.query.vote === 'like' ? 1 : -1;

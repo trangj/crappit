@@ -54,9 +54,10 @@ router.post('/', auth, async (req, res) => {
 router.put('/:commentid', auth, async (req, res) => {
   try {
     if (!req.body.content) throw Error('Missing required fields');
-    const user = await User.findOne(req.user.id);
-    if (!user) throw Error('No user with that id was found');
-    const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
+    const comment = await Comment.findOne({
+      id: parseInt(req.params.commentid),
+      author_id: req.user.id,
+    });
     if (!comment) throw Error('No comment exists or you are not the author');
 
     comment.content = sanitizeHtml(req.body.content);
@@ -81,9 +82,10 @@ router.put('/:commentid', auth, async (req, res) => {
 
 router.delete('/:commentid', auth, async (req, res) => {
   try {
-    const user = await User.findOne(req.user.id);
-    if (!user) throw Error('No user with that id was found');
-    const comment = await Comment.findOne({ id: parseInt(req.params.commentid), author: user });
+    const comment = await Comment.findOne({
+      id: parseInt(req.params.commentid),
+      author_id: req.user.id,
+    });
     if (!comment) throw Error('No comment exists or you are not the author');
 
     comment.content = null;
@@ -110,17 +112,15 @@ router.put('/:commentid/changevote', auth, async (req, res) => {
   try {
     const comment = await Comment.findOne(req.params.commentid);
     if (!comment) throw Error('No comment exists');
-    const user = await User.findOne(req.user.id);
-    if (!user) throw Error('No user exists');
     const comment_author = await User.findOne(comment.author_id);
     if (!comment_author) throw Error('Comment author does not exist');
 
-    const vote = await CommentVote.findOne({ comment, user });
+    const vote = await CommentVote.findOne({ comment, user_id: req.user.id });
 
     if (!vote) {
       const newVote = await CommentVote.create({
         comment,
-        user,
+        user_id: req.user.id,
         value: req.query.vote === 'like' ? 1 : -1,
       }).save();
       comment.vote += req.query.vote === 'like' ? 1 : -1;
@@ -196,7 +196,6 @@ router.post('/:commentid/reply', auth, async (req, res) => {
 
     const { post, parent_comment, ...rest } = newComment;
     commentPost.number_of_comments += 1;
-
     await commentPost.save();
 
     res.status(200).json({
