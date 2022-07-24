@@ -9,11 +9,11 @@ export class AddReplyAndCommentNotifications1658630780814 implements MigrationIn
           ('COMMENT_REPLY', 'Replies to your comments')
         `);
     await queryRunner.query(`
-          insert into notification_setting (user_id, notification_type_id, value)
+          insert into notification_setting (user_id, notification_type_id, "value")
           select 
           u.id user_id,
           nt.id notification_type_id, 
-          true value
+          true "value"
           from "user" u, notification_type nt
         `);
   }
