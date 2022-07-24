@@ -1,10 +1,10 @@
 import React, { forwardRef, ReactNode } from 'react';
 import { Menu } from '@headlessui/react';
 import Link from 'next/link';
-import { ChevronDownIcon, PlusIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, PlusIcon, BellIcon } from '@heroicons/react/outline';
 import { Avatar } from 'src/ui/Avatar';
 import { Divider } from 'src/ui/Divider';
-import { BellIcon, HomeIcon } from '@heroicons/react/solid';
+import { HomeIcon } from '@heroicons/react/solid';
 import Image from 'next/image';
 import useTopicFollow from '../../hooks/topic-query/useTopicFollow';
 

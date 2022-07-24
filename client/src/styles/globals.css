@@ -123,6 +123,11 @@
 	.menu-option {
 		@apply hover:bg-gray-100 dark:hover:bg-gray-800 py-2.5 px-6 flex gap-2 items-center text-sm;
 	}
+
+	/* ToolTip */
+	.tooltip {
+		@apply absolute z-10 rounded py-1 px-2 shadow min-w-max opacity-0 group-hover:opacity-100 invisible group-hover:visible delay-500 transition-opacity bg-black text-white font-medium;
+	}
 }
 
 /* Link card styling */
@@ -140,7 +145,7 @@
 
 .link_card a[href]:not(.link_card_overlay),
 .link_card button:not(.link_card_overlay),
-.link_card .tooltip:not(.link_card_overlay) {
+.link_card .tooltip-container:not(.link_card_overlay) {
 	position: relative;
 	z-index: 2;
 }

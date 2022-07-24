@@ -18,12 +18,9 @@ function ToolTip({
   children, position = 'bottom', title, className = '',
 }: ToolTipProps) {
   return (
-    <div className={`relative group tooltip ${className}`}>
+    <div className={`relative group tooltip-container ${className}`}>
       <div
-        className={`absolute z-10 rounded py-1 px-2 shadow min-w-max opacity-0 group-hover:opacity-100 transition-opacity hidden group-hover:block invisible group-hover:visible
-          bg-black text-white font-medium
-          ${positionOptions[position]}
-        `}
+        className={`tooltip ${positionOptions[position]}`}
         role="tooltip"
       >
         <div className="text-xs">{title}</div>
