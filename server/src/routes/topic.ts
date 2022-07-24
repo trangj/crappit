@@ -126,7 +126,7 @@ router.post('/:topic/follow_topic', auth, async (req, res) => {
   }
 });
 
-router.post('/:topic/favorite_topic', auth, async (req, res) => {
+router.put('/:topic/favorite_topic', auth, async (req, res) => {
   try {
     const user = await User.findOne(req.user.id, { relations: ['topics_followed'] });
     if (!user) throw Error('No user was found with that id');

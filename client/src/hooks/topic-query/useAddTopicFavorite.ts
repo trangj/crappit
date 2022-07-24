@@ -4,7 +4,7 @@ import axios from '../../axiosConfig';
 
 async function favoriteTopic(topic: string) {
   try {
-    const res = await axios.post(`/api/topic/${topic}/favorite_topic`);
+    const res = await axios.put(`/api/topic/${topic}/favorite_topic`);
     return res.data;
   } catch (err: any) {
     throw err.response.data;
