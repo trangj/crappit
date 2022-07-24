@@ -38,6 +38,8 @@ module.exports = {
     extend: {
       opacity: ['disabled'],
       backgroundOpacity: ['active'],
+      display: ['group-hover'],
+      visibility: ['group-hover'],
     },
   },
   plugins: [],

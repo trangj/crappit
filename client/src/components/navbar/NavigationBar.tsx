@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from 'src/ui/Button';
 import { MenuIcon, PlusIcon } from '@heroicons/react/outline';
 import { useTheme } from 'src/hooks/useTheme';
+import ToolTip from 'src/ui/ToolTip';
 import { useUser } from '../../context/UserState';
 import UserMenu from './UserMenu';
 import BrowseMenu from './BrowseMenu';
@@ -39,9 +40,11 @@ function NavigationBar() {
             && (
             <div className="flex gap-2 mr-2">
               <NotificationPopover />
-              <Link passHref href="/submit">
-                <Button as="a" variant="ghost" border="rounded" icon={<PlusIcon className="h-6 w-6" />} />
-              </Link>
+              <ToolTip title="Create Post">
+                <Link passHref href="/submit">
+                  <Button as="a" variant="ghost" border="rounded" icon={<PlusIcon className="h-6 w-6" />} />
+                </Link>
+              </ToolTip>
             </div>
             )}
           </div>

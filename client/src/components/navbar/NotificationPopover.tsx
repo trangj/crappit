@@ -8,6 +8,7 @@ import axios from 'src/axiosConfig';
 import dayjs from 'dayjs';
 import { Notification } from 'src/types/entities/notification';
 import toast from 'react-hot-toast';
+import ToolTip from 'src/ui/ToolTip';
 
 function NotificationPopover() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -67,18 +68,21 @@ function NotificationPopover() {
     <Popover className="relative">
       {({ open, close }) => (
         <>
-          <Popover.Button
-            active={open}
-            as={Button}
-            variant="ghost"
-            border="rounded"
-            icon={(
-              <>
-                {!hasReadAll && <span className="bg-upvote rounded-full h-2 w-2 absolute top-0 right-0 m-1.5 shadow" />}
-                <BellIcon className="h-6 w-6" />
-              </>
-            )}
-          />
+          <Popover.Button as={React.Fragment}>
+            <ToolTip title="Notifications">
+              <Button
+                active={open}
+                variant="ghost"
+                border="rounded"
+                icon={(
+                  <>
+                    {!hasReadAll && <span className="bg-upvote rounded-full h-2 w-2 absolute top-0 right-0 m-1.5 shadow" />}
+                    <BellIcon className="h-6 w-6" />
+                  </>
+                )}
+              />
+            </ToolTip>
+          </Popover.Button>
           <Popover.Panel className="absolute z-10 transform -translate-x-80 mt-2">
             <Card className="w-96">
               <nav className="p-4 flex items-center justify-between">
@@ -86,9 +90,9 @@ function NotificationPopover() {
                   Notifications
                 </span>
                 <div className="flex gap-1">
-                  <Button variant="ghost" border="rounded" icon={<CheckIcon className="h-6 w-6" />} onClick={() => handleReadAll()} />
+                  <Button variant="ghost" border="rounded" size="xs" icon={<CheckIcon className="h-6 w-6" />} onClick={() => handleReadAll()} />
                   <Link passHref href="/settings/notifications">
-                    <Button variant="ghost" border="rounded" as="a" icon={<CogIcon className="h-6 w-6" />} />
+                    <Button variant="ghost" border="rounded" as="a" size="xs" icon={<CogIcon className="h-6 w-6" />} />
                   </Link>
                 </div>
               </nav>
@@ -104,7 +108,7 @@ function NotificationPopover() {
                       rel="noopener noreferrer"
                       className={`p-4 flex flex-col ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
                     >
-                      <span>
+                      <p>
                         <span>
                           {notification.title}
                         </span>
@@ -114,10 +118,10 @@ function NotificationPopover() {
                           {' '}
                           {dayjs(notification.sent_at).fromNow()}
                         </span>
-                      </span>
-                      <span className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                      </p>
+                      <p className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap p-0">
                         {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
-                      </span>
+                      </p>
                     </a>
                   </span>
                 )) : (
@@ -131,7 +135,7 @@ function NotificationPopover() {
               <div className="flex items-center justify-center p-3 h-12 dark:bg-gray-800 bg-gray-100">
                 <span onClick={() => close()}>
                   <Link passHref href="/notifications">
-                    <a className="uppercase text-blue-500 dark:text-blue-400 font-bold">
+                    <a className="uppercase text-blue-500 dark:text-blue-400 font-bold text-sm">
                       See all
                     </a>
                   </Link>

@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { Avatar } from 'src/ui/Avatar';
 import { useRouter } from 'next/router';
+import ToolTip from 'src/ui/ToolTip';
 import { Button } from '../../ui/Button';
 import { LinkCard, LinkCardOverlay } from '../../ui/LinkCard';
 import Voting from './Voting';
@@ -63,7 +64,9 @@ function PostItem({ post, ...props }: Props) {
                 </a>
               </Link>
               {' '}
-              {dayjs(post.created_at).fromNow()}
+              <ToolTip className="inline" title={dayjs(post.created_at).format('llll')}>
+                {dayjs(post.created_at).fromNow()}
+              </ToolTip>
             </div>
           </small>
           <h6 className="font-medium">

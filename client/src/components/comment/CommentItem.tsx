@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { Comment } from 'src/types/entities/comment';
 import { ArrowsExpandIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
+import ToolTip from 'src/ui/ToolTip';
 import { Avatar } from '../../ui/Avatar';
 import { Button } from '../../ui/Button';
 import CommentVoting from './CommentVoting';
@@ -41,12 +42,14 @@ function CommentItem({ comment }: Props) {
               <a className="font-medium">{comment.author}</a>
             </Link>
           )}
-          <div className="text-gray-500 dark:text-gray-400 inline">
-            {' '}
-            &bull;
-            {' '}
-            {dayjs(comment.created_at).fromNow()}
-          </div>
+          <ToolTip className="inline" title={dayjs(comment.created_at).format('llll')}>
+            <div className="text-gray-500 dark:text-gray-400 inline">
+              {' '}
+              &bull;
+              {' '}
+              {dayjs(comment.created_at).fromNow()}
+            </div>
+          </ToolTip>
         </small>
       </div>
     );
@@ -100,7 +103,9 @@ function CommentItem({ comment }: Props) {
               {' '}
               &bull;
               {' '}
-              {dayjs(comment.created_at).fromNow()}
+              <ToolTip className="inline" title={dayjs(comment.created_at).format('llll')}>
+                {dayjs(comment.created_at).fromNow()}
+              </ToolTip>
               {comment.is_edited && (
               <i>
                 {' '}

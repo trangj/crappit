@@ -6,6 +6,7 @@ import { ChatAltIcon, PencilIcon, ReplyIcon } from '@heroicons/react/outline';
 import toast from 'react-hot-toast';
 import useTopic from 'src/hooks/topic-query/useTopic';
 import { useRouter } from 'next/router';
+import ToolTip from 'src/ui/ToolTip';
 import DeletePostModerator from './DeletePostModerator';
 import DeletePost from './DeletePost';
 import UpdatePost from './UpdatePost';
@@ -42,7 +43,9 @@ function PostCard({ post }: Props) {
                 </a>
               </Link>
               {' '}
-              {dayjs(post.created_at).fromNow()}
+              <ToolTip className="inline" title={dayjs(post.created_at).format('llll')}>
+                {dayjs(post.created_at).fromNow()}
+              </ToolTip>
             </div>
           </small>
           <h5 className="font-medium">{post.title}</h5>
