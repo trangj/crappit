@@ -1,6 +1,8 @@
 import express from 'express';
 import { auth, optionalAuth } from '../middleware/auth';
-import { Moderator, Topic, User } from '../entities';
+import {
+  Moderator, Topic, User, Follow,
+} from '../entities';
 import { upload } from '../middleware/upload';
 
 const router = express.Router();
@@ -60,9 +62,13 @@ router.post('/', auth, upload, async (req, res) => {
       description: req.body.description,
       image_url: req.file ? req.file.location : '',
       image_name: req.file ? req.file.key : '',
-      followers: [user],
       number_of_followers: 1,
     }).save().catch(() => { throw Error('A topic with that title already exists'); });
+
+    await Follow.create({
+      topic_id: newTopic.id,
+      user_id: user.id,
+    }).save();
 
     await Moderator.create({
       topic_id: newTopic.id,
@@ -78,11 +84,11 @@ router.post('/', auth, upload, async (req, res) => {
   }
 });
 
-// @route   POST /api/topic/:topic/followtopic
+// @route   POST /api/topic/:topic/follow_topic
 // @desc    Follow a topic
 // @access  Private
 
-router.post('/:topic/followtopic', auth, async (req, res) => {
+router.post('/:topic/follow_topic', auth, async (req, res) => {
   try {
     const user = await User.findOne(req.user.id, { relations: ['topics_followed'] });
     if (!user) throw Error('No user was found with that id');
@@ -90,29 +96,49 @@ router.post('/:topic/followtopic', auth, async (req, res) => {
     const topic = await Topic.findOne({ title: req.params.topic });
     if (!topic) throw Error('No topic exists');
 
-    let message;
-    let follow;
+    const follow = await Follow.findOne({ topic_id: topic.id, user_id: user.id });
 
-    if (user.topics_followed.some((curTopic) => curTopic.id === topic.id)) {
-      user.topics_followed = user.topics_followed.filter((curTopic) => curTopic.id !== topic.id);
+    let message = null;
+    let newFollow = null;
+
+    if (follow) {
+      await follow.remove();
       topic.number_of_followers -= 1;
       message = 'Successfully unfollowed';
-      follow = null;
     } else {
-      user.topics_followed.push(topic);
+      newFollow = await Follow.create({
+        topic_id: topic.id,
+        user_id: user.id,
+      }).save();
       topic.number_of_followers += 1;
       message = 'Successfully followed';
-      follow = user.id;
     }
 
-    await user.save();
     await topic.save();
 
     res.status(200).json({
-      topic: topic.title,
-      user_followed_id: follow,
+      follow: newFollow,
+      user_followed_id: follow ? null : user.id,
       status: { text: message, severity: 'success' },
     });
+  } catch (err) {
+    res.status(400).json({ status: { text: err.message, severity: 'error' } });
+  }
+});
+
+router.post('/:topic/favorite_topic', auth, async (req, res) => {
+  try {
+    const user = await User.findOne(req.user.id, { relations: ['topics_followed'] });
+    if (!user) throw Error('No user was found with that id');
+
+    const topic = await Topic.findOne({ title: req.params.topic });
+    if (!topic) throw Error('No topic exists');
+
+    const follow = await Follow.findOne({ topic_id: topic.id, user_id: user.id });
+    follow.favorite = !follow.favorite;
+    await follow.save();
+
+    res.status(200).json(follow);
   } catch (err) {
     res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }

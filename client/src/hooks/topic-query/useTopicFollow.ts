@@ -1,14 +1,11 @@
 import { useQuery } from 'react-query';
+import { TopicsFollowed } from 'src/types/entities/user';
 import { Error } from 'src/types/error';
 import axios from '../../axiosConfig';
 import { useUser } from '../../context/UserState';
 
 type FollowedTopics = {
-    topics_followed: [{
-        title: string;
-        icon_image_name: string;
-        icon_image_url: string;
-    }];
+    topics_followed: TopicsFollowed[];
 };
 
 async function fetchTopicFollow() {

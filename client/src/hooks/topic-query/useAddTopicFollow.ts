@@ -5,7 +5,7 @@ import axios from '../../axiosConfig';
 
 async function followTopic(topic: string) {
   try {
-    const res = await axios.post(`/api/topic/${topic}/followtopic`);
+    const res = await axios.post(`/api/topic/${topic}/follow_topic`);
     return res.data;
   } catch (err: any) {
     throw err.response.data;
@@ -23,10 +23,15 @@ export default function useAddTopicFollow(topic: Topic) {
       });
       queryClient.setQueryData(['followed_topics'], (initialData: any) => {
         if (res.user_followed_id) {
-          initialData.topics_followed.push({ title: topic.title });
+          initialData.topics_followed.push({
+            ...res.follow,
+            title: topic.title,
+            icon_image_url: topic.icon_image_url,
+            icon_image_name: topic.icon_image_name,
+          });
         } else {
           initialData.topics_followed = initialData.topics_followed.filter(
-            (i: any) => i.title !== topic.title,
+            (i: any) => i.topic_id !== topic.id,
           );
         }
         return initialData;

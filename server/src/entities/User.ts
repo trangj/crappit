@@ -1,7 +1,7 @@
 import {
-  Column, Entity, JoinTable, ManyToMany,
+  Column, Entity, OneToMany,
 } from 'typeorm';
-import { Topic } from '.';
+import { Follow } from './Follow';
 import { Template } from './Template';
 
 @Entity()
@@ -21,9 +21,8 @@ export class User extends Template {
   @Column({ default: '' })
     avatar_image_name?: string;
 
-  @ManyToMany(() => Topic, (topic) => topic.followers)
-  @JoinTable({ name: 'follow' })
-    topics_followed: Topic[];
+  @OneToMany(() => Follow, (follow) => follow.user)
+    topics_followed: Follow[];
 
   @Column({ nullable: true })
     reset_password_token?: string;

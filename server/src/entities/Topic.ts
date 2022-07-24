@@ -1,5 +1,7 @@
-import { Column, Entity, ManyToMany } from 'typeorm';
-import { User } from '.';
+import {
+  Column, Entity, OneToMany,
+} from 'typeorm';
+import { Follow } from './Follow';
 import { Template } from './Template';
 
 @Entity()
@@ -25,8 +27,8 @@ export class Topic extends Template {
   @Column({ default: '' })
     icon_image_name?: string;
 
-  @ManyToMany(() => User, (user) => user.topics_followed)
-    followers: User[];
+  @OneToMany(() => Follow, (follow) => follow.topic)
+    followers: Follow[];
 
   @Column({ type: 'int', default: 0 })
     number_of_followers: number;

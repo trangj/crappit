@@ -71,14 +71,14 @@ function ExploreTopicCard() {
           </li>
         )) : (
           <div className="animate-pulse flex flex-col">
-            {Array.from({ length: 5 }, () => (
-              <>
+            {Array.from({ length: 5 }, (_, i) => (
+              <React.Fragment key={i}>
                 <div className="flex gap-2 m-2">
                   <div className="h-8 w-8 flex-none rounded-full bg-gray-200 dark:bg-gray-700" />
                   <div className="h-8 w-full rounded bg-gray-200 dark:bg-gray-700" />
                 </div>
                 <Divider />
-              </>
+              </React.Fragment>
             ))}
           </div>
         )}

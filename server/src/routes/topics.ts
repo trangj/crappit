@@ -28,6 +28,7 @@ router.get('/followed_topics', optionalAuth, async (req, res) => {
   try {
     const topics_followed = await Topic.query(`
       select
+      ft.*,
       t.title title,
       t.icon_image_url icon_image_url,
       t.icon_image_name icon_image_name
