@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from 'src/ui/Button';
-import { MenuIcon } from '@heroicons/react/outline';
+import { MenuIcon, PlusIcon } from '@heroicons/react/outline';
 import { useTheme } from 'src/hooks/useTheme';
 import { useUser } from '../../context/UserState';
 import UserMenu from './UserMenu';
 import BrowseMenu from './BrowseMenu';
 import MobileMenu from './MobileMenu';
 import SearchBar from './SearchBar';
+import NotificationPopover from './NotificationPopover';
 
 function NavigationBar() {
   const { logoutUser, user } = useUser();
@@ -34,6 +35,15 @@ function NavigationBar() {
             </Link>
             {user && <BrowseMenu />}
             <SearchBar />
+            {user
+            && (
+            <div className="flex gap-2 mr-2">
+              <NotificationPopover />
+              <Link passHref href="/submit">
+                <Button as="a" variant="ghost" border="rounded" icon={<PlusIcon className="h-6 w-6" />} />
+              </Link>
+            </div>
+            )}
           </div>
           <div className="inline-flex flex-grow-0 items-center">
             {!user && (

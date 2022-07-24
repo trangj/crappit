@@ -41,7 +41,7 @@ function CommentItem({ comment }: Props) {
               <a className="font-medium">{comment.author}</a>
             </Link>
           )}
-          <div className="text-gray-400 dark:text-gray-400 inline">
+          <div className="text-gray-500 dark:text-gray-400 inline">
             {' '}
             &bull;
             {' '}

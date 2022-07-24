@@ -14,6 +14,7 @@ import passport from './middleware/passport';
 import {
   UserRouter, TopicsRouter, TopicRouter, PostsRouter, PostRouter,
   CommentRouter, ModerationRouter, CommentsRouter, SearchRouter,
+  NotificationRouter,
 } from './routes';
 import redis from './common/redis';
 import ormconfig from './ormconfig';
@@ -58,6 +59,7 @@ import ormconfig from './ormconfig';
   app.use('/api/user', UserRouter);
   app.use('/api/moderation', ModerationRouter);
   app.use('/api/search', SearchRouter);
+  app.use('/api/notification', NotificationRouter);
 
   app.listen(process.env.PORT || 5000, () => console.log('Server started on port 5000...'));
 })().catch((err) => {

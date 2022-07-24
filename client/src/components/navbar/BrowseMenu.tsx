@@ -1,31 +1,30 @@
-import React, { ReactNode } from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 import { Menu } from '@headlessui/react';
 import Link from 'next/link';
 import { ChevronDownIcon, PlusIcon } from '@heroicons/react/outline';
 import { Avatar } from 'src/ui/Avatar';
 import { Divider } from 'src/ui/Divider';
-import { HomeIcon } from '@heroicons/react/solid';
+import { BellIcon, HomeIcon } from '@heroicons/react/solid';
 import Image from 'next/image';
 import useTopicFollow from '../../hooks/topic-query/useTopicFollow';
 
 type NextLinkProps = {
   href: string;
   children: ReactNode;
+  active: boolean;
   icon?: ReactNode;
 };
 
-function NextLink({
-  href, children, icon, ...props
-}: NextLinkProps) {
-  return (
-    <Link href={href} passHref>
-      <a {...props} className="menu-option">
-        {icon || null}
-        {children}
-      </a>
-    </Link>
-  );
-}
+const NextLink = forwardRef<any, any>(({
+  href, children, icon, active, ...props
+}: NextLinkProps, ref) => (
+  <Link href={href} passHref>
+    <a {...props} className={`menu-option ${active && 'bg-gray-100 dark:bg-gray-800'}`} ref={ref}>
+      {icon || null}
+      {children}
+    </a>
+  </Link>
+));
 
 function BrowseMenu() {
   const { data, isLoading } = useTopicFollow();
@@ -48,36 +47,43 @@ function BrowseMenu() {
             >
               MY TOPICS
             </div>
-            <Menu.Item
-              as={NextLink}
-              href="/t/create"
-              icon={<PlusIcon className="h-5 w-5" />}
-            >
-              Create Topic
+            <Menu.Item>
+              {({ active }) => (
+                <NextLink
+                  active={active}
+                  href="/t/create"
+                  icon={<PlusIcon className="h-5 w-5" />}
+                >
+                  Create Topic
+                </NextLink>
+              )}
             </Menu.Item>
             {!isLoading
               && data
               && data.topics_followed.map((topic, i) => (
                 <Menu.Item
-                  as={NextLink}
                   key={i}
-                  href={`/t/${topic.title}`}
-                  icon={
-                    topic.icon_image_name ? (
-                      <Image
-                        alt="topic icon"
-                        src={topic.icon_image_name}
-                        width={20}
-                        height={20}
-                        className="rounded-full bg-white"
-                      />
-                    ) : (
-                      <Avatar className="h-5 w-5 flex-none" />
-                    )
-                  }
                 >
-                  t/
-                  {topic.title}
+                  {({ active }) => (
+                    <NextLink
+                      active={active}
+                      href={`/t/${topic.title}`}
+                      icon={topic.icon_image_name ? (
+                        <Image
+                          alt="topic icon"
+                          src={topic.icon_image_name}
+                          width={20}
+                          height={20}
+                          className="rounded-full bg-white"
+                        />
+                      ) : (
+                        <Avatar className="h-5 w-5 flex-none" />
+                      )}
+                    >
+                      t/
+                      {topic.title}
+                    </NextLink>
+                  )}
                 </Menu.Item>
               ))}
             <Divider className="my-2" />
@@ -87,19 +93,38 @@ function BrowseMenu() {
             >
               OTHER
             </div>
-            <Menu.Item
-              as={NextLink}
-              href="/"
-              icon={<HomeIcon className="h-5 w-5" />}
-            >
-              Home
+            <Menu.Item>
+              {({ active }) => (
+                <NextLink
+                  active={active}
+                  href="/"
+                  icon={<HomeIcon className="h-5 w-5" />}
+                >
+                  Home
+                </NextLink>
+              )}
             </Menu.Item>
-            <Menu.Item
-              as={NextLink}
-              href="/submit"
-              icon={<PlusIcon className="h-5 w-5" />}
-            >
-              Create Post
+            <Menu.Item>
+              {({ active }) => (
+                <NextLink
+                  active={active}
+                  href="/submit"
+                  icon={<PlusIcon className="h-5 w-5" />}
+                >
+                  Create Post
+                </NextLink>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <NextLink
+                  href="/notifications"
+                  icon={<BellIcon className="h-5 w-5" />}
+                  active={active}
+                >
+                  Notifications
+                </NextLink>
+              )}
             </Menu.Item>
           </Menu.Items>
         </>

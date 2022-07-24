@@ -49,7 +49,7 @@ function ModeratorLayout({ children } : { children : ReactNode}) {
   return (
     <>
       <div
-        className="top-12 dark:bg-gray-850 h-10 flex items-center fixed w-full"
+        className="top-12 dark:bg-gray-850 bg-white h-10 flex items-center fixed w-full"
       >
         <span
           className="ml-6 font-bold uppercase text-xs"
@@ -68,7 +68,7 @@ function ModeratorLayout({ children } : { children : ReactNode}) {
       </div>
       <div className="flex">
         <div
-          className="bg-white dark:bg-gray-800 flex flex-col w-64 overflow-x-hidden top-20 mt-2 bottom-0 fixed py-2"
+          className="dark:bg-gray-800 bg-gray-100 flex flex-col w-64 overflow-x-hidden top-20 mt-2 bottom-0 fixed py-2"
         >
           <Link passHref href={`/t/${router.query.topic}/about`}>
             <a className={`menu-option cursor-pointer dark:hover:bg-white hover:bg-black hover:bg-opacity-5 dark:hover:bg-opacity-5 ${router.route === '/t/[topic]/about' ? 'button-ghost-active' : ''}`}>

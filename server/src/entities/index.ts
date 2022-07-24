@@ -5,3 +5,6 @@ export * from './User';
 export * from './Vote';
 export * from './CommentVote';
 export * from './Moderator';
+export * from './Notification';
+export * from './NotificationSetting';
+export * from './NotificationType';

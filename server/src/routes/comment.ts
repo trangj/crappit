@@ -4,6 +4,7 @@ import { auth } from '../middleware/auth';
 import {
   Post, User, Comment, CommentVote,
 } from '../entities';
+import { sendNotification } from '../common/notifications';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ const router = express.Router();
 
 router.post('/', auth, async (req, res) => {
   try {
-    const commentPost = await Post.findOne(req.body.postId);
+    const commentPost = await Post.findOne(req.body.postId, { relations: ['topic', 'author'] });
     if (!commentPost) throw Error('No post');
     const user = await User.findOne(req.user.id);
     if (!user) throw Error('No user');
@@ -26,8 +27,20 @@ router.post('/', auth, async (req, res) => {
 
     const { post, ...rest } = newComment;
     commentPost.number_of_comments += 1;
-
     await commentPost.save();
+
+    if (commentPost.author_id !== newComment.author_id) {
+      await sendNotification({
+        recipient: commentPost.author,
+        sender: user,
+        body: newComment.content,
+        type: 'POST_REPLY',
+        url: `${process.env.CLIENT_URL}/t/${commentPost.topic.title}/comments/${commentPost.id}`,
+        title: `u/${user.username} replied to your post in t/${commentPost.topic.title}`,
+        comment_id: newComment.id,
+        post_id: commentPost.id,
+      });
+    }
 
     res.status(200).json({
       comment: {
@@ -180,11 +193,11 @@ router.put('/:commentid/changevote', auth, async (req, res) => {
 
 router.post('/:commentid/reply', auth, async (req, res) => {
   try {
-    const comment = await Comment.findOne(req.params.commentid);
+    const comment = await Comment.findOne(req.params.commentid, { relations: ['author'] });
     if (!comment) throw Error('No comment was found with that id');
     const user = await User.findOne(req.user.id);
     if (!user) throw Error('No user was found with that id');
-    const commentPost = await Post.findOne(req.body.postId);
+    const commentPost = await Post.findOne(req.body.postId, { relations: ['topic'] });
     if (!commentPost) throw Error('No post was found with that id');
 
     const newComment = await Comment.create({
@@ -197,6 +210,19 @@ router.post('/:commentid/reply', auth, async (req, res) => {
     const { post, parent_comment, ...rest } = newComment;
     commentPost.number_of_comments += 1;
     await commentPost.save();
+
+    if (comment.author_id !== newComment.author_id) {
+      await sendNotification({
+        recipient: comment.author,
+        sender: user,
+        body: newComment.content,
+        type: 'COMMENT_REPLY',
+        url: `${process.env.CLIENT_URL}/t/${commentPost.topic.title}/comments/${commentPost.id}`,
+        title: `u/${user.username} replied to your comment in t/${commentPost.topic.title}`,
+        comment_id: newComment.id,
+        post_id: commentPost.id,
+      });
+    }
 
     res.status(200).json({
       comment: {

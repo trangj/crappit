@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { Moderator, Topic } from '../entities';
 
-export const isModerator = async (req: Request, res: Response, next: NextFunction) => {
+export const canModTopic = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const topic = await Topic.findOne({ title: req.params.topic });
     if (!topic) throw Error('Topic does not exist');
