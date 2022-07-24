@@ -68,21 +68,22 @@ function NotificationPopover() {
     <Popover className="relative">
       {({ open, close }) => (
         <>
-          <Popover.Button as={React.Fragment}>
-            <ToolTip title="Notifications">
-              <Button
-                active={open}
-                variant="ghost"
-                border="rounded"
-                icon={(
-                  <>
-                    {!hasReadAll && <span className="bg-upvote rounded-full h-2 w-2 absolute top-0 right-0 m-1.5 shadow" />}
-                    <BellIcon className="h-6 w-6" />
-                  </>
-                )}
-              />
-            </ToolTip>
-          </Popover.Button>
+          <ToolTip
+            title="Notifications"
+          >
+            <Popover.Button
+              as={Button}
+              active={open}
+              variant="ghost"
+              border="rounded"
+              icon={(
+                <>
+                  {!hasReadAll && <span className="bg-upvote rounded-full h-2 w-2 absolute top-0 right-0 m-1.5 shadow" />}
+                  <BellIcon className="h-6 w-6" />
+                </>
+              )}
+            />
+          </ToolTip>
           <Popover.Panel className="absolute z-10 transform -translate-x-80 mt-2">
             <Card className="w-96">
               <nav className="p-4 flex items-center justify-between">
