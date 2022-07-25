@@ -95,7 +95,7 @@ function PostItem({ post, ...props }: Props) {
         <Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
           <a className="self-center mt-2">
             <img
-              src={`https://crappit.imgix.net/${post.image_name}?auto=format&w=1920`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_LOADER_URL}${post.image_name}?auto=format&w=1920`}
               alt="post media"
               style={{ maxHeight: 512 }}
             />

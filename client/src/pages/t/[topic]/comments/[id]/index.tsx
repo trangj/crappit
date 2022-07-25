@@ -68,7 +68,7 @@ function PostPage() {
         {data.type === PostType.PHOTO ? (
           <meta
             property="og:image"
-            content={`https://crappit.imgix.net/${data.image_name}`}
+            content={`${process.env.NEXT_PUBLIC_IMAGE_LOADER_URL}${data.image_name}`}
             key="default"
           />
         ) : null}

@@ -51,6 +51,7 @@ npm i
   SESSION_SECRET: "<your access token secret>"
   AWS_ACCESS_KEY_ID: "<your aws access id>"
   AWS_SECRET_ACCESS_KEY: "<your aws access key>"
+  S3_BUCKET: "<your s3 bucket>"
   GOOGLE_CLIENT_ID: "<your google id>"
   GOOGLE_CLIENT_SECRET: "<your google secret>"
   SENDGRID_KEY: "<your sendgrid api key>"
@@ -59,10 +60,14 @@ npm i
   REDIS_URL: "<your redis database url>"
 ```
 
-6. To run the server, enter the command:
+Environment variables are provided in the .env.development folder for the client. However, I use imgix and you will have to replace the NEXT_PUBLIC_IMAGE_LOADER_URL variable with your own imgix storage.
+
+6. Note the different services that I have used. You will need to set up an S3 bucket to allow for file uploads, Google Cloud OAuth keys for authentication with Google, and a Sendgrid account to allow emails to be sent. 
+
+7. To run the server, enter the command:
 
 ```
 npm run dev
 ```
 
-7. Have fun!
+8. Have fun!

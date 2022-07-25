@@ -76,13 +76,13 @@ function PostCard({ post }: Props) {
         </div>
         {post.type === 'photo' && (
         <a
-          href={`https://crappit.imgix.net/${post.image_name}`}
+          href={`${process.env.NEXT_PUBLIC_IMAGE_LOADER_URL}${post.image_name}`}
           className="self-center"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
-            src={`https://crappit.imgix.net/${post.image_name}?auto=format`}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_LOADER_URL}${post.image_name}?auto=format`}
             alt="post media"
             style={{ maxHeight: 700 }}
           />

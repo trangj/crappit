@@ -16,7 +16,7 @@ const SUPPORTED_FORMATS = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
 const uploadFile = multer({
   storage: multerS3({
     s3,
-    bucket: 'crappit-images',
+    bucket: process.env.S3_BUCKET,
     acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
@@ -53,7 +53,7 @@ export const upload = (req: Request, res: Response, next: NextFunction) => {
 export const deleteFile = (Key: string) => {
   s3.deleteObject(
     {
-      Bucket: 'crappit-images',
+      Bucket: process.env.S3_BUCKET,
       Key,
     },
     (err) => {
