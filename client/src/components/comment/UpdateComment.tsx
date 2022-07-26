@@ -21,16 +21,21 @@ interface FormValues {
 }
 
 function UpdateComment({ comment, openEdit, setOpenEdit }: Props) {
-  const { isLoading, mutate } = useUpdateComment(setOpenEdit, comment);
+  const { isLoading, mutateAsync } = useUpdateComment(comment);
 
-  const handleSubmit = ({ content }: FormValues) => {
+  const handleSubmit = async ({ content }: FormValues) => {
     const newComment = {
       content,
     };
-    mutate({
-      commentId: comment.id,
-      newComment,
-    });
+    try {
+      await mutateAsync({
+        commentId: comment.id,
+        newComment,
+      });
+      setOpenEdit(false);
+    } catch {
+      //
+    }
   };
 
   if (!openEdit) return null;
@@ -41,14 +46,13 @@ function UpdateComment({ comment, openEdit, setOpenEdit }: Props) {
       onSubmit={handleSubmit}
       validationSchema={schema}
     >
-      {({ values, setFieldValue, isSubmitting }) => (
+      {({ values, setFieldValue }) => (
         <Form>
           <RichTextEditor
             value={values.content}
             placeholder="What are your thoughts?"
             name="content"
             setFieldValue={setFieldValue}
-            isSubmitting={isSubmitting}
           />
           <div className="flex justify-end gap-2">
             <Button className="w-24" onClick={() => setOpenEdit(false)}>

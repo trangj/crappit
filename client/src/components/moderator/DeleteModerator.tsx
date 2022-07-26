@@ -15,8 +15,20 @@ type DeleteModeratorProps = {
 
 function DeleteModerator({ topic, user }: DeleteModeratorProps) {
   const [open, setOpen] = useState(false);
-  const { isLoading, mutate } = useDeleteModerator(topic);
+  const { isLoading, mutateAsync } = useDeleteModerator(topic);
   const cancelRef = useRef(null);
+
+  const handleClick = async () => {
+    try {
+      await mutateAsync({
+        topic: topic.title,
+        id: user.user_id,
+      });
+      setOpen(false);
+    } catch {
+      //
+    }
+  };
 
   return (
     <>
@@ -51,13 +63,7 @@ function DeleteModerator({ topic, user }: DeleteModeratorProps) {
                 Cancel
               </Button>
               <Button
-                onClick={() => {
-                  mutate({
-                    topic: topic.title,
-                    id: user.user_id,
-                  });
-                  setOpen(false);
-                }}
+                onClick={handleClick}
                 loading={isLoading}
                 variant="filled"
               >

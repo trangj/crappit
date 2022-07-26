@@ -13,8 +13,20 @@ type Props = {
 
 function DeleteCommentModerator({ comment, topic }: Props) {
   const [open, setOpen] = useState(false);
-  const { isLoading, mutate } = useDeleteCommentModerator(comment, setOpen);
+  const { isLoading, mutateAsync } = useDeleteCommentModerator(comment);
   const cancelRef = useRef(null);
+
+  const handleClick = async () => {
+    try {
+      await mutateAsync({
+        commentId: comment.id,
+        topic: topic.title,
+      });
+      setOpen(false);
+    } catch {
+      //
+    }
+  };
 
   return (
     <>
@@ -42,12 +54,7 @@ function DeleteCommentModerator({ comment, topic }: Props) {
                 Cancel
               </Button>
               <Button
-                onClick={() => {
-                  mutate({
-                    commentId: comment.id,
-                    topic: topic.title,
-                  });
-                }}
+                onClick={handleClick}
                 loading={isLoading}
                 variant="filled"
                 className="w-20"

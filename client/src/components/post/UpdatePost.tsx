@@ -21,16 +21,21 @@ interface FormData {
 }
 
 function UpdatePost({ post, openEdit, setOpenEdit }: Props) {
-  const { isLoading, mutate } = useUpdatePost(setOpenEdit, post);
+  const { isLoading, mutateAsync } = useUpdatePost(post);
 
-  const handleSubmit = ({ content }: FormData) => {
+  const handleSubmit = async ({ content }: FormData) => {
     const newPost = {
       content,
     };
-    mutate({
-      postid: post.id,
-      newPost,
-    });
+    try {
+      await mutateAsync({
+        postid: post.id,
+        newPost,
+      });
+      setOpenEdit(false);
+    } catch {
+      //
+    }
   };
 
   if (!openEdit) return null;
@@ -41,14 +46,13 @@ function UpdatePost({ post, openEdit, setOpenEdit }: Props) {
       onSubmit={handleSubmit}
       validationSchema={schema}
     >
-      {({ values, setFieldValue, isSubmitting }) => (
+      {({ values, setFieldValue }) => (
         <Form>
           <RichTextEditor
             value={values.content}
             placeholder="Text (optional)"
             name="content"
             setFieldValue={setFieldValue}
-            isSubmitting={isSubmitting}
           />
           <div className="flex justify-end gap-2">
             <Button className="w-24" onClick={() => setOpenEdit(false)}>

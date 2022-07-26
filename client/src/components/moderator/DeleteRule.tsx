@@ -12,8 +12,20 @@ type DeleteRuleProps = {
 
 function DeleteRule({ topic, rule }: DeleteRuleProps) {
   const [open, setOpen] = useState(false);
-  const { isLoading, mutate } = useDeleteRule(topic);
+  const { isLoading, mutateAsync } = useDeleteRule(topic);
   const cancelRef = useRef(null);
+
+  const handleClick = async () => {
+    try {
+      await mutateAsync({
+        topic: topic.title,
+        rule,
+      });
+      setOpen(false);
+    } catch {
+      //
+    }
+  };
 
   return (
     <>
@@ -44,13 +56,7 @@ function DeleteRule({ topic, rule }: DeleteRuleProps) {
                 Cancel
               </Button>
               <Button
-                onClick={() => {
-                  mutate({
-                    topic: topic.title,
-                    rule,
-                  });
-                  setOpen(false);
-                }}
+                onClick={handleClick}
                 loading={isLoading}
                 variant="filled"
               >

@@ -17,11 +17,10 @@ async function addReply({ commentId, reply }: { commentId: number, reply: Commen
   }
 }
 
-export default function useAddReply(setOpenReply: (arg0: boolean) => void, comment: Comment) {
+export default function useAddReply(comment: Comment) {
   return useMutation<Response, Error, any, any>(addReply, {
     onSuccess: (res) => {
       comment.children = [res.comment, ...comment.children];
-      setOpenReply(false);
     },
     onError: (err) => {
       toast.error(err.status.text);

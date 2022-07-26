@@ -156,6 +156,10 @@
 	min-height: 130px;
 }
 
+.ProseMirror:focus-visible {
+	outline: none;
+}
+
 .ProseMirror p.is-editor-empty:first-child::before {
 	content: attr(data-placeholder);
 	float: left;

@@ -30,14 +30,18 @@ interface FormValues {
 function AddRule({ topic }: AddRuleProps) {
   const [open, setOpen] = useState(false);
   const cancelRef = useRef(null);
-  const { mutate, isLoading } = useAddRule(topic);
+  const { mutateAsync, isLoading } = useAddRule(topic);
 
   const handleSubmit = async ({ name, description }: FormValues) => {
-    mutate({
-      topic: topic.title,
-      rule: { name, description, created_at: new Date().toISOString() },
-    });
-    setOpen(false);
+    try {
+      await mutateAsync({
+        topic: topic.title,
+        rule: { name, description, created_at: new Date().toISOString() },
+      });
+      setOpen(false);
+    } catch {
+      //
+    }
   };
 
   const initialValues: FormValues = {

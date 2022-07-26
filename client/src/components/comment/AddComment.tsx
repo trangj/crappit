@@ -22,9 +22,9 @@ interface FormValues {
 
 function AddComment({ post, sortParam }: Props) {
   const { user } = useUser();
-  const { isLoading, mutate } = useAddComment(String(post), sortParam);
+  const { isLoading, mutateAsync } = useAddComment(String(post), sortParam);
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: FormValues,
     { resetForm }: FormikHelpers<FormValues>,
   ) => {
@@ -33,10 +33,14 @@ function AddComment({ post, sortParam }: Props) {
       content,
       postId: post,
     };
-    mutate({
-      newComment,
-    });
-    resetForm();
+    try {
+      await mutateAsync({
+        newComment,
+      });
+      resetForm();
+    } catch {
+      //
+    }
   };
 
   if (!user) {
@@ -77,14 +81,13 @@ function AddComment({ post, sortParam }: Props) {
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
-        {({ values, setFieldValue, isSubmitting }) => (
+        {({ values, setFieldValue }) => (
           <Form>
             <RichTextEditor
               value={values.content}
               placeholder="What are your thoughts?"
               name="content"
               setFieldValue={setFieldValue}
-              isSubmitting={isSubmitting}
             />
             <Button
               type="submit"

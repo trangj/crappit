@@ -31,23 +31,27 @@ interface FormValues {
 
 function AddModerator({ topic }: Props) {
   const [open, setOpen] = useState(false);
-  const { isLoading, mutate } = useAddModerator(topic);
+  const { isLoading, mutateAsync } = useAddModerator(topic);
   const cancelRef = useRef(null);
 
-  const handleSubmit = (
+  const handleSubmit = async (
     {
       username, can_manage_posts_and_comments, can_manage_settings, can_manage_everything,
     }: FormValues,
     { resetForm }: FormikHelpers<FormValues>,
   ) => {
-    mutate({
-      topic: topic.title,
-      username,
-      can_manage_posts_and_comments,
-      can_manage_settings,
-      can_manage_everything,
-    });
-    resetForm();
+    try {
+      await mutateAsync({
+        topic: topic.title,
+        username,
+        can_manage_posts_and_comments,
+        can_manage_settings,
+        can_manage_everything,
+      });
+      resetForm();
+    } catch {
+      //
+    }
   };
 
   return (

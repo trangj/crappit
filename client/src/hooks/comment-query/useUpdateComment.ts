@@ -14,14 +14,13 @@ async function updateComment(
   }
 }
 
-export default function useUpdateComment(setOpenEdit: (arg0: boolean) => void, comment: Comment) {
+export default function useUpdateComment(comment: Comment) {
   return useMutation(updateComment, {
     onSuccess: (res) => {
       comment.content = res.comment.content;
       comment.updated_at = res.comment.updated_at;
       comment.is_edited = true;
       toast.success(res.status.text);
-      setOpenEdit(false);
     },
     onError: (err: any) => {
       toast.error(err.status.text);

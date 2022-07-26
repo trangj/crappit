@@ -12,7 +12,7 @@ async function updatePost({ postid, newPost }: { postid: number, newPost: { cont
   }
 }
 
-export default function useUpdatePost(setOpenEdit: (arg0: boolean) => void, post: Post) {
+export default function useUpdatePost(post: Post) {
   const queryClient = useQueryClient();
   return useMutation(updatePost, {
     onSuccess: (res) => {
@@ -21,7 +21,6 @@ export default function useUpdatePost(setOpenEdit: (arg0: boolean) => void, post
         return initialData;
       });
       toast.success(res.status.text);
-      setOpenEdit(false);
     },
     onError: (err: any) => {
       toast.error(err.status.text);

@@ -10,8 +10,19 @@ type Props = {
 
 function DeleteComment({ comment }: Props) {
   const [open, setOpen] = useState(false);
-  const { isLoading, mutate } = useDeleteComment(comment, setOpen);
+  const { isLoading, mutateAsync } = useDeleteComment(comment);
   const cancelRef = useRef(null);
+
+  const handleClick = async () => {
+    try {
+      await mutateAsync({
+        commentId: comment.id,
+      });
+      setOpen(false);
+    } catch {
+      //
+    }
+  };
 
   return (
     <>
@@ -39,11 +50,7 @@ function DeleteComment({ comment }: Props) {
                 Cancel
               </Button>
               <Button
-                onClick={() => {
-                  mutate({
-                    commentId: comment.id,
-                  });
-                }}
+                onClick={handleClick}
                 loading={isLoading}
                 variant="filled"
                 className="w-20"

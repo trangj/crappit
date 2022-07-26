@@ -19,7 +19,10 @@ function SearchBar() {
     <div className={`flex-grow px-4 ${!user ? 'mx-auto max-w-2xl' : ''}`}>
       <form
         onSubmit={handleSubmit}
-        className="flex h-9 rounded border dark:bg-gray-800 dark:border-gray-700 bg-gray-100 hover:bg-white hover:border-blue-500 dark:hover:border-white dark:hover:bg-gray-900 focus-within:bg-white focus-within:border-blue-500 dark:focus-within:border-white dark:focus-within:bg-gray-900"
+        className="
+          flex h-9 rounded border dark:bg-gray-800 dark:border-gray-700 bg-gray-100 hover:bg-white
+          hover:border-blue-500 dark:hover:border-white dark:hover:bg-gray-900 focus-within:bg-white
+          focus-within:border-blue-500 dark:focus-within:border-white dark:focus-within:bg-gray-900"
       >
         <label className="flex">
           <div className="flex items-center pr-2 pl-4">
