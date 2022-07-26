@@ -141,7 +141,7 @@ function AddPost() {
         validationSchema={schema}
       >
         {({
-          setFieldValue, values, isSubmitting, isValid,
+          setFieldValue, values, isValid,
         }) => (
           <Form className="flex flex-col">
             <Field
@@ -221,7 +221,6 @@ function AddPost() {
                       placeholder="Text (optional)"
                       name="content"
                       setFieldValue={setFieldValue}
-                      isSubmitting={isSubmitting}
                     />
                   </Tab.Panel>
                   <Tab.Panel>
