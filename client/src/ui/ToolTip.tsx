@@ -25,9 +25,7 @@ function ToolTip({
       >
         <div className="text-xs">{title}</div>
       </div>
-      <span>
-        {children}
-      </span>
+      {children}
     </div>
   );
 }
