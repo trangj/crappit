@@ -1,67 +1,24 @@
 import { Popover } from '@headlessui/react';
 import { Button } from 'src/ui/Button';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { BellIcon, CheckIcon, CogIcon } from '@heroicons/react/outline';
 import { Card } from 'src/ui/Card';
 import Link from 'next/link';
-import axios from 'src/axiosConfig';
 import dayjs from 'dayjs';
-import { Notification } from 'src/types/entities/notification';
-import toast from 'react-hot-toast';
 import ToolTip from 'src/ui/ToolTip';
+import useNotifications from 'src/hooks/notification-query/useNotifications';
+import useReadNotification from 'src/hooks/notification-query/useReadNotification';
+import useReadAllNotifications from 'src/hooks/notification-query/useReadAllNotifications';
+import NotificationSkeleton from '../util/NotificationSkeleton';
 
 function NotificationPopover() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchNotifications() {
-      try {
-        setLoading(true);
-        const res = await axios.get('/api/notification?limit=5');
-        setNotifications(res.data);
-      } catch {
-        toast.error('Failed to fetch notifcations');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchNotifications();
-  }, []);
-
-  const handleRead = async (notification_id : number) => {
-    try {
-      const res = await axios.post('/api/notification/read', {
-        id: notification_id,
-      });
-      const newNotifications = notifications.map((notification) => {
-        if (notification.id === res.data.id) {
-          notification.read_at = res.data.read_at;
-        }
-        return notification;
-      });
-      setNotifications(newNotifications);
-    } catch {
-      toast.error('Failed to read notification');
-    }
-  };
-
-  const handleReadAll = async () => {
-    try {
-      await axios.post('/api/notification/read_all');
-      const newNotifications = notifications.map((notification) => {
-        notification.read_at = new Date();
-        return notification;
-      });
-      setNotifications(newNotifications);
-    } catch {
-      toast.error('Failed to read all notifications');
-    }
-  };
+  const { data, isLoading } = useNotifications();
+  const { mutate: readMutate } = useReadNotification();
+  const { mutate: readAllMutate } = useReadAllNotifications();
 
   const hasReadAll = useMemo(
-    () => notifications.every((notification) => notification.read_at),
-    [notifications],
+    () => data && data.pages[0].notifications.every((notification) => notification.read_at),
+    [data],
   );
 
   return (
@@ -91,17 +48,17 @@ function NotificationPopover() {
                   Notifications
                 </span>
                 <div className="flex gap-1">
-                  <Button variant="ghost" border="rounded" size="xs" icon={<CheckIcon className="h-6 w-6" />} onClick={() => handleReadAll()} />
+                  <Button variant="ghost" border="rounded" size="xs" icon={<CheckIcon className="h-6 w-6" />} onClick={() => readAllMutate()} />
                   <Link passHref href="/settings/notifications">
                     <Button variant="ghost" border="rounded" as="a" size="xs" icon={<CogIcon className="h-6 w-6" />} />
                   </Link>
                 </div>
               </nav>
               <div className="max-h-80 overflow-y-auto overflow-hidden">
-                {!loading ? notifications.map((notification) => (
+                {!isLoading && data ? data.pages[0].notifications.map((notification) => (
                   <span
                     key={notification.id}
-                    onClick={() => handleRead(notification.id)}
+                    onClick={() => readMutate({ id: notification.id })}
                   >
                     <a
                       href={notification.url}
@@ -126,11 +83,7 @@ function NotificationPopover() {
                     </a>
                   </span>
                 )) : (
-                  <div className="p-4 flex flex-col gap-3">
-                    <div className="animate-pulse h-10 rounded w-full bg-gray-200 dark:bg-gray-700" />
-                    <div className="animate-pulse h-10 rounded w-full bg-gray-200 dark:bg-gray-700" />
-                    <div className="animate-pulse h-10 rounded w-full bg-gray-200 dark:bg-gray-700" />
-                  </div>
+                  <NotificationSkeleton />
                 )}
               </div>
               <div className="flex items-center justify-center p-3 h-12 dark:bg-gray-800 bg-gray-100">

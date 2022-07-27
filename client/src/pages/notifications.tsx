@@ -1,17 +1,19 @@
 import { CheckIcon, CogIcon } from '@heroicons/react/outline';
-import axios from 'src/axiosConfig';
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from 'src/ui/Button';
 import dayjs from 'dayjs';
 import { Card } from 'src/ui/Card';
 import { Divider } from 'src/ui/Divider';
-import { Notification } from 'src/types/entities/notification';
-import toast from 'react-hot-toast';
 import { useUser } from 'src/context/UserState';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
+import useReadAllNotifications from 'src/hooks/notification-query/useReadAllNotifications';
+import useNotifications from 'src/hooks/notification-query/useNotifications';
+import useReadNotification from 'src/hooks/notification-query/useReadNotification';
+import InfiniteScroll from 'react-infinite-scroller';
+import NotificationSkeleton from 'src/components/util/NotificationSkeleton';
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (!req.cookies.crappit_session) {
@@ -30,53 +32,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 function NotificationsPage() {
   const { user } = useUser();
   const router = useRouter();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchNotifications() {
-      try {
-        setLoading(true);
-        const res = await axios.get('/api/notification');
-        setNotifications(res.data);
-      } catch {
-        // toast.error('Failed to fetch notifcations');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchNotifications();
-  }, []);
-
-  const handleRead = async (notification_id : number) => {
-    try {
-      const res = await axios.post('/api/notification/read', {
-        id: notification_id,
-      });
-      const newNotifications = notifications.map((notification) => {
-        if (notification.id === res.data.id) {
-          notification.read_at = res.data.read_at;
-        }
-        return notification;
-      });
-      setNotifications(newNotifications);
-    } catch {
-      toast.error('Failed to read notification');
-    }
-  };
-
-  const handleReadAll = async () => {
-    try {
-      await axios.post('/api/notification/read_all');
-      const newNotifications = notifications.map((notification) => {
-        notification.read_at = new Date();
-        return notification;
-      });
-      setNotifications(newNotifications);
-    } catch {
-      toast.error('Failed to read all notifications');
-    }
-  };
+  const {
+    data, isLoading, fetchNextPage, isError, hasNextPage,
+  } = useNotifications();
+  const { mutate: readMutate } = useReadNotification();
+  const { mutate: readAllMutate } = useReadAllNotifications();
 
   if (!user) {
     router.push('/login');
@@ -91,7 +52,7 @@ function NotificationsPage() {
       <nav className="flex justify-between items-center">
         <h5>Notifications</h5>
         <div className="flex gap-1">
-          <Button variant="ghost" border="rounded" size="lg" icon={<CheckIcon className="h-6 w-6 mr-1" />} onClick={() => handleReadAll()}>
+          <Button variant="ghost" border="rounded" size="lg" icon={<CheckIcon className="h-6 w-6 mr-1" />} onClick={() => readAllMutate()}>
             Mark as read
           </Button>
           <Link passHref href="/settings/notifications">
@@ -102,40 +63,48 @@ function NotificationsPage() {
         </div>
       </nav>
       <Card className="mt-4">
-        {!loading ? notifications.map((notification) => (
-          <span
-            key={notification.id}
-            onClick={() => handleRead(notification.id)}
+        {!isLoading && data ? (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={() => fetchNextPage({ cancelRefetch: false })}
+            hasMore={!isError && hasNextPage}
           >
-            <a
-              href={notification.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`p-4 flex flex-col ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
-            >
-              <span>
-                <span>
-                  {notification.title}
-                </span>
-                <span className="dark:text-gray-400 text-gray-500">
-                  {' '}
-                  &bull;
-                  {' '}
-                  {dayjs(notification.sent_at).fromNow()}
-                </span>
-              </span>
-              <span className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
-              </span>
-            </a>
-            <Divider />
-          </span>
-        )) : (
-          <div className="p-4 flex flex-col gap-3">
-            <div className="animate-pulse h-10 rounded w-full bg-gray-200 dark:bg-gray-700" />
-            <div className="animate-pulse h-10 rounded w-full bg-gray-200 dark:bg-gray-700" />
-            <div className="animate-pulse h-10 rounded w-full bg-gray-200 dark:bg-gray-700" />
-          </div>
+            {data.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group.notifications.map((notification) => (
+                  <span
+                    key={notification.id}
+                    onClick={() => readMutate({ id: notification.id })}
+                  >
+                    <a
+                      href={notification.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`p-4 flex flex-col ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
+                    >
+                      <span>
+                        <span>
+                          {notification.title}
+                        </span>
+                        <span className="dark:text-gray-400 text-gray-500">
+                          {' '}
+                          &bull;
+                          {' '}
+                          {dayjs(notification.sent_at).fromNow()}
+                        </span>
+                      </span>
+                      <span className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                        {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
+                      </span>
+                    </a>
+                    <Divider />
+                  </span>
+                ))}
+              </React.Fragment>
+            ))}
+          </InfiniteScroll>
+        ) : (
+          <NotificationSkeleton />
         )}
       </Card>
     </div>

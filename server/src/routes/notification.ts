@@ -8,12 +8,18 @@ router.get('/', auth, async (req, res) => {
   try {
     const notifications = await Notification.find({
       where: { recipient_id: req.user.id },
-      take: parseInt(req.query.limit as string) || undefined,
+      take: 5,
+      skip: parseInt(req.query.skip as string) || undefined,
       order: { sent_at: 'DESC' },
     });
-    res.status(200).json(notifications);
+    res.status(200).json({
+      notifications,
+      nextCursor: notifications.length
+        ? parseInt(req.query.skip as string) + notifications.length
+        : undefined,
+    });
   } catch (err) {
-    res.status(400);
+    res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }
 });
 
@@ -30,7 +36,7 @@ router.get('/settings', auth, async (req, res) => {
     });
     res.status(200).json(notificationSettings);
   } catch (err) {
-    res.status(400);
+    res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }
 });
 
@@ -44,7 +50,7 @@ router.put('/settings', auth, async (req, res) => {
     notificationSetting.save();
     res.status(200).json(notificationSetting);
   } catch (err) {
-    res.status(400);
+    res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }
 });
 
@@ -56,7 +62,7 @@ router.post('/read', auth, async (req, res) => {
     await notification.save();
     res.status(200).json(notification);
   } catch (err) {
-    res.status(400);
+    res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }
 });
 
@@ -69,7 +75,7 @@ router.post('/read_all', auth, async (req, res) => {
     `, [new Date()]);
     res.status(200).json({});
   } catch (err) {
-    res.status(400);
+    res.status(400).json({ status: { text: err.message, severity: 'error' } });
   }
 });
 
