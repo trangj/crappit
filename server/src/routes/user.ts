@@ -90,11 +90,11 @@ router.post('/register', async (req, res) => {
 
     // add user notification settings
     await NotificationSetting.query(`
-      insert into notification_setting (user_id, notification_type_id, value)
+      insert into notification_setting (user_id, notification_type_id, "value")
       select 
       u.id user_id,
       nt.id notification_type_id, 
-      true value
+      true "value"
       from "user" u, notification_type nt
       where u.id = $1
     `, [newUser.id]);
