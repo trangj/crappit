@@ -2,10 +2,10 @@ import express from 'express';
 import bcyrpt from 'bcryptjs';
 import crypto from 'crypto';
 import sgMail from '@sendgrid/mail';
-import { MoreThan } from 'typeorm';
+import { getManager, MoreThan } from 'typeorm';
 import { auth, optionalAuth } from '../middleware/auth';
 import {
-  NotificationSetting, Post, Topic, User,
+  Post, Topic, User,
 } from '../entities';
 import { deleteFile, upload } from '../middleware/upload';
 import passport from '../middleware/passport';
@@ -82,22 +82,24 @@ router.post('/register', async (req, res) => {
     const hash = await bcyrpt.hash(password, salt);
     if (!hash) throw Error('Error with generating hash');
 
-    const newUser = await User.create({
+    let newUser = User.create({
       username,
       email,
       password: hash,
-    }).save().catch(() => { throw Error('A user already exists with that username or email'); });
+    });
 
-    // add user notification settings
-    await NotificationSetting.query(`
-      insert into notification_setting (user_id, notification_type_id, "value")
-      select 
-      u.id user_id,
-      nt.id notification_type_id, 
-      true "value"
-      from "user" u, notification_type nt
-      where u.id = $1
-    `, [newUser.id]);
+    await getManager().transaction(async (em) => {
+      newUser = await em.save(newUser);
+      await em.query(`
+        insert into notification_setting (user_id, notification_type_id, "value")
+        select 
+        u.id user_id,
+        nt.id notification_type_id, 
+        true "value"
+        from "user" u, notification_type nt
+        where u.id = $1
+      `, [newUser.id]);
+    });
 
     req.session.user = { id: newUser.id };
     redis.sadd(`user_sess:${newUser.id}`, `sess:${req.session.id}`);

@@ -1,5 +1,6 @@
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
+import { getManager } from 'typeorm';
 import { User } from '../entities';
 
 passport.use(new Strategy({
@@ -17,11 +18,23 @@ passport.use(new Strategy({
       user.google_id = profile.id;
       await user.save();
     } else {
-      user = await User.create({
+      user = User.create({
         username: Date.now().toString(),
         email: profile.emails[0].value,
         google_id: profile.id,
-      }).save().catch(() => { throw Error('A user already exists with that username or email'); });
+      });
+      await getManager().transaction(async (em) => {
+        user = await em.save(user);
+        await em.query(`
+          insert into notification_setting (user_id, notification_type_id, "value")
+          select 
+          u.id user_id,
+          nt.id notification_type_id, 
+          true "value"
+          from "user" u, notification_type nt
+          where u.id = $1
+      `, [user.id]);
+      });
     }
 
     done(undefined, { id: user.id });
