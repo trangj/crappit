@@ -1,4 +1,4 @@
-import React, { ButtonHTMLAttributes, ReactNode } from 'react';
+import React, { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 import Link from 'next/link';
 import { User } from 'src/types/entities/user';
 import { Menu } from '@headlessui/react';
@@ -18,35 +18,35 @@ type Props = {
 type NextLinkProps = {
   href: string,
   children: ReactNode,
+  active: boolean;
   icon?: ReactNode;
 };
 
 type OptionProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode,
+  active: boolean
   icon?: ReactNode,
 };
 
-function NextLink({
-  href, children, icon, ...props
-}: NextLinkProps) {
-  return (
-    <Link href={href} passHref>
-      <a {...props} className="menu-option text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white">
-        {icon || null}
-        {children}
-      </a>
-    </Link>
-  );
-}
-
-function Option({ children, icon, ...props }: OptionProps) {
-  return (
-    <button {...props} className="menu-option text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white" type="button">
+const NextLink = forwardRef<any, any>(({
+  href, children, icon, active, ...props
+}: NextLinkProps, ref) => (
+  <Link href={href} passHref>
+    <a {...props} className={`menu-option ${active && 'bg-gray-100 dark:bg-gray-800'}`} ref={ref}>
       {icon || null}
       {children}
-    </button>
-  );
-}
+    </a>
+  </Link>
+));
+
+const Option = forwardRef<any, any>(({
+  children, icon, active, ...props
+}: OptionProps, ref) => (
+  <button {...props} ref={ref} className={`menu-option ${active && 'bg-gray-100 dark:bg-gray-800'}`} type="button">
+    {icon || null}
+    {children}
+  </button>
+));
 
 function UserMenu({
   user, logoutUser, theme, setTheme,
@@ -76,35 +76,75 @@ function UserMenu({
       <Menu.Items className="menu w-56">
         {user && (
         <>
-          <Menu.Item as={NextLink} href={`/user/${user.id}`} icon={<UserCircleIcon className="h-5 w-5" />}>
-            Profile
+          <Menu.Item>
+            {({ active }) => (
+              <NextLink
+                active={active}
+                href={`/user/${user.id}`}
+                icon={<UserCircleIcon className="h-5 w-5" />}
+              >
+                Profile
+              </NextLink>
+            )}
           </Menu.Item>
-          <Menu.Item as={NextLink} href="/settings" icon={<CogIcon className="h-5 w-5" />}>
-            Settings
+          <Menu.Item>
+            {({ active }) => (
+              <NextLink
+                active={active}
+                href="/settings"
+                icon={<CogIcon className="h-5 w-5" />}
+              >
+                Settings
+              </NextLink>
+            )}
           </Menu.Item>
         </>
         )}
-        <Menu.Item as={NextLink} href="/t" icon={<SearchIcon className="h-5 w-5" />}>
-          Discover Topics
+        <Menu.Item>
+          {({ active }) => (
+            <NextLink
+              active={active}
+              href="/t"
+              icon={<SearchIcon className="h-5 w-5" />}
+            >
+              Discover Topics
+            </NextLink>
+          )}
         </Menu.Item>
-        <Menu.Item
-          as={Option}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          icon={theme === 'dark' ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
-        >
-          Dark Mode
+        <Menu.Item>
+          {({ active }) => (
+            <Option
+              active={active}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              icon={theme === 'dark' ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
+            >
+              Dark Mode
+            </Option>
+          )}
         </Menu.Item>
         {user ? (
-          <Menu.Item
-            onClick={async () => logoutUser()}
-            as={Option}
-            icon={<LogoutIcon className="h-5 w-5" />}
-          >
-            Logout
+          <Menu.Item>
+            {({ active }) => (
+              <Option
+                active={active}
+                onClick={async () => logoutUser()}
+                icon={<LogoutIcon className="h-5 w-5" />}
+              >
+                Logout
+              </Option>
+            )}
           </Menu.Item>
         ) : (
-          <Menu.Item as={NextLink} href="/login" icon={<UserCircleIcon className="h-5 w-5" />}>
-            Sign Up or Log In
+          <Menu.Item>
+            {({ active }) => (
+              <NextLink
+                active={active}
+                href="/login"
+                icon={<UserCircleIcon className="h-5 w-5" />}
+              >
+                Sign Up or Log In
+              </NextLink>
+            )}
           </Menu.Item>
         )}
       </Menu.Items>

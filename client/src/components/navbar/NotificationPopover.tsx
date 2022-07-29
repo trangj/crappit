@@ -17,7 +17,8 @@ function NotificationPopover() {
   const { mutate: readAllMutate } = useReadAllNotifications();
 
   const hasReadAll = useMemo(
-    () => data && data.pages[0].notifications.every((notification) => notification.read_at),
+    () => (data
+      ? data.pages[0].notifications.every((notification) => notification.read_at) : true),
     [data],
   );
 
