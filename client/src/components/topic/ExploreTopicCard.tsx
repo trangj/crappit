@@ -32,7 +32,7 @@ function ExploreTopicCard() {
         ? (
           <div className={`relative h-20 ${topics.length && !topics[0].image_url && 'bg-blue-400'}`}>
             {
-              topics.length && topics[0].image_url && (
+              topics.length && topics[0].image_url ? (
                 <Image
                   alt="Topic banner"
                   src={topics[0].image_name}
@@ -40,7 +40,7 @@ function ExploreTopicCard() {
                   objectFit="cover"
                   objectPosition="center"
                 />
-              )
+              ) : null
             }
             <div className="h-full w-full absolute bg-gradient-to-t from-white dark:from-gray-850" />
             <h6 className="absolute bottom-2 left-4 font-medium text-base">Top Communities</h6>
