@@ -46,7 +46,7 @@ function DeletePost({ post }: Props) {
                   });
                 }}
                 loading={isLoading}
-                variant="filled"
+                variant="danger"
                 className="w-20"
               >
                 Delete

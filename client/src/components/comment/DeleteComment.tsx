@@ -52,7 +52,7 @@ function DeleteComment({ comment }: Props) {
               <Button
                 onClick={handleClick}
                 loading={isLoading}
-                variant="filled"
+                variant="danger"
                 className="w-20"
               >
                 Delete

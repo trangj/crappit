@@ -47,7 +47,7 @@ function HomePage() {
   );
 
   return (
-    <Container>
+    <Container className="flex justify-center gap-6">
       <Head>
         <title>Crappit - Dive into anything</title>
         <meta
@@ -65,53 +65,51 @@ function HomePage() {
           content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!"
         />
       </Head>
-      <div className="flex gap-6">
-        <div className="w-full">
-          <CreatePostCard />
-          <SortPost sortParam={sortParam} setSortParam={setSortParam} />
-          {!isLoading && data ? (
-            <InfiniteScroll
-              pageStart={0}
-              loadMore={() => fetchNextPage({ cancelRefetch: false })}
-              hasMore={!isError && hasNextPage}
-              loader={<PostLoaderSkeleton key="loader" />}
-            >
-              {data.pages.map((group, i) => (
-                <React.Fragment key={i}>
-                  {group.posts.map((post) => (
-                    <PostItem post={post} key={post.id} />
-                  ))}
-                </React.Fragment>
-              ))}
-            </InfiniteScroll>
-          ) : (
-            <>
-              <PostSkeleton />
-              <PostSkeleton />
-            </>
-          )}
-        </div>
-        <SideBar>
-          <ExploreTopicCard />
-          <Card className="flex flex-col gap-3 p-3">
-            <div className="font-semibold">Home</div>
-            <div className="content">
-              Your personal Crappit frontpage. Come here to check in with your
-              favorite topics.
-            </div>
-            <Link passHref href="/submit">
-              <Button variant="filled" fullWidth as="a">
-                Create Post
-              </Button>
-            </Link>
-            <Link passHref href="/t/create">
-              <Button fullWidth as="a">
-                Create Topic
-              </Button>
-            </Link>
-          </Card>
-        </SideBar>
+      <div className="lg:max-w-2xl max-w-full w-full">
+        <CreatePostCard />
+        <SortPost sortParam={sortParam} setSortParam={setSortParam} />
+        {!isLoading && data ? (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={() => fetchNextPage({ cancelRefetch: false })}
+            hasMore={!isError && hasNextPage}
+            loader={<PostLoaderSkeleton key="loader" />}
+          >
+            {data.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group.posts.map((post) => (
+                  <PostItem post={post} key={post.id} />
+                ))}
+              </React.Fragment>
+            ))}
+          </InfiniteScroll>
+        ) : (
+          <>
+            <PostSkeleton />
+            <PostSkeleton />
+          </>
+        )}
       </div>
+      <SideBar>
+        <ExploreTopicCard />
+        <Card className="flex flex-col gap-3 p-3">
+          <div className="font-semibold">Home</div>
+          <div className="content">
+            Your personal Crappit frontpage. Come here to check in with your
+            favorite topics.
+          </div>
+          <Link passHref href="/submit">
+            <Button variant="filled" fullWidth as="a">
+              Create Post
+            </Button>
+          </Link>
+          <Link passHref href="/t/create">
+            <Button fullWidth as="a">
+              Create Topic
+            </Button>
+          </Link>
+        </Card>
+      </SideBar>
     </Container>
   );
 }

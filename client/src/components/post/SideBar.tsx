@@ -10,7 +10,7 @@ type Props = {
 
 function SideBar({ children }: Props) {
   return (
-    <div className="flex-col w-80 hidden lg:flex">
+    <div className="flex-col hidden lg:flex" style={{ width: 310 }}>
       <div style={{ width: 'inherit' }}>
         {children}
       </div>

@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { Post } from 'src/types/entities/post';
-import { ChatAltIcon, PencilIcon, ReplyIcon } from '@heroicons/react/outline';
+import {
+  ChatAltIcon, ExternalLinkIcon, PencilIcon, ReplyIcon,
+} from '@heroicons/react/outline';
 import toast from 'react-hot-toast';
 import useTopic from 'src/hooks/topic-query/useTopic';
 import { useRouter } from 'next/router';
 import ToolTip from 'src/ui/ToolTip';
+import Embed from 'src/ui/Embed';
 import DeletePostModerator from './DeletePostModerator';
 import DeletePost from './DeletePost';
 import UpdatePost from './UpdatePost';
@@ -31,7 +34,7 @@ function PostCard({ post }: Props) {
         <Voting post={post} />
       </div>
       <div className="flex flex-col w-full">
-        <div className="w-full p-2">
+        <div className="w-full pt-2 px-2">
           <small className="flex pb-1">
             <div className="text-gray-500 dark:text-gray-400">
               Posted by
@@ -49,16 +52,6 @@ function PostCard({ post }: Props) {
             </div>
           </small>
           <h5 className="font-medium">{post.title}</h5>
-          {post.type === 'link' && (
-          <a
-            href={post.content}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline text-xs"
-          >
-            {post.content}
-          </a>
-          )}
           {openEdit ? (
             <UpdatePost
               post={post}
@@ -68,12 +61,26 @@ function PostCard({ post }: Props) {
           ) : (
             post.type === 'text' && (
               <div
-                className="pt-2 content"
+                className="py-2 content"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
             )
           )}
         </div>
+        {post.type === 'link' && (
+          <div className="ml-2">
+            <a
+              href={post.content}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline text-xs"
+            >
+              {`${post.content.slice(0, 30)}...`}
+              <ExternalLinkIcon className="h-4 w-4 inline" />
+            </a>
+            <Embed url={post.content} />
+          </div>
+        )}
         {post.type === 'photo' && (
         <a
           href={`${process.env.NEXT_PUBLIC_IMAGE_LOADER_URL}${post.image_name}`}

@@ -2,12 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import { Post } from 'src/types/entities/post';
-import { ChatAltIcon, ReplyIcon } from '@heroicons/react/outline';
+import { ChatAltIcon, ExternalLinkIcon, ReplyIcon } from '@heroicons/react/outline';
 import toast from 'react-hot-toast';
 import Image from 'next/image';
 import { Avatar } from 'src/ui/Avatar';
 import { useRouter } from 'next/router';
 import ToolTip from 'src/ui/ToolTip';
+import Embed from 'src/ui/Embed';
 import { Button } from '../../ui/Button';
 import { LinkCard, LinkCardOverlay } from '../../ui/LinkCard';
 import Voting from './Voting';
@@ -80,17 +81,21 @@ function PostItem({ post, ...props }: Props) {
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
           )}
-          {post.type === 'link' && (
+        </div>
+        {post.type === 'link' && (
+        <div>
           <a
             href={post.content}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline text-xs"
+            className="text-blue-600 dark:text-blue-400 hover:underline text-xs px-2"
           >
-            {post.content}
+            {`${post.content.slice(0, 30)}...`}
+            <ExternalLinkIcon className="h-4 w-4 inline" />
           </a>
-          )}
+          <Embed url={post.content} />
         </div>
+        )}
         {post.type === 'photo' && (
         <Link passHref href={`/t/${post.topic}/comments/${post.id}`}>
           <a className="self-center mt-2">

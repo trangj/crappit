@@ -14,6 +14,7 @@ import SideBar from 'src/components/post/SideBar';
 import CreatePost from 'src/components/post/CreatePostCard';
 import TopicRuleCard from 'src/components/topic/TopicRuleCard';
 import TopicCardSkeleton from 'src/components/util/TopicCardSkeleton';
+import { Container } from 'src/ui/Container';
 import useTopic, { fetchTopic } from '../../../hooks/topic-query/useTopic';
 import usePosts, { fetchPosts } from '../../../hooks/post-query/usePosts';
 import TopicHeader from '../../../components/topic/TopicHeader';
@@ -87,39 +88,38 @@ function TopicPage() {
             </div>
           )
       }
-      <div className="mt-4 container mx-auto max-w-5xl sm:px-5">
-        <div className="flex gap-6">
-          <div className="w-full">
-            <CreatePost url={`/t/${topicData?.title}`} />
-            <SortPost
-              sortParam={sortParam}
-              setSortParam={setSortParam}
-              url={`/t/${topicData?.title}?`}
-            />
-            {!isLoading && data ? (
-              <InfiniteScroll
-                pageStart={0}
-                loadMore={() => fetchNextPage({ cancelRefetch: false })}
-                hasMore={!isError && hasNextPage}
-                loader={<PostLoaderSkeleton key="loader" />}
-              >
-                {data.pages.map((group, i) => (
-                  <React.Fragment key={i}>
-                    {group.posts.map((post) => (
-                      <PostItem post={post} key={post.id} />
-                    ))}
-                  </React.Fragment>
-                ))}
-              </InfiniteScroll>
-            ) : (
-              <>
-                <PostSkeleton />
-                <PostSkeleton />
-              </>
-            )}
-          </div>
-          <SideBar>
-            {
+      <Container className="pt-0 flex justify-center gap-6" topPadding="mt-4">
+        <div className="lg:max-w-2xl max-w-full w-full">
+          <CreatePost url={`/t/${topicData?.title}`} />
+          <SortPost
+            sortParam={sortParam}
+            setSortParam={setSortParam}
+            url={`/t/${topicData?.title}?`}
+          />
+          {!isLoading && data ? (
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={() => fetchNextPage({ cancelRefetch: false })}
+              hasMore={!isError && hasNextPage}
+              loader={<PostLoaderSkeleton key="loader" />}
+            >
+              {data.pages.map((group, i) => (
+                <React.Fragment key={i}>
+                  {group.posts.map((post) => (
+                    <PostItem post={post} key={post.id} />
+                  ))}
+                </React.Fragment>
+              ))}
+            </InfiniteScroll>
+          ) : (
+            <>
+              <PostSkeleton />
+              <PostSkeleton />
+            </>
+          )}
+        </div>
+        <SideBar>
+          {
               topicData && !isTopicLoading ? (
                 <>
                   <TopicCard topicData={topicData} />
@@ -132,9 +132,8 @@ function TopicPage() {
                 <TopicCardSkeleton />
               )
             }
-          </SideBar>
-        </div>
-      </div>
+        </SideBar>
+      </Container>
     </>
   );
 }

@@ -25,6 +25,7 @@ module.exports = {
       }),
       maxWidth: {
         '3xl': '740px',
+        '2xl': '640px',
       },
       screens: {
         lg: '960px',

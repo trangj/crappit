@@ -1,8 +1,10 @@
 import React, { ReactNode } from 'react';
 
-export function Container({ children }: { children: ReactNode; }) {
+type ContainerProps = { children: ReactNode, className?: string, topPadding?: string }
+
+export function Container({ children, className = '', topPadding = 'mt-16' }: ContainerProps) {
   return (
-    <div className="pt-16 mt-1 container mx-auto max-w-5xl sm:px-5">
+    <div className={`mt-1 container mx-auto max-w-5xl sm:px-5 ${className} ${topPadding}`}>
       {children}
     </div>
   );

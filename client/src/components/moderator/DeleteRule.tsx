@@ -58,7 +58,7 @@ function DeleteRule({ topic, rule }: DeleteRuleProps) {
               <Button
                 onClick={handleClick}
                 loading={isLoading}
-                variant="filled"
+                variant="danger"
               >
                 Delete
               </Button>

@@ -31,7 +31,7 @@ function Search() {
   } = useSearchPosts(q as string, sortParam);
 
   return (
-    <Container>
+    <Container className="flex justify-center gap-6">
       <Head>
         <title>
           crappit: search results -
@@ -43,10 +43,9 @@ function Search() {
         <meta property="og:url" content={`https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/`} />
         <meta property="og:description" content="Crappit is a network of communities based on people's interests. Find communities you're interested in, and become part of an online community!" />
       </Head>
-      <div className="flex gap-6">
-        <div className="w-full">
-          <SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/search?q=${q}&`} />
-          {!isLoading && data && data.pages[0].posts.length === 0
+      <div className="lg:max-w-2xl max-w-full w-full w-full">
+        <SortPost sortParam={sortParam} setSortParam={setSortParam} url={`/search?q=${q}&`} />
+        {!isLoading && data && data.pages[0].posts.length === 0
                         && (
                         <Card>
                           <div className="p-4 text-center">
@@ -63,34 +62,33 @@ function Search() {
                           </div>
                         </Card>
                         )}
-          {!isLoading && data && (
-            <InfiniteScroll
-              pageStart={0}
-              loadMore={() => fetchNextPage({ cancelRefetch: false })}
-              hasMore={!isError && hasNextPage}
-              loader={<PostLoaderSkeleton key="loader" />}
-            >
-              {data.pages.map((group, i) => (
-                <React.Fragment key={i}>
-                  {group.posts.map((post) => (
-                    <PostItem
-                      post={post}
-                      key={post.id}
-                    />
-                  ))}
-                </React.Fragment>
+        {!isLoading && data && (
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={() => fetchNextPage({ cancelRefetch: false })}
+          hasMore={!isError && hasNextPage}
+          loader={<PostLoaderSkeleton key="loader" />}
+        >
+          {data.pages.map((group, i) => (
+            <React.Fragment key={i}>
+              {group.posts.map((post) => (
+                <PostItem
+                  post={post}
+                  key={post.id}
+                />
               ))}
-            </InfiniteScroll>
-          )}
-          {isLoading && (
-            <>
-              <PostSkeleton />
-              <PostSkeleton />
-            </>
-          )}
-        </div>
-        <SideBar />
+            </React.Fragment>
+          ))}
+        </InfiniteScroll>
+        )}
+        {isLoading && (
+        <>
+          <PostSkeleton />
+          <PostSkeleton />
+        </>
+        )}
       </div>
+      <SideBar />
     </Container>
   );
 }

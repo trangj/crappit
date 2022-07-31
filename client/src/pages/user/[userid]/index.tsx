@@ -53,7 +53,7 @@ function Profile() {
   } = useProfilePosts(userid as string, sortParam);
 
   return (
-    <Container>
+    <Container className="flex justify-center gap-6">
       {profile && (
       <Head>
         <title>
@@ -74,48 +74,46 @@ function Profile() {
         />
       </Head>
       )}
-      <div className="flex gap-6">
-        <div className="w-full">
-          <SortPost
-            setSortParam={setSortParam}
-            sortParam={sortParam}
-            url={`/user/${profile?.id}?`}
-          />
-          {!isLoading && data ? (
-            <InfiniteScroll
-              pageStart={0}
-              loadMore={() => fetchNextPage({ cancelRefetch: false })}
-              hasMore={!isError && hasNextPage}
-              loader={<PostLoaderSkeleton key="loader" />}
-            >
-              {data.pages.map((group, i) => (
-                <React.Fragment key={i}>
-                  {group.posts.map((post) => (
-                    <PostItem post={post} key={post.id} />
-                  ))}
-                </React.Fragment>
-              ))}
-            </InfiniteScroll>
-          ) : (
-            <>
-              <PostSkeleton />
-              <PostSkeleton />
-            </>
-          )}
-        </div>
-        <SideBar>
-          {profile && !isProfileLoading ? (
-            <>
-              <UserCard profile={profile} />
-              {profile.topics_moderated.length !== 0 && (
-              <UserModeratorCard profile={profile} />
-              )}
-            </>
-          ) : (
-            <TopicCardSkeleton />
-          )}
-        </SideBar>
+      <div className="lg:max-w-2xl max-w-full w-full">
+        <SortPost
+          setSortParam={setSortParam}
+          sortParam={sortParam}
+          url={`/user/${profile?.id}?`}
+        />
+        {!isLoading && data ? (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={() => fetchNextPage({ cancelRefetch: false })}
+            hasMore={!isError && hasNextPage}
+            loader={<PostLoaderSkeleton key="loader" />}
+          >
+            {data.pages.map((group, i) => (
+              <React.Fragment key={i}>
+                {group.posts.map((post) => (
+                  <PostItem post={post} key={post.id} />
+                ))}
+              </React.Fragment>
+            ))}
+          </InfiniteScroll>
+        ) : (
+          <>
+            <PostSkeleton />
+            <PostSkeleton />
+          </>
+        )}
       </div>
+      <SideBar>
+        {profile && !isProfileLoading ? (
+          <>
+            <UserCard profile={profile} />
+            {profile.topics_moderated.length !== 0 && (
+              <UserModeratorCard profile={profile} />
+            )}
+          </>
+        ) : (
+          <TopicCardSkeleton />
+        )}
+      </SideBar>
     </Container>
   );
 }

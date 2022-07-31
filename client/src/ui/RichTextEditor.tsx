@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Editor, EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Placeholder } from '@tiptap/extension-placeholder';
 import { Link } from '@tiptap/extension-link';
+import { CodeBlock } from '@tiptap/extension-code-block';
+import RichTextEditorSkeleton from 'src/components/util/RichTextEditorSkeleton';
 import { Button } from './Button';
 import ToolTip from './ToolTip';
 
@@ -17,7 +19,19 @@ type Props = {
   ) => void;
 };
 
-function ToolBar({ editor }: { editor: Editor | null }) {
+function ToolBar({ editor }: { editor: Editor }) {
+  const handleLinkClick = useCallback(() => {
+    const previousUrl = editor.getAttributes('link').href;
+    const url = window.prompt('URL', previousUrl);
+    if (!url) return;
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink()
+        .run();
+    }
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url, target: '_blank' })
+      .run();
+  }, [editor]);
+
   if (!editor) return null;
 
   return (
@@ -73,16 +87,7 @@ function ToolBar({ editor }: { editor: Editor | null }) {
               <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z" />
             </svg>
         )}
-          onClick={() => {
-            const url = window.prompt('URL');
-            if (!url) return;
-            editor
-              .chain()
-              .focus()
-              .extendMarkRange('link')
-              .setLink({ href: url })
-              .run();
-          }}
+          onClick={handleLinkClick}
           active={editor.isActive('link')}
         />
       </ToolTip>
@@ -204,6 +209,27 @@ function ToolBar({ editor }: { editor: Editor | null }) {
           active={editor.isActive('blockquote')}
         />
       </ToolTip>
+      <ToolTip className="flex" title="Code Block">
+        <Button
+          variant="ghost"
+          border="rounded"
+          icon={(
+            <svg
+              className="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+              <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z" />
+            </svg>
+        )}
+          onClick={() => editor.chain().focus().setCodeBlock().run()}
+          active={editor.isActive('codeBlock')}
+        />
+      </ToolTip>
     </div>
   );
 }
@@ -218,6 +244,7 @@ export default function RichTextEditor({
     extensions: [
       StarterKit,
       Link,
+      CodeBlock,
       Placeholder.configure({
         placeholder,
       }),
@@ -233,6 +260,8 @@ export default function RichTextEditor({
       editor?.commands.clearContent();
     }
   }, [value]);
+
+  if (!editor) return <RichTextEditorSkeleton />;
 
   return (
     <div className="w-full my-2 bg-transparent border rounded dark:border-gray-700 border-gray-300 flex flex-col

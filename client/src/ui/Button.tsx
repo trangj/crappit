@@ -9,7 +9,7 @@ export type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 > & {
-  variant?: 'outline' | 'filled' | 'ghost';
+  variant?: 'outline' | 'filled' | 'ghost' | 'danger';
   border?: 'rounded' | 'rounded-full' | 'none';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   loading?: boolean;
@@ -48,6 +48,7 @@ export const Button = React.forwardRef(
       outline: `button-outline ${active ? 'button-outline-active' : ''}`,
       filled: `button-filled ${active ? 'button-filled-active' : ''}`,
       ghost: `button-ghost ${active ? 'button-ghost-active' : ''}`,
+      danger: 'button-filled button-danger',
     };
 
     const sizeOptions = {

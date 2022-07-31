@@ -56,7 +56,7 @@ function DeleteCommentModerator({ comment, topic }: Props) {
               <Button
                 onClick={handleClick}
                 loading={isLoading}
-                variant="filled"
+                variant="danger"
                 className="w-20"
               >
                 Delete

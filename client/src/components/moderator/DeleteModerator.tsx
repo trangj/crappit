@@ -65,7 +65,7 @@ function DeleteModerator({ topic, user }: DeleteModeratorProps) {
               <Button
                 onClick={handleClick}
                 loading={isLoading}
-                variant="filled"
+                variant="danger"
               >
                 Remove as moderator
               </Button>
