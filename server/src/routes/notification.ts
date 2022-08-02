@@ -82,8 +82,8 @@ router.post('/read_all', auth, async (req, res) => {
     await AppDataSource.query(`
       update notification n
       set read_at=$1
-      where n.read_at is null
-    `, [new Date()]);
+      where n.read_at is null and n.recipient_id = $2
+    `, [new Date(), req.user.id]);
     res.status(200).json({});
   } catch (err) {
     res.status(400).json({ status: { text: err.message, severity: 'error' } });
