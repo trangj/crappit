@@ -1,5 +1,6 @@
 import express from 'express';
 import sanitizeHtml from 'sanitize-html';
+import AppDataSource from '../dataSource';
 import { auth } from '../middleware/auth';
 import {
   Post, User, Comment, CommentVote,
@@ -14,20 +15,31 @@ const router = express.Router();
 
 router.post('/', auth, async (req, res) => {
   try {
-    const commentPost = await Post.findOne(req.body.postId, { relations: ['topic', 'author'] });
+    const commentPost = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: req.body.postId }, relations: { topic: true, author: true } },
+    );
     if (!commentPost) throw Error('No post');
-    const user = await User.findOne(req.user.id);
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: req.user.id } },
+    );
     if (!user) throw Error('No user');
 
-    const newComment = await Comment.create({
-      author: user,
-      content: sanitizeHtml(req.body.content),
-      post: commentPost,
-    }).save();
-
-    const { post, ...rest } = newComment;
+    let newComment = AppDataSource.manager.create(
+      Comment,
+      {
+        author: user,
+        content: sanitizeHtml(req.body.content),
+        post: commentPost,
+      },
+    );
     commentPost.number_of_comments += 1;
-    await commentPost.save();
+
+    await AppDataSource.transaction(async (em) => {
+      newComment = await em.save(newComment);
+      await em.save(commentPost);
+    });
 
     if (commentPost.author_id !== newComment.author_id) {
       await sendNotification({
@@ -42,14 +54,16 @@ router.post('/', auth, async (req, res) => {
       });
     }
 
+    delete newComment.post;
+
     res.status(200).json({
       comment: {
-        ...rest,
+        ...newComment,
         author: user.username,
         author_id: user.id,
         avatar_image_url: user.avatar_image_url,
         avatar_image_name: user.avatar_image_name,
-        post_id: post.id,
+        post_id: commentPost.id,
         user_vote: null,
         children: [],
       },
@@ -67,10 +81,10 @@ router.post('/', auth, async (req, res) => {
 router.put('/:commentid', auth, async (req, res) => {
   try {
     if (!req.body.content) throw Error('Missing required fields');
-    const comment = await Comment.findOne({
-      id: parseInt(req.params.commentid),
-      author_id: req.user.id,
-    });
+    const comment = await AppDataSource.manager.findOne(
+      Comment,
+      { where: { id: parseInt(req.params.commentid), author_id: req.user.id } },
+    );
     if (!comment) throw Error('No comment exists or you are not the author');
 
     comment.content = sanitizeHtml(req.body.content);
@@ -95,10 +109,10 @@ router.put('/:commentid', auth, async (req, res) => {
 
 router.delete('/:commentid', auth, async (req, res) => {
   try {
-    const comment = await Comment.findOne({
-      id: parseInt(req.params.commentid),
-      author_id: req.user.id,
-    });
+    const comment = await AppDataSource.manager.findOne(
+      Comment,
+      { where: { id: parseInt(req.params.commentid), author_id: req.user.id } },
+    );
     if (!comment) throw Error('No comment exists or you are not the author');
 
     comment.content = null;
@@ -123,23 +137,40 @@ router.delete('/:commentid', auth, async (req, res) => {
 
 router.put('/:commentid/changevote', auth, async (req, res) => {
   try {
-    const comment = await Comment.findOne(req.params.commentid);
+    const comment = await AppDataSource.manager.findOne(
+      Comment,
+      { where: { id: parseInt(req.params.commentid) } },
+    );
     if (!comment) throw Error('No comment exists');
-    const comment_author = await User.findOne(comment.author_id);
+    const comment_author = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: comment.author_id } },
+    );
     if (!comment_author) throw Error('Comment author does not exist');
 
-    const vote = await CommentVote.findOne({ comment, user_id: req.user.id });
+    const vote = await AppDataSource.manager.findOne(
+      CommentVote,
+      { where: { comment_id: comment.id, user_id: req.user.id } },
+    );
 
     if (!vote) {
-      const newVote = await CommentVote.create({
-        comment,
-        user_id: req.user.id,
-        value: req.query.vote === 'like' ? 1 : -1,
-      }).save();
+      const newVote = AppDataSource.manager.create(
+        CommentVote,
+        {
+          comment,
+          user_id: req.user.id,
+          value: req.query.vote === 'like' ? 1 : -1,
+        },
+      );
       comment.vote += req.query.vote === 'like' ? 1 : -1;
       comment_author.karma += req.query.vote === 'like' ? 1 : -1;
-      await comment.save();
-      await comment_author.save();
+
+      await AppDataSource.transaction(async (em) => {
+        await em.save(newVote);
+        await em.save(comment);
+        await em.save(comment_author);
+      });
+
       res.status(200).json({ vote: comment.vote, user_vote: newVote.value });
     } else {
       if (req.query.vote === 'like') {
@@ -175,9 +206,13 @@ router.put('/:commentid/changevote', auth, async (req, res) => {
         comment.vote -= 2;
         comment_author.karma -= 2;
       }
-      await vote.save();
-      await comment.save();
-      await comment_author.save();
+
+      await AppDataSource.transaction(async (em) => {
+        await em.save(vote);
+        await em.save(comment);
+        await em.save(comment_author);
+      });
+
       res.status(200).json({ vote: comment.vote, user_vote: vote.value });
     }
   } catch (err) {
@@ -193,23 +228,37 @@ router.put('/:commentid/changevote', auth, async (req, res) => {
 
 router.post('/:commentid/reply', auth, async (req, res) => {
   try {
-    const comment = await Comment.findOne(req.params.commentid, { relations: ['author'] });
+    const comment = await AppDataSource.manager.findOne(
+      Comment,
+      { where: { id: parseInt(req.params.commentid) }, relations: { author: true } },
+    );
     if (!comment) throw Error('No comment was found with that id');
-    const user = await User.findOne(req.user.id);
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: req.user.id } },
+    );
     if (!user) throw Error('No user was found with that id');
-    const commentPost = await Post.findOne(req.body.postId, { relations: ['topic'] });
+    const commentPost = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: req.body.postId }, relations: { topic: true } },
+    );
     if (!commentPost) throw Error('No post was found with that id');
 
-    const newComment = await Comment.create({
-      author: user,
-      content: sanitizeHtml(req.body.content),
-      post: commentPost,
-      parent_comment: comment,
-    }).save();
-
-    const { post, parent_comment, ...rest } = newComment;
+    let newComment = AppDataSource.manager.create(
+      Comment,
+      {
+        author: user,
+        content: sanitizeHtml(req.body.content),
+        post: commentPost,
+        parent_comment: comment,
+      },
+    );
     commentPost.number_of_comments += 1;
-    await commentPost.save();
+
+    await AppDataSource.transaction(async (em) => {
+      newComment = await em.save(newComment);
+      await em.save(commentPost);
+    });
 
     if (comment.author_id !== newComment.author_id) {
       await sendNotification({
@@ -224,14 +273,17 @@ router.post('/:commentid/reply', auth, async (req, res) => {
       });
     }
 
+    delete newComment.post;
+    delete newComment.parent_comment;
+
     res.status(200).json({
       comment: {
-        ...rest,
+        ...newComment,
         author: user.username,
         author_id: user.id,
         avatar_image_url: user.avatar_image_url,
         avatar_image_name: user.avatar_image_name,
-        post_id: post.id,
+        post_id: commentPost.id,
         user_vote: null,
         children: [],
       },

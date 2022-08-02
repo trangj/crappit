@@ -1,3 +1,4 @@
+import AppDataSource from '../dataSource';
 import {
   NotificationType, Notification, NotificationSetting, User,
 } from '../entities';
@@ -18,27 +19,33 @@ export async function sendNotification({
 }: Context) {
   try {
     // find notification type
-    const notificationType = await NotificationType.findOne({ type_name: type });
+    const notificationType = await AppDataSource.manager.findOne(
+      NotificationType,
+      { where: { type_name: type } },
+    );
     if (!notificationType) throw Error('Notification type does not exist');
 
     // check if recipient allows notifications for
-    const recipientNotificationSetting = await NotificationSetting.findOne({
-      user_id: recipient.id,
-      notification_type_id: notificationType.id,
-    });
+    const recipientNotificationSetting = await AppDataSource.manager.findOne(
+      NotificationSetting,
+      { where: { user_id: recipient.id, notification_type_id: notificationType.id } },
+    );
     if (!recipientNotificationSetting.value) return;
 
     // create notification
-    await Notification.create({
-      title,
-      body,
-      url,
-      notification_type_id: notificationType.id,
-      recipient_id: recipient.id,
-      sender_id: sender.id,
-      comment_id,
-      post_id,
-    }).save();
+    await AppDataSource.manager.create(
+      Notification,
+      {
+        title,
+        body,
+        url,
+        notification_type_id: notificationType.id,
+        recipient_id: recipient.id,
+        sender_id: sender.id,
+        comment_id,
+        post_id,
+      },
+    ).save();
   } catch (err) {
     throw Error(err.message);
   }

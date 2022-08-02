@@ -1,6 +1,6 @@
 import express from 'express';
 import { optionalAuth } from '../middleware/auth';
-import { Post } from '../entities';
+import AppDataSource from '../dataSource';
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/', optionalAuth, async (req, res) => {
   try {
-    const posts = await Post.query(`
+    const posts = await AppDataSource.query(`
       select
       p.*,
       t.title topic,
@@ -48,7 +48,7 @@ router.get('/', optionalAuth, async (req, res) => {
 
 router.get('/:topic', optionalAuth, async (req, res) => {
   try {
-    const posts = await Post.query(`
+    const posts = await AppDataSource.query(`
       select
       p.*,
       t.title topic,

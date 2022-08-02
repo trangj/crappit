@@ -1,6 +1,6 @@
 import passport from 'passport';
 import { Strategy } from 'passport-google-oauth20';
-import { getManager } from 'typeorm';
+import AppDataSource from '../dataSource';
 import { User } from '../entities';
 
 passport.use(new Strategy({
@@ -9,9 +9,10 @@ passport.use(new Strategy({
   callbackURL: `${process.env.SERVER_URL}/api/user/google/callback`,
 }, async (google_access_token, _, profile, done) => {
   try {
-    let user = await User.findOne({
-      where: [{ google_id: profile.id }, { email: profile.emails[0].value }],
-    });
+    let user = await AppDataSource.manager.findOne(
+      User,
+      { where: [{ google_id: profile.id }, { email: profile.emails[0].value }] },
+    );
 
     if (user) {
       user.google_access_token = google_access_token;
@@ -23,7 +24,7 @@ passport.use(new Strategy({
         email: profile.emails[0].value,
         google_id: profile.id,
       });
-      await getManager().transaction(async (em) => {
+      await AppDataSource.transaction(async (em) => {
         user = await em.save(user);
         await em.query(`
           insert into notification_setting (user_id, notification_type_id, "value")

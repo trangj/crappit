@@ -1,6 +1,7 @@
 import express from 'express';
 import { optionalAuth } from '../middleware/auth';
 import { Comment } from '../entities';
+import AppDataSource from '../dataSource';
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ const createCommentThread = (comments: Comment[]): any => {
 
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
-    const comments = await Comment.query(`
+    const comments = await AppDataSource.query(`
       with recursive cte
       as (
         (select 

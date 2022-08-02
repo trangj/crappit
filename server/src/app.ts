@@ -7,7 +7,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 import express from 'express';
 import cors from 'cors';
-import { createConnection } from 'typeorm';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
 import passport from './middleware/passport';
@@ -17,12 +16,12 @@ import {
   NotificationRouter,
 } from './routes';
 import redis from './common/redis';
-import ormconfig from './ormconfig';
+import AppDataSource from './dataSource';
 
 (async () => {
   const app = express();
 
-  await createConnection(ormconfig);
+  await AppDataSource.initialize();
 
   const RedisStore = connectRedis(session);
 

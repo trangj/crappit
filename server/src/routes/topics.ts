@@ -1,6 +1,7 @@
 import express from 'express';
 import { optionalAuth } from '../middleware/auth';
 import { Topic } from '../entities';
+import AppDataSource from '../dataSource';
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const topics = await Topic.find();
+    const topics = await AppDataSource.manager.find(Topic);
     if (!topics) throw Error('Could not get topics');
     res.status(200).json(topics);
   } catch (err) {
@@ -26,7 +27,7 @@ router.get('/', async (req, res) => {
 
 router.get('/followed_topics', optionalAuth, async (req, res) => {
   try {
-    const topics_followed = await Topic.query(`
+    const topics_followed = await AppDataSource.query(`
       select
       ft.*,
       t.title title,
@@ -50,7 +51,7 @@ router.get('/followed_topics', optionalAuth, async (req, res) => {
 
 router.get('/top', optionalAuth, async (req, res) => {
   try {
-    const top_topics = await Topic.query(`
+    const top_topics = await AppDataSource.query(`
       select
       t.title title,
       t.icon_image_url icon_image_url,

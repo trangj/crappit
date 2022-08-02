@@ -5,6 +5,7 @@ import { auth, optionalAuth } from '../middleware/auth';
 import {
   Post, Topic, User, Vote,
 } from '../entities';
+import AppDataSource from '../dataSource';
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const router = express.Router();
 
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
-    const post = await Post.query(`
+    const post = await AppDataSource.query(`
       select
       p.*,
       t.title topic,
@@ -44,20 +45,26 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
 router.post('/', auth, upload, async (req, res) => {
   try {
-    const topic = await Topic.findOne({ title: req.body.topic });
+    const topic = await AppDataSource.manager.findOne(
+      Topic,
+      { where: { title: req.body.topic } },
+    );
     if (!topic) throw Error('No topic exists');
 
     if (req.body.title.length > 300) throw Error('Post title is too long');
 
-    const newPost = Post.create({
-      title: req.body.title,
-      type: req.body.type,
-      content: sanitizeHtml(req.body.content),
-      image_url: req.file && req.body.type === 'photo' ? req.file.location : '',
-      image_name: req.file && req.body.type === 'photo' ? req.file.key : '',
-      author_id: req.user.id,
-      topic,
-    });
+    const newPost = AppDataSource.manager.create(
+      Post,
+      {
+        title: req.body.title,
+        type: req.body.type,
+        content: sanitizeHtml(req.body.content),
+        image_url: req.file && req.body.type === 'photo' ? req.file.location : '',
+        image_name: req.file && req.body.type === 'photo' ? req.file.key : '',
+        author_id: req.user.id,
+        topic,
+      },
+    );
 
     await newPost.save();
 
@@ -76,10 +83,15 @@ router.post('/', auth, upload, async (req, res) => {
 
 router.delete('/:id', auth, async (req, res) => {
   try {
-    const post = await Post.findOne({ id: parseInt(req.params.id), author_id: req.user.id });
+    const post = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: parseInt(req.params.id), author_id: req.user.id } },
+    );
     if (!post) throw Error('Post does not exist or you are not the author');
-    await Post.remove(post);
+
+    await post.remove();
     if (post.type === 'photo') deleteFile(post.image_name);
+
     res.status(200).json({
       status: { text: 'Post successfully deleted', severity: 'success' },
     });
@@ -94,7 +106,10 @@ router.delete('/:id', auth, async (req, res) => {
 
 router.put('/:id', auth, async (req, res) => {
   try {
-    const post = await Post.findOne({ id: parseInt(req.params.id), author_id: req.user.id });
+    const post = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: parseInt(req.params.id), author_id: req.user.id } },
+    );
     if (!post) throw Error('Post does not exist or you are not the author of the post');
     if (post.type !== 'text') throw Error('You can only edit text posts');
 
@@ -118,22 +133,39 @@ router.put('/:id', auth, async (req, res) => {
 
 router.put('/:id/changevote', auth, async (req, res) => {
   try {
-    const post = await Post.findOne(req.params.id);
+    const post = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: parseInt(req.params.id) } },
+    );
     if (!post) throw Error('No post exists');
-    const post_author = await User.findOne(post.author_id);
+    const post_author = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: post.author_id } },
+    );
     if (!post_author) throw Error('Post author does not exist');
 
-    const vote = await Vote.findOne({ post, user_id: req.user.id });
+    const vote = await AppDataSource.manager.findOne(
+      Vote,
+      { where: { post_id: post.id, user_id: req.user.id } },
+    );
     if (!vote) {
-      const newVote = await Vote.create({
-        post,
-        user_id: req.user.id,
-        value: req.query.vote === 'like' ? 1 : -1,
-      }).save();
+      const newVote = AppDataSource.manager.create(
+        Vote,
+        {
+          post,
+          user_id: req.user.id,
+          value: req.query.vote === 'like' ? 1 : -1,
+        },
+      );
       post.vote += req.query.vote === 'like' ? 1 : -1;
       post_author.karma += req.query.vote === 'like' ? 1 : -1;
-      await post.save();
-      await post_author.save();
+
+      await AppDataSource.transaction(async (em) => {
+        await em.save(newVote);
+        await em.save(post);
+        await em.save(post_author);
+      });
+
       res.status(200).json({ vote: post.vote, user_vote: newVote.value });
     } else {
       if (req.query.vote === 'like') {
@@ -169,9 +201,13 @@ router.put('/:id/changevote', auth, async (req, res) => {
         post.vote -= 2;
         post_author.karma -= 2;
       }
-      await vote.save();
-      await post.save();
-      await post_author.save();
+
+      await AppDataSource.transaction(async (em) => {
+        await em.save(vote);
+        await em.save(post);
+        await em.save(post_author);
+      });
+
       res.status(200).json({ vote: post.vote, user_vote: vote.value });
     }
   } catch (err) {

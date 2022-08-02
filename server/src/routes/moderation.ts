@@ -1,4 +1,5 @@
 import express from 'express';
+import AppDataSource from '../dataSource';
 import { canManageEverything, canManagePostsAndComments, canManageSettings } from '../middleware/checkModPermission';
 import { canModTopic } from '../middleware/checkModerator';
 import { deleteFile, upload } from '../middleware/upload';
@@ -15,20 +16,31 @@ const router = express.Router();
 
 router.post('/:topic/user', auth, canModTopic, canManageEverything, async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { username: req.body.username } },
+    );
     if (!user) throw Error('User does not exist');
 
-    const moderator = await Moderator.findOne({ topic_id: req.topic.id, user_id: user.id });
+    const moderator = await AppDataSource.manager.findOne(
+      Moderator,
+      { where: { topic_id: req.topic.id, user_id: user.id } },
+    );
     if (moderator) throw Error('User is already a moderator');
 
-    const newModerator = await Moderator.create({
-      topic_id: req.topic.id,
-      user_id: user.id,
-      can_manage_everything: req.body.can_manage_everything,
-      can_manage_posts_and_comments: req.body.can_manage_everything
-        ? true : req.body.can_manage_posts_and_comments,
-      can_manage_settings: req.body.can_manage_everything ? true : req.body.can_manage_settings,
-    }).save();
+    const newModerator = AppDataSource.manager.create(
+      Moderator,
+      {
+        topic_id: req.topic.id,
+        user_id: user.id,
+        can_manage_everything: req.body.can_manage_everything,
+        can_manage_posts_and_comments: req.body.can_manage_everything
+          ? true : req.body.can_manage_posts_and_comments,
+        can_manage_settings: req.body.can_manage_everything ? true : req.body.can_manage_settings,
+      },
+    );
+
+    await newModerator.save();
 
     res.status(200).json({
       user: {
@@ -54,10 +66,16 @@ router.post('/:topic/user', auth, canModTopic, canManageEverything, async (req, 
 
 router.delete('/:topic/user/:userid', auth, canModTopic, canManageEverything, async (req, res) => {
   try {
-    const user = await User.findOne(req.params.userid);
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: parseInt(req.params.userid) } },
+    );
     if (!user) throw Error('User does not exist');
 
-    await Moderator.delete({ user_id: user.id, topic_id: req.topic.id });
+    await AppDataSource.manager.delete(
+      Moderator,
+      { user_id: user.id, topic_id: req.topic.id },
+    );
 
     res.status(200).json({
       user: { user_id: user.id, username: user.username, topic_id: req.topic.id },
@@ -76,12 +94,15 @@ router.delete('/:topic/user/:userid', auth, canModTopic, canManageEverything, as
 
 router.delete('/:topic/post/:post', auth, canModTopic, canManagePostsAndComments, async (req, res) => {
   try {
-    const post = await Post.findOne(req.params.post);
+    const post = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: parseInt(req.params.post), topic_id: req.topic.id } },
+    );
     if (!post) throw Error('Post does not exist');
-    if (post.topic_id !== req.topic.id) throw Error('Post does not belong to topic');
 
-    await Post.remove(post);
+    await post.remove();
     if (post.type === 'photo') deleteFile(post.image_name);
+
     res.status(200).json({
       status: { text: 'Post successfully deleted', severity: 'success' },
     });
@@ -96,9 +117,15 @@ router.delete('/:topic/post/:post', auth, canModTopic, canManagePostsAndComments
 
 router.delete('/:topic/comment/:commentid', auth, canModTopic, canManagePostsAndComments, async (req, res) => {
   try {
-    const comment = await Comment.findOne(req.params.commentid);
+    const comment = await AppDataSource.manager.findOne(
+      Comment,
+      { where: { id: parseInt(req.params.commentid) } },
+    );
     if (!comment) throw Error('Comment does not exist');
-    const post = await Post.findOne(comment.post_id);
+    const post = await AppDataSource.manager.findOne(
+      Post,
+      { where: { id: comment.post_id } },
+    );
     if (post.topic_id !== req.topic.id) throw Error('Comment does not belong to topic');
 
     comment.content = null;

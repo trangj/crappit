@@ -2,11 +2,10 @@ import express from 'express';
 import bcyrpt from 'bcryptjs';
 import crypto from 'crypto';
 import sgMail from '@sendgrid/mail';
-import { getManager, MoreThan } from 'typeorm';
+import { MoreThan } from 'typeorm';
+import AppDataSource from '../dataSource';
 import { auth, optionalAuth } from '../middleware/auth';
-import {
-  Post, Topic, User,
-} from '../entities';
+import { User } from '../entities';
 import { deleteFile, upload } from '../middleware/upload';
 import passport from '../middleware/passport';
 import redis from '../common/redis';
@@ -38,13 +37,12 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
 
 router.get('/me', auth, async (req, res) => {
   try {
-    const user = await User.findOne(req.user.id);
-
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: req.user.id } },
+    );
     delete user.password;
-
-    res
-      .status(200)
-      .json({ user });
+    res.status(200).json({ user });
   } catch (err) {
     await redis.srem(`user_sess:${req.user.id}`, `sess:${req.session.id}`);
     req.session.destroy((session_err: any) => {
@@ -82,13 +80,16 @@ router.post('/register', async (req, res) => {
     const hash = await bcyrpt.hash(password, salt);
     if (!hash) throw Error('Error with generating hash');
 
-    let newUser = User.create({
-      username,
-      email,
-      password: hash,
-    });
+    let newUser = AppDataSource.manager.create(
+      User,
+      {
+        username,
+        email,
+        password: hash,
+      },
+    );
 
-    await getManager().transaction(async (em) => {
+    await AppDataSource.transaction(async (em) => {
       newUser = await em.save(newUser);
       await em.query(`
         insert into notification_setting (user_id, notification_type_id, "value")
@@ -128,7 +129,10 @@ router.post('/login', async (req, res) => {
     if (!username || !password) throw Error('Missing fields');
     if (username.length > 20 || username.length < 3) throw Error('Username is too short or too long');
 
-    const user = await User.findOne({ username });
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { username } },
+    );
     if (!user) throw Error('User does not exist');
 
     const isMatch = await bcyrpt.compare(password, user.password).catch(() => { throw new Error('Invalid email or password'); });
@@ -158,7 +162,10 @@ router.post('/login', async (req, res) => {
 router.post('/forgot', async (req, res) => {
   try {
     const token = crypto.randomBytes(20).toString('hex');
-    const user = await User.findOne({ email: req.body.email });
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { email: req.body.email } },
+    );
     if (!user) throw Error('No user with that email exists.');
 
     user.reset_password_token = token;
@@ -197,10 +204,15 @@ router.post('/forgot', async (req, res) => {
 
 router.get('/reset/:token', async (req, res) => {
   try {
-    const user = await User.findOne({
-      reset_password_token: req.params.token,
-      reset_password_expires: MoreThan(Date.now()),
-    });
+    const user = await AppDataSource.manager.findOne(
+      User,
+      {
+        where: {
+          reset_password_token: req.params.token,
+          reset_password_expires: MoreThan(Date.now()),
+        },
+      },
+    );
     if (!user) throw Error('Token is invalid or has expired');
     res.status(200).json({
       status: { text: 'Token is validated', severity: 'success' },
@@ -223,10 +235,15 @@ router.post('/reset/:token', async (req, res) => {
     if (password !== password2) throw Error('Passwords are not the same');
     if (password.length < 6) throw Error('Password is too short');
 
-    const user = await User.findOne({
-      reset_password_token: req.params.token,
-      reset_password_expires: MoreThan(Date.now()),
-    });
+    const user = await AppDataSource.manager.findOne(
+      User,
+      {
+        where: {
+          reset_password_token: req.params.token,
+          reset_password_expires: MoreThan(Date.now()),
+        },
+      },
+    );
     if (!user) throw Error('Token is invalid or has expired');
 
     const salt = await bcyrpt.genSalt(10);
@@ -283,10 +300,13 @@ router.post('/reset/:token', async (req, res) => {
 
 router.get('/:userid', async (req, res) => {
   try {
-    const user = await User.findOne(req.params.userid);
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: parseInt(req.params.userid) } },
+    );
     if (!user) throw Error('No user found');
 
-    const topics_moderated = await Topic.query(`
+    const topics_moderated = await AppDataSource.query(`
       select
       t.title title,
       t.icon_image_url icon_image_url,
@@ -313,7 +333,10 @@ router.get('/:userid', async (req, res) => {
 
 router.post('/email', auth, async (req, res) => {
   try {
-    const user = await User.findOne(req.user.id);
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: req.user.id } },
+    );
     if (!user) throw Error('No user found');
     if (user.email === req.body.newEmail) throw Error('You already are using that email');
 
@@ -351,7 +374,10 @@ router.post('/email', auth, async (req, res) => {
 
 router.post('/:userid/avatar', auth, upload, async (req, res) => {
   try {
-    const user = await User.findOne(req.user.id);
+    const user = await AppDataSource.manager.findOne(
+      User,
+      { where: { id: req.user.id } },
+    );
     if (!user) throw Error('No user found');
 
     if (user.avatar_image_name && req.file) {
@@ -405,7 +431,7 @@ router.post('/logout', auth, async (req, res) => {
 
 router.get('/:userid/posts', optionalAuth, async (req, res) => {
   try {
-    const posts = await Post.query(`
+    const posts = await AppDataSource.manager.query(`
       select
       p.*,
       t.title topic,
