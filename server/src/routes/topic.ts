@@ -73,7 +73,7 @@ router.post('/', auth, upload, async (req, res) => {
     );
 
     await AppDataSource.transaction(async (em) => {
-      newTopic = await em.save(newTopic);
+      newTopic = await em.save(newTopic).catch(() => { throw Error('A topic already exists with that title'); });
       const follow = AppDataSource.manager.create(
         Follow,
         {

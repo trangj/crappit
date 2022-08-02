@@ -90,7 +90,7 @@ router.post('/register', async (req, res) => {
     );
 
     await AppDataSource.transaction(async (em) => {
-      newUser = await em.save(newUser);
+      newUser = await em.save(newUser).catch(() => { throw Error('A user already exists with that username or email'); });
       await em.query(`
         insert into notification_setting (user_id, notification_type_id, "value")
         select 
