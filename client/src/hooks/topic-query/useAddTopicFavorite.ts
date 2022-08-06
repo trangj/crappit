@@ -1,6 +1,13 @@
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
+import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
+
+interface MutationResponse extends Response {
+  topic_id: number,
+  favorite: boolean;
+}
 
 async function favoriteTopic(topic: string) {
   try {
@@ -13,7 +20,7 @@ async function favoriteTopic(topic: string) {
 
 export default function useAddTopicFavorite() {
   const queryClient = useQueryClient();
-  return useMutation<any, any, any, any>(favoriteTopic, {
+  return useMutation<MutationResponse, Error, string>(favoriteTopic, {
     onSuccess: (res) => {
       queryClient.setQueryData(['followed_topics'], (initialData: any) => {
         initialData.topics_followed = initialData.topics_followed.map((followed_topic: any) => {
@@ -25,7 +32,7 @@ export default function useAddTopicFavorite() {
         return initialData;
       });
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.status.text);
     },
   });

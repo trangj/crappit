@@ -16,8 +16,9 @@ const ProfileSettingsPage : NextPageWithLayout = function () {
     return null;
   }
 
-  const handleAvatar = async (e: any) => {
+  const handleAvatar : React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
+      if (!e.target.files) throw Error('No file was selected.');
       const file = e.target.files[0];
       if (
         file.type !== 'image/png'

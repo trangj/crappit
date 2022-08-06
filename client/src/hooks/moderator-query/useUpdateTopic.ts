@@ -1,9 +1,26 @@
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
+import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
 
+interface MutationResponse extends Response {
+  topic: {
+    description: string,
+    headline: string
+  };
+}
+
+interface MutationParams {
+  topic: string
+  newTopic: {
+    description: string,
+    headline: string
+  }
+}
+
 async function updateTopic(
-  { topic, newTopic }: { topic: string, newTopic: { description: string, headline: string; }; },
+  { topic, newTopic }: MutationParams,
 ) {
   try {
     const res = await axios.put(`/api/moderation/${topic}`, newTopic);
@@ -15,7 +32,7 @@ async function updateTopic(
 
 export default function useUpdateTopic(topic: string) {
   const queryClient = useQueryClient();
-  return useMutation(updateTopic, {
+  return useMutation<MutationResponse, Error, MutationParams>(updateTopic, {
     onSuccess: (res) => {
       queryClient.setQueryData(['topic', topic], (initalData: any) => {
         initalData.description = res.topic.description;
@@ -24,7 +41,7 @@ export default function useUpdateTopic(topic: string) {
       });
       toast.success(res.status.text);
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.status.text);
     },
   });

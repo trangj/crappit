@@ -14,7 +14,7 @@ type Props = {
   placeholder: string;
   setFieldValue: (
     field: string,
-    value: any,
+    value: string,
     shouldValidate?: boolean | undefined
   ) => void;
 };

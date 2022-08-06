@@ -1,7 +1,18 @@
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
 import { Topic } from 'src/types/entities/topic';
+import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
+
+interface MutationResponse extends Response {
+  user_followed_id: number,
+  follow: {
+    topic_id: number,
+    user_id: number,
+    favorite: boolean,
+  }
+}
 
 async function followTopic(topic: string) {
   try {
@@ -14,7 +25,7 @@ async function followTopic(topic: string) {
 
 export default function useAddTopicFollow(topic: Topic) {
   const queryClient = useQueryClient();
-  return useMutation<any, any, any, any>(followTopic, {
+  return useMutation<MutationResponse, Error, string>(followTopic, {
     onSuccess: (res) => {
       queryClient.setQueryData(['topic', topic.title], (initialData: any) => {
         initialData.user_followed_id = res.user_followed_id;
@@ -38,7 +49,7 @@ export default function useAddTopicFollow(topic: Topic) {
       });
       toast.success(res.status.text);
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.status.text);
     },
   });

@@ -3,7 +3,7 @@ import { FieldProps, getIn } from 'formik';
 
 type Props = FieldProps & {
   label: string,
-  multiline: any;
+  multiline: boolean;
 };
 
 export function TextFieldForm({

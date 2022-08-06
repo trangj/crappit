@@ -2,13 +2,22 @@ import { useMutation } from 'react-query';
 import toast from 'react-hot-toast';
 import { Comment } from 'src/types/entities/comment';
 import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
 
-interface Response {
+interface MutateResponse extends Response {
   comment: Comment;
 }
 
-async function addReply({ commentId, reply }: { commentId: number, reply: Comment; }) {
+interface MutationParams {
+  commentId: number,
+  reply: {
+    content: string,
+    postId: number
+  }
+}
+
+async function addReply({ commentId, reply }: MutationParams) {
   try {
     const res = await axios.post(`/api/comment/${commentId}/reply`, reply);
     return res.data;
@@ -18,7 +27,7 @@ async function addReply({ commentId, reply }: { commentId: number, reply: Commen
 }
 
 export default function useAddReply(comment: Comment) {
-  return useMutation<Response, Error, any, any>(addReply, {
+  return useMutation<MutateResponse, Error, MutationParams>(addReply, {
     onSuccess: (res) => {
       comment.children = [res.comment, ...comment.children];
     },

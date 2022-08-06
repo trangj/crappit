@@ -2,14 +2,20 @@ import { useMutation } from 'react-query';
 import toast from 'react-hot-toast';
 import { Comment } from 'src/types/entities/comment';
 import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
 
-interface Response {
+interface MutateResponse extends Response {
   vote: number;
   user_vote: number;
 }
 
-async function commentVoting({ commentId, vote }: { commentId: number, vote: string; }) {
+interface MutationParams {
+  commentId: number,
+  vote: string
+}
+
+async function commentVoting({ commentId, vote }: MutationParams) {
   try {
     const res = await axios.put(
       `/api/comment/${commentId}/changevote?vote=${vote}`,
@@ -21,7 +27,7 @@ async function commentVoting({ commentId, vote }: { commentId: number, vote: str
 }
 
 export default function useCommentVoting(comment: Comment) {
-  return useMutation<Response, Error, any, any>(commentVoting, {
+  return useMutation<MutateResponse, Error, MutationParams>(commentVoting, {
     onSuccess: (res) => {
       comment.vote = res.vote;
       comment.user_vote = res.user_vote;

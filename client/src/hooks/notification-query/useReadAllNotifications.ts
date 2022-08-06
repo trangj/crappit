@@ -1,6 +1,7 @@
 import { useQueryClient, useMutation } from 'react-query';
 import toast from 'react-hot-toast';
 import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
 
 async function readAllNotifications() {
@@ -14,7 +15,7 @@ async function readAllNotifications() {
 
 export default function useReadAllNotifications() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error>(readAllNotifications, {
+  return useMutation<Response, Error>(readAllNotifications, {
     onSuccess: () => {
       queryClient.invalidateQueries(['notifications']);
     },

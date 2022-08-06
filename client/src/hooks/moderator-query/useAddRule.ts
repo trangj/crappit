@@ -1,9 +1,23 @@
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from 'react-query';
-import { Topic, Rule } from 'src/types/entities/topic';
+import { Rule, Topic } from 'src/types/entities/topic';
+import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
 
-async function addRule({ topic, rule }: { topic: string, rule: Rule }) {
+interface MutationResponse extends Response {
+  rule: {
+    content: string,
+    updated_at: Date,
+  };
+}
+
+interface MutationParams {
+  topic: string
+  rule: Rule
+}
+
+async function addRule({ topic, rule }: MutationParams) {
   try {
     const res = await axios.post(`/api/moderation/${topic}/add_rule`, {
       rule,
@@ -16,7 +30,7 @@ async function addRule({ topic, rule }: { topic: string, rule: Rule }) {
 
 export default function useAddRule(topic: Topic) {
   const queryClient = useQueryClient();
-  return useMutation(addRule, {
+  return useMutation<MutationResponse, Error, MutationParams>(addRule, {
     onSuccess: (res) => {
       queryClient.setQueryData(['topic', topic.title], (initialData: any) => {
         initialData.rules.push(res.rule);
@@ -24,7 +38,7 @@ export default function useAddRule(topic: Topic) {
       });
       toast.success(res.status.text);
     },
-    onError: (err: any) => {
+    onError: (err) => {
       toast.error(err.status.text);
     },
   });

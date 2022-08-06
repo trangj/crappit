@@ -23,6 +23,15 @@ const schema = yup.object({
     .required('Confirm your password'),
 });
 
+type ResetProps = {
+  res: {
+    status: {
+      text: string,
+      severity: string
+    }
+  }
+}
+
 interface FormValues {
   password: string,
   password2: string;
@@ -33,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const res = await axios.get(`/api/user/reset/${query.token}`);
     return {
       props: {
-        status: res.data,
+        res: res.data,
       },
     };
   } catch (err) {
@@ -46,16 +55,16 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   }
 };
 
-function Reset({ status }: any) {
+function Reset({ res }: ResetProps) {
   const router = useRouter();
   const { setUser } = useUser();
   const { token } = router.query;
 
   useEffect(() => {
-    if (status) {
-      toast.success(status.status.text);
+    if (res) {
+      toast.success(res.status.text);
     }
-  }, [status]);
+  }, [res]);
 
   const handleSubmit = async ({ password, password2 }: FormValues) => {
     try {

@@ -1,9 +1,14 @@
 import { useQueryClient, useMutation } from 'react-query';
 import toast from 'react-hot-toast';
 import { Error } from 'src/types/error';
+import { Response } from 'src/types/response';
 import axios from '../../axiosConfig';
 
-async function readNotification({ id }: {id: number}) {
+interface MutationParams {
+  id: number
+}
+
+async function readNotification({ id }: MutationParams) {
   try {
     const res = await axios.post('/api/notification/read', { id });
     return res.data;
@@ -14,7 +19,7 @@ async function readNotification({ id }: {id: number}) {
 
 export default function useReadNotification() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, any, any>(readNotification, {
+  return useMutation<Response, Error, MutationParams>(readNotification, {
     onSuccess: () => {
       queryClient.invalidateQueries(['notifications']);
     },

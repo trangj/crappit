@@ -44,8 +44,9 @@ const TopicAppearance : NextPageWithLayout = function () {
     );
   }
 
-  const handleIcon = async (e: any) => {
+  const handleIcon : React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
+      if (!e.target.files) throw Error('No file was selected.');
       const file = e.target.files[0];
       if (
         file.type !== 'image/png'
@@ -54,7 +55,7 @@ const TopicAppearance : NextPageWithLayout = function () {
       ) throw Error('Invalid file type');
       const formData = new FormData();
       formData.append('file', file);
-      const res: any = await axios.post(
+      const res = await axios.post(
         `/api/moderation/${topicData.title}/icon`,
         formData,
       );
@@ -69,8 +70,9 @@ const TopicAppearance : NextPageWithLayout = function () {
     }
   };
 
-  const handleBanner = async (e: any) => {
+  const handleBanner : React.ChangeEventHandler<HTMLInputElement> = async (e) => {
     try {
+      if (!e.target.files) throw Error('No file was selected.');
       const file = e.target.files[0];
       if (
         file.type !== 'image/png'
@@ -79,7 +81,7 @@ const TopicAppearance : NextPageWithLayout = function () {
       ) throw Error('Invalid file type');
       const formData = new FormData();
       formData.append('file', file);
-      const res: any = await axios.post(
+      const res = await axios.post(
         `/api/moderation/${topicData.title}/banner`,
         formData,
       );

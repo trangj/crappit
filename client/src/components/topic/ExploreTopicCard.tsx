@@ -20,7 +20,7 @@ function ExploreTopicCard() {
         setLoading(false);
         setTopics(res.data.top_topics);
       } catch (err) {
-        console.log(err);
+        //
       }
     };
     fetchTopics();
