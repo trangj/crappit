@@ -23,7 +23,7 @@ function CommentCard() {
   return (
     <Card id="comments" className="p-3">
       <div className="mx-6">
-        <AddComment post={post as string} sortParam={sortParam} />
+        <AddComment post={post as string} />
         <SortComment
           post={post as string}
           topic={topic as string}

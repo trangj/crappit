@@ -13,16 +13,15 @@ const schema = yup.object({
 
 type Props = {
   post: string;
-  sortParam: string;
 };
 
 interface FormValues {
   content: string;
 }
 
-function AddComment({ post, sortParam }: Props) {
+function AddComment({ post }: Props) {
   const { user } = useUser();
-  const { isLoading, mutateAsync } = useAddComment(String(post), sortParam);
+  const { isLoading, mutateAsync } = useAddComment(String(post));
 
   const handleSubmit = async (
     values: FormValues,

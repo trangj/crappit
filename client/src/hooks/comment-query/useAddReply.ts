@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import toast from 'react-hot-toast';
 import { Comment } from 'src/types/entities/comment';
 import { Error } from 'src/types/error';
@@ -27,9 +27,10 @@ async function addReply({ commentId, reply }: MutationParams) {
 }
 
 export default function useAddReply(comment: Comment) {
+  const queryClient = useQueryClient();
   return useMutation<MutateResponse, Error, MutationParams>(addReply, {
-    onSuccess: (res) => {
-      comment.children = [res.comment, ...comment.children];
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments', String(comment.post_id)]);
     },
     onError: (err) => {
       toast.error(err.status.text);

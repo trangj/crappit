@@ -25,14 +25,11 @@ async function addComment({ newComment } : MutateParams) {
   }
 }
 
-export default function useAddComment(id: string, sortParam: string) {
+export default function useAddComment(id: string) {
   const queryClient = useQueryClient();
   return useMutation<MutateResponse, Error, MutateParams>(addComment, {
-    onSuccess: (res) => {
-      queryClient.setQueryData(['comments', id, sortParam], (initialData: any) => {
-        initialData.pages[0].comments = [res.comment, ...initialData.pages[0].comments];
-        return initialData;
-      });
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments', id]);
     },
     onError: (err) => {
       toast.error(err.status.text);
