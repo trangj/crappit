@@ -25,7 +25,8 @@ router.get('/', optionalAuth, async (req, res) => {
       order by 
         (case when $2 = 'top' then p.vote end) desc,
         (case when $2 = 'new' then p.created_at end) desc,
-        (case when $2 = 'hot' or $2 = '' then p.number_of_comments end) desc
+        (case when $2 = 'hot' or $2 = '' then p.number_of_comments end) desc,
+        p.id desc
       limit 10 offset $3
     `, [req.user.id, req.query.sort, req.query.skip]);
 

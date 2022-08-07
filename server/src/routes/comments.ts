@@ -42,7 +42,8 @@ router.get('/:id', optionalAuth, async (req, res) => {
         order by 
           (case when $3 = 'top' then c.vote end) desc,
           (case when $3 = 'new' then c.created_at end) desc,
-          (case when $3 = 'hot' or $3 = '' then c.id end) desc
+          (case when $3 = 'hot' or $3 = '' then c.id end) desc,
+          c.id desc
         limit 5 offset $4)
         union all
           select cc.*,
