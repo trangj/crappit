@@ -17,6 +17,7 @@ import NotificationSkeleton from 'src/components/util/NotificationSkeleton';
 import { Avatar } from 'src/ui/Avatar';
 import Image from 'next/image';
 import NotificationIcon from 'src/components/notification/NotificationIcon';
+import { parseTextFromHtml } from 'src/helpers/parseText';
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (!req.cookies.crappit_session) {
@@ -85,7 +86,7 @@ function NotificationsPage() {
                       rel="noopener noreferrer"
                       className={`p-4 flex gap-2 ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
                     >
-                      <a className="h-8 w-8 relative">
+                      <a className="h-8 w-8 relative flex-none">
                         {!notification.icon_name ? (
                           <Avatar />
                         ) : (
@@ -113,9 +114,11 @@ function NotificationsPage() {
                             {dayjs(notification.sent_at).fromNow()}
                           </span>
                         </span>
-                        <span className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                          {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
-                        </span>
+                        <p
+                          className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-normal max-h-16 pt-0"
+                        >
+                          {parseTextFromHtml(notification.body)}
+                        </p>
                       </div>
                     </a>
                     <Divider />

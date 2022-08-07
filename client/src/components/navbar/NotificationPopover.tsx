@@ -11,6 +11,7 @@ import useReadNotification from 'src/hooks/notification-query/useReadNotificatio
 import useReadAllNotifications from 'src/hooks/notification-query/useReadAllNotifications';
 import Image from 'next/image';
 import { Avatar } from 'src/ui/Avatar';
+import { parseTextFromHtml } from 'src/helpers/parseText';
 import NotificationSkeleton from '../util/NotificationSkeleton';
 import NotificationIcon from '../notification/NotificationIcon';
 
@@ -98,8 +99,8 @@ function NotificationPopover() {
                             {dayjs(notification.sent_at).fromNow()}
                           </span>
                         </p>
-                        <p className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap p-0">
-                          {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
+                        <p className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-normal max-h-16 p-0">
+                          {parseTextFromHtml(notification.body)}
                         </p>
                       </div>
                     </a>
