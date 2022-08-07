@@ -51,6 +51,8 @@ router.post('/', auth, async (req, res) => {
         title: `u/${user.username} replied to your post in t/${commentPost.topic.title}`,
         comment_id: newComment.id,
         post_id: commentPost.id,
+        icon_name: user.avatar_image_name,
+        icon_url: user.avatar_image_url,
       });
     }
 
@@ -270,6 +272,8 @@ router.post('/:commentid/reply', auth, async (req, res) => {
         title: `u/${user.username} replied to your comment in t/${commentPost.topic.title}`,
         comment_id: newComment.id,
         post_id: commentPost.id,
+        icon_url: user.avatar_image_url,
+        icon_name: user.avatar_image_name,
       });
     }
 

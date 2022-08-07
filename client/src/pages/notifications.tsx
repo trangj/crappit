@@ -14,6 +14,9 @@ import useNotifications from 'src/hooks/notification-query/useNotifications';
 import useReadNotification from 'src/hooks/notification-query/useReadNotification';
 import InfiniteScroll from 'react-infinite-scroller';
 import NotificationSkeleton from 'src/components/util/NotificationSkeleton';
+import { Avatar } from 'src/ui/Avatar';
+import Image from 'next/image';
+import NotificationIcon from 'src/components/notification/NotificationIcon';
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   if (!req.cookies.crappit_session) {
@@ -80,22 +83,40 @@ function NotificationsPage() {
                       href={notification.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`p-4 flex flex-col ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
+                      className={`p-4 flex gap-2 ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
                     >
-                      <span>
+                      <a className="h-8 w-8 relative">
+                        {!notification.icon_name ? (
+                          <Avatar />
+                        ) : (
+                          <Image
+                            alt="user avatar"
+                            src={notification.icon_name}
+                            width={32}
+                            height={32}
+                            className="rounded-full bg-white"
+                          />
+                        )}
+                        <span className="bg-white dark:bg-black border border-white rounded-full h-5 w-5 absolute -bottom-2 -right-0.5 p-0.5 text-blue-500">
+                          <NotificationIcon type={notification.notification_type.type_name} />
+                        </span>
+                      </a>
+                      <div className="flex flex-col">
                         <span>
-                          {notification.title}
+                          <span>
+                            {notification.title}
+                          </span>
+                          <span className="dark:text-gray-400 text-gray-500">
+                            {' '}
+                            &bull;
+                            {' '}
+                            {dayjs(notification.sent_at).fromNow()}
+                          </span>
                         </span>
-                        <span className="dark:text-gray-400 text-gray-500">
-                          {' '}
-                          &bull;
-                          {' '}
-                          {dayjs(notification.sent_at).fromNow()}
+                        <span className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                          {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
                         </span>
-                      </span>
-                      <span className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                        {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
-                      </span>
+                      </div>
                     </a>
                     <Divider />
                   </span>

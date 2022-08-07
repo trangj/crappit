@@ -60,4 +60,10 @@ export class Notification extends BaseEntity {
 
   @Column({ nullable: true })
     url: string;
+
+  @Column({ default: '' })
+    icon_url: string;
+
+  @Column({ default: '' })
+    icon_name: string;
 }

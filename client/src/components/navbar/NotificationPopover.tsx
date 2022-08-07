@@ -9,7 +9,10 @@ import ToolTip from 'src/ui/ToolTip';
 import useNotifications from 'src/hooks/notification-query/useNotifications';
 import useReadNotification from 'src/hooks/notification-query/useReadNotification';
 import useReadAllNotifications from 'src/hooks/notification-query/useReadAllNotifications';
+import Image from 'next/image';
+import { Avatar } from 'src/ui/Avatar';
 import NotificationSkeleton from '../util/NotificationSkeleton';
+import NotificationIcon from '../notification/NotificationIcon';
 
 function NotificationPopover() {
   const { data, isLoading } = useNotifications();
@@ -65,22 +68,40 @@ function NotificationPopover() {
                       href={notification.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`p-4 flex flex-col ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
+                      className={`p-4 flex gap-2 ${!notification.read_at && 'bg-opacity-20 bg-blue-500'}`}
                     >
-                      <p>
-                        <span>
-                          {notification.title}
+                      <a className="h-8 w-8 relative flex-none">
+                        {!notification.icon_name ? (
+                          <Avatar />
+                        ) : (
+                          <Image
+                            alt="user avatar"
+                            src={notification.icon_name}
+                            width={32}
+                            height={32}
+                            className="rounded-full bg-white"
+                          />
+                        )}
+                        <span className="bg-white dark:bg-black border border-white rounded-full h-5 w-5 absolute -bottom-2 -right-0.5 p-0.5 text-blue-500">
+                          <NotificationIcon type={notification.notification_type.type_name} />
                         </span>
-                        <span className="dark:text-gray-400 text-gray-500">
-                          {' '}
-                          &bull;
-                          {' '}
-                          {dayjs(notification.sent_at).fromNow()}
-                        </span>
-                      </p>
-                      <p className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap p-0">
-                        {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
-                      </p>
+                      </a>
+                      <div className="flex flex-col">
+                        <p>
+                          <span>
+                            {notification.title}
+                          </span>
+                          <span className="dark:text-gray-400 text-gray-500">
+                            {' '}
+                            &bull;
+                            {' '}
+                            {dayjs(notification.sent_at).fromNow()}
+                          </span>
+                        </p>
+                        <p className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-nowrap p-0">
+                          {notification.body.replace(/<\/?[^>]+>/gi, ' ')}
+                        </p>
+                      </div>
                     </a>
                   </span>
                 )) : (

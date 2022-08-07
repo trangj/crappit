@@ -12,10 +12,12 @@ type Context = {
   title: string,
   comment_id?: number,
   post_id?: number,
+  icon_name: string,
+  icon_url: string,
 }
 
 export async function sendNotification({
-  recipient, sender, type, body, url, title, comment_id, post_id,
+  recipient, sender, type, body, url, title, comment_id, post_id, icon_name, icon_url,
 }: Context) {
   try {
     // find notification type
@@ -44,6 +46,8 @@ export async function sendNotification({
         sender_id: sender.id,
         comment_id,
         post_id,
+        icon_url,
+        icon_name,
       },
     ).save();
   } catch (err) {

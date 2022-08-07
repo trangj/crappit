@@ -11,6 +11,9 @@ router.get('/', auth, async (req, res) => {
       Notification,
       {
         where: { recipient_id: req.user.id },
+        relations: {
+          notification_type: true,
+        },
         take: 5,
         skip: parseInt(req.query.skip as string) || undefined,
         order: { sent_at: 'DESC' },
