@@ -115,7 +115,10 @@ function NotificationsPage() {
                           </span>
                         </span>
                         <p
-                          className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-normal max-h-16 pt-0"
+                          className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-normal max-h-14 pt-0"
+                          style={{
+                            lineHeight: '18px',
+                          }}
                         >
                           {parseTextFromHtml(notification.body)}
                         </p>

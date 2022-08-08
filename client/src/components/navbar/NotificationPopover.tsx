@@ -99,7 +99,12 @@ function NotificationPopover() {
                             {dayjs(notification.sent_at).fromNow()}
                           </span>
                         </p>
-                        <p className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-normal max-h-16 p-0">
+                        <p
+                          className="dark:text-gray-400 text-gray-500 overflow-hidden overflow-ellipsis whitespace-normal max-h-14 p-0"
+                          style={{
+                            lineHeight: '18px',
+                          }}
+                        >
                           {parseTextFromHtml(notification.body)}
                         </p>
                       </div>
